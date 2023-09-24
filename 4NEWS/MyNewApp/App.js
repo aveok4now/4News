@@ -10,6 +10,7 @@ import React from 'react';
 import { SafeAreaView, StyleSheet, Text, StatusBar } from 'react-native';
 import SignInScreen from './src/screens/SignInScreen';
 import SignUpScreen from './src/screens/SignUpScreen';
+import ConfirmEmailScreen from './src/screens/ConfirmEmailScreen';
 
 
 const App = () => {
@@ -17,7 +18,7 @@ const App = () => {
     <>
       <StatusBar backgroundColor="#B0ABD9" />
       <SafeAreaView style={styles.root}>
-        <SignUpScreen />
+        <ConfirmEmailScreen />
       </SafeAreaView>
     </>
   );
