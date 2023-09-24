@@ -19,7 +19,7 @@ const NewPasswordScreen = () => {
     }
 
     const onSignInPress = () => {
-        console.warn("Вернуться к входу в аккаунт");
+        // console.warn("Вернуться к входу в аккаунт");
         navigation.navigate("Добро пожаловать !");
     }
 

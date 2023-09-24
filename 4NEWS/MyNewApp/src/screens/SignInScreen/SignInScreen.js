@@ -17,19 +17,19 @@ const SignInScreen = () => {
     const navigation = useNavigation();
 
     const onSignInPressed = () => {
-        console.warn("Вход");
+        //console.warn("Вход");
         //валидация
         navigation.navigate('Домашняя страница');
 
     }
 
     const onForgotPassword = () => {
-        console.warn("Забыли пароль");
+        // console.warn("Забыли пароль");
         navigation.navigate("Забыли пароль");
     }
 
     const onSignUpPress = () => {
-        console.warn("Регистрация");
+        //  console.warn("Регистрация");
         navigation.navigate("Регистрация");
     }
 
