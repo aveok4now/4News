@@ -2,25 +2,24 @@ import React, { useState } from 'react';
 import { View, Text, StyleSheet, ScrollView } from 'react-native';
 import CustomInput from '../../components/CustomInput';
 import CustomButton from '../../components/CustomButton/CustomButton';
-
+import { useNavigation } from '@react-navigation/native';
 // import { Container } from './styles';
 
 const ForgotPasswordScreen = () => {
 
-
+    const navigation = useNavigation();
     const [username, setUsername] = useState('');
 
 
     const onSendPressed = () => {
-        console.warn("Отправить");
+        //console.warn("Отправить");
+        // валидация ...
+        navigation.navigate("Восстановление пароля");
     }
 
     const onSignInPress = () => {
-        console.warn("Вернуться к входу в аккаунт");
-    }
-
-    const onResendPress = () => {
-        console.warn("Повторный код");
+        //console.warn("Вернуться к входу в аккаунт");
+        navigation.navigate("Добро пожаловать !");
     }
 
 

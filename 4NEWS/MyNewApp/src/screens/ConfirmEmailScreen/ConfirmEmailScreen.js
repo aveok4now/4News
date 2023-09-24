@@ -2,25 +2,30 @@ import React, { useState } from 'react';
 import { View, Text, StyleSheet, ScrollView } from 'react-native';
 import CustomInput from '../../components/CustomInput';
 import CustomButton from '../../components/CustomButton/CustomButton';
-
+import { useNavigation } from '@react-navigation/native';
 // import { Container } from './styles';
 
 const ConfirmEmailScreen = () => {
 
+    const navigation = useNavigation();
 
     const [code, setCode] = useState('');
 
 
     const onConfirmPressed = () => {
-        console.warn("Подтвердить");
+        //console.warn("Подтвердить");
+        // валидация
+        navigation.navigate("Домашняя страница");
     }
 
     const onSignInPress = () => {
-        console.warn("Вернуться к входу в аккаунт");
+        //console.warn("Вернуться к входу в аккаунт");
+        navigation.navigate("Добро пожаловать !");
     }
 
     const onResendPress = () => {
-        console.warn("Повторный код");
+        // console.warn("Повторный код");
+        // ....
     }
 
 

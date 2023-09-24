@@ -2,22 +2,25 @@ import React, { useState } from 'react';
 import { View, Text, StyleSheet, ScrollView } from 'react-native';
 import CustomInput from '../../components/CustomInput';
 import CustomButton from '../../components/CustomButton/CustomButton';
-
+import { useNavigation } from '@react-navigation/native';
 // import { Container } from './styles';
 
 const NewPasswordScreen = () => {
 
-
+    const navigation = useNavigation();
     const [code, setCode] = useState('');
     const [newPassword, setNewPassword] = useState('');
     const [newPasswordRepeat, setNewPasswordRepeat] = useState('');
 
     const onSubmitPressed = () => {
-        console.warn("Подтвердить");
+        //console.warn("Подтвердить");
+        // валидация
+        navigation.navigate("Домашняя страница");
     }
 
     const onSignInPress = () => {
         console.warn("Вернуться к входу в аккаунт");
+        navigation.navigate("Добро пожаловать !");
     }
 
 

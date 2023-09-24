@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, ScrollView } from 'react-native';
 import CustomInput from '../../components/CustomInput';
 import CustomButton from '../../components/CustomButton/CustomButton';
 import SocialSignInButtons from '../../components/SocialSignInButtons';
-
+import { useNavigation } from '@react-navigation/native';
 // import { Container } from './styles';
 
 const SignUpScreen = () => {
@@ -13,21 +13,27 @@ const SignUpScreen = () => {
     const [password, setPassword] = useState('');
     const [passwordRepeat, setPasswordRepeat] = useState('');
 
+    const navigation = useNavigation();
 
     const onRegisterPressed = () => {
-        console.warn("Регистрация");
+        //console.warn("Регистрация");
+        //валидация
+        navigation.navigate("Подтверждение почты");
     }
 
     const onSignInPress = () => {
-        console.warn("Регистрация");
+        //console.warn("Регистрация");
+        navigation.navigate("Добро пожаловать !")
     }
 
     const onTermsOfUsePressed = () => {
         console.warn("Условия пользования");
+        // добавить навигацию
     }
 
     const onPrivacyPolicyPressed = () => {
         console.warn("Политика конфиденциальности");
+        // добавить навигацию
     }
 
     return (

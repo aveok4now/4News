@@ -4,7 +4,7 @@ import Logo from '../../../assets/images/seved.png';
 import CustomInput from '../../components/CustomInput';
 import CustomButton from '../../components/CustomButton/CustomButton';
 import SocialSignInButtons from '../../components/SocialSignInButtons';
-
+import { useNavigation } from '@react-navigation/native';
 
 // import { Container } from './styles';
 
@@ -14,17 +14,23 @@ const SignInScreen = () => {
     const [password, setPassword] = useState('');
 
     const { height } = useWindowDimensions();
+    const navigation = useNavigation();
 
     const onSignInPressed = () => {
         console.warn("Вход");
+        //валидация
+        navigation.navigate('Домашняя страница');
+
     }
 
     const onForgotPassword = () => {
         console.warn("Забыли пароль");
+        navigation.navigate("Забыли пароль");
     }
 
     const onSignUpPress = () => {
         console.warn("Регистрация");
+        navigation.navigate("Регистрация");
     }
 
     return (
