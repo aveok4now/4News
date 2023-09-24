@@ -3,7 +3,8 @@ import { View, Text, Image, StyleSheet, useWindowDimensions, ScrollView } from '
 import Logo from '../../../assets/images/seved.png';
 import CustomInput from '../../components/CustomInput';
 import CustomButton from '../../components/CustomButton/CustomButton';
-import Icon from 'react-native-vector-icons/FontAwesome';
+import SocialSignInButtons from '../../components/SocialSignInButtons';
+
 
 // import { Container } from './styles';
 
@@ -20,14 +21,6 @@ const SignInScreen = () => {
 
     const onForgotPassword = () => {
         console.warn("Забыли пароль");
-    }
-
-    const onSignInGoogle = () => {
-        console.warn("Вход через Google");
-    }
-
-    const onSignInVK = () => {
-        console.warn("Вход через ВКонтакте");
     }
 
     const onSignUpPress = () => {
@@ -59,18 +52,7 @@ const SignInScreen = () => {
                     type="Tertiary"
                 />
 
-                <CustomButton
-                    text="Google"
-                    onPress={onSignInGoogle}
-                    bgColor="#FAE9EA"
-                    fgColor="#DD4D44"
-                />
-                <CustomButton
-                    text="ВКонтакте"
-                    onPress={onSignInVK}
-                    bgColor="#CFD8F7"
-                    fgColor="#154ED3"
-                />
+                <SocialSignInButtons />
 
                 <CustomButton
                     text="Нет аккаунта? Создать сейчас"
