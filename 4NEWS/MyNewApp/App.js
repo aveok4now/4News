@@ -6,7 +6,7 @@
  * @flow strict-local
  */
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { SafeAreaView, StyleSheet, Text, StatusBar } from 'react-native';
 import SignInScreen from './src/screens/SignInScreen';
 import SignUpScreen from './src/screens/SignUpScreen';
@@ -14,9 +14,10 @@ import ConfirmEmailScreen from './src/screens/ConfirmEmailScreen';
 import ForgotPasswordScreen from './src/screens/ForgotPasswordScreen';
 import NewPasswordScreen from './src/screens/NewPasswordScreen';
 import Navigation from './src/navigation';
-
+import SplashScreen from 'react-native-splash-screen';
 
 const App = () => {
+  SplashScreen.hide();
   return (
     <>
       <StatusBar backgroundColor="#B0ABD9" />
