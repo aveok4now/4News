@@ -13,6 +13,7 @@ import ConfirmEmailScreen from '../screens/ConfirmEmailScreen';
 import ForgotPasswordScreen from '../screens/ForgotPasswordScreen';
 import NewPasswordScreen from '../screens/NewPasswordScreen';
 import HomeScreen from '../screens/HomeScreen';
+import OnBoardingScreen from '../screens/OnBoardingScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -29,6 +30,7 @@ const Navigation = () => {
         <NavigationContainer theme={navTheme} style={styles.container}>
             {/* show header or not */}
             <Stack.Navigator screenOptions={{ headerShown: false }}>
+                <Stack.Screen name="Приветствие" component={OnBoardingScreen} />
                 <Stack.Screen name="Добро пожаловать !"
                     component={SignInScreen}
                     options={{
