@@ -1,6 +1,30 @@
 React Native News App project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
 
 
+- [x] App Icon
+- [x] Splash Screen
+- [x] OnBoarding Screen
+  - [x] Page 1
+  - [x] Page 2
+  - [x] Page 3  
+- [ ] Screens
+  - [x] SignIn
+    - [ ] SignIn via Google
+    - [ ] SignIn via VK
+  - [x] SignUp
+  - [x] New Password
+  - [x] Forgot Password
+    - [ ] Password Reset
+  - [x] Confirm Email
+  - [x] Home Screen
+  - [ ] News Screen
+  - [ ] About Screen
+  - [ ] Help Screen
+- [ ] News API
+- [ ] MySQL Integration
+
+
+
 # Ссылки
 
 To learn more about React Native, take a look at the following resources:
