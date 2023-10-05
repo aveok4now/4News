@@ -54,7 +54,7 @@ const OnBoardingScreen = () => {
                 containerStyles={{ paddingHorizontal: 15 }}
                 pages={[
                     {
-                        backgroundColor: '#F1E4F3',
+                        backgroundColor: '#b6ddfa',
                         image: (
                             <View>
 
@@ -68,7 +68,7 @@ const OnBoardingScreen = () => {
                         subtitle: 'Новостная лента с регулярными обновлениями',
                     },
                     {
-                        backgroundColor: '#83B5D1',
+                        backgroundColor: '#7da9f2',
                         image: (
                             <View>
                                 <LottieView style={styles.lottie}
@@ -81,7 +81,7 @@ const OnBoardingScreen = () => {
                         subtitle: 'Читайте, сколько угодно',
                     },
                     {
-                        backgroundColor: '#a78bfa',
+                        backgroundColor: '#c6a9d9',
                         image: (
                             <View>
                                 <LottieView style={styles.lottie} source={require("../assets/animations/interests.json")} autoPlay loop />
