@@ -5,6 +5,7 @@ import { useNavigation } from '@react-navigation/native';
 import Onboarding from 'react-native-onboarding-swiper';
 import LottieView from 'lottie-react-native';
 import * as Animatable from 'react-native-animatable';
+import { setItem } from "../../utils/asyncStorage";
 
 const { width, height } = Dimensions.get('window');
 
@@ -13,7 +14,7 @@ const OnBoardingScreen = () => {
     const navigation = useNavigation();
     const handleDone = () => {
         navigation.navigate('Добро пожаловать !')
-
+        setItem('onboarded', '1');
     }
 
     const Button = ({ text, onPress, buttonStyle, textStyle }) => {

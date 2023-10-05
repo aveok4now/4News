@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import {
     DefaultTheme,
@@ -14,6 +14,7 @@ import ForgotPasswordScreen from '../screens/ForgotPasswordScreen';
 import NewPasswordScreen from '../screens/NewPasswordScreen';
 import HomeScreen from '../screens/HomeScreen';
 import OnBoardingScreen from '../screens/OnBoardingScreen';
+import { setItem, getItem, removeItem } from '../utils/asyncStorage';
 
 const Stack = createNativeStackNavigator();
 
@@ -26,10 +27,26 @@ const navTheme = {
 };
 
 const Navigation = () => {
+    const [showOnboarding, setShowOnboarding] = useState(null);
+    useEffect(() => {
+        checkIfAlreadyOnboarded()
+    }, [])
+
+    const checkIfAlreadyOnboarded = async () => {
+        let onboarded = await getItem('onboarded');
+        if (onboarded == 1) {
+            setShowOnboarding(false);
+        } else {
+            setShowOnboarding(true);
+        }
+    }
+
+    if (showOnboarding == null) return null;
+
     return (
         <NavigationContainer theme={navTheme} style={styles.container}>
             {/* show header or not */}
-            <Stack.Navigator screenOptions={{ headerShown: false }}>
+            <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName={showOnboarding ? 'Приветствие' : 'Добро пожаловать !'}>
                 <Stack.Screen name="Приветствие" component={OnBoardingScreen} />
                 <Stack.Screen name="Добро пожаловать !"
                     component={SignInScreen}
@@ -60,6 +77,7 @@ const Navigation = () => {
         </NavigationContainer>
     );
 }
+
 
 const styles = StyleSheet.create({
     container: {

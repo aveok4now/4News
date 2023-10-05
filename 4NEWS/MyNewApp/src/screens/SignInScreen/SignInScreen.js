@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
-import { View, Text, Image, StyleSheet, useWindowDimensions, ScrollView } from 'react-native';
+import { View, Text, Image, StyleSheet, useWindowDimensions, ScrollView, TouchableOpacity } from 'react-native';
 import Logo from '../../../assets/images/seved.png';
 import CustomInput from '../../components/CustomInput';
 import CustomButton from '../../components/CustomButton/CustomButton';
 import SocialSignInButtons from '../../components/SocialSignInButtons';
 import { useNavigation } from '@react-navigation/native';
-
 // import { Container } from './styles';
+import Icon from 'react-native-vector-icons/FontAwesome';
+import { removeItem } from '../../utils/asyncStorage';
 
 const SignInScreen = () => {
 
@@ -33,9 +34,16 @@ const SignInScreen = () => {
         navigation.navigate("Регистрация");
     }
 
+    const handleReset = async () => {
+        await removeItem('onboarded');
+        navigation.push('Приветствие');
+    }
     return (
         <ScrollView showsVerticalScrollIndicator={false}>
             <View style={styles.root}>
+                <TouchableOpacity onPress={handleReset} style={styles.questionIcon}>
+                    <Icon name="question-circle" size={30} color="white" />
+                </TouchableOpacity>
                 <Image source={Logo} style={[styles.logo, { height: height * 0.17 }]} resizeMode="contain" />
                 <CustomInput
                     placeholder="Имя пользователя или эл. почта"
@@ -83,8 +91,12 @@ const styles = StyleSheet.create({
         width: '70%',
         maxWidth: 500,
         maxHeight: 200,
-
-    }
+    },
+    questionIcon: {
+        position: 'absolute',
+        top: 15,
+        left: 15,
+    },
 })
 
 export default SignInScreen;
