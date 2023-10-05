@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, Image, StyleSheet, useWindowDimensions, ScrollView, TouchableOpacity } from 'react-native';
+import { View, Text, Image, StyleSheet, useWindowDimensions, ScrollView, TouchableOpacity, ImageBackground, Dimensions } from 'react-native';
 import Logo from '../../../assets/images/seved.png';
 import CustomInput from '../../components/CustomInput';
 import CustomButton from '../../components/CustomButton/CustomButton';
@@ -9,12 +9,19 @@ import { useNavigation } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { removeItem } from '../../utils/asyncStorage';
 
+
+
+const { width, height } = Dimensions.get('window');
 const SignInScreen = () => {
 
+    //const image = { uri: 'https://i.pinimg.com/736x/b3/4e/12/b34e12e24fe377683d2182d40a040f5c.jpg' };
+    // const image = { uri: 'https://i.pinimg.com/564x/c7/1f/00/c71f00ea86ee2bb9eac2d0c99b978d5b.jpg' };
+    //const image = require('D:/react/4NEWS/MyNewApp/assets/images/backgr.jpg');
+    const image = require('../assets/images/backgr.jpg');
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
 
-    const { height } = useWindowDimensions();
+    const { width, height } = useWindowDimensions();
     const navigation = useNavigation();
 
     const onSignInPressed = () => {
@@ -40,47 +47,56 @@ const SignInScreen = () => {
     }
     return (
         <ScrollView showsVerticalScrollIndicator={false}>
-            <View style={styles.root}>
-                <TouchableOpacity onPress={handleReset} style={styles.questionIcon}>
-                    <Icon name="question-circle" size={30} color="white" />
-                </TouchableOpacity>
-                <Image source={Logo} style={[styles.logo, { height: height * 0.17 }]} resizeMode="contain" />
-                <CustomInput
-                    placeholder="Имя пользователя или эл. почта"
-                    value={username}
-                    setValue={setUsername}
-                />
-                <CustomInput
-                    placeholder="Пароль"
-                    value={password}
-                    setValue={setPassword}
-                    secureTextEntry
-                />
-                <CustomButton
-                    text="Войти"
-                    onPress={onSignInPressed}
-                />
-                <CustomButton
-                    text="Забыли пароль?"
-                    onPress={onForgotPassword}
-                    type="Tertiary"
-                />
+            <ImageBackground source={image} resizeMode="cover" style={styles.image}>
+                <View style={styles.root}>
 
-                <SocialSignInButtons />
+                    <TouchableOpacity onPress={handleReset} style={styles.questionIcon}>
+                        <Icon name="question-circle" size={30} color="white" />
+                    </TouchableOpacity>
+                    <Image source={Logo} style={[styles.logo, { height: height * 0.17 }]} resizeMode="contain" />
+                    <CustomInput
+                        placeholder="Имя пользователя или эл. почта"
+                        value={username}
+                        setValue={setUsername}
+                    />
+                    <CustomInput
+                        placeholder="Пароль"
+                        value={password}
+                        setValue={setPassword}
+                        secureTextEntry
+                    />
+                    <CustomButton
+                        text="Войти"
+                        onPress={onSignInPressed}
+                    />
+                    <CustomButton
+                        text="Забыли пароль?"
+                        onPress={onForgotPassword}
+                        type="Tertiary"
+                    />
 
-                <CustomButton
-                    text="Нет аккаунта? Создать сейчас"
-                    onPress={onSignUpPress}
-                    type="Tertiary"
-                />
+                    <SocialSignInButtons />
 
-            </View>
+                    <CustomButton
+                        text="Нет аккаунта? Создать сейчас"
+                        onPress={onSignUpPress}
+                        type="Tertiary"
+                    />
+
+                </View>
+            </ImageBackground>
         </ScrollView>
     );
 }
 
 
 const styles = StyleSheet.create({
+    image: {
+        flex: 2,
+        justifyContent: 'center',
+        width: width,
+        height: height,
+    },
     root: {
         alignItems: 'center',
         padding: 20,
@@ -94,7 +110,7 @@ const styles = StyleSheet.create({
     },
     questionIcon: {
         position: 'absolute',
-        top: 15,
+        top: height * 0.001,
         left: 15,
     },
 })

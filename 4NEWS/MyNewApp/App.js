@@ -16,11 +16,13 @@ import NewPasswordScreen from './src/screens/NewPasswordScreen';
 import Navigation from './src/navigation';
 import SplashScreen from 'react-native-splash-screen';
 
+
+
 const App = () => {
   SplashScreen.hide();
   return (
     <>
-      <StatusBar backgroundColor="#B0ABD9" />
+      <StatusBar backgroundColor="#989be2" />
       <SafeAreaView style={styles.root}>
         <Navigation />
       </SafeAreaView>
