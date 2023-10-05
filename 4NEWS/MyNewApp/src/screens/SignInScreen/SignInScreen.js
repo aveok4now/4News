@@ -45,48 +45,58 @@ const SignInScreen = () => {
         await removeItem('onboarded');
         navigation.push('Приветствие');
     }
-    return (
-        <ScrollView showsVerticalScrollIndicator={false}>
-            <ImageBackground source={image} resizeMode="cover" style={styles.image}>
-                <View style={styles.root}>
 
-                    <TouchableOpacity onPress={handleReset} style={styles.questionIcon}>
-                        <Icon name="question-circle" size={30} color="white" />
-                    </TouchableOpacity>
-                    <Image source={Logo} style={[styles.logo, { height: height * 0.17 }]} resizeMode="contain" />
-                    <CustomInput
-                        placeholder="Имя пользователя или эл. почта"
-                        value={username}
-                        setValue={setUsername}
-                    />
-                    <CustomInput
-                        placeholder="Пароль"
-                        value={password}
-                        setValue={setPassword}
-                        secureTextEntry
-                    />
-                    <CustomButton
-                        text="Войти"
-                        onPress={onSignInPressed}
-                    />
-                    <CustomButton
-                        text="Забыли пароль?"
-                        onPress={onForgotPassword}
-                        type="Tertiary"
-                    />
-
-                    <SocialSignInButtons />
-
-                    <CustomButton
-                        text="Нет аккаунта? Создать сейчас"
-                        onPress={onSignUpPress}
-                        type="Tertiary"
-                    />
-
-                </View>
-            </ImageBackground>
-        </ScrollView>
+    const content = (
+        <View style={styles.root}>
+            <TouchableOpacity onPress={handleReset} style={styles.questionIcon}>
+                <Icon name="question-circle" size={30} color="white" />
+            </TouchableOpacity>
+            <Image source={Logo} style={[styles.logo, { height: height * 0.17 }]} resizeMode="contain" />
+            <CustomInput
+                placeholder="Имя пользователя или эл. почта"
+                value={username}
+                setValue={setUsername}
+            />
+            <CustomInput
+                placeholder="Пароль"
+                value={password}
+                setValue={setPassword}
+                secureTextEntry
+            />
+            <CustomButton
+                text="Войти"
+                onPress={onSignInPressed}
+            />
+            <CustomButton
+                text="Забыли пароль?"
+                onPress={onForgotPassword}
+                type="Tertiary"
+            />
+            <SocialSignInButtons />
+            <CustomButton
+                text="Нет аккаунта? Создать сейчас"
+                onPress={onSignUpPress}
+                type="Tertiary"
+            />
+        </View>
     );
+
+    return (
+        <>
+            {styles.image.height === height ? (
+                <ImageBackground source={image} resizeMode="cover" style={styles.image}>
+                    {content}
+                </ImageBackground>
+            ) : (
+                <ScrollView showsVerticalScrollIndicator={false}>
+                    <ImageBackground source={image} resizeMode="cover" style={styles.image}>
+                        {content}
+                    </ImageBackground>
+                </ScrollView>
+            )}
+        </>
+    );
+
 }
 
 
@@ -110,7 +120,7 @@ const styles = StyleSheet.create({
     },
     questionIcon: {
         position: 'absolute',
-        top: height * 0.001,
+        // top: height * 0.001,
         left: 15,
     },
 })
