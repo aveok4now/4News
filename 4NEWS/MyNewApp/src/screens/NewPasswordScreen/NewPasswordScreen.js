@@ -4,15 +4,17 @@ import CustomInput from '../../components/CustomInput';
 import CustomButton from '../../components/CustomButton/CustomButton';
 import { useNavigation } from '@react-navigation/native';
 // import { Container } from './styles';
+import { useForm } from 'react-hook-form';
+
+
 
 const NewPasswordScreen = () => {
 
+    const { control, handleSubmit, watch } = useForm();
     const navigation = useNavigation();
-    const [code, setCode] = useState('');
-    const [newPassword, setNewPassword] = useState('');
-    const [newPasswordRepeat, setNewPasswordRepeat] = useState('');
-
-    const onSubmitPressed = () => {
+    const pwd = watch('password');
+    const code_regex = /^\d+$/;
+    const onSubmitPressed = (data) => {
         //console.warn("Подтвердить");
         // валидация
         navigation.navigate("Домашняя страница");
@@ -32,26 +34,46 @@ const NewPasswordScreen = () => {
 
                 <CustomInput
                     placeholder="Код подтверждения"
-                    value={code}
-                    setValue={setCode}
+                    name="code"
+                    control={control}
+                    rules={{
+                        required: 'Необходимо ввести код подтверждения',
+                        minLength: { value: 4, message: 'Код состоит из четырёх символов' },
+                        maxLength: { value: 4, message: 'Код состоит из четырёх символов' },
+                        pattern: { value: code_regex, message: 'Код состоит только из цифр' }
+                    }}
                 />
                 <CustomInput
+                    name="password"
+                    control={control}
                     placeholder="Введите свой новый пароль"
-                    value={newPassword}
-                    setValue={setNewPassword}
-                    secureTextEntry
+                    rules={{
+                        required: 'Необходимо ввести пароль',
+                        minLength: {
+                            value: 5,
+                            message: 'Длина пароля должна быть не менее 5 символов'
+                        },
+                        maxLength: {
+                            value: 15,
+                            message: 'Длина пароля должна быть не больше 15 символов'
+                        }
+                    }}
                 />
 
                 <CustomInput
+                    name="password-repeat"
+                    control={control}
                     placeholder="Подтвердите новый пароль"
-                    value={newPasswordRepeat}
-                    setValue={setNewPasswordRepeat}
+                    rules={{
+                        validate: value =>
+                            value === pwd || 'Пароли не совпадают',
+                    }}
                     secureTextEntry
                 />
 
                 <CustomButton
                     text="Подтвердить"
-                    onPress={onSubmitPressed}
+                    onPress={handleSubmit(onSubmitPressed)}
                 />
 
 

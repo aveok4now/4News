@@ -5,17 +5,18 @@ import CustomButton from '../../components/CustomButton/CustomButton';
 import SocialSignInButtons from '../../components/SocialSignInButtons';
 import { useNavigation } from '@react-navigation/native';
 // import { Container } from './styles';
+import { useForm } from 'react-hook-form';
 
+
+const email_regex = /^[a-zA-Z0-9.!#$%&'+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)+$/;
+const name_regex = /^[a-zA-Z]+$/;
 const SignUpScreen = () => {
 
-    const [username, setUsername] = useState('');
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const [passwordRepeat, setPasswordRepeat] = useState('');
-
+    const { control, handleSubmit, watch } = useForm();
+    const pwd = watch('password');
     const navigation = useNavigation();
 
-    const onRegisterPressed = () => {
+    const onRegisterPressed = (data) => {
         //console.warn("Регистрация");
         //валидация
         navigation.navigate("Подтверждение почты");
@@ -40,32 +41,61 @@ const SignUpScreen = () => {
         <ScrollView showsVerticalScrollIndicator={false}>
             <View style={styles.root}>
                 <Text style={styles.title}>Создать аккаунт</Text>
+
                 <CustomInput
+                    name="username"
+                    control={control}
                     placeholder="Имя пользователя"
-                    value={username}
-                    setValue={setUsername}
+                    rules={{
+                        required: 'Необходимо ввести имя пользователя',
+                        minLength: { value: 5, message: 'Имя пользователя должно быть не менее 5 символов' },
+                        maxLength: { value: 15, message: 'Имя пользователя должно быть не более 15 символов' },
+                        pattern: { value: name_regex, message: 'Некорректный ввод имени' }
+                    }}
                 />
+
                 <CustomInput
+                    name="email"
+                    control={control}
                     placeholder="Эл. почта"
-                    value={email}
-                    setValue={setEmail}
+                    rules={{
+                        required: 'Необходимо ввести адрес эл.почты',
+                        pattern: { value: email_regex, message: 'Неправильный ввод электронной почты' }
+                    }}
                 />
+
                 <CustomInput
+                    name="password"
+                    control={control}
                     placeholder="Пароль"
-                    value={password}
-                    setValue={setPassword}
                     secureTextEntry
+                    rules={{
+                        required: 'Необходимо ввести пароль',
+                        minLength: {
+                            value: 5,
+                            message: 'Длина пароля должна быть не менее 5 символов'
+                        },
+                        maxLength: {
+                            value: 15,
+                            message: 'Длина пароля должна быть не больше 15 символов'
+                        }
+                    }}
                 />
+
                 <CustomInput
+                    name="password-repeat"
+                    control={control}
                     placeholder="Повторите пароль"
-                    value={passwordRepeat}
-                    setValue={setPasswordRepeat}
                     secureTextEntry
+                    rules={{
+                        validate: value =>
+                            value === pwd || 'Пароли не совпадают',
+                    }}
                 />
 
                 <CustomButton
                     text="Зарегестрироваться"
-                    onPress={onRegisterPressed}
+                    onPress={handleSubmit(onRegisterPressed)}
                 />
 
 
