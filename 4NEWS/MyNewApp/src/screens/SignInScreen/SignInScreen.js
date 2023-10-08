@@ -9,9 +9,11 @@ import { useNavigation } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { removeItem } from '../../utils/asyncStorage';
 import { useForm, Controller } from 'react-hook-form';
-
-
+import ModalPopup from '../../components/CustomModal/CustomModal';
+import LottieView from 'lottie-react-native';
 const { width, height } = Dimensions.get('window');
+
+
 const SignInScreen = () => {
 
     //const image = { uri: 'https://i.pinimg.com/736x/b3/4e/12/b34e12e24fe377683d2182d40a040f5c.jpg' };
@@ -54,6 +56,16 @@ const SignInScreen = () => {
     }
 
 
+    const [modalVisible, setModalVisible] = useState(false); // Состояние для видимости модального окна
+
+    const openModal = () => {
+        setModalVisible(true); // Функция для открытия модального окна
+    };
+
+    const closeModal = () => {
+        setModalVisible(false); // Функция для закрытия модального окна
+    };
+
     return (
         <ScrollView showsVerticalScrollIndicator={false}>
             <ImageBackground source={image} resizeMode="cover" style={styles.image}>
@@ -64,6 +76,27 @@ const SignInScreen = () => {
                     </TouchableOpacity>
                     <Image source={Logo} style={[styles.logo, { height: height * 0.17 }]} resizeMode="contain" />
 
+                    <TouchableOpacity onPress={openModal} style={styles.exitIcon}>
+                        <Icon name="sign-out" size={30} color="white" />
+                    </TouchableOpacity>
+
+                    <ModalPopup visible={modalVisible} onClose={closeModal}>
+                        <View style={{ alignItems: 'center' }}>
+                            <View style={styles.header}>
+                                <TouchableOpacity onPress={closeModal}>
+                                    <LottieView style={styles.lottieClose}
+                                        source={require("D:/react/4NEWS/MyNewApp/src/screens/assets/animations/close.json")}
+                                        autoPlay={true}
+                                        loop={false} />
+                                </TouchableOpacity>
+                            </View>
+                        </View>
+                        <LottieView style={styles.lottie}
+                            source={require("D:/react/4NEWS/MyNewApp/src/screens/assets/animations/exit.json")}
+                            autoPlay={true}
+                            loop={false} />
+                        <Text style={{ marginVertical: 30, fontSize: 20, textAlign: 'center' }}>Вы уверены, что хотите выйти?</Text>
+                    </ModalPopup>
 
                     <CustomInput
                         name="username"
@@ -72,7 +105,7 @@ const SignInScreen = () => {
                         rules={{
                             required: 'Ввведите имя или эл. почту 🤖',
                             minLength: { value: 5, message: 'Имя пользователя должно быть не менее 5 символов' },
-                            //maxLength: { value: 20, message: 'Имя пользователя или эл.почта должны быть не больше 20 символов' }
+                            maxLength: { value: 20, message: 'Имя пользователя или эл.почта должны быть не больше 20 символов' }
                         }}
                     />
 
@@ -137,6 +170,29 @@ const styles = StyleSheet.create({
         position: 'absolute',
         // top: height * 0.001,
         left: 15,
+        textAlign: 'center'
+    },
+    exitIcon: {
+        position: 'absolute',
+        // top: height * 0.001,
+        right: 15,
+    },
+    lottie: {
+        justifyContent: 'center',
+        alignSelf: 'center',
+        width: width * 0.9,
+        height: width
+    },
+    lottieClose: {
+        width: 80,
+        height: 80
+    },
+
+    header: {
+        width: '100%',
+        height: 40,
+        alignItems: 'flex-end',
+        justifyContent: 'center'
     },
 })
 
