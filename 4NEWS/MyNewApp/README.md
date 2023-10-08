@@ -20,6 +20,8 @@ React Native News App project, bootstrapped using [`@react-native-community/cli`
   - [ ] News Screen
   - [ ] About Screen
   - [ ] Help Screen
+- [x] OnExit ModalPopUp
+- [x] Forms validation
 - [ ] News API
 - [ ] MySQL Integration
 
