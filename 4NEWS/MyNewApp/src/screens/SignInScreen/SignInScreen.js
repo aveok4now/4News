@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, Image, StyleSheet, useWindowDimensions, ScrollView, TouchableOpacity, ImageBackground, Dimensions } from 'react-native';
+import { View, Text, Image, StyleSheet, useWindowDimensions, ScrollView, TouchableOpacity, ImageBackground, Dimensions, TextInput } from 'react-native';
 import Logo from '../../../assets/images/seved.png';
 import CustomInput from '../../components/CustomInput';
 import CustomButton from '../../components/CustomButton/CustomButton';
@@ -8,7 +8,7 @@ import { useNavigation } from '@react-navigation/native';
 // import { Container } from './styles';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { removeItem } from '../../utils/asyncStorage';
-
+import { useForm, Controller } from 'react-hook-form';
 
 
 const { width, height } = Dimensions.get('window');
@@ -24,9 +24,16 @@ const SignInScreen = () => {
     const { width, height } = useWindowDimensions();
     const navigation = useNavigation();
 
-    const onSignInPressed = () => {
+
+    const { control,
+        handleSubmit,
+        formState: { errors }
+    } = useForm();
+
+    const onSignInPressed = (data) => {
         //console.warn("Вход");
         //валидация
+        console.warn(data);
         navigation.navigate('Домашняя страница');
 
     }
@@ -46,57 +53,65 @@ const SignInScreen = () => {
         navigation.push('Приветствие');
     }
 
-    const content = (
-        <View style={styles.root}>
-            <TouchableOpacity onPress={handleReset} style={styles.questionIcon}>
-                <Icon name="question-circle" size={30} color="white" />
-            </TouchableOpacity>
-            <Image source={Logo} style={[styles.logo, { height: height * 0.17 }]} resizeMode="contain" />
-            <CustomInput
-                placeholder="Имя пользователя или эл. почта"
-                value={username}
-                setValue={setUsername}
-            />
-            <CustomInput
-                placeholder="Пароль"
-                value={password}
-                setValue={setPassword}
-                secureTextEntry
-            />
-            <CustomButton
-                text="Войти"
-                onPress={onSignInPressed}
-            />
-            <CustomButton
-                text="Забыли пароль?"
-                onPress={onForgotPassword}
-                type="Tertiary"
-            />
-            <SocialSignInButtons />
-            <CustomButton
-                text="Нет аккаунта? Создать сейчас"
-                onPress={onSignUpPress}
-                type="Tertiary"
-            />
-        </View>
-    );
 
     return (
-        <>
-            {styles.image.height === height ? (
-                <ImageBackground source={image} resizeMode="cover" style={styles.image}>
-                    {content}
-                </ImageBackground>
-            ) : (
-                <ScrollView showsVerticalScrollIndicator={false}>
-                    <ImageBackground source={image} resizeMode="cover" style={styles.image}>
-                        {content}
-                    </ImageBackground>
-                </ScrollView>
-            )}
-        </>
-    );
+        <ScrollView showsVerticalScrollIndicator={false}>
+            <ImageBackground source={image} resizeMode="cover" style={styles.image}>
+                <View style={styles.root}>
 
+                    <TouchableOpacity onPress={handleReset} style={styles.questionIcon}>
+                        <Icon name="question-circle" size={30} color="white" />
+                    </TouchableOpacity>
+                    <Image source={Logo} style={[styles.logo, { height: height * 0.17 }]} resizeMode="contain" />
+
+
+                    <CustomInput
+                        name="username"
+                        placeholder="Имя пользователя или эл. почта"
+                        control={control}
+                        rules={{
+                            required: 'Ввведите имя или эл. почту 🤖',
+                            minLength: { value: 5, message: 'Имя пользователя должно быть не менее 5 символов' },
+                            //maxLength: { value: 20, message: 'Имя пользователя или эл.почта должны быть не больше 20 символов' }
+                        }}
+                    />
+
+                    <CustomInput
+                        name="password"
+                        placeholder="Пароль"
+                        secureTextEntry
+                        control={control}
+                        rules={{
+                            required: 'Введите пароль 👺',
+                            minLength: { value: 5, message: 'Длина пароля должна быть не менее 5 символов' },
+                            maxLength: { value: 15, message: 'Длина пароля должна быть не больше 15 символов' }
+                        }}
+                    />
+
+
+                    <CustomButton
+                        text="Войти"
+                        onPress={handleSubmit(onSignInPressed)}
+                    />
+
+                    <CustomButton
+                        text="Забыли пароль?"
+                        onPress={onForgotPassword}
+                        type="Tertiary"
+                    />
+
+                    <SocialSignInButtons />
+
+                    <CustomButton
+                        text="Нет аккаунта? Создать сейчас"
+                        onPress={onSignUpPress}
+                        type="Tertiary"
+                    />
+
+                </View>
+            </ImageBackground>
+        </ScrollView>
+    );
 }
 
 
