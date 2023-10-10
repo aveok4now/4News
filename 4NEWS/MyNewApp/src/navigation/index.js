@@ -67,7 +67,27 @@ const Navigation = () => {
 
                         },
                     }} />
-                <Stack.Screen name="Регистрация" component={SignUpScreen} />
+                <Stack.Screen name="Регистрация"
+                    component={SignUpScreen}
+                    options={{
+                        headerShown: true, // Показать заголовок на этой странице
+                        headerTransparent: true,
+                        headerTintColor: 'white',
+                        headerStyle: {
+                            backgroundColor: 'transparent',
+                        },
+
+                        headerTitleAlign: 'center',
+                        headerTitleStyle: {
+                            fontSize: 24,
+                            color: 'white',
+                            fontWeight: 'bold',
+
+                        },
+
+                    }}
+
+                />
                 <Stack.Screen name="Подтверждение почты" component={ConfirmEmailScreen} />
                 <Stack.Screen name="Забыли пароль" component={ForgotPasswordScreen} />
                 <Stack.Screen name="Восстановление пароля" component={NewPasswordScreen} />
