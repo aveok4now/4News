@@ -54,7 +54,7 @@ const OnBoardingScreen = () => {
                 containerStyles={{ paddingHorizontal: 15 }}
                 pages={[
                     {
-                        backgroundColor: '#b6ddfa',
+                        backgroundColor: '#40BBC4',
                         image: (
                             <View>
 
@@ -81,7 +81,7 @@ const OnBoardingScreen = () => {
                         subtitle: 'Читайте, сколько угодно',
                     },
                     {
-                        backgroundColor: '#c6a9d9',
+                        backgroundColor: '#5a88e4',
                         image: (
                             <View>
                                 <LottieView style={styles.lottie} source={require("../assets/animations/interests.json")} autoPlay loop />
@@ -115,9 +115,10 @@ const styles = StyleSheet.create({
     done: {
         padding: 20,
         // color: 'white',
-        backgroundColor: '#b9cbf2',
+        backgroundColor: '#DF02D4',
         borderTopLeftRadius: 100,
-        borderBottomLeftRadius: 100
+        borderBottomLeftRadius: 100,
+
     },
 
     text: {

@@ -62,11 +62,10 @@ const styles = {
     },
     modalContainer: {
         width: '80%',
-        backgroundColor: 'white',
+        backgroundColor: '#48ade0',
         paddingHorizontal: 20,
         paddingVertical: 30,
         borderRadius: 20,
-        elevation: 50,
         overflow: 'hidden',
     },
     closeButton: {
@@ -85,7 +84,8 @@ const styles = {
         //width: '50%',
         alignItems: 'center',
         textAlign: 'center',
-        fontSize: 14
+        fontSize: 14,
+        color: 'white'
     },
 
 };

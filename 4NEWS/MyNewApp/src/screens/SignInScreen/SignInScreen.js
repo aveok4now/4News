@@ -12,6 +12,8 @@ import { useForm, Controller } from 'react-hook-form';
 import ModalPopup from '../../components/CustomModal/CustomModal';
 import LottieView from 'lottie-react-native';
 const { width, height } = Dimensions.get('window');
+import * as Animatable from 'react-native-animatable';
+
 
 
 const SignInScreen = () => {
@@ -68,81 +70,93 @@ const SignInScreen = () => {
 
     return (
         <ScrollView showsVerticalScrollIndicator={false}>
-            <ImageBackground source={image} resizeMode="cover" style={styles.image}>
-                <View style={styles.root}>
+            {/* <ImageBackground source={image} resizeMode="cover" style={styles.image}> */}
+            <View style={styles.root}>
 
-                    <TouchableOpacity onPress={handleReset} style={styles.questionIcon}>
+                <TouchableOpacity onPress={handleReset} style={styles.questionIcon}>
+                    <Animatable.View animation="bounceIn" duration={1500}>
                         <Icon name="question-circle" size={30} color="white" />
-                    </TouchableOpacity>
-                    <Image source={Logo} style={[styles.logo, { height: height * 0.17 }]} resizeMode="contain" />
+                    </Animatable.View>
+                </TouchableOpacity>
+                <Animatable.Image
+                    animation="bounceIn"
+                    duration={1500}
+                    source={Logo}
+                    style={[styles.logo, { height: height * 0.17 }]}
+                    resizeMode="contain"
+                />
 
-                    <TouchableOpacity onPress={openModal} style={styles.exitIcon}>
+
+                <TouchableOpacity onPress={openModal} style={styles.exitIcon}>
+                    <Animatable.View animation="bounceIn" duration={1500}>
                         <Icon name="sign-out" size={30} color="white" />
-                    </TouchableOpacity>
+                    </Animatable.View>
+                </TouchableOpacity>
 
-                    <ModalPopup visible={modalVisible} onClose={closeModal}>
-                        <View style={{ alignItems: 'center' }}>
-                            <View style={styles.header}>
-                                <TouchableOpacity onPress={closeModal}>
-                                    <LottieView style={styles.lottieClose}
-                                        source={require("D:/react/4NEWS/MyNewApp/src/screens/assets/animations/close.json")}
-                                        autoPlay={true}
-                                        loop={false} />
-                                </TouchableOpacity>
-                            </View>
+                <ModalPopup visible={modalVisible} onClose={closeModal}>
+                    <View style={{ alignItems: 'center' }}>
+                        <View style={styles.header}>
+                            <TouchableOpacity onPress={closeModal}>
+                                <LottieView style={styles.lottieClose}
+                                    source={require("D:/react/4NEWS/MyNewApp/src/screens/assets/animations/close.json")}
+                                    autoPlay={true}
+                                    loop={false} />
+                            </TouchableOpacity>
                         </View>
-                        <LottieView style={styles.lottie}
-                            source={require("D:/react/4NEWS/MyNewApp/src/screens/assets/animations/exit.json")}
-                            autoPlay={true}
-                            loop={false} />
-                        <Text style={{ marginVertical: 30, fontSize: 20, textAlign: 'center' }}>Вы уверены, что хотите выйти?</Text>
-                    </ModalPopup>
+                    </View>
+                    <LottieView style={styles.lottie}
+                        source={require("D:/react/4NEWS/MyNewApp/src/screens/assets/animations/exit.json")}
+                        autoPlay={true}
+                        loop={false} />
+                    <Text style={{ marginVertical: 30, fontSize: 20, textAlign: 'center' }}>Вы уверены, что хотите выйти?</Text>
+                </ModalPopup>
 
-                    <CustomInput
-                        name="username"
-                        placeholder="Имя пользователя или эл. почта"
-                        control={control}
-                        rules={{
-                            required: 'Ввведите имя или эл. почту 🤖',
-                            minLength: { value: 5, message: 'Имя пользователя должно быть не менее 5 символов' },
-                            maxLength: { value: 20, message: 'Имя пользователя или эл.почта должны быть не больше 20 символов' }
-                        }}
-                    />
+                <CustomInput
+                    name="username"
+                    placeholder="Имя пользователя или эл. почта"
+                    control={control}
+                    rules={{
+                        required: 'Ввведите имя или эл. почту 🤖',
+                        minLength: { value: 5, message: 'Имя пользователя должно быть не менее 5 символов' },
+                        maxLength: { value: 20, message: 'Имя пользователя или эл.почта должны быть не больше 20 символов' }
+                    }}
+                />
 
-                    <CustomInput
-                        name="password"
-                        placeholder="Пароль"
-                        secureTextEntry
-                        control={control}
-                        rules={{
-                            required: 'Введите пароль 👺',
-                            minLength: { value: 5, message: 'Длина пароля должна быть не менее 5 символов' },
-                            maxLength: { value: 15, message: 'Длина пароля должна быть не больше 15 символов' }
-                        }}
-                    />
+                <CustomInput
+                    name="password"
+                    placeholder="Пароль"
+                    secureTextEntry
+                    control={control}
+                    rules={{
+                        required: 'Введите пароль 👺',
+                        minLength: { value: 5, message: 'Длина пароля должна быть не менее 5 символов' },
+                        maxLength: { value: 15, message: 'Длина пароля должна быть не больше 15 символов' }
+                    }}
+                />
 
 
-                    <CustomButton
-                        text="Войти"
-                        onPress={handleSubmit(onSignInPressed)}
-                    />
+                <CustomButton
+                    text="Войти"
+                    onPress={handleSubmit(onSignInPressed)}
+                />
 
-                    <CustomButton
-                        text="Забыли пароль?"
-                        onPress={onForgotPassword}
-                        type="Tertiary"
-                    />
+                <CustomButton
+                    text="Забыли пароль?"
+                    onPress={onForgotPassword}
+                    type="Tertiary"
+                />
 
-                    <SocialSignInButtons />
+                <SocialSignInButtons />
 
-                    <CustomButton
-                        text="Нет аккаунта? Создать сейчас"
-                        onPress={onSignUpPress}
-                        type="Tertiary"
-                    />
+                <CustomButton
+                    text="Нет аккаунта? Создать сейчас"
+                    onPress={onSignUpPress}
+                    type="Tertiary"
+                />
 
-                </View>
-            </ImageBackground>
+            </View>
+            {/* </ImageBackground> */}
+
         </ScrollView>
     );
 }
@@ -168,13 +182,13 @@ const styles = StyleSheet.create({
     },
     questionIcon: {
         position: 'absolute',
-        // top: height * 0.001,
+        top: 15,
         left: 15,
         textAlign: 'center'
     },
     exitIcon: {
         position: 'absolute',
-        // top: height * 0.001,
+        top: 15,
         right: 15,
     },
     lottie: {
@@ -194,6 +208,9 @@ const styles = StyleSheet.create({
         alignItems: 'flex-end',
         justifyContent: 'center'
     },
+
+
+
 })
 
 export default SignInScreen;
