@@ -7,7 +7,7 @@
  */
 
 import React, { useEffect, useState, useRef } from 'react';
-import { SafeAreaView, StyleSheet, Text, StatusBar, BackHandler, Modal, View, Dimensions, TouchableOpacity, Animated } from 'react-native';
+import { SafeAreaView, StyleSheet, Text, StatusBar, BackHandler, Modal, ListItem, View, Dimensions, TouchableOpacity, Animated } from 'react-native';
 import Navigation from './src/navigation';
 import SplashScreen from 'react-native-splash-screen';
 import LottieView from 'lottie-react-native';
@@ -16,14 +16,27 @@ import ModalPopup from './src/components/CustomModal/CustomModal';
 import LinearGradient from 'react-native-linear-gradient';
 import RadialGradient from 'react-native-radial-gradient';
 const { width, height } = Dimensions.get('window');
+import SQLite from 'react-native-sqlite-storage'
 
 
+SQLite.enablePromise(true);
 const App = () => {
   const [visible, setVisible] = useState(false);
 
   SplashScreen.hide();
 
   useEffect(() => {
+
+    db = SQLite.openDatabase(
+      {
+        name: 'news.db',
+        createFromLocation: 1,
+      },
+      successToOpenDB,
+      failToOpenDB
+    );
+
+
     const backAction = () => {
       setVisible(true);
       return true;
@@ -37,12 +50,21 @@ const App = () => {
     return () => backHandler.remove();
   }, []);
 
+  const successToOpenDB = () => {
+    alert("База данных подключена!");
+  }
+
+  const failToOpenDB = (err) => {
+    alert(err)
+  }
   return (
     <>
       <StatusBar backgroundColor="#36d1dc" />
       {/* <LinearGradient colors={['#42275a', '#734b6d']} style={styles.gradient}> */}
       <LinearGradient colors={['#36d1dc', '#5b86e5']} style={styles.gradient}>
         <SafeAreaView style={styles.root}>
+          <Text>Name</Text>
+          <Text note>id</Text>
           <ModalPopup visible={visible}>
             <View style={{ alignItems: 'center' }}>
               <View style={styles.header}>

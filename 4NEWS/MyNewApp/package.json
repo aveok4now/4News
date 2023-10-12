@@ -29,6 +29,7 @@
     "react-native-screens": "^3.25.0",
     "react-native-simple-bottom-sheet": "^1.0.4",
     "react-native-splash-screen": "^3.3.0",
+    "react-native-sqlite-storage": "^6.0.1",
     "react-native-vector-icons": "^10.0.0"
   },
   "devDependencies": {
