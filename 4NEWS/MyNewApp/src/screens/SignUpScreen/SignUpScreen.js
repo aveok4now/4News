@@ -8,7 +8,10 @@ import { useForm } from 'react-hook-form';
 import BottomSheet from 'react-native-simple-bottom-sheet';
 import { Dimensions } from 'react-native';
 import * as Animatable from 'react-native-animatable';
+import SQLite from 'react-native-sqlite-storage'
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
+SQLite.enablePromise(true);
 const email_regex = /^[a-zA-Z0-9.!#$%&'+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)+$/;
 const name_regex = /^[a-zA-Z]+$/;
 const { width, height } = Dimensions.get('window');
@@ -24,13 +27,30 @@ const SignUpScreen = () => {
 
 
 
-    const onRegisterPressed = (data) => {
-        navigation.navigate("Подтверждение почты");
+
+    const onRegisterPressed = async (data) => {
+        try {
+            console.log(data);
+            const db = await SQLite.openDatabase({ name: 'news.db', location: 1 });
+            const [result] = await db.executeSql('INSERT INTO Users (userID, userLogin, userPassword) VALUES (?, ?, ?)', [5, data.username, data.password]);
+
+            if (result.rowsAffected > 0) {
+                await AsyncStorage.setItem('username', data.username);
+                await AsyncStorage.setItem('password', data.password);
+                navigation.navigate('Домашняя страница');
+            } else {
+                console.warn('Ошибка при добавлении пользователя в базу данных');
+            }
+        } catch (error) {
+            console.error(error);
+        }
     }
+
 
     const onSignInPress = () => {
         navigation.navigate("Добро пожаловать !")
     }
+
 
     const onTermsOfUsePressed = () => {
         //console.warn("Условия пользования");
