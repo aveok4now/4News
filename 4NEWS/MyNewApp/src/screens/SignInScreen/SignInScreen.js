@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, Image, StyleSheet, useWindowDimensions, ScrollView, TouchableOpacity, ImageBackground, Dimensions, TextInput } from 'react-native';
 import Logo from '../../../assets/images/seved.png';
 import CustomInput from '../../components/CustomInput';
@@ -13,7 +13,10 @@ import ModalPopup from '../../components/CustomModal/CustomModal';
 import LottieView from 'lottie-react-native';
 const { width, height } = Dimensions.get('window');
 import * as Animatable from 'react-native-animatable';
+import SQLite from 'react-native-sqlite-storage'
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
+SQLite.enablePromise(true);
 
 
 const SignInScreen = () => {
@@ -29,18 +32,54 @@ const SignInScreen = () => {
     const navigation = useNavigation();
 
 
+    useEffect(() => {
+        const checkUserCredentials = async () => {
+            const savedUsername = await AsyncStorage.getItem('username');
+            const savedPassword = await AsyncStorage.getItem('password');
+
+            if (savedUsername && savedPassword) {
+                onSignInPressed({ username: savedUsername, password: savedPassword });
+            }
+        }
+
+        checkUserCredentials();
+    }, []);
+
+
     const { control,
         handleSubmit,
         formState: { errors }
     } = useForm();
 
-    const onSignInPressed = (data) => {
-        //console.warn("Вход");
-        //валидация
-        console.warn(data);
-        navigation.navigate('Домашняя страница');
+    // const onSignInPressed = (data) => {
+    //     //console.warn("Вход");
+    //     //валидация
+    //     console.warn(data);
+    //     navigation.navigate('Домашняя страница');
 
+    // }
+
+    const onSignInPressed = async (data) => {
+        try {
+            console.log(data);
+            const db = await SQLite.openDatabase({ name: 'news.db', location: 1 });
+            const [result] = await db.executeSql('SELECT * FROM users WHERE userLogin = ? AND userPassword = ?', [data.username, data.password]);
+            if (result.rows.length > 0) {
+                // User exists in the database
+                // Сохраните данные авторизации
+                await AsyncStorage.setItem('username', data.username);
+                await AsyncStorage.setItem('password', data.password);
+                navigation.navigate('Домашняя страница');
+            } else {
+                // User does not exist in the database
+                console.warn('User does not exist');
+            }
+        } catch (error) {
+            console.error(error);
+        }
     }
+
+
 
     const onForgotPassword = () => {
         // console.warn("Забыли пароль");
@@ -117,7 +156,7 @@ const SignInScreen = () => {
                     control={control}
                     rules={{
                         required: 'Ввведите имя или эл. почту 🤖',
-                        minLength: { value: 5, message: 'Имя пользователя должно быть не менее 5 символов' },
+                        minLength: { value: 4, message: 'Имя пользователя должно быть не менее 4 символов' },
                         maxLength: { value: 20, message: 'Имя пользователя или эл.почта должны быть не больше 20 символов' }
                     }}
                 />
@@ -129,7 +168,7 @@ const SignInScreen = () => {
                     control={control}
                     rules={{
                         required: 'Введите пароль 👺',
-                        minLength: { value: 5, message: 'Длина пароля должна быть не менее 5 символов' },
+                        minLength: { value: 4, message: 'Длина пароля должна быть не менее 5 символов' },
                         maxLength: { value: 15, message: 'Длина пароля должна быть не больше 15 символов' }
                     }}
                 />

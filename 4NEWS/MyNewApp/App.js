@@ -19,7 +19,7 @@ const { width, height } = Dimensions.get('window');
 import SQLite from 'react-native-sqlite-storage'
 
 
-SQLite.enablePromise(true);
+// SQLite.enablePromise(true);
 const App = () => {
   const [visible, setVisible] = useState(false);
 
@@ -63,8 +63,6 @@ const App = () => {
       {/* <LinearGradient colors={['#42275a', '#734b6d']} style={styles.gradient}> */}
       <LinearGradient colors={['#36d1dc', '#5b86e5']} style={styles.gradient}>
         <SafeAreaView style={styles.root}>
-          <Text>Name</Text>
-          <Text note>id</Text>
           <ModalPopup visible={visible}>
             <View style={{ alignItems: 'center' }}>
               <View style={styles.header}>
