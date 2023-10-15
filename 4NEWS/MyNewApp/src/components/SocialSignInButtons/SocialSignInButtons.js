@@ -6,17 +6,18 @@ import CustomButton from '../CustomButton/CustomButton';
 
 const SocialSignInButtons = () => {
 
-    const onSignInGoogle = () => {
-        console.warn("Вход через Google");
-    }
+    // const onSignInGoogle = () => {
+    //     console.warn("Вход через Google");
+    // }
 
-    const onSignInVK = () => {
-        console.warn("Вход через ВКонтакте");
-    }
+    // const onSignInVK = () => {
+    //     console.warn("Вход через ВКонтакте");
+    // }
+
 
     return (
         <>
-            <CustomButton
+            {/* <CustomButton
                 text="Google"
                 onPress={onSignInGoogle}
                 bgColor="#FAE9EA"
@@ -27,7 +28,8 @@ const SocialSignInButtons = () => {
                 onPress={onSignInVK}
                 bgColor="#CFD8F7"
                 fgColor="#154ED3"
-            />
+            /> */}
+
         </>
     );
 }

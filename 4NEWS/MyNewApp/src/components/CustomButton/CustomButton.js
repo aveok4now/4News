@@ -1,11 +1,11 @@
 import React from 'react';
-import { View, Text, StyleSheet, Pressable } from 'react-native';
+import { View, Text, StyleSheet, Pressable, TouchableOpacity } from 'react-native';
 
 // import { Container } from './styles';
 
 const CustomButton = ({ onPress, text, type = "Primary", bgColor, fgColor }) => {
     return (
-        <Pressable onPress={onPress}
+        <TouchableOpacity onPress={onPress}
             style={[
                 styles.container,
                 styles[`container_${type}`],
@@ -17,7 +17,7 @@ const CustomButton = ({ onPress, text, type = "Primary", bgColor, fgColor }) => 
                 fgColor ? { color: fgColor } : {},
                 ]}>
                 {text}</Text>
-        </Pressable>
+        </TouchableOpacity>
     );
 }
 

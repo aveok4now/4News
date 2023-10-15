@@ -39,6 +39,8 @@ const SignInScreen = () => {
 
             if (savedUsername && savedPassword) {
                 onSignInPressed({ username: savedUsername, password: savedPassword });
+            } else if (savedUsername === 'guest') {
+                onSignInAsGuestPressed({ username: savedUsername })
             }
         }
 
@@ -59,6 +61,26 @@ const SignInScreen = () => {
 
     // }
 
+    const createGuestsTable = async () => {
+        const db = await SQLite.openDatabase({ name: 'news.db', location: 1 });
+        db.executeSql('CREATE TABLE IF NOT EXISTS guests (guestID INTEGER PRIMARY KEY AUTOINCREMENT)');
+    };
+
+    const addGuestToDatabase = async (guestID) => {
+        try {
+            const db = await SQLite.openDatabase({ name: 'news.db', location: 1 });
+            const [result] = await db.executeSql('INSERT INTO guests (guestID) VALUES (?)', [guestID]);
+            if (result.rowsAffected > 0) {
+                console.log('Гость успешно добавлен в базу данных');
+            } else {
+                console.warn('Не удалось добавить гостя в базу данных');
+            }
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
+
     const onSignInPressed = async (data) => {
         try {
             console.log(data);
@@ -74,6 +96,26 @@ const SignInScreen = () => {
                 // User does not exist in the database
                 console.warn('User does not exist');
             }
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+    const onSignInAsGuestPressed = async (data) => {
+
+        try {
+            await AsyncStorage.setItem('username', 'guest');
+            await AsyncStorage.removeItem('password');
+            //const db = await SQLite.openDatabase({ name: 'news.db', location: 1 });
+            //const [result] = await db.executeSql('SELECT * FROM guests WHERE guestID = ?', [data.id]);
+            console.log(data)
+            navigation.navigate('Домашняя страница');
+            // if (result.rows.length > 0) {
+            //     navigation.navigate('Домашняя страница');
+            // } else {
+            //     addGuestToDatabase(data.id);
+            //     navigation.navigate('Домашняя страница');
+            // }
         } catch (error) {
             console.error(error);
         }
@@ -185,7 +227,12 @@ const SignInScreen = () => {
                     type="Tertiary"
                 />
 
-                <SocialSignInButtons />
+                <CustomButton
+                    text="Войти как Гость"
+                    onPress={onSignInAsGuestPressed}
+                    bgColor="#CFD8F7"
+                    fgColor="#154ED3"
+                />
 
                 <CustomButton
                     text="Нет аккаунта? Создать сейчас"
