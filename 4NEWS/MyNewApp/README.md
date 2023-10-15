@@ -9,8 +9,7 @@ React Native News App project, bootstrapped using [`@react-native-community/cli`
   - [x] Page 3  
 - [ ] Screens
   - [x] SignIn
-    - [ ] SignIn via Google
-    - [ ] SignIn via VK
+    - [ ] SignIn as a Guest
   - [x] SignUp
     - [x] Terms of Use, Privacy Policy 
   - [x] New Password
@@ -24,7 +23,7 @@ React Native News App project, bootstrapped using [`@react-native-community/cli`
 - [x] OnExit ModalPopUp
 - [x] Forms validation
 - [ ] News API
-- [ ] MySQL Integration
+- [x] SQLite Integration
 
 
 
