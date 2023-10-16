@@ -34,16 +34,23 @@ const SignInScreen = () => {
         const checkUserCredentials = async () => {
             const savedUsername = await AsyncStorage.getItem('username');
             const savedPassword = await AsyncStorage.getItem('password');
+            const guestID = await AsyncStorage.getItem('guestID');
 
             if (savedUsername && savedPassword) {
                 onSignInPressed({ username: savedUsername, password: savedPassword });
             } else if (savedUsername === 'guest') {
-                onSignInAsGuestPressed({ username: savedUsername })
+                if (guestID) {
+                    onSignInAsGuestPressed({ guestID: guestID });
+                } else {
+                    onSignInAsGuestPressed();
+                }
             }
         }
 
         checkUserCredentials();
     }, []);
+
+
 
 
     const { control,
@@ -75,7 +82,6 @@ const SignInScreen = () => {
     // };
 
 
-
     const onSignInPressed = async (data) => {
         //StartVibration();
         try {
@@ -98,27 +104,42 @@ const SignInScreen = () => {
     }
 
 
-    const onSignInAsGuestPressed = async () => {
-        //StartVibration();
+    const onSignInAsGuestPressed = async (data) => {
         try {
+            const db = await SQLite.openDatabase({ name: 'news.db', location: 1 });
+            const getLastGuestID = async () => {
+                return new Promise((resolve, reject) => {
+                    db.transaction((tx) => {
+                        tx.executeSql('SELECT MAX(guestId) AS maxID FROM Guests', [], (_, { rows }) => {
+                            const { maxID } = rows.item(0);
+                            resolve(maxID || 0);
+                        },
+                            (error) => {
+                                reject(error);
+                            });
+                    });
+                });
+            };
 
-            await AsyncStorage.setItem('username', 'guest');
-            await AsyncStorage.removeItem('password');
-            // createGuestsTable();
-            // addGuestToDatabase();
-            //console.log(data)
-            console.log("Вошёл как гость")
-            navigation.navigate('Домашняя страница');
-            // if (result.rows.length > 0) {
-            //     navigation.navigate('Домашняя страница');
-            // } else {
-            //     addGuestToDatabase(data.id);
-            //     navigation.navigate('Домашняя страница');
-            // }
+            const lastGuestID = await getLastGuestID();
+            const newGuestID = lastGuestID + 1;
+
+            const [result] = await db.executeSql('INSERT INTO Guests (guestId) VALUES (?)', [newGuestID]);
+
+            if (result.rowsAffected > 0) {
+                await AsyncStorage.setItem('username', 'guest');
+                await AsyncStorage.setItem('guestID', newGuestID.toString());
+                await AsyncStorage.removeItem('password');
+                console.log("Вошёл как гость" + newGuestID);
+                navigation.navigate('Домашняя страница');
+            } else {
+                console.log('Ошибка при добавлении гостя в базу данных');
+            }
         } catch (error) {
             console.error(error);
         }
-    }
+    };
+
 
 
     const onForgotPassword = () => {
