@@ -8,7 +8,8 @@ const CustomInput = ({
     name,
     rules = {},
     placeholder,
-    secureTextEntry
+    secureTextEntry,
+    setIsTyping,
 }) => {
     return (
 
@@ -21,8 +22,14 @@ const CustomInput = ({
                     <View style={[styles.container, { borderColor: error ? 'red' : '#E8E8E8' }]}>
                         <TextInput
                             value={value}
-                            onChangeText={onChange}
-                            onBlur={onBlur}
+                            onChangeText={(text) => {
+                                onChange(text);
+                                setIsTyping(true);
+                            }}
+                            onBlur={() => {
+                                onBlur();
+                                setIsTyping(false);
+                            }}
                             placeholder={placeholder}
                             style={styles.input}
                             secureTextEntry={secureTextEntry}
@@ -39,7 +46,8 @@ const CustomInput = ({
 
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: '#CEEAF7',
+        // backgroundColor: '#CEEAF7',
+        backgroundColor: '#CEEAF770',
         width: '100%',
         borderColor: '#E8E8E8',
         borderWidth: 1,

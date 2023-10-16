@@ -29,6 +29,10 @@ const SignInScreen = () => {
     const { width, height } = useWindowDimensions();
     const navigation = useNavigation();
     const invalidCredentialsText = "Неверный логин или пароль";
+    const [isTyping, setIsTyping] = useState(false);
+
+
+
 
     useEffect(() => {
         const checkUserCredentials = async () => {
@@ -224,6 +228,7 @@ const SignInScreen = () => {
                         minLength: { value: 4, message: 'Имя пользователя должно быть не менее 4 символов' },
                         maxLength: { value: 20, message: 'Имя пользователя или эл.почта должны быть не больше 20 символов' }
                     }}
+                    setIsTyping={setIsTyping}
                 />
 
                 <CustomInput
@@ -236,6 +241,7 @@ const SignInScreen = () => {
                         minLength: { value: 4, message: 'Длина пароля должна быть не менее 5 символов' },
                         maxLength: { value: 15, message: 'Длина пароля должна быть не больше 15 символов' }
                     }}
+                    setIsTyping={setIsTyping}
                 />
 
                 <CustomButton
@@ -243,11 +249,9 @@ const SignInScreen = () => {
                     onPress={handleSubmit(onSignInPressed)}
                 />
 
-                {!userExist && (
+                {!userExist && !isTyping && (
                     <Text style={styles.noUser}>{invalidCredentialsText}</Text>
-                )
-                }
-
+                )}
 
                 <CustomButton
                     text="Забыли пароль?"
