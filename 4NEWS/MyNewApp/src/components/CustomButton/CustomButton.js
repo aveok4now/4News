@@ -1,11 +1,17 @@
 import React from 'react';
-import { View, Text, StyleSheet, Pressable, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, Pressable, TouchableOpacity, Vibration } from 'react-native';
 
 // import { Container } from './styles';
 
+const DURATION = 10
+const StartVibration = () => {
+    Vibration.vibrate(DURATION)
+}
+
+
 const CustomButton = ({ onPress, text, type = "Primary", bgColor, fgColor }) => {
     return (
-        <TouchableOpacity onPress={onPress}
+        <TouchableOpacity onPress={onPress} onPressOut={StartVibration}
             style={[
                 styles.container,
                 styles[`container_${type}`],

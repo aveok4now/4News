@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, Image, StyleSheet, useWindowDimensions, ScrollView, TouchableOpacity, ImageBackground, Dimensions, TextInput } from 'react-native';
+import { View, Text, Image, StyleSheet, useWindowDimensions, ScrollView, TouchableOpacity, ImageBackground, Dimensions, TextInput, Vibration } from 'react-native';
 import Logo from '../../../assets/images/seved.png';
 import CustomInput from '../../components/CustomInput';
 import CustomButton from '../../components/CustomButton/CustomButton';
@@ -82,7 +82,9 @@ const SignInScreen = () => {
 
 
     const onSignInPressed = async (data) => {
+        //StartVibration();
         try {
+
             console.log(data);
             const db = await SQLite.openDatabase({ name: 'news.db', location: 1 });
             const [result] = await db.executeSql('SELECT * FROM users WHERE userLogin = ? AND userPassword = ?', [data.username, data.password]);
@@ -102,7 +104,7 @@ const SignInScreen = () => {
     }
 
     const onSignInAsGuestPressed = async (data) => {
-
+        //StartVibration();
         try {
             await AsyncStorage.setItem('username', 'guest');
             await AsyncStorage.removeItem('password');
@@ -122,7 +124,6 @@ const SignInScreen = () => {
     }
 
 
-
     const onForgotPassword = () => {
         // console.warn("Забыли пароль");
         navigation.navigate("Забыли пароль");
@@ -134,6 +135,7 @@ const SignInScreen = () => {
     }
 
     const handleReset = async () => {
+        Vibration.vibrate(10);
         await removeItem('onboarded');
         navigation.push('Приветствие');
     }
@@ -142,6 +144,7 @@ const SignInScreen = () => {
     const [modalVisible, setModalVisible] = useState(false); // Состояние для видимости модального окна
 
     const openModal = () => {
+        Vibration.vibrate(10);
         setModalVisible(true); // Функция для открытия модального окна
     };
 
