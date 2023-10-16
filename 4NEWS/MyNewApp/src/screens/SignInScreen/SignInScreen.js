@@ -24,11 +24,11 @@ const SignInScreen = () => {
     // const image = { uri: 'https://i.pinimg.com/564x/c7/1f/00/c71f00ea86ee2bb9eac2d0c99b978d5b.jpg' };
     //const image = require('D:/react/4NEWS/MyNewApp/assets/images/backgr.jpg');
     const image = require('../assets/images/backgr.jpg');
-    const [username, setUsername] = useState('');
-    const [password, setPassword] = useState('');
 
+    const [userExist, setUserExist] = useState(true);
     const { width, height } = useWindowDimensions();
     const navigation = useNavigation();
+    const invalidCredentialsText = "Неверный логин или пароль";
 
     useEffect(() => {
         const checkUserCredentials = async () => {
@@ -84,14 +84,13 @@ const SignInScreen = () => {
             const db = await SQLite.openDatabase({ name: 'news.db', location: 1 });
             const [result] = await db.executeSql('SELECT * FROM users WHERE userLogin = ? AND userPassword = ?', [data.username, data.password]);
             if (result.rows.length > 0) {
-                // User exists in the database
-                // Сохраните данные авторизации
+                setUserExist(true);
                 await AsyncStorage.setItem('username', data.username);
                 await AsyncStorage.setItem('password', data.password);
                 navigation.navigate('Домашняя страница');
             } else {
-                // User does not exist in the database
-                console.warn('User does not exist');
+                setUserExist(false);
+                console.log('User does not exist');
             }
         } catch (error) {
             console.error(error);
@@ -223,6 +222,12 @@ const SignInScreen = () => {
                     onPress={handleSubmit(onSignInPressed)}
                 />
 
+                {!userExist && (
+                    <Text style={styles.noUser}>{invalidCredentialsText}</Text>
+                )
+                }
+
+
                 <CustomButton
                     text="Забыли пароль?"
                     onPress={onForgotPassword}
@@ -296,6 +301,11 @@ const styles = StyleSheet.create({
         alignItems: 'flex-end',
         justifyContent: 'center'
     },
+    noUser: {
+        color: 'red',
+        marginTop: 10,
+        marginBottom: 10,
+    }
 
 
 
