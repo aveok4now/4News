@@ -15,7 +15,6 @@ const { width, height } = Dimensions.get('window');
 import * as Animatable from 'react-native-animatable';
 import SQLite from 'react-native-sqlite-storage'
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
 SQLite.enablePromise(true);
 
 
@@ -30,7 +29,6 @@ const SignInScreen = () => {
 
     const { width, height } = useWindowDimensions();
     const navigation = useNavigation();
-
 
     useEffect(() => {
         const checkUserCredentials = async () => {
@@ -61,24 +59,21 @@ const SignInScreen = () => {
 
     // }
 
-    const createGuestsTable = async () => {
-        const db = await SQLite.openDatabase({ name: 'news.db', location: 1 });
-        db.executeSql('CREATE TABLE IF NOT EXISTS guests (guestID INTEGER PRIMARY KEY AUTOINCREMENT)');
-    };
+    // const createGuestsTable = async () => {
+    //     const db = await SQLite.openDatabase({ name: 'news.db', location: 1 });
+    //     db.executeSql('CREATE TABLE IF NOT EXISTS Guests (guestId INTEGER PRIMARY KEY AUTOINCREMENT)');
+    // };
 
-    const addGuestToDatabase = async (guestID) => {
-        try {
-            const db = await SQLite.openDatabase({ name: 'news.db', location: 1 });
-            const [result] = await db.executeSql('INSERT INTO guests (guestID) VALUES (?)', [guestID]);
-            if (result.rowsAffected > 0) {
-                console.log('Гость успешно добавлен в базу данных');
-            } else {
-                console.warn('Не удалось добавить гостя в базу данных');
-            }
-        } catch (error) {
-            console.error(error);
-        }
-    };
+    // const addGuestToDatabase = async () => {
+    //     try {
+    //         const db = await SQLite.openDatabase({ name: 'news.db', location: 1 });
+    //         await db.executeSql('INSERT INTO Guests VALUES (guestId = 10)');
+    //         console.log('Гость успешно добавлен в базу данных');
+    //     } catch (error) {
+    //         console.error(error);
+    //     }
+    // };
+
 
 
     const onSignInPressed = async (data) => {
@@ -103,14 +98,17 @@ const SignInScreen = () => {
         }
     }
 
-    const onSignInAsGuestPressed = async (data) => {
+
+    const onSignInAsGuestPressed = async () => {
         //StartVibration();
         try {
+
             await AsyncStorage.setItem('username', 'guest');
             await AsyncStorage.removeItem('password');
-            //const db = await SQLite.openDatabase({ name: 'news.db', location: 1 });
-            //const [result] = await db.executeSql('SELECT * FROM guests WHERE guestID = ?', [data.id]);
-            console.log(data)
+            // createGuestsTable();
+            // addGuestToDatabase();
+            //console.log(data)
+            console.log("Вошёл как гость")
             navigation.navigate('Домашняя страница');
             // if (result.rows.length > 0) {
             //     navigation.navigate('Домашняя страница');
@@ -152,6 +150,7 @@ const SignInScreen = () => {
         setModalVisible(false); // Функция для закрытия модального окна
     };
 
+
     return (
         <ScrollView showsVerticalScrollIndicator={false}>
             {/* <ImageBackground source={image} resizeMode="cover" style={styles.image}> */}
@@ -162,6 +161,8 @@ const SignInScreen = () => {
                         <Icon name="question-circle" size={30} color="white" />
                     </Animatable.View>
                 </TouchableOpacity>
+
+
                 <Animatable.Image
                     animation="bounceIn"
                     duration={1500}
@@ -169,7 +170,6 @@ const SignInScreen = () => {
                     style={[styles.logo, { height: height * 0.17 }]}
                     resizeMode="contain"
                 />
-
 
                 <TouchableOpacity onPress={openModal} style={styles.exitIcon}>
                     <Animatable.View animation="bounceIn" duration={1500}>
@@ -217,7 +217,6 @@ const SignInScreen = () => {
                         maxLength: { value: 15, message: 'Длина пароля должна быть не больше 15 символов' }
                     }}
                 />
-
 
                 <CustomButton
                     text="Войти"

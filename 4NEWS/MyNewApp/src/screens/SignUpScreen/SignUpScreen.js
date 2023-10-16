@@ -30,13 +30,30 @@ const SignUpScreen = () => {
 
     const onRegisterPressed = async (data) => {
         try {
-            console.log(data);
             const db = await SQLite.openDatabase({ name: 'news.db', location: 1 });
-            const [result] = await db.executeSql('INSERT INTO Users (userID, userLogin, userPassword) VALUES (?, ?, ?)', [5, data.username, data.password]);
+            const getLastUserID = async () => {
+                return new Promise((resolve, reject) => {
+                    db.transaction((tx) => {
+                        tx.executeSql('SELECT MAX(userID) AS maxID FROM Users', [], (_, { rows }) => {
+                            const { maxID } = rows.item(0);
+                            resolve(maxID || 0);
+                        },
+                            (error) => {
+                                reject(error);
+                            });
+                    });
+                });
+            };
+
+            const lastUserID = await getLastUserID();
+            const newUserID = lastUserID + 1;
+
+            const [result] = await db.executeSql('INSERT INTO Users (userID, userLogin, userPassword) VALUES (?, ?, ?)', [newUserID, data.username, data.password]);
 
             if (result.rowsAffected > 0) {
                 await AsyncStorage.setItem('username', data.username);
                 await AsyncStorage.setItem('password', data.password);
+                console.log(data)
                 navigation.navigate('Домашняя страница');
             } else {
                 console.warn('Ошибка при добавлении пользователя в базу данных');
@@ -44,7 +61,8 @@ const SignUpScreen = () => {
         } catch (error) {
             console.error(error);
         }
-    }
+    };
+
 
 
     const onSignInPress = () => {
