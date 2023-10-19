@@ -97,7 +97,8 @@ const SignInScreen = () => {
                 setUserExist(true);
                 await AsyncStorage.setItem('username', data.username);
                 await AsyncStorage.setItem('password', data.password);
-                navigation.navigate('Домашняя страница');
+                //navigation.navigate('Домашняя страница');
+                navigation.navigate('Splash');
             } else {
                 setUserExist(false);
                 console.log('User does not exist');
@@ -135,7 +136,7 @@ const SignInScreen = () => {
                 await AsyncStorage.setItem('guestID', newGuestID.toString());
                 await AsyncStorage.removeItem('password');
                 console.log("Вошёл как гость" + newGuestID);
-                navigation.navigate('Домашняя страница');
+                navigation.navigate('Splash');
             } else {
                 console.log('Ошибка при добавлении гостя в базу данных');
             }

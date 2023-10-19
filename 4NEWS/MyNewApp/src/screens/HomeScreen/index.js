@@ -54,35 +54,35 @@ const HomeScreen = ({ navigation }) => {
         },
     ])
     const getData = async () => {
-        try {
-            const ruResponse = await fetch(
-                `https://newsapi.org/v2/top-headlines?country=ru&apiKey=ef0cca7fb1924225a4c6c42e0f32924b&category=${Category[Select].category}`);
+        // try {
+        //     const ruResponse = await fetch(
+        //         `https://newsapi.org/v2/top-headlines?country=ru&apiKey=ef0cca7fb1924225a4c6c42e0f32924b&category=${Category[Select].category}`);
 
-            if (!ruResponse.ok) {
-                throw new Error(`RuResponse Error: ${ruResponse.status}`);
-            }
+        //     if (!ruResponse.ok) {
+        //         throw new Error(`RuResponse Error: ${ruResponse.status}`);
+        //     }
 
-            const ruData = await ruResponse.json();
+        //     const ruData = await ruResponse.json();
 
-            const usResponse = await fetch(
-                `https://newsapi.org/v2/top-headlines?country=us&apiKey=ef0cca7fb1924225a4c6c42e0f32924b&category=${Category[Select].category}`);
+        //     const usResponse = await fetch(
+        //         `https://newsapi.org/v2/top-headlines?country=us&apiKey=ef0cca7fb1924225a4c6c42e0f32924b&category=${Category[Select].category}`);
 
-            if (!usResponse.ok) {
-                throw new Error(`UsResponse Error: ${usResponse.status}`);
-            }
+        //     if (!usResponse.ok) {
+        //         throw new Error(`UsResponse Error: ${usResponse.status}`);
+        //     }
 
-            const usData = await usResponse.json();
+        //     const usData = await usResponse.json();
 
-            const combinedData = [...ruData.articles, ...usData.articles];
+        //     const combinedData = [...ruData.articles, ...usData.articles];
 
-            combinedData.sort(() => Math.random() - 0.5);
+        //     combinedData.sort(() => Math.random() - 0.5);
 
-            setData(combinedData);
-            setIsRefreshing(false);
-        } catch (error) {
-            console.error("Error in getData:", error);
-            setIsRefreshing(false);
-        }
+        //     setData(combinedData);
+        //     setIsRefreshing(false);
+        // } catch (error) {
+        //     console.error("Error in getData:", error);
+        //     setIsRefreshing(false);
+        // }
     };
 
     useEffect(() => {
