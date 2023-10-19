@@ -54,23 +54,37 @@ const HomeScreen = ({ navigation }) => {
         },
     ])
     const getData = async () => {
-        const ruResponse = await fetch(
-            `https://newsapi.org/v2/top-headlines?country=ru&apiKey=ef0cca7fb1924225a4c6c42e0f32924b&category=${Category[Select].category}`);
+        try {
+            const ruResponse = await fetch(
+                `https://newsapi.org/v2/top-headlines?country=ru&apiKey=ef0cca7fb1924225a4c6c42e0f32924b&category=${Category[Select].category}`);
 
-        const ruData = await ruResponse.json();
+            if (!ruResponse.ok) {
+                throw new Error(`RuResponse Error: ${ruResponse.status}`);
+            }
 
-        const usResponse = await fetch(
-            `https://newsapi.org/v2/top-headlines?country=us&apiKey=ef0cca7fb1924225a4c6c42e0f32924b&category=${Category[Select].category}`);
+            const ruData = await ruResponse.json();
 
-        const usData = await usResponse.json();
+            const usResponse = await fetch(
+                `https://newsapi.org/v2/top-headlines?country=us&apiKey=ef0cca7fb1924225a4c6c42e0f32924b&category=${Category[Select].category}`);
 
-        const combinedData = [...ruData.articles, ...usData.articles];
+            if (!usResponse.ok) {
+                throw new Error(`UsResponse Error: ${usResponse.status}`);
+            }
 
-        combinedData.sort(() => Math.random() - 0.5);
+            const usData = await usResponse.json();
 
-        setData(combinedData);
-        setIsRefreshing(false)
-    }
+            const combinedData = [...ruData.articles, ...usData.articles];
+
+            combinedData.sort(() => Math.random() - 0.5);
+
+            setData(combinedData);
+            setIsRefreshing(false);
+        } catch (error) {
+            console.error("Error in getData:", error);
+            setIsRefreshing(false);
+        }
+    };
+
     useEffect(() => {
         getData();
     }, []);
