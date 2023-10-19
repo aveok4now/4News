@@ -54,6 +54,9 @@ const Card = ({ item }) => {
                     </Text>
 
                 </View>
+                <View style={styles.source}>
+                    <Text style={styles.sourceText}>Источник: {item.source.name}</Text>
+                </View>
 
             </Animatable.View>
         </LinearGradient>
@@ -67,12 +70,13 @@ const styles = StyleSheet.create({
         flex: 2,
     },
     card: {
-        // flex: 1,
+        flex: 1,
+        position: 'relative',
         // height: 200,
         // width: '100%',
         paddingHorizontal: 4,
         paddingVertical: 14,
-        marginVertical: 4,
+        marginBottom: 4,
         // marginBottom: 15,
         // marginTop: 15,
         elevation: 0,
@@ -110,5 +114,20 @@ const styles = StyleSheet.create({
         fontWeight: '700',
 
     },
+
+    source: {
+        position: 'absolute',
+        top: 14,
+        right: 5,
+        backgroundColor: '#55D6BE',
+        borderRadius: 5,
+        padding: 5
+    },
+
+    sourceText: {
+        color: 'black',
+        fontWeight: '500',
+
+    }
 
 });
