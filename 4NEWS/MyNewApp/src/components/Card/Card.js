@@ -1,5 +1,15 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Image, ActivityIndicator, SafeAreaView } from 'react-native';
+import {
+    View,
+    Text,
+    StyleSheet,
+    TouchableOpacity,
+    Image,
+    ActivityIndicator,
+    SafeAreaView,
+    ScrollView,
+    Dimensions
+} from 'react-native';
 import * as Animatable from 'react-native-animatable';
 import LinearGradient from 'react-native-linear-gradient';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -16,6 +26,8 @@ const Card = ({ item }) => {
     const handleImageLoad = () => {
         setImageLoaded(true);
     };
+
+
 
     return (
         <LinearGradient
@@ -76,6 +88,7 @@ const Card = ({ item }) => {
 
             </Animatable.View>
         </LinearGradient>
+
     );
 };
 
@@ -83,10 +96,10 @@ export default Card;
 
 const styles = StyleSheet.create({
     root: {
-        flex: 2,
+        flex: 1,
     },
     card: {
-        flex: 1,
+        // flex: 1,
         position: 'relative',
         // height: 200,
         // width: '100%',
