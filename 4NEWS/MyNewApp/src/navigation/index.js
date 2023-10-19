@@ -15,6 +15,7 @@ import NewPasswordScreen from '../screens/NewPasswordScreen';
 import HomeScreen from '../screens/HomeScreen';
 import OnBoardingScreen from '../screens/OnBoardingScreen';
 import { setItem, getItem, removeItem } from '../utils/asyncStorage';
+import Search from '../utils/Search';
 
 const Stack = createNativeStackNavigator();
 
@@ -67,6 +68,7 @@ const Navigation = () => {
 
                         },
                     }} />
+                <Stack.Screen name="Search" component={Search} />
                 <Stack.Screen name="Регистрация"
                     component={SignUpScreen}
                     options={{

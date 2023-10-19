@@ -51,7 +51,7 @@ const App = () => {
   }, []);
 
   const successToOpenDB = () => {
-    alert("База данных подключена!");
+    //alert("База данных подключена!");
   }
 
   const failToOpenDB = (err) => {

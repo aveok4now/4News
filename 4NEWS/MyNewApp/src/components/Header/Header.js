@@ -3,12 +3,13 @@ import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import * as Animatable from 'react-native-animatable';
 import Icon from 'react-native-vector-icons/FontAwesome';
 // import { Container } from './styles';
+import Search from '../../utils/Search';
 
-const Header = () => {
+const Header = ({ navigation }) => {
     return (
         <Animatable.View style={styles.header} animation="fadeIn" duration={1500}>
             <Text style={styles.text}>Поиск новостей</Text>
-            <TouchableOpacity>
+            <TouchableOpacity onPress={() => navigation.navigate('Search')}>
                 <Icon name="search" size={24} color="#F7F6C5" />
             </TouchableOpacity>
 
