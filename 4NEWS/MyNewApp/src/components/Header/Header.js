@@ -25,11 +25,11 @@ const styles = StyleSheet.create({
         display: 'flex',
         flexDirection: 'row',
         justifyContent: 'space-between',
-        borderWidth: 1,
+        borderWidth: 0.25,
         borderRadius: 5,
         borderColor: '#F3FAE1',
         backgroundColor: '#7371FC',
-        elevation: 15
+        elevation: 5
     },
     text: {
         fontSize: 18,

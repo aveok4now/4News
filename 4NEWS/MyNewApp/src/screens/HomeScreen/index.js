@@ -7,28 +7,34 @@ const HomeScreen = ({ navigation }) => {
 
     const [Data, setData] = useState([]);
     const getData = async () => {
-        const response = await fetch(
+        const ruResponse = await fetch(
+            'https://newsapi.org/v2/top-headlines?country=ru&apiKey=ef0cca7fb1924225a4c6c42e0f32924b');
+
+        const ruData = await ruResponse.json();
+
+        const usResponse = await fetch(
             'https://newsapi.org/v2/top-headlines?country=us&apiKey=ef0cca7fb1924225a4c6c42e0f32924b');
 
-        const data = await response.json()
-        console.log(data)
-        setData(data.articles)
+        const usData = await usResponse.json();
+
+        const combinedData = [...ruData.articles, ...usData.articles];
+
+        combinedData.sort(() => Math.random() - 0.5);
+
+        setData(combinedData);
     }
     useEffect(() => {
         getData();
     }, []);
+
     return (
         <View>
             <Header navigation={navigation} />
-            {/* <Text style={{ fontSize: 24, alignItems: 'center', color: 'white' }}>
-                Новости будут здесь ...
-            </Text> */}
             <View>
                 <FlatList
                     data={Data}
                     renderItem={({ item, index }) => {
                         return <Card item={item} />;
-
                     }}
                 />
             </View>

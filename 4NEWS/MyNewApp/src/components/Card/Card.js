@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Image, ActivityIndicator, SafeAreaView } from 'react-native';
 import * as Animatable from 'react-native-animatable';
-import defaultImage from '../../screens/assets/images/news-default.jpg';
+import LinearGradient from 'react-native-linear-gradient';
 
 
 
 
 const Card = ({ item }) => {
+    const defaultImage = 'https://arbeitgeber.de/wp-content/uploads/2020/11/bda-news-header-1920x1280px-1536x1024.jpg'
+
     console.log(item);
     const [imageLoaded, setImageLoaded] = useState(false);
     const imageUrl = item.urlToImage || defaultImage;
@@ -16,22 +18,45 @@ const Card = ({ item }) => {
     };
 
     return (
+        <LinearGradient // Оберните карточку в LinearGradient
+            colors={['#4568dc', '#b06ab3']}
 
-        <Animatable.View style={styles.card} animation="fadeIn" duration={1500}>
-            {!imageLoaded && <ActivityIndicator style={styles.loader} />}
-            <Text>{item.title}</Text>
-            <Animatable.Image
-                source={{ uri: imageUrl }}
-                style={[
-                    styles.image,
-                    {
-                        opacity: imageLoaded ? 1 : 0
-                    }
-                ]}
-                onLoad={handleImageLoad}
-            />
-        </Animatable.View>
+        >
+            <Animatable.View style={styles.card} animation="fadeIn" duration={1500}>
+                {!imageLoaded && <ActivityIndicator style={styles.loader} />}
 
+                <Animatable.Image
+                    source={{ uri: imageUrl }}
+                    style={[
+                        styles.image,
+                        {
+                            opacity: imageLoaded ? 1 : 0
+                        }
+                    ]}
+                    onLoad={handleImageLoad}
+                    resizeMethod='resize'
+                />
+                <View style={styles.titleView}>
+                    <Text style={styles.title}>{item.title}</Text>
+                    <Text style={styles.description}>{item.description || ''}</Text>
+
+                    <Text style={styles.description}>{item.author || ''} </Text>
+                    <Text style={[styles.description, { marginVertical: 1, color: 'white' }]}>
+                        {new Date(item.publishedAt).toLocaleString('ru-RU', {
+                            year: 'numeric',
+                            month: 'long',
+                            day: 'numeric',
+                            hour: '2-digit',
+                            minute: '2-digit',
+                            second: '2-digit',
+                            timeZone: 'UTC',
+                        })}
+                    </Text>
+
+                </View>
+
+            </Animatable.View>
+        </LinearGradient>
     );
 };
 
@@ -42,28 +67,48 @@ const styles = StyleSheet.create({
         flex: 2,
     },
     card: {
-        flex: 1,
-        height: 200,
-        width: '100%',
+        // flex: 1,
+        // height: 200,
+        // width: '100%',
         paddingHorizontal: 4,
-        paddingVertical: 4,
+        paddingVertical: 14,
         marginVertical: 4,
-        marginBottom: 15,
-        marginTop: 15,
-        elevation: 15,
+        // marginBottom: 15,
+        // marginTop: 15,
+        elevation: 0,
+        borderRadius: 3
     },
     image: {
         flex: 1,
-        width: '100%',
-        height: '100%',
+        height: 200,
         resizeMode: 'contain',
-        borderRadius: 15,
-        maxHeight: '100%',
+        borderRadius: 7,
     },
     loader: {
         position: 'absolute',
         top: '50%',
         left: '50%',
-        transform: [{ translateX: -12.5 }, { translateY: -12.5 }]
-    }
+        transform: [{ translateX: -12.5 }, { translateY: -12.5 }],
+        color: 'red'
+
+    },
+    titleView: {
+        paddingHorizontal: 2,
+        marginVertical: 2,
+    },
+    title: {
+        fontSize: 14,
+        lineHeight: 16,
+        textAlign: 'justify',
+        fontWeight: '600'
+    },
+    description: {
+        fontSize: 12,
+        lineHeight: 16,
+        marginVertical: 4,
+        color: '#E2E2E2',
+        fontWeight: '700',
+
+    },
+
 });
