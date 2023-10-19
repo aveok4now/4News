@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Image, ActivityIndicator, SafeAreaView } from 'react-native';
 import * as Animatable from 'react-native-animatable';
 import LinearGradient from 'react-native-linear-gradient';
-
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 
 
@@ -18,8 +18,19 @@ const Card = ({ item }) => {
     };
 
     return (
-        <LinearGradient // Оберните карточку в LinearGradient
-            colors={['#4568dc', '#b06ab3']}
+        <LinearGradient
+            // colors={['#8BC6EC', '#9599E2']}
+            // start={{ x: 0, y: 0 }}
+            // end={{ x: 1, y: 1 }}
+            // colors={['#D8B5FF', '#1EAE98']}
+            // start={{ x: 0, y: 0 }}
+            // end={{ x: 1, y: 1 }}
+            // colors={['#4E65FF', '#92EFFD']}
+            // start={{ x: 0, y: 0 }}
+            // end={{ x: 1, y: 1 }}
+            colors={['#764BA2', '#667EEA']}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 1 }}
 
         >
             <Animatable.View style={styles.card} animation="fadeIn" duration={1500}>
@@ -39,20 +50,25 @@ const Card = ({ item }) => {
                 <View style={styles.titleView}>
                     <Text style={styles.title}>{item.title}</Text>
                     <Text style={styles.description}>{item.description || ''}</Text>
+                    <View style={styles.podcard}>
+                        <Text style={styles.description}>{item.author || ''} </Text>
+                        <Text style={styles.description}>
+                            {new Date(item.publishedAt).toLocaleString('ru-RU', {
+                                year: 'numeric',
+                                month: 'long',
+                                day: 'numeric',
+                                hour: '2-digit',
+                                minute: '2-digit',
+                                second: '2-digit',
+                                timeZone: 'UTC',
+                            })}
+                        </Text>
+                    </View>
 
-                    <Text style={styles.description}>{item.author || ''} </Text>
-                    <Text style={[styles.description, { marginVertical: 1, color: 'white' }]}>
-                        {new Date(item.publishedAt).toLocaleString('ru-RU', {
-                            year: 'numeric',
-                            month: 'long',
-                            day: 'numeric',
-                            hour: '2-digit',
-                            minute: '2-digit',
-                            second: '2-digit',
-                            timeZone: 'UTC',
-                        })}
-                    </Text>
-
+                    <TouchableOpacity style={styles.more}>
+                        <Text style={styles.moreText}>Подробнее</Text>
+                        <Icon name="arrow-right" size={19} color="#F7F6C5" style={{ marginLeft: 8 }} />
+                    </TouchableOpacity>
                 </View>
                 <View style={styles.source}>
                     <Text style={styles.sourceText}>Источник: {item.source.name}</Text>
@@ -90,7 +106,7 @@ const styles = StyleSheet.create({
     },
     loader: {
         position: 'absolute',
-        top: '50%',
+        top: '35%',
         left: '50%',
         transform: [{ translateX: -12.5 }, { translateY: -12.5 }],
         color: 'red'
@@ -104,7 +120,8 @@ const styles = StyleSheet.create({
         fontSize: 14,
         lineHeight: 16,
         textAlign: 'justify',
-        fontWeight: '600'
+        fontWeight: '600',
+        // letterSpacing: -0.25
     },
     description: {
         fontSize: 12,
@@ -118,16 +135,41 @@ const styles = StyleSheet.create({
     source: {
         position: 'absolute',
         top: 14,
-        right: 5,
-        backgroundColor: '#55D6BE',
+        right: 4,
+        backgroundColor: '#8EBCF3',
         borderRadius: 5,
         padding: 5
     },
 
     sourceText: {
-        color: 'black',
+        color: '#F7F6C5',
         fontWeight: '500',
 
+    },
+    podcard: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        paddingHorizontal: 2,
+
+    },
+    more: {
+        backgroundColor: '#8EBCF3',
+        paddingHorizontal: 10,
+        paddingVertical: 5,
+        width: '30%',
+        textAlign: 'center',
+        marginTop: 5,
+        borderRadius: 5,
+        flexDirection: 'row',
+        elevation: 1,
+        marginTop: 10,
+        paddingTop: 6
+    },
+
+    moreText: {
+        fontWeight: '700',
+        color: '#F7F6C5',
     }
 
 });
