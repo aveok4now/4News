@@ -1,29 +1,38 @@
 React Native News App project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
 
 
-- [x] App Icon
-- [x] Splash Screen
+- [x] App Icon - should be rebuild
+- [x] App Splash Screen - should be rebuild
 - [x] OnBoarding Screen
   - [x] Page 1
   - [x] Page 2
-  - [x] Page 3  
+  - [x] Page 3
 - [ ] Screens
   - [x] SignIn
-    - [ ] SignIn as a Guest
+    - [x] SignIn as a Guest
   - [x] SignUp
-    - [x] Terms of Use, Privacy Policy 
+    - [x] Terms of Use, Privacy Policy Bottom Sheets
   - [x] New Password
   - [x] Forgot Password
     - [ ] Password Reset
   - [x] Confirm Email
   - [x] Home Screen
+    - [x] Splash Screen
+    - [x] Page Refresh
+    - [x] Search Bar
+    - [ ] Search Functionality
   - [ ] News Screen
   - [ ] About Screen
   - [ ] Help Screen
 - [x] OnExit ModalPopUp
 - [x] Forms validation
-- [ ] News API
+- [x] News API
+  - [x] US News
+    - [x] Categories Search  
+  - [X] RU News
+    - [x] Categories Search  
 - [x] SQLite Integration
+- [x] Async Storage
 
 
 
