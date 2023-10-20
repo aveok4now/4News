@@ -65,8 +65,10 @@ const HomeScreen = ({ navigation }) => {
             const ruResponse = await fetch(
                 `https://newsapi.org/v2/top-headlines?country=ru&apiKey=${apiKeyList[apiKeyIndex]}&category=${Category[Select].category}`);
 
-            if (!ruResponse.ok) {
-                throw new Error(`RuResponse Error: ${ruResponse.status}`);
+            if (ruResponse == undefined) {
+                apiKeyIndex = (apiKeyIndex + 1) % apiKeyList.length;
+                getData()
+                //throw new Error(`RuResponse Error: ${ruResponse.status}`);
             }
 
             const ruData = await ruResponse.json();
@@ -74,8 +76,11 @@ const HomeScreen = ({ navigation }) => {
             const usResponse = await fetch(
                 `https://newsapi.org/v2/top-headlines?country=us&apiKey=${apiKeyList[apiKeyIndex]}&category=${Category[Select].category}`);
 
-            if (!usResponse.ok) {
-                throw new Error(`UsResponse Error: ${usResponse.status}`);
+            if (usResponse == undefined) {
+
+                apiKeyIndex = (apiKeyIndex + 1) % apiKeyList.length;
+                getData()
+                //throw new Error(`UsResponse Error: ${usResponse.status}`);
             }
 
             const usData = await usResponse.json();
@@ -87,7 +92,7 @@ const HomeScreen = ({ navigation }) => {
             setData(combinedData);
             setIsRefreshing(false);
 
-            apiKeyIndex = (apiKeyIndex + 1) % apiKeyList.length;
+            //apiKeyIndex = (apiKeyIndex + 1) % apiKeyList.length;
             setIsLoading(false)
         } catch (error) {
             console.error("Error in getData:", error);
@@ -101,19 +106,25 @@ const HomeScreen = ({ navigation }) => {
         try {
             setIsLoading(true)
             const ruResponse = await fetch(
-                `https://newsapi.org/v2/top-headlines?country=ru&apiKey=ef0cca7fb1924225a4c6c42e0f32924b&category=${category}`);
+                `https://newsapi.org/v2/top-headlines?country=ru&apiKey=${apiKeyList[apiKeyIndex]}&category=${category}`);
 
-            if (!ruResponse.ok) {
-                throw new Error(`RuResponse Error: ${ruResponse.status}`);
+
+            if (ruResponse == undefined) {
+                apiKeyIndex = (apiKeyIndex + 1) % apiKeyList.length;
+                getData2()
+                //throw new Error(`RuResponse Error: ${ruResponse.status}`);
             }
 
             const ruData = await ruResponse.json();
 
             const usResponse = await fetch(
-                `https://newsapi.org/v2/top-headlines?country=us&apiKey=ef0cca7fb1924225a4c6c42e0f32924b&category=${category}`);
+                `https://newsapi.org/v2/top-headlines?country=us&apiKey=${apiKeyList[apiKeyIndex]}&category=${category}`);
 
-            if (!usResponse.ok) {
-                throw new Error(`UsResponse Error: ${usResponse.status}`);
+            if (usResponse == undefined) {
+
+                apiKeyIndex = (apiKeyIndex + 1) % apiKeyList.length;
+                getData2()
+                //throw new Error(`UsResponse Error: ${usResponse.status}`);
             }
 
             const usData = await usResponse.json();
@@ -127,7 +138,7 @@ const HomeScreen = ({ navigation }) => {
             apiKeyIndex = (apiKeyIndex + 1) % apiKeyList.length;
             setIsLoading(false)
         } catch (error) {
-            console.error("Error in getData:", error);
+            console.error("Error in getData2:", error);
             setIsFetchingError(true)
             setIsRefreshing(false);
         }
@@ -145,6 +156,7 @@ const HomeScreen = ({ navigation }) => {
 
     return (
         <>
+            {/* TODO: Lottie */}
             {Loading ? (
                 <View style={styles.load}>
                     <ActivityIndicator
@@ -171,8 +183,6 @@ const HomeScreen = ({ navigation }) => {
                                             //onRefresh()
                                         }}
                                     >
-
-
                                         <Text
                                             style={index == Select ?
                                                 styles.selListText : styles.horListText}>{item.nameRU}</Text>
