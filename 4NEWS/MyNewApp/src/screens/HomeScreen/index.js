@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, FlatList, ScrollView, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, FlatList, ScrollView, TouchableOpacity, StyleSheet, ActivityIndicator } from 'react-native';
 import Header from '../../components/Header';
 import Card from '../../components/Card';
 
 
 const HomeScreen = ({ navigation }) => {
 
-    const [isFetchingError, setIsFetchingError] = useState(false)
+    const [isFetchingError, setIsFetchingError] = useState(false);
+    const [Loading, setIsLoading] = useState(false);
     const [Data, setData] = useState([]);
     const [Select, setSelect] = useState(0);
     const [isRefreshing, setIsRefreshing] = useState(false);
@@ -60,6 +61,7 @@ const HomeScreen = ({ navigation }) => {
 
     const getData = async () => {
         try {
+            setIsLoading(true)
             const ruResponse = await fetch(
                 `https://newsapi.org/v2/top-headlines?country=ru&apiKey=${apiKeyList[apiKeyIndex]}&category=${Category[Select].category}`);
 
@@ -86,7 +88,7 @@ const HomeScreen = ({ navigation }) => {
             setIsRefreshing(false);
 
             apiKeyIndex = (apiKeyIndex + 1) % apiKeyList.length;
-            console.log(apiKeyIndex)
+            setIsLoading(false)
         } catch (error) {
             console.error("Error in getData:", error);
             setIsFetchingError(true)
@@ -97,6 +99,7 @@ const HomeScreen = ({ navigation }) => {
 
     const getData2 = async (category) => {
         try {
+            setIsLoading(true)
             const ruResponse = await fetch(
                 `https://newsapi.org/v2/top-headlines?country=ru&apiKey=ef0cca7fb1924225a4c6c42e0f32924b&category=${category}`);
 
@@ -122,6 +125,7 @@ const HomeScreen = ({ navigation }) => {
             setData(combinedData);
             setIsRefreshing(false);
             apiKeyIndex = (apiKeyIndex + 1) % apiKeyList.length;
+            setIsLoading(false)
         } catch (error) {
             console.error("Error in getData:", error);
             setIsFetchingError(true)
@@ -140,52 +144,68 @@ const HomeScreen = ({ navigation }) => {
     }
 
     return (
-        <View style={{ flex: 1 }}>
-            <Header navigation={navigation} />
+        <>
+            {Loading ? (
+                <View style={styles.load}>
+                    <ActivityIndicator
+                        color={'#754da6'}
+                        size={36}>
+                    </ActivityIndicator>
+                </View>) : (
+                <View style={{ flex: 1 }}>
+                    <Header navigation={navigation} />
 
-            <View style={styles.horList}>
-                <FlatList
-                    horizontal
-                    showsHorizontalScrollIndicator={false}
-                    data={Category}
-                    renderItem={({ item, index }) => {
-                        return (
-                            <TouchableOpacity
-                                style={index == Select ?
-                                    styles.selListItem : styles.horListItem}
-                                onPress={() => {
-                                    setSelect(index)
-                                    getData2(Category[index].category)
-                                    //onRefresh()
-                                }}
-                            >
+                    <View style={styles.horList}>
+                        <FlatList
+                            horizontal
+                            showsHorizontalScrollIndicator={false}
+                            data={Category}
+                            renderItem={({ item, index }) => {
+                                return (
+                                    <TouchableOpacity
+                                        style={index == Select ?
+                                            styles.selListItem : styles.horListItem}
+                                        onPress={() => {
+                                            setSelect(index)
+                                            getData2(Category[index].category)
+                                            //onRefresh()
+                                        }}
+                                    >
 
 
-                                <Text
-                                    style={index == Select ?
-                                        styles.selListText : styles.horListText}>{item.nameRU}</Text>
-                            </TouchableOpacity>
-                        )
-                    }}
-                />
-            </View>
-            <View>
-                <FlatList
-                    onRefresh={onRefresh}
-                    refreshing={isRefreshing}
-                    data={Data}
-                    renderItem={({ item, index }) => {
-                        return <Card item={item} />;
-                    }}
-                />
-            </View>
-        </View>
+                                        <Text
+                                            style={index == Select ?
+                                                styles.selListText : styles.horListText}>{item.nameRU}</Text>
+                                    </TouchableOpacity>
+                                )
+                            }}
+                        />
+                    </View>
+                    <View>
+                        <FlatList
+                            onRefresh={onRefresh}
+                            refreshing={isRefreshing}
+                            data={Data}
+                            renderItem={({ item, index }) => {
+                                return <Card item={item} />;
+                            }}
+                        />
+                    </View>
+                </View>
+            )}
+        </>
     );
 }
 
 export default HomeScreen;
 
 const styles = StyleSheet.create({
+    load: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+
     horList: {
         paddingHorizontal: 10,
         paddingVertical: 10,
