@@ -6,6 +6,7 @@ import Card from '../../components/Card';
 
 const HomeScreen = ({ navigation }) => {
 
+    const [isFetchingError, setIsFetchingError] = useState(false)
     const [Data, setData] = useState([]);
     const [Select, setSelect] = useState(0);
     const [isRefreshing, setIsRefreshing] = useState(false);
@@ -53,37 +54,80 @@ const HomeScreen = ({ navigation }) => {
             category: 'technology',
         },
     ])
+
+    const apiKeyList = ["ef0cca7fb1924225a4c6c42e0f32924b", "abc3f76eb9ec4195b35c7c5b3771a40b", "5bb375e99be54883b8b9aee7001fc660", "2c7f28792cc64ca699bfd3bbf2768105"];
+    let apiKeyIndex = 0;
+
     const getData = async () => {
-        // try {
-        //     const ruResponse = await fetch(
-        //         `https://newsapi.org/v2/top-headlines?country=ru&apiKey=ef0cca7fb1924225a4c6c42e0f32924b&category=${Category[Select].category}`);
+        try {
+            const ruResponse = await fetch(
+                `https://newsapi.org/v2/top-headlines?country=ru&apiKey=${apiKeyList[apiKeyIndex]}&category=${Category[Select].category}`);
 
-        //     if (!ruResponse.ok) {
-        //         throw new Error(`RuResponse Error: ${ruResponse.status}`);
-        //     }
+            if (!ruResponse.ok) {
+                throw new Error(`RuResponse Error: ${ruResponse.status}`);
+            }
 
-        //     const ruData = await ruResponse.json();
+            const ruData = await ruResponse.json();
 
-        //     const usResponse = await fetch(
-        //         `https://newsapi.org/v2/top-headlines?country=us&apiKey=ef0cca7fb1924225a4c6c42e0f32924b&category=${Category[Select].category}`);
+            const usResponse = await fetch(
+                `https://newsapi.org/v2/top-headlines?country=us&apiKey=${apiKeyList[apiKeyIndex]}&category=${Category[Select].category}`);
 
-        //     if (!usResponse.ok) {
-        //         throw new Error(`UsResponse Error: ${usResponse.status}`);
-        //     }
+            if (!usResponse.ok) {
+                throw new Error(`UsResponse Error: ${usResponse.status}`);
+            }
 
-        //     const usData = await usResponse.json();
+            const usData = await usResponse.json();
 
-        //     const combinedData = [...ruData.articles, ...usData.articles];
+            const combinedData = [...ruData.articles, ...usData.articles];
 
-        //     combinedData.sort(() => Math.random() - 0.5);
+            combinedData.sort(() => Math.random() - 0.5);
 
-        //     setData(combinedData);
-        //     setIsRefreshing(false);
-        // } catch (error) {
-        //     console.error("Error in getData:", error);
-        //     setIsRefreshing(false);
-        // }
+            setData(combinedData);
+            setIsRefreshing(false);
+
+            apiKeyIndex = (apiKeyIndex + 1) % apiKeyList.length;
+            console.log(apiKeyIndex)
+        } catch (error) {
+            console.error("Error in getData:", error);
+            setIsFetchingError(true)
+            setIsRefreshing(false);
+        }
     };
+
+
+    const getData2 = async (category) => {
+        try {
+            const ruResponse = await fetch(
+                `https://newsapi.org/v2/top-headlines?country=ru&apiKey=ef0cca7fb1924225a4c6c42e0f32924b&category=${category}`);
+
+            if (!ruResponse.ok) {
+                throw new Error(`RuResponse Error: ${ruResponse.status}`);
+            }
+
+            const ruData = await ruResponse.json();
+
+            const usResponse = await fetch(
+                `https://newsapi.org/v2/top-headlines?country=us&apiKey=ef0cca7fb1924225a4c6c42e0f32924b&category=${category}`);
+
+            if (!usResponse.ok) {
+                throw new Error(`UsResponse Error: ${usResponse.status}`);
+            }
+
+            const usData = await usResponse.json();
+
+            const combinedData = [...ruData.articles, ...usData.articles];
+
+            combinedData.sort(() => Math.random() - 0.5);
+
+            setData(combinedData);
+            setIsRefreshing(false);
+            apiKeyIndex = (apiKeyIndex + 1) % apiKeyList.length;
+        } catch (error) {
+            console.error("Error in getData:", error);
+            setIsFetchingError(true)
+            setIsRefreshing(false);
+        }
+    }
 
     useEffect(() => {
         getData();
@@ -98,6 +142,7 @@ const HomeScreen = ({ navigation }) => {
     return (
         <View style={{ flex: 1 }}>
             <Header navigation={navigation} />
+
             <View style={styles.horList}>
                 <FlatList
                     horizontal
@@ -110,8 +155,8 @@ const HomeScreen = ({ navigation }) => {
                                     styles.selListItem : styles.horListItem}
                                 onPress={() => {
                                     setSelect(index)
-                                    getData()
-                                    onRefresh()
+                                    getData2(Category[index].category)
+                                    //onRefresh()
                                 }}
                             >
 
