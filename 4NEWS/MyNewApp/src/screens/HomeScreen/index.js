@@ -187,7 +187,7 @@ const HomeScreen = ({ navigation }) => {
                             refreshing={isRefreshing}
                             data={Data}
                             renderItem={({ item, index }) => {
-                                return <Card item={item} />;
+                                return <Card item={item} navigation={navigation} />;
                             }}
                         />
                     </View>
@@ -203,7 +203,8 @@ const styles = StyleSheet.create({
     load: {
         flex: 1,
         justifyContent: 'center',
-        alignItems: 'center'
+        alignItems: 'center',
+        backgroundColor: 'transparent'
     },
 
     horList: {
