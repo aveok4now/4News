@@ -6,6 +6,7 @@ import Onboarding from 'react-native-onboarding-swiper';
 import LottieView from 'lottie-react-native';
 import * as Animatable from 'react-native-animatable';
 import { setItem } from "../../utils/asyncStorage";
+import { assets } from "../../../react-native.config";
 
 const { width, height } = Dimensions.get('window');
 
@@ -102,6 +103,7 @@ const styles = StyleSheet.create({
 
     container: {
         flex: 1,
+
         //backgroundColor: 'white'
     },
 
@@ -124,6 +126,7 @@ const styles = StyleSheet.create({
     text: {
         color: 'white',
         fontWeight: '500',
+        fontFamily: "Inter-ExtraBold",
     },
 
     skip: {

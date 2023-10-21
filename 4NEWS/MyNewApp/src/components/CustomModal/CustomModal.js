@@ -67,6 +67,7 @@ const styles = {
         paddingVertical: 30,
         borderRadius: 20,
         overflow: 'hidden',
+        fontFamily: "Inter-Bold"
     },
     closeButton: {
         alignSelf: 'flex-end',
@@ -85,7 +86,8 @@ const styles = {
         alignItems: 'center',
         textAlign: 'center',
         fontSize: 14,
-        color: 'white'
+        color: 'white',
+        fontFamily: "Inter-Bold"
     },
 
 };

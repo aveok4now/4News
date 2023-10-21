@@ -14,7 +14,7 @@ import * as Animatable from 'react-native-animatable';
 import LinearGradient from 'react-native-linear-gradient';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Navigation from '../../navigation';
-
+import { assets } from '../../../react-native.config';
 
 
 const Card = ({ item, navigation }) => {
@@ -143,6 +143,7 @@ const styles = StyleSheet.create({
         lineHeight: 16,
         textAlign: 'justify',
         fontWeight: '600',
+        fontFamily: "Inter-Bold",
         // letterSpacing: -0.25
     },
     description: {
@@ -150,8 +151,8 @@ const styles = StyleSheet.create({
         lineHeight: 16,
         marginVertical: 4,
         color: '#E2E2E2',
-        fontWeight: '700',
-
+        //fontWeight: '700',
+        fontFamily: "Inter-SemiBold",
     },
 
     source: {
@@ -165,8 +166,8 @@ const styles = StyleSheet.create({
 
     sourceText: {
         color: '#F7F6C5',
-        fontWeight: '500',
-
+        //fontWeight: '500',
+        fontFamily: "Inter-ExtraLight"
     },
     podcard: {
         flexDirection: 'row',
@@ -179,7 +180,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#8EBCF3',
         paddingHorizontal: 10,
         paddingVertical: 5,
-        width: '30%',
+        width: '33%',
         textAlign: 'center',
         marginTop: 5,
         borderRadius: 5,
@@ -190,8 +191,9 @@ const styles = StyleSheet.create({
     },
 
     moreText: {
-        fontWeight: '700',
+        //fontWeight: '700',
         color: '#F7F6C5',
+        fontFamily: "Inter-ExtraBold",
     }
 
 });

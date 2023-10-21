@@ -4,6 +4,7 @@ import * as Animatable from 'react-native-animatable';
 import Logo from '../assets/images/seved.png';
 import RadialGradient from 'react-native-radial-gradient';
 import { NavigationContainer } from '@react-navigation/native';
+import { assets } from '../../../react-native.config';
 
 const { width, height } = Dimensions.get('window');
 const Splash = ({ navigation }) => {
@@ -76,7 +77,8 @@ const styles = StyleSheet.create({
         position: 'absolute',
         top: '90%',
         opacity: 0.5,
-        letterSpacing: 1
+        letterSpacing: 1,
+        fontFamily: "Inter-ExtraBold",
     }
 
 });

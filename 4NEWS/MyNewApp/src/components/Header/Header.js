@@ -79,10 +79,11 @@ const styles = StyleSheet.create({
         elevation: 5,
     },
     text: {
-        fontSize: 18,
+        fontSize: 20,
         fontWeight: '500',
         color: '#F7F6C5',
         letterSpacing: 1,
+        fontFamily: "Inter-Light"
 
     }
 })

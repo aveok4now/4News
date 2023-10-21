@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, StyleSheet, } from 'react-native';
 import { Controller } from 'react-hook-form';
 // import { Container } from './styles';
-
+import { assets } from '../../../react-native.config';
 
 const defaultColor1 = '#6274F8'
 const CustomInput = ({
@@ -49,7 +49,10 @@ const CustomInput = ({
                         />
                     </View>
                     {error && (
-                        <Text style={{ color: 'red', alignSelf: 'stretch' }}>{error.message || 'Ошибка'}</Text>)}
+                        <Text style={styles.errorText}>
+                            {error.message || 'Ошибка'}
+                        </Text>
+                    )}
                 </>
             )}
         />
@@ -69,9 +72,19 @@ const styles = StyleSheet.create({
         paddingHorizontal: 10,
         marginVertical: 5,
     },
-    input: {},
+    input: {
+        fontFamily: "Inter-Light"
+    },
     inputFocused: {
         backgroundColor: '#73A4BD70', // Измените цвет фона на красный или другой желаемый цвет
+    },
+
+
+    errorText: {
+        fontFamily: "Inter-Regular",
+        color: 'red',
+        alignSelf: 'stretch',
+
     },
 })
 

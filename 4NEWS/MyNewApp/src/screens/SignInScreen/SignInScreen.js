@@ -15,6 +15,7 @@ const { width, height } = Dimensions.get('window');
 import * as Animatable from 'react-native-animatable';
 import SQLite from 'react-native-sqlite-storage'
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { assets } from '../../../react-native.config';
 SQLite.enablePromise(true);
 
 
@@ -322,6 +323,7 @@ const styles = StyleSheet.create({
     root: {
         alignItems: 'center',
         padding: 20,
+
     },
     logo: {
         marginTop: '20%',

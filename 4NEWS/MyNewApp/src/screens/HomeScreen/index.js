@@ -246,12 +246,15 @@ const styles = StyleSheet.create({
     },
 
     horListText: {
-        fontWeight: '500',
-        color: '#383738'
+        //fontWeight: '500',
+        color: '#383738',
+        fontFamily: "Inter-Bold",
+
     },
 
     selListText: {
-        fontWeight: 'bold',
+        //fontWeight: 'bold',
+        fontFamily: "Inter-Bold"
     }
 
 })

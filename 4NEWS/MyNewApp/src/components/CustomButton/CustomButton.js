@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet, Pressable, TouchableOpacity, Vibration } from 'react-native';
-
+import { assets } from '../../../react-native.config';
 // import { Container } from './styles';
 
 const DURATION = 10
@@ -52,12 +52,14 @@ const styles = StyleSheet.create({
     },
 
     text: {
-        fontWeight: 'bold',
+        //fontWeight: 'bold',
+        fontFamily: "Inter-ExtraBold",
         color: 'white'
     },
 
     text_Tertiary: {
         color: '#FCF7F8',
+        fontFamily: "Inter-Light",
     },
 
     text_Secondary: {
