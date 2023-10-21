@@ -12,18 +12,23 @@ const Search = ({ navigation }) => {
 
     const apiKeyList = ["ef0cca7fb1924225a4c6c42e0f32924b", "abc3f76eb9ec4195b35c7c5b3771a40b", "5bb375e99be54883b8b9aee7001fc660", "2c7f28792cc64ca699bfd3bbf2768105"];
     let apiKeyIndex = 0;
+    let searchTimer = null;
+
     const searchNews = async (text) => {
         try {
-            setSearchText(text)
-            if (text.length >= 2) {
-                console.warn("Первый" + apiKeyList[apiKeyIndex])
+            //setSearchText(text)
+
+            if (searchTimer) clearTimeout(searchTimer)
+
+            searchTimer = setTimeout(async () => {
+                //console.warn("Первый" + apiKeyList[apiKeyIndex])
                 const ruResponse = await fetch(
                     `https://newsapi.org/v2/top-headlines?country=ru&apiKey=${apiKeyList[apiKeyIndex]}&q=${text}`);
 
-                if (ruResponse == undefined) {
+                if (ruResponse.status === 429) {
                     apiKeyIndex = (apiKeyIndex + 1) % apiKeyList.length;
-                    console.warn("Второй" + apiKeyList[apiKeyIndex])
-                    searchNews()
+                    searchNews(text)
+                    return
                     //throw new Error(`RuResponse Error: ${ruResponse.status}`);
                 }
 
@@ -32,10 +37,11 @@ const Search = ({ navigation }) => {
                 const usResponse = await fetch(
                     `https://newsapi.org/v2/top-headlines?country=us&apiKey=${apiKeyList[apiKeyIndex]}&q=${text}`);
 
-                if (usResponse == undefined) {
+                if (usResponse.status === 429) {
 
                     apiKeyIndex = (apiKeyIndex + 1) % apiKeyList.length;
-                    searchNews()
+                    searchNews(text)
+                    return
                     //throw new Error(`UsResponse Error: ${usResponse.status}`);
                 }
 
@@ -43,15 +49,24 @@ const Search = ({ navigation }) => {
 
                 const combinedData = [...ruData.articles, ...usData.articles];
 
-                combinedData.sort(() => Math.random() - 0.5);
+                //combinedData.sort(() => Math.random() - 0.5);
 
                 setData(combinedData);
             }
+            )
+
+
+
 
         } catch (error) {
             console.error("Error in SearchNews:", error);
         }
     }
+
+    const handleTextChange = (text) => {
+        setSearchText(text);
+        searchNews(text);
+    };
 
     return (
         <Animatable.View style={styles.searchRoot} animation="fadeIn" duration={1500}>
@@ -73,11 +88,10 @@ const Search = ({ navigation }) => {
                         style={{ fontSize: 16, width: '100%' }}
                         placeholder='Что будем искать?'
                         placeholderTextColor={'white'}
-                        onChangeText={(text) => {
-                            searchNews(text)
-                        }}
+                        onChangeText={handleTextChange}
                         selectionColor={'#F7F6C5'}
                         value={SearchText}
+                        maxLength={20}
                     />
                 </View>
                 <View>
