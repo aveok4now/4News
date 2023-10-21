@@ -34,19 +34,27 @@ const Header = ({ navigation }) => {
             <TouchableOpacity onPress={async () => {
                 const savedUsername = await AsyncStorage.getItem('username');
                 const savedPassword = await AsyncStorage.getItem('password');
+
                 if (savedUsername) {
-                    await AsyncStorage.removeItem(savedUsername)
-                    await AsyncStorage.removeItem(savedPassword)
-                } else if (savedUsername === 'guest') {
-                    AsyncStorage.removeItem(savedUsername)
+                    await AsyncStorage.removeItem(savedUsername);
                 }
+
+                if (savedPassword) {
+                    await AsyncStorage.removeItem(savedPassword);
+                }
+
+                const isGuestUser = savedUsername === 'guest';
+
+                if (isGuestUser) {
+                    await AsyncStorage.removeItem('guestID');
+                }
+
                 await AsyncStorage.setItem('loggedOut', 'true');
-                navigation.navigate('Добро пожаловать !', { status: "logout" })
-
-
+                navigation.navigate('Добро пожаловать !', { status: "logout" });
             }}>
                 <Icon name="close" size={24} color="#F7F6C5" />
             </TouchableOpacity>
+
             <Text style={styles.text}>Привет, {identify}</Text>
             <TouchableOpacity onPress={() => navigation.navigate('Search')}>
                 <Icon name="search" size={24} color="#F7F6C5" />
