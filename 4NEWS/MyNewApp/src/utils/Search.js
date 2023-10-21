@@ -1,9 +1,12 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, TextInput, FlatList } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, TextInput, FlatList, Dimensions } from 'react-native';
 import * as Animatable from 'react-native-animatable';
 import RadialGradient from 'react-native-radial-gradient';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Card from '../components/Card';
+import LottieView from 'lottie-react-native';
+
+const { width, height } = Dimensions.get('window');
 
 const Search = ({ navigation }) => {
     const [SearchText, setSearchText] = useState('')
@@ -104,11 +107,14 @@ const Search = ({ navigation }) => {
                 </View>
 
                 {/* TODO: Lottie */}
-                {Data == null ? (
+                {Data.length === 0 && (
                     <View>
-                        <Text>НИЧЕГО</Text>
+                        <LottieView style={styles.lottie}
+                            source={require("../screens/assets/animations/news.json")}
+                            autoPlay={true}
+                            loop={true} />
                     </View>
-                ) : null}
+                )}
             </RadialGradient>
         </Animatable.View>
     );
@@ -132,5 +138,12 @@ const styles = StyleSheet.create({
     arrow: {
         // marginLeft: '2%',
         marginRight: '5%'
-    }
+    },
+    lottie: {
+        justifyContent: 'center',
+        alignSelf: 'center',
+        width: width * 0.9,
+        height: width,
+        marginTop: '30%'
+    },
 })
