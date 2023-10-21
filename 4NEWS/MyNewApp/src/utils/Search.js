@@ -5,10 +5,11 @@ import RadialGradient from 'react-native-radial-gradient';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Card from '../components/Card';
 import LottieView from 'lottie-react-native';
-
+import { useNavigation } from '@react-navigation/native';
 const { width, height } = Dimensions.get('window');
 
 const Search = ({ navigation }) => {
+    //const navigation = useNavigation();
     const [SearchText, setSearchText] = useState('')
     const [Data, setData] = useState([])
 
@@ -80,13 +81,21 @@ const Search = ({ navigation }) => {
                 center={[100, 360]}
                 radius={500}
             >
-                <View style={styles.search}>
-                    <Icon
-                        style={styles.arrow}
-                        name="arrow-left"
-                        size={24}
-                        color="#F7F6C5"
-                    />
+                <Animatable.View
+                    style={styles.search}
+                    animation="fadeIn" duration={1000}
+                >
+                    <TouchableOpacity onPress={() => {
+                        navigation.navigate("Домашняя страница")
+                    }}>
+                        <Icon
+                            style={styles.arrow}
+                            name="arrow-left"
+                            size={24}
+                            color="#F7F6C5"
+
+                        />
+                    </TouchableOpacity>
                     <TextInput
                         style={{ fontSize: 16, width: '100%' }}
                         placeholder='Что будем искать?'
@@ -96,7 +105,7 @@ const Search = ({ navigation }) => {
                         value={SearchText}
                         maxLength={20}
                     />
-                </View>
+                </Animatable.View>
                 <View>
                     <FlatList
                         data={Data}

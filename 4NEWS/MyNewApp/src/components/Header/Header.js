@@ -8,7 +8,7 @@ import Search from '../../utils/Search';
 const Header = ({ navigation }) => {
     return (
         <Animatable.View style={styles.header} animation="fadeIn" duration={1500}>
-            <Text style={styles.text}>Новостная лента</Text>
+            <Text style={styles.text}>Привет, Гость!</Text>
             <TouchableOpacity onPress={() => navigation.navigate('Search')}>
                 <Icon name="search" size={24} color="#F7F6C5" />
             </TouchableOpacity>
@@ -35,7 +35,7 @@ const styles = StyleSheet.create({
         fontSize: 18,
         fontWeight: '500',
         color: '#F7F6C5',
-        letterSpacing: 2,
+        letterSpacing: 1,
 
     }
 })
