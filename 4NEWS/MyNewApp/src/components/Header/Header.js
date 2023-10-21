@@ -1,14 +1,53 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import * as Animatable from 'react-native-animatable';
 import Icon from 'react-native-vector-icons/FontAwesome';
 // import { Container } from './styles';
 import Search from '../../utils/Search';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Header = ({ navigation }) => {
+    const [identify, setIdenify] = useState('')
+
+    useEffect(() => {
+        const checkUserCredentials = async () => {
+            const savedUsername = await AsyncStorage.getItem('username');
+            const savedPassword = await AsyncStorage.getItem('password');
+            const guestID = await AsyncStorage.getItem('guestID');
+
+            if (savedUsername && savedPassword) {
+                //onSignInPressed({ username: savedUsername, password: savedPassword });
+                setIdenify(savedUsername)
+            } else if (savedUsername === 'guest') {
+                if (guestID) {
+                    setIdenify("Гость")
+                }
+            }
+        }
+
+        checkUserCredentials();
+    }, []);
+
+
     return (
         <Animatable.View style={styles.header} animation="fadeIn" duration={1500}>
-            <Text style={styles.text}>Привет, Гость!</Text>
+            <TouchableOpacity onPress={async () => {
+                const savedUsername = await AsyncStorage.getItem('username');
+                const savedPassword = await AsyncStorage.getItem('password');
+                if (savedUsername) {
+                    await AsyncStorage.removeItem(savedUsername)
+                    await AsyncStorage.removeItem(savedPassword)
+                } else if (savedUsername === 'guest') {
+                    AsyncStorage.removeItem(savedUsername)
+                }
+                await AsyncStorage.setItem('loggedOut', 'true');
+                navigation.navigate('Добро пожаловать !', { status: "logout" })
+
+
+            }}>
+                <Icon name="close" size={24} color="#F7F6C5" />
+            </TouchableOpacity>
+            <Text style={styles.text}>Привет, {identify}</Text>
             <TouchableOpacity onPress={() => navigation.navigate('Search')}>
                 <Icon name="search" size={24} color="#F7F6C5" />
             </TouchableOpacity>

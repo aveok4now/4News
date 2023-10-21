@@ -18,7 +18,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 SQLite.enablePromise(true);
 
 
-const SignInScreen = () => {
+const SignInScreen = ({ route }) => {
 
     //const image = { uri: 'https://i.pinimg.com/736x/b3/4e/12/b34e12e24fe377683d2182d40a040f5c.jpg' };
     // const image = { uri: 'https://i.pinimg.com/564x/c7/1f/00/c71f00ea86ee2bb9eac2d0c99b978d5b.jpg' };
@@ -31,22 +31,44 @@ const SignInScreen = () => {
     const invalidCredentialsText = "Неверный логин или пароль";
     const [isTyping, setIsTyping] = useState(false);
 
+    //const [isLoggedOut, setIsLoggedOut] = useState(false);
 
 
 
     useEffect(() => {
         const checkUserCredentials = async () => {
+
+            if (route.params?.status === "logout") {
+                AsyncStorage.setItem('loggedOut', 'true');
+            }
+
+            const isLoggedOut = await AsyncStorage.getItem('loggedOut');
             const savedUsername = await AsyncStorage.getItem('username');
             const savedPassword = await AsyncStorage.getItem('password');
             const guestID = await AsyncStorage.getItem('guestID');
 
-            if (savedUsername && savedPassword) {
-                onSignInPressed({ username: savedUsername, password: savedPassword });
-            } else if (savedUsername === 'guest') {
-                if (guestID) {
-                    onSignInAsGuestPressed({ guestID: guestID });
-                } else {
-                    onSignInAsGuestPressed();
+            console.log("loggedout" + isLoggedOut)
+            console.log("status" + route.params?.status)
+
+            if (route.params?.status === "logout") {
+                await AsyncStorage.removeItem('username');
+                await AsyncStorage.removeItem('password');
+                AsyncStorage.setItem('loggedOut', 'true');
+                console.log(savedUsername)
+                console.log(savedPassword)
+                return;
+            } else {
+                if (savedUsername && savedPassword) {
+                    if (isLoggedOut === 'false') {
+                        onSignInPressed({ username: savedUsername, password: savedPassword });
+                        // AsyncStorage.setItem('loggedOut', '');
+                    }
+                } else if (savedUsername === 'guest') {
+                    if (guestID) {
+                        onSignInAsGuestPressed({ guestID: guestID });
+                    } else {
+                        onSignInAsGuestPressed();
+                    }
                 }
             }
         }
@@ -92,12 +114,14 @@ const SignInScreen = () => {
 
             console.log(data);
             const db = await SQLite.openDatabase({ name: 'news.db', location: 1 });
+
             const [result] = await db.executeSql('SELECT * FROM users WHERE userLogin = ? AND userPassword = ?', [data.username, data.password]);
             if (result.rows.length > 0) {
                 setUserExist(true);
                 await AsyncStorage.setItem('username', data.username);
                 await AsyncStorage.setItem('password', data.password);
                 //navigation.navigate('Домашняя страница');
+                AsyncStorage.setItem('loggedOut', 'false');
                 navigation.navigate('Splash');
             } else {
                 setUserExist(false);
@@ -137,6 +161,7 @@ const SignInScreen = () => {
                 await AsyncStorage.removeItem('password');
                 console.log("Вошёл как гость" + newGuestID);
                 navigation.navigate('Splash');
+
             } else {
                 console.log('Ошибка при добавлении гостя в базу данных');
             }

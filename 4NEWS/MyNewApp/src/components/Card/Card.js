@@ -20,7 +20,7 @@ import Navigation from '../../navigation';
 const Card = ({ item, navigation }) => {
     const defaultImage = 'https://arbeitgeber.de/wp-content/uploads/2020/11/bda-news-header-1920x1280px-1536x1024.jpg'
 
-    console.log(item);
+    //console.log(item);
     const [imageLoaded, setImageLoaded] = useState(false);
     const imageUrl = item.urlToImage || defaultImage;
 
