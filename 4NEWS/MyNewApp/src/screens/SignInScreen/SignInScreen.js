@@ -31,6 +31,7 @@ const SignInScreen = ({ route }) => {
     const invalidCredentialsText = "Неверный логин или пароль";
     const [isTyping, setIsTyping] = useState(false);
 
+    const [inputFocus, setIsInputFocus] = useState(false);
     //const [isLoggedOut, setIsLoggedOut] = useState(false);
 
 
@@ -200,6 +201,10 @@ const SignInScreen = ({ route }) => {
         setModalVisible(false); // Функция для закрытия модального окна
     };
 
+    const handleInputFocus = () => {
+        setIsInputFocus(true)
+    }
+
 
     return (
         <ScrollView showsVerticalScrollIndicator={false}>
@@ -255,6 +260,7 @@ const SignInScreen = ({ route }) => {
                         maxLength: { value: 20, message: 'Имя пользователя или эл.почта должны быть не больше 20 символов' }
                     }}
                     setIsTyping={setIsTyping}
+
                 />
 
                 <CustomInput

@@ -1,8 +1,10 @@
-import React from 'react';
-import { View, Text, TextInput, StyleSheet } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, TextInput, StyleSheet, } from 'react-native';
 import { Controller } from 'react-hook-form';
 // import { Container } from './styles';
 
+
+const defaultColor1 = '#6274F8'
 const CustomInput = ({
     control,
     name,
@@ -10,16 +12,24 @@ const CustomInput = ({
     placeholder,
     secureTextEntry,
     setIsTyping,
+    selectionColor,
 }) => {
+    const [isFocused, setIsFocused] = React.useState(false);
     return (
-
         <Controller
             control={control}
             name={name}
             rules={rules}
-            render={({ field: { value, onChange, onBlur }, fieldState: { error } }) => (
+            render={({ field: { value, onChange, onBlur, onFocus }, fieldState: { error } }) => (
                 <>
-                    <View style={[styles.container, { borderColor: error ? 'red' : '#E8E8E8' }]}>
+                    <View style={[
+                        styles.container,
+                        {
+                            borderColor: error ? 'red' : '#E8E8E8'
+
+                        },
+                        isFocused && styles.inputFocused
+                    ]}>
                         <TextInput
                             value={value}
                             onChangeText={(text) => {
@@ -29,7 +39,10 @@ const CustomInput = ({
                             onBlur={() => {
                                 onBlur();
                                 setIsTyping(false);
+                                setIsFocused(false);
                             }}
+                            onFocus={() => setIsFocused(true)}
+                            selectionColor={selectionColor || defaultColor1}
                             placeholder={placeholder}
                             style={styles.input}
                             secureTextEntry={secureTextEntry}
@@ -57,6 +70,9 @@ const styles = StyleSheet.create({
         marginVertical: 5,
     },
     input: {},
+    inputFocused: {
+        backgroundColor: '#73A4BD70', // Измените цвет фона на красный или другой желаемый цвет
+    },
 })
 
 export default CustomInput;  

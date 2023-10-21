@@ -115,7 +115,6 @@ const Search = ({ navigation }) => {
                     />
                 </View>
 
-                {/* TODO: Lottie */}
                 {Data.length === 0 && (
                     <View>
                         <LottieView style={styles.lottie}

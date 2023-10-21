@@ -55,7 +55,7 @@ const Header = ({ navigation }) => {
                 <Icon name="close" size={24} color="#F7F6C5" />
             </TouchableOpacity>
 
-            <Text style={styles.text}>Привет, {identify}</Text>
+            <Text style={styles.text}>Привет, {identify}!</Text>
             <TouchableOpacity onPress={() => navigation.navigate('Search')}>
                 <Icon name="search" size={24} color="#F7F6C5" />
             </TouchableOpacity>

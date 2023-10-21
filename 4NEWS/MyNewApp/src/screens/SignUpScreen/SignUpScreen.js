@@ -24,7 +24,7 @@ const SignUpScreen = () => {
     const [bottomSheetVisible, setBottomSheetVisible] = useState(false);
     const [showTermsSheet, setShowTermsSheet] = useState(false);
     const [showPrivacySheet, setShowPrivacySheet] = useState(false);
-
+    const [isTyping, setIsTyping] = useState(false);
 
 
 
@@ -95,6 +95,8 @@ const SignUpScreen = () => {
                         maxLength: { value: 15, message: 'Имя пользователя должно быть не более 15 символов' },
                         pattern: { value: name_regex, message: 'Некорректный ввод имени' }
                     }}
+                    setIsTyping={setIsTyping}
+                    selectionColor={'#C2F970'}
                 />
 
                 <CustomInput
@@ -105,6 +107,8 @@ const SignUpScreen = () => {
                         required: 'Необходимо ввести адрес эл.почты',
                         pattern: { value: email_regex, message: 'Неправильный ввод электронной почты' }
                     }}
+                    setIsTyping={setIsTyping}
+                    selectionColor={'#00EEFB'}
                 />
 
                 <CustomInput
@@ -123,6 +127,8 @@ const SignUpScreen = () => {
                             message: 'Длина пароля должна быть не больше 15 символов'
                         }
                     }}
+                    setIsTyping={setIsTyping}
+                    selectionColor={'#DF57BC'}
                 />
 
                 <CustomInput
@@ -134,6 +140,8 @@ const SignUpScreen = () => {
                         validate: value =>
                             value === pwd || 'Пароли не совпадают',
                     }}
+                    setIsTyping={setIsTyping}
+                    selectionColor={'#F6AE2D'}
                 />
 
                 <CustomButton
