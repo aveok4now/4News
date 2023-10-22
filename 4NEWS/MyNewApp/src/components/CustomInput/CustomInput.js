@@ -13,6 +13,7 @@ const CustomInput = ({
     secureTextEntry,
     setIsTyping,
     selectionColor,
+    isUserExist
 }) => {
     const [isFocused, setIsFocused] = React.useState(false);
     return (
@@ -26,7 +27,6 @@ const CustomInput = ({
                         styles.container,
                         {
                             borderColor: error ? 'red' : '#E8E8E8'
-
                         },
                         isFocused && styles.inputFocused
                     ]}>
@@ -53,6 +53,11 @@ const CustomInput = ({
                             {error.message || 'Ошибка'}
                         </Text>
                     )}
+                    {rules.isUserExist == "Пользователь с таким именем уже существует" && (
+                        <Text style={styles.errorText}>
+                            {'Пользователь с таким именем уже существует'}
+                        </Text>
+                    )}
                 </>
             )}
         />
@@ -76,7 +81,7 @@ const styles = StyleSheet.create({
         fontFamily: "Inter-Light"
     },
     inputFocused: {
-        backgroundColor: '#73A4BD70', // Измените цвет фона на красный или другой желаемый цвет
+        backgroundColor: '#73A4BD70',
     },
 
 

@@ -87,7 +87,8 @@ const Navigation = () => {
                         headerTitleStyle: {
                             fontSize: 24,
                             color: 'white',
-                            fontWeight: 'bold',
+                            //fontWeight: 'bold',
+                            fontFamily: "Inter-ExtraBold"
 
                         },
 

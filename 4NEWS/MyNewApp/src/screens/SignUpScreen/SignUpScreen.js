@@ -25,43 +25,58 @@ const SignUpScreen = () => {
     const [showTermsSheet, setShowTermsSheet] = useState(false);
     const [showPrivacySheet, setShowPrivacySheet] = useState(false);
     const [isTyping, setIsTyping] = useState(false);
-
-
+    const [isExist, setIsExist] = useState(false);
+    const [isButtonPressed, setIsButtonPressed] = useState(false);
 
     const onRegisterPressed = async (data) => {
+        setIsButtonPressed(true)
         try {
             const db = await SQLite.openDatabase({ name: 'news.db', location: 1 });
-            const getLastUserID = async () => {
-                return new Promise((resolve, reject) => {
-                    db.transaction((tx) => {
-                        tx.executeSql('SELECT MAX(userID) AS maxID FROM Users', [], (_, { rows }) => {
-                            const { maxID } = rows.item(0);
-                            resolve(maxID || 0);
-                        },
-                            (error) => {
-                                reject(error);
-                            });
-                    });
-                });
-            };
 
-            const lastUserID = await getLastUserID();
-            const newUserID = lastUserID + 1;
+            const [existingUser] = await db.executeSql('SELECT * FROM Users WHERE userLogin = ?', [data.username]);
 
-            const [result] = await db.executeSql('INSERT INTO Users (userID, userLogin, userPassword) VALUES (?, ?, ?)', [newUserID, data.username, data.password]);
-
-            if (result.rowsAffected > 0) {
-                await AsyncStorage.setItem('username', data.username);
-                await AsyncStorage.setItem('password', data.password);
-                console.log(data)
-                navigation.navigate('Домашняя страница');
+            if (existingUser.rows.length > 0) {
+                //console.warn('Пользователь с таким именем уже существует');
+                setIsExist(true)
             } else {
-                console.warn('Ошибка при добавлении пользователя в базу данных');
+                setIsExist(false)
+                const getLastUserID = async () => {
+                    return new Promise((resolve, reject) => {
+                        db.transaction((tx) => {
+                            tx.executeSql('SELECT MAX(userID) AS maxID FROM Users', [], (_, { rows }) => {
+                                const { maxID } = rows.item(0);
+                                resolve(maxID || 0);
+                            },
+                                (error) => {
+                                    reject(error);
+                                });
+                        });
+                    });
+                };
+                const lastUserID = await getLastUserID();
+                const newUserID = lastUserID + 1;
+
+                const [result] = await db.executeSql('INSERT INTO Users (userID, userLogin, userPassword) VALUES (?, ?, ?)', [newUserID, data.username, data.password]);
+
+                if (result.rowsAffected > 0) {
+                    await AsyncStorage.setItem('username', data.username);
+                    await AsyncStorage.setItem('password', data.password);
+                    console.log(data);
+                    navigation.navigate('Домашняя страница');
+                    navigation.reset({
+                        index: 0,
+                        routes: [{ name: 'Домашняя страница' }],
+                    });
+                } else {
+                    console.warn('Ошибка при добавлении пользователя в базу данных');
+                }
             }
         } catch (error) {
             console.error(error);
         }
+
     };
+
 
 
 
@@ -85,6 +100,7 @@ const SignUpScreen = () => {
     return (
         <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ flexGrow: 1 }}>
             <View style={styles.root}>
+
                 <CustomInput
                     name="username"
                     control={control}
@@ -93,8 +109,9 @@ const SignUpScreen = () => {
                         required: 'Необходимо ввести имя пользователя',
                         minLength: { value: 5, message: 'Имя пользователя должно быть не менее 5 символов' },
                         maxLength: { value: 15, message: 'Имя пользователя должно быть не более 15 символов' },
-                        pattern: { value: name_regex, message: 'Некорректный ввод имени' }
+                        pattern: [{ value: name_regex, message: 'Некорректный ввод имени' }],
                     }}
+
                     setIsTyping={setIsTyping}
                     selectionColor={'#C2F970'}
                 />
@@ -162,6 +179,15 @@ const SignUpScreen = () => {
                     type="Tertiary"
                 />
 
+                {isExist && isButtonPressed && !isTyping && (
+                    <Animatable.Text
+                        animation="bounceIn"
+                        duration={1000}
+                        style={styles.errorText}
+                    >
+                        Пользователь с таким именем уже существует
+                    </Animatable.Text>
+                )}
             </View>
 
             {showTermsSheet && (
@@ -236,6 +262,11 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         fontSize: 20,
         fontWeight: '600'
+    },
+    errorText: {
+        fontFamily: "Inter-ExtraBold",
+        fontSize: 14,
+        color: "#EBB6B6"
     }
 
 })
