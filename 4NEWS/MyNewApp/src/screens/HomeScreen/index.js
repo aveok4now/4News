@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, FlatList, ScrollView, TouchableOpacity, StyleSheet, ActivityIndicator } from 'react-native';
+import { View, Text, FlatList, ScrollView, TouchableOpacity, StyleSheet, ActivityIndicator, Dimensions } from 'react-native';
 import Header from '../../components/Header';
 import Card from '../../components/Card';
 
@@ -94,8 +94,8 @@ const HomeScreen = ({ navigation }) => {
 
             setData(combinedData);
             setIsRefreshing(false);
-
-            //apiKeyIndex = (apiKeyIndex + 1) % apiKeyList.length;
+            //console.log(combinedData)
+            //apiKeyIndex = (apiKeyIndex + 1) % apiKeyList.lrength;
             setIsLoading(false)
         } catch (error) {
             console.error("Error in getData:", error);
@@ -157,17 +157,22 @@ const HomeScreen = ({ navigation }) => {
         getData();
     }
 
+
+
     return (
         <>
             {/* TODO: Lottie */}
             {Loading ? (
+
                 <View style={styles.load}>
+
                     <ActivityIndicator
                         color={'#754da6'}
                         size={36}>
                     </ActivityIndicator>
                 </View>) : (
                 <View style={{ flex: 1 }}>
+
                     <Header navigation={navigation} />
 
                     <View style={styles.horList}>
@@ -194,20 +199,34 @@ const HomeScreen = ({ navigation }) => {
                             }}
                         />
                     </View>
-                    <View>
-                        <FlatList
-                            onRefresh={onRefresh}
-                            refreshing={isRefreshing}
-                            data={Data}
-                            renderItem={({ item, index }) => {
-                                return <Card item={item} navigation={navigation} />;
-                            }}
-                        />
+
+                    <View style={{ flex: 1 }}>
+                        <View style={{ height: Dimensions.get("window").height * 0.85 }}>
+                            <FlatList
+                                showsVerticalScrollIndicator={false}
+                                onRefresh={onRefresh}
+                                refreshing={isRefreshing}
+                                data={Data}
+                                renderItem={({ item, index }) => {
+                                    return <Card item={item} navigation={navigation} />;
+                                }}
+                            />
+                        </View>
                     </View>
+
                 </View>
+
             )}
+
+            {/* <Tab.Navigator screenOptions={screenOptions} initialRouteName='Домашняя страница'>
+                <Tab.Screen name="Домашняя страница" component={HomeScreen} />
+                <Tab.Screen name="Добро пожаловать !" component={SignInScreen} />
+            </Tab.Navigator> */}
         </>
+
     );
+
+
 }
 
 export default HomeScreen;

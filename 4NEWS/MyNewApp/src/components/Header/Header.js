@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import * as Animatable from 'react-native-animatable';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import Icon2 from 'react-native-vector-icons/SimpleLineIcons'
 // import { Container } from './styles';
 import Search from '../../utils/Search';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -52,7 +53,7 @@ const Header = ({ navigation }) => {
                 await AsyncStorage.setItem('loggedOut', 'true');
                 navigation.navigate('Добро пожаловать !', { status: "logout" });
             }}>
-                <Icon name="close" size={24} color="#F7F6C5" />
+                <Icon2 name="logout" size={24} color="#F7F6C5" />
             </TouchableOpacity>
 
             <Text style={styles.text}>Привет, {identify}!</Text>
@@ -77,6 +78,7 @@ const styles = StyleSheet.create({
         borderColor: '#F3FAE1',
         backgroundColor: '#7371FC',
         elevation: 5,
+        verticalAlign: 'auto'
     },
     text: {
         fontSize: 20,

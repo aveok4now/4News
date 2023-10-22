@@ -13,7 +13,6 @@ import {
 import * as Animatable from 'react-native-animatable';
 import LinearGradient from 'react-native-linear-gradient';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import Navigation from '../../navigation';
 import { assets } from '../../../react-native.config';
 
 

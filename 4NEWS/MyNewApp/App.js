@@ -61,6 +61,7 @@ const App = () => {
     <>
       <StatusBar backgroundColor="#36d1dc" />
       {/* <LinearGradient colors={['#42275a', '#734b6d']} style={styles.gradient}> */}
+
       <LinearGradient colors={['#36d1dc', '#5b86e5']} style={styles.gradient}>
         <SafeAreaView style={styles.root}>
           <ModalPopup visible={visible}>
@@ -86,6 +87,9 @@ const App = () => {
     </>
   );
 }
+
+
+
 
 const styles = StyleSheet.create({
   root: {
