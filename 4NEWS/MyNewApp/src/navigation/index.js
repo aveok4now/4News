@@ -96,8 +96,21 @@ const Navigation = () => {
 
                 />
                 <Stack.Screen name="Подтверждение почты" component={ConfirmEmailScreen} />
-                <Stack.Screen name="Забыли пароль" component={ForgotPasswordScreen} />
-                <Stack.Screen name="Восстановление пароля" component={NewPasswordScreen} />
+                <Stack.Screen name="Восстановление пароля"
+                    component={ForgotPasswordScreen}
+                    options={{
+                        headerShown: true,
+                        headerTransparent: true,
+                        headerTintColor: 'white',
+                        headerTitleAlign: 'center',
+                        headerTitleStyle: {
+                            fontSize: 20,
+                            color: 'white',
+                            fontFamily: "Inter-ExtraBold"
+                        }
+                    }}
+                />
+                {/* <Stack.Screen name="Восстановление пароля" component={NewPasswordScreen} /> */}
 
                 <Stack.Screen name="Домашняя страница" component={HomeScreen} />
             </Stack.Navigator>

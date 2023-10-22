@@ -176,7 +176,7 @@ const SignInScreen = ({ route }) => {
 
     const onForgotPassword = () => {
         // console.warn("Забыли пароль");
-        navigation.navigate("Забыли пароль");
+        navigation.navigate("Восстановление пароля");
     }
 
     const onSignUpPress = () => {
