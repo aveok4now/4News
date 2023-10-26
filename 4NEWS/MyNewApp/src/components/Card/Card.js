@@ -8,8 +8,7 @@ import {
     ActivityIndicator,
     SafeAreaView,
     ScrollView,
-    Dimensions,
-    Alert
+    Dimensions
 } from 'react-native';
 import * as Animatable from 'react-native-animatable';
 import LinearGradient from 'react-native-linear-gradient';
@@ -182,10 +181,8 @@ const Card = ({ item, navigation }) => {
                                     <Icon name={isLiked ? "heart" : "heart-o"} size={20} color="white" />
                                 </TouchableOpacity>
                             </View>
+
                         </View>
-
-
-
                     </View>
                     <View style={styles.source}>
                         <Text style={styles.sourceText}>Источник: {item.source.name}</Text>

@@ -31,12 +31,7 @@ const ModalPopup = ({ visible, children, route, navigation }) => {
                 useNativeDriver: true,
             }).start();
         }
-
-
     };
-
-
-
 
 
     return (

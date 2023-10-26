@@ -1,17 +1,20 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, FlatList, StyleSheet, Dimensions } from 'react-native';
+import { View, Text, FlatList, StyleSheet, Dimensions, Button } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Card from '../../components/Card';
 import * as Animatable from 'react-native-animatable'
 import { assets } from '../../../react-native.config';
 import TypeWriter from 'react-native-typewriter'
 import CustomButton from '../../components/CustomButton';
+import Icon from 'react-native-vector-icons/FontAwesome';
+import LottieView from 'lottie-react-native';
 
 
+const { width, height } = Dimensions.get('window');
 export default function FavoritesScreen({ navigation }) {
     const [favorites, setFavorites] = useState([]);
     const [identify, setIdenify] = useState('')
-    const [state] = useState("📰 Ваши сохранённые новости, ")
+    //const [state] = useState("📰 Ваши сохранённые новости, ")
     const [isRefreshing, setIsRefreshing] = useState(false);
 
     useEffect(() => {
@@ -47,12 +50,29 @@ export default function FavoritesScreen({ navigation }) {
 
     useEffect(() => {
         loadFavorites();
+        const refreshInterval = setInterval(loadFavorites, 5000);
+
+        return () => {
+            clearInterval(refreshInterval);
+        };
     }, []);
 
     const onRefresh = () => {
         setIsRefreshing(true);
         loadFavorites()
     }
+
+    const handleDelete = (url) => {
+        const updatedFavorites = favorites.filter(item => item.url !== url);
+        AsyncStorage.setItem('savedNewsItems', JSON.stringify(updatedFavorites))
+            .then(() => {
+                setFavorites(updatedFavorites);
+            })
+            .catch(error => {
+                console.error('Error saving updated favorites:', error);
+            });
+    }
+
 
     return (
         identify !== "Гость" ? (
@@ -63,28 +83,47 @@ export default function FavoritesScreen({ navigation }) {
 
                 <View style={styles.header}>
 
-                    <TypeWriter
+                    {/* <TypeWriter
                         style={styles.headerText}
                         minDelay={5}
                         typing={1}
                     >
                         {state}{identify}
-                    </TypeWriter>
+                    </TypeWriter> */}
 
-
-                    {/* <Text style={styles.headerText}>Ваши сохраннённые новости, {identify} </Text> */}
+                    <Text style={styles.headerText}>Избранные новости</Text>
                 </View>
-
                 <FlatList
-                    style={{ marginBottom: '30%' }}
+                    showsVerticalScrollIndicator={false}
+                    style={{ marginBottom: '27%' }}
                     onRefresh={onRefresh}
                     refreshing={isRefreshing}
                     data={favorites}
                     keyExtractor={(item) => item.url}
                     renderItem={({ item }) => {
-                        return <Card item={item} navigation={navigation} />;
+                        return (
+                            <>
+                                <Card item={item} navigation={navigation} /><View>
+                                    <CustomButton
+                                        text='Удалить'
+                                        onPress={() => handleDelete(item.url)}
+                                    >
+                                    </CustomButton>
+                                </View>
+                            </>
+                        );
                     }}
                 />
+                {favorites.length === 0 && (
+                    <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+                        <Text style={{ fontFamily: "Inter-Light", fontSize: 20 }}>Здесь будут появляться избранные новости, нажимайте на кнопку {" "}
+                            <Icon name={"heart-o"} size={20} color="white" /> , чтобы сохранить их!
+                        </Text>
+                        <View>
+                            <LottieView style={styles.lottie} source={require("../assets/animations/interests.json")} autoPlay loop />
+                        </View>
+                    </View>
+                )}
             </Animatable.View>
         ) : (
             <>
@@ -106,6 +145,12 @@ export default function FavoritesScreen({ navigation }) {
     );
 }
 const styles = StyleSheet.create({
+    lottie: {
+        justifyContent: 'center',
+        alignSelf: 'center',
+        width: width * 0.9,
+        height: width
+    },
     heading: {
         fontFamily: "Inter-Bold",
         fontSize: 20,
@@ -114,9 +159,7 @@ const styles = StyleSheet.create({
     header: {
         // width: '100%',
         // height: Dimensions.get("screen").height * 0.1
-        flexDirection: 'row',
         alignItems: 'center',
-        justifyContent: 'space-between',
         paddingVertical: 10,
         paddingHorizontal: 10,
         backgroundColor: '#8EBBF3',
@@ -125,7 +168,8 @@ const styles = StyleSheet.create({
     },
     headerText: {
         fontFamily: "Inter-ExtraBold",
-        textAlign: 'justify',
+        textAlign: 'center',
+        justifyContent: 'center',
         fontSize: 20
         //justifyContent: 'center'
     },
