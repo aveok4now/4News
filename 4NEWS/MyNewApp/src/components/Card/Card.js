@@ -24,6 +24,9 @@ const Card = ({ item, navigation }) => {
     const imageUrl = item.urlToImage || defaultImage;
     const [isLiked, setIsLiked] = useState(false);
 
+
+    let includesG = item.url.includes("https://news.google.com/")
+
     const handleImageLoad = () => {
         setImageLoaded(true);
     };
@@ -63,7 +66,7 @@ const Card = ({ item, navigation }) => {
                     <View style={styles.titleView}>
                         <Text style={styles.title}>{item.title}</Text>
                         <Text style={styles.description}>{item.description || ''}</Text>
-                        <View style={styles.podcard}>
+                        <View style={[styles.podcard, item.author && item.author.length > 20 ? { flexDirection: 'column', alignItems: 'flex-start' } : null]}>
                             <Text style={styles.description}>{item.author || ''} </Text>
                             <Text style={styles.description}>
                                 {new Date(item.publishedAt).toLocaleString('ru-RU', {
@@ -77,33 +80,34 @@ const Card = ({ item, navigation }) => {
                                 })}
                             </Text>
                         </View>
+                        <View style={{ flexDirection: 'row', gap: 200 }}>
 
-                        {!item.url.includes("https://news.google.com/") && (
-                            <View style={{ flexDirection: 'row', gap: 200 }}>
+                            <TouchableOpacity
+                                disabled={includesG}
+                                style={[styles.more, { opacity: includesG ? 0 : 1 }]}
+                                onPress={() => navigation.navigate("NewsViewer", {
+                                    url: item.url,
+                                })}>
+                                <Text style={styles.moreText}>Подробнее</Text>
+                                <Icon name="arrow-right" size={20} color="#F7F6C5" style={{ marginLeft: 8 }} />
+                            </TouchableOpacity>
+                            <View style={
+                                [
+                                    styles.more,
+                                    {
+                                        backgroundColor: isLiked ? '#DA2C38' : '#301315',
+                                        width: 'auto'
+                                    }]}>
                                 <TouchableOpacity
-                                    style={styles.more}
-                                    onPress={() => navigation.navigate("NewsViewer", {
-                                        url: item.url,
-                                    })}>
-                                    <Text style={styles.moreText}>Подробнее</Text>
-                                    <Icon name="arrow-right" size={20} color="#F7F6C5" style={{ marginLeft: 8 }} />
+                                    onPress={() => setIsLiked(!isLiked)}
+                                >
+                                    <Icon name={isLiked ? "heart" : "heart-o"} size={20} color="white" />
                                 </TouchableOpacity>
-                                <View style={
-                                    [
-                                        styles.more,
-                                        {
-                                            backgroundColor: isLiked ? '#DA2C38' : '#301315',
-                                            width: 'auto'
-                                        }]}>
-                                    <TouchableOpacity
-                                        onPress={() => setIsLiked(!isLiked)}
-                                    >
-                                        <Icon name={isLiked ? "heart" : "heart-o"} size={20} color="white" />
-                                    </TouchableOpacity>
-                                </View>
                             </View>
+                        </View>
 
-                        )}
+
+
                     </View>
                     <View style={styles.source}>
                         <Text style={styles.sourceText}>Источник: {item.source.name}</Text>
@@ -138,7 +142,7 @@ const styles = StyleSheet.create({
     image: {
         flex: 1,
         height: 200,
-        resizeMode: 'contain',
+        resizeMode: 'cover',
         borderRadius: 7,
     },
     loader: {
@@ -208,22 +212,8 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         elevation: 1,
         marginTop: 10,
-        paddingTop: 6
+        paddingTop: 6,
     },
-    like: {
-        backgroundColor: 'red',
-        paddingHorizontal: 10,
-        paddingVertical: 5,
-        width: '33%',
-        textAlign: 'center',
-        marginTop: 5,
-        borderRadius: 5,
-        flexDirection: 'row',
-        elevation: 1,
-        marginTop: 10,
-        paddingTop: 6
-    },
-
 
 
     moreText: {

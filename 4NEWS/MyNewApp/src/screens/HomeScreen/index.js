@@ -111,6 +111,7 @@ const HomeScreen = ({ navigation }) => {
 
     const getData2 = async (category) => {
         try {
+            //setIsLoading(true)
             const ruResponse = await fetch(
                 `https://newsapi.org/v2/top-headlines?country=ru&apiKey=${apiKeyList[apiKeyIndex]}&category=${category}`);
 
@@ -141,7 +142,7 @@ const HomeScreen = ({ navigation }) => {
 
             setData(combinedData);
             setIsRefreshing(false);
-            apiKeyIndex = (apiKeyIndex + 1) % apiKeyList.length;
+            //apiKeyIndex = (apiKeyIndex + 1) % apiKeyList.length;
             setIsLoading(false)
         } catch (error) {
             console.error("Error in getData2:", error);
