@@ -1,20 +1,20 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, FlatList, ScrollView, TouchableOpacity, StyleSheet, ActivityIndicator, Dimensions, Image } from 'react-native';
+import { View, Text, FlatList, ScrollView, TouchableOpacity, StyleSheet, ActivityIndicator, Dimensions, Image, StatusBar } from 'react-native';
 import Header from '../../components/Header';
 import Card from '../../components/Card';
 import HorFlatList from '../../components/HorFlatList';
 import CategoryComp from '../../components/Category/CategoryComp';
+import NetInfo from '@react-native-community/netinfo'
+import * as Animatable from 'react-native-animatable'
 
 const HomeScreen = ({ navigation }) => {
 
     const [isFetchingError, setIsFetchingError] = useState(false);
     const [Loading, setIsLoading] = useState(false);
-
     const [Data, setData] = useState([]);
-
-
     const [Select, setSelect] = useState(0);
     const [isRefreshing, setIsRefreshing] = useState(false);
+
     const [Category, SetCategory] = useState([
         {
             id: 1,
@@ -62,6 +62,9 @@ const HomeScreen = ({ navigation }) => {
 
     const apiKeyList = ["ef0cca7fb1924225a4c6c42e0f32924b", "abc3f76eb9ec4195b35c7c5b3771a40b", "5bb375e99be54883b8b9aee7001fc660", "2c7f28792cc64ca699bfd3bbf2768105"];
     let apiKeyIndex = 0;
+
+    const [isConnected, setIsConnected] = useState(false);
+    const [showConnectionStatus, setShowConnectionStatus] = useState(false);
 
     const getData = async () => {
         try {
@@ -153,7 +156,24 @@ const HomeScreen = ({ navigation }) => {
 
 
     useEffect(() => {
+        const unsubscribe = NetInfo.addEventListener(state => {
+            console.log("Connection type", state.type);
+            console.log("Is connected?", state.isConnected);
+            setIsConnected(state.isConnected);
+            if (state.isConnected == true) {
+                getData();
+                setShowConnectionStatus(true);
+                setTimeout(() => {
+                    setShowConnectionStatus(false);
+                }, 2000);
+            }
+        });
+
         getData();
+
+        return () => {
+            unsubscribe();
+        }
     }, []);
 
 
@@ -162,9 +182,36 @@ const HomeScreen = ({ navigation }) => {
         getData();
     }
 
+    const [canBeShowed, setCanBeShowed] = useState(false)
+    const handleAnimEnd = () => {
+        setTimeout(() => {
+            setCanBeShowed(true);
+        }, 1500);
+    }
+
 
     return (
         <>
+            {!isConnected ? (
+                <Animatable.View
+                    animation="fadeInDown"
+                    duration={1000}
+                    style={{ justifyContent: 'center', alignItems: 'center', backgroundColor: 'red' }}>
+                    <Text style={{ fontFamily: 'Inter-Light' }}>Отсутствует интернет-соединение</Text>
+                </Animatable.View>
+            ) : (
+                showConnectionStatus && (
+                    <Animatable.View
+                        animation="fadeInDown"
+                        onAnimationEnd={handleAnimEnd}
+                        duration={1000}
+                        style={{ position: 'absolute', top: 0, left: 0, right: 0, justifyContent: 'center', alignItems: 'center', backgroundColor: 'green', flex: 2, zIndex: 1 }}>
+                        <Text style={{ fontFamily: 'Inter-Light' }}>Подключение установлено!</Text>
+                    </Animatable.View>
+                )
+            )
+            }
+
             {/* TODO: Lottie */}
             {Loading ? (
 
@@ -175,115 +222,121 @@ const HomeScreen = ({ navigation }) => {
                         size={36}>
                     </ActivityIndicator>
                 </View>) : (
-                <View style={{ flex: 1 }}>
+                canBeShowed && (
+                    <View style={{ flex: 1 }}>
 
-                    <Header navigation={navigation} />
+                        <Header navigation={navigation} />
 
-                    <View style={styles.horList}>
-                        <FlatList
-                            horizontal
-                            showsHorizontalScrollIndicator={false}
-                            data={Category}
-                            renderItem={({ item, index }) => {
-                                return (
-                                    <TouchableOpacity
-                                        style={index == Select ?
-                                            styles.selListItem : styles.horListItem}
-                                        onPress={() => {
-                                            setSelect(index)
-                                            getData2(Category[index].category)
-                                            //onRefresh()
-                                        }}
-                                    >
-                                        <Text
-                                            style={index == Select ?
-                                                styles.selListText : styles.horListText}>{item.nameRU}</Text>
-                                    </TouchableOpacity>
-                                )
-                            }}
-                        />
-                    </View>
-
-                    {/* <View style={{ flex: 1 }}>
-                        <View style={{
-                            width: Dimensions.get("window").width,
-                            height: Dimensions.get("window").height,
-                        }}>
+                        <Animatable.View
+                            animation="fadeIn"
+                            duration={1500}
+                            style={styles.horList}>
                             <FlatList
                                 horizontal
-                                showsHorizonatlScrollIndicator={false}
-                                data={Data.filter(item => item.urlToImage != null).slice(0, 6)}
+                                showsHorizontalScrollIndicator={false}
+                                data={Category}
                                 renderItem={({ item, index }) => {
-                                    return <HorFlatList item={item} />;
+                                    return (
+                                        <TouchableOpacity
+                                            style={index == Select ?
+                                                styles.selListItem : styles.horListItem}
+                                            onPress={() => {
+                                                setSelect(index)
+                                                getData2(Category[index].category)
+                                                //onRefresh()
+                                            }}
+                                        >
+                                            <Text
+                                                style={index == Select ?
+                                                    styles.selListText : styles.horListText}>{item.nameRU}</Text>
+                                        </TouchableOpacity>
+                                    )
                                 }}
                             />
+                        </Animatable.View>
+
+                        {/* <View style={{ flex: 1 }}>
+        <View style={{
+            width: Dimensions.get("window").width,
+            height: Dimensions.get("window").height,
+        }}>
+            <FlatList
+                horizontal
+                showsHorizonatlScrollIndicator={false}
+                data={Data.filter(item => item.urlToImage != null).slice(0, 6)}
+                renderItem={({ item, index }) => {
+                    return <HorFlatList item={item} />;
+                }}
+            />
+        </View>
+    </View> */}
+                        {/* <ScrollView
+        style={{ flex: 1 }}
+        scrollEventThrottle={16}
+    >
+
+        <View style={{
+            flex: 1,
+            backgroundColor: '#8BC6EC',
+            paddingTop: 20,
+            zIndex: 1,
+            position: 'relative',
+            borderTopLeftRadius: 25,
+            borderTopRightRadius: 25
+        }}>
+            <Text style={styles.heading}>
+                Что мы можем предложить Вам сегодня:
+            </Text>
+            <View style={{ height: 130, marginTop: 20 }}>
+                <ScrollView
+                    horizontal={true}
+                    showsHorizontalScrollIndicator={false}
+                >
+                    <CategoryComp
+                        imageUri={require('../assets/images/seved.png')}
+                        name="Спорт"
+                    />
+                    <CategoryComp
+                        imageUri={require('../assets/images/seved.png')}
+                        name="Развлечения"
+                    />
+                    <CategoryComp
+                        imageUri={require('../assets/images/seved.png')}
+                        name="Здоровье"
+                    />
+                </ScrollView>
+            </View> */}
+                        {/* <View style={{ marginTop: 40, paddingHorizontal: 20 }}>
+                <Text style={{ fontSize: 24, fontFamily: 'Inter-Bold' }}>
+                    Lorem ipsum ...
+                </Text>
+                <Text style={{ marginTop: 10, fontFamily: 'Inter-Light' }}>
+                    Lorem ipsum ...  Lorem ipsum ...  Lorem ipsum ...  Lorem ipsum ...
+                </Text>
+            </View> */}
+                        {/* </View>
+
+    </ScrollView> */}
+
+                        <View style={{ flex: 2, }}>
+                            <View style={{ height: Dimensions.get("window").height * 0.78 }}>
+                                <FlatList
+                                    style={{ flex: 1, zIndex: 100, position: 'relative' }}
+                                    showsVerticalScrollIndicator={false}
+                                    onRefresh={onRefresh}
+                                    refreshing={isRefreshing}
+                                    data={Data}
+                                    renderItem={({ item, index }) => {
+                                        return <Card item={item} navigation={navigation} />;
+                                    }}
+                                />
+                            </View>
                         </View>
-                    </View> */}
-                    {/* <ScrollView
-                        style={{ flex: 1 }}
-                        scrollEventThrottle={16}
-                    >
 
-                        <View style={{
-                            flex: 1,
-                            backgroundColor: '#8BC6EC',
-                            paddingTop: 20,
-                            zIndex: 1,
-                            position: 'relative',
-                            borderTopLeftRadius: 25,
-                            borderTopRightRadius: 25
-                        }}>
-                            <Text style={styles.heading}>
-                                Что мы можем предложить Вам сегодня:
-                            </Text>
-                            <View style={{ height: 130, marginTop: 20 }}>
-                                <ScrollView
-                                    horizontal={true}
-                                    showsHorizontalScrollIndicator={false}
-                                >
-                                    <CategoryComp
-                                        imageUri={require('../assets/images/seved.png')}
-                                        name="Спорт"
-                                    />
-                                    <CategoryComp
-                                        imageUri={require('../assets/images/seved.png')}
-                                        name="Развлечения"
-                                    />
-                                    <CategoryComp
-                                        imageUri={require('../assets/images/seved.png')}
-                                        name="Здоровье"
-                                    />
-                                </ScrollView>
-                            </View> */}
-                    {/* <View style={{ marginTop: 40, paddingHorizontal: 20 }}>
-                                <Text style={{ fontSize: 24, fontFamily: 'Inter-Bold' }}>
-                                    Lorem ipsum ...
-                                </Text>
-                                <Text style={{ marginTop: 10, fontFamily: 'Inter-Light' }}>
-                                    Lorem ipsum ...  Lorem ipsum ...  Lorem ipsum ...  Lorem ipsum ...
-                                </Text>
-                            </View> */}
-                    {/* </View>
 
-                    </ScrollView> */}
-
-                    <View style={{ flex: 2, }}>
-                        <View style={{ height: Dimensions.get("window").height * 0.78 }}>
-                            <FlatList
-                                style={{ flex: 1, zIndex: 100, position: 'relative' }}
-                                showsVerticalScrollIndicator={false}
-                                onRefresh={onRefresh}
-                                refreshing={isRefreshing}
-                                data={Data}
-                                renderItem={({ item, index }) => {
-                                    return <Card item={item} navigation={navigation} />;
-                                }}
-                            />
-                        </View>
                     </View>
+                )
 
-
-                </View>
 
             )}
 
