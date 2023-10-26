@@ -22,6 +22,7 @@ const Card = ({ item, navigation }) => {
     //console.log(item);
     const [imageLoaded, setImageLoaded] = useState(false);
     const imageUrl = item.urlToImage || defaultImage;
+    const [isLiked, setIsLiked] = useState(false);
 
     const handleImageLoad = () => {
         setImageLoaded(true);
@@ -78,20 +79,35 @@ const Card = ({ item, navigation }) => {
                         </View>
 
                         {!item.url.includes("https://news.google.com/") && (
-                            <TouchableOpacity
-                                style={styles.more}
-                                onPress={() => navigation.navigate("NewsViewer", {
-                                    url: item.url,
-                                })
-                                }>
-                                <Text style={styles.moreText}>Подробнее</Text>
-                                <Icon name="arrow-right" size={19} color="#F7F6C5" style={{ marginLeft: 8 }} />
-                            </TouchableOpacity>
-                        )}
+                            <View style={{ flexDirection: 'row', gap: 200 }}>
+                                <TouchableOpacity
+                                    style={styles.more}
+                                    onPress={() => navigation.navigate("NewsViewer", {
+                                        url: item.url,
+                                    })}>
+                                    <Text style={styles.moreText}>Подробнее</Text>
+                                    <Icon name="arrow-right" size={20} color="#F7F6C5" style={{ marginLeft: 8 }} />
+                                </TouchableOpacity>
+                                <View style={
+                                    [
+                                        styles.more,
+                                        {
+                                            backgroundColor: isLiked ? '#DA2C38' : '#301315',
+                                            width: 'auto'
+                                        }]}>
+                                    <TouchableOpacity
+                                        onPress={() => setIsLiked(!isLiked)}
+                                    >
+                                        <Icon name={isLiked ? "heart" : "heart-o"} size={20} color="white" />
+                                    </TouchableOpacity>
+                                </View>
+                            </View>
 
+                        )}
                     </View>
                     <View style={styles.source}>
                         <Text style={styles.sourceText}>Источник: {item.source.name}</Text>
+
                     </View>
 
                 </Animatable.View>
@@ -156,12 +172,18 @@ const styles = StyleSheet.create({
 
     source: {
         position: 'absolute',
-        top: 14,
-        right: 4,
+        top: '4%',
+        right: '1%',
         backgroundColor: '#8EBCF3',
         borderRadius: 5,
         padding: 5
     },
+
+    // like: {
+    //     position: 'absolute',
+    //     top: '5.5%',
+    //     left: '2%',
+    // },
 
     sourceText: {
         color: '#F7F6C5',
@@ -188,6 +210,21 @@ const styles = StyleSheet.create({
         marginTop: 10,
         paddingTop: 6
     },
+    like: {
+        backgroundColor: 'red',
+        paddingHorizontal: 10,
+        paddingVertical: 5,
+        width: '33%',
+        textAlign: 'center',
+        marginTop: 5,
+        borderRadius: 5,
+        flexDirection: 'row',
+        elevation: 1,
+        marginTop: 10,
+        paddingTop: 6
+    },
+
+
 
     moreText: {
         //fontWeight: '700',
