@@ -12,7 +12,7 @@ export default function FavoritesScreen({ navigation }) {
     const [favorites, setFavorites] = useState([]);
     const [identify, setIdenify] = useState('')
     const [state] = useState("📰 Ваши сохранённые новости, ")
-
+    const [isRefreshing, setIsRefreshing] = useState(false);
 
     useEffect(() => {
         const checkUserCredentials = async () => {
@@ -38,7 +38,8 @@ export default function FavoritesScreen({ navigation }) {
         try {
             const savedNewsItems = await AsyncStorage.getItem('savedNewsItems');
             const parsedSavedNewsItems = JSON.parse(savedNewsItems) || [];
-            setFavorites(parsedSavedNewsItems);
+            setFavorites(parsedSavedNewsItems.reverse());
+            setIsRefreshing(false)
         } catch (error) {
             console.error('Error loading saved news items:', error);
         }
@@ -47,6 +48,12 @@ export default function FavoritesScreen({ navigation }) {
     useEffect(() => {
         loadFavorites();
     }, []);
+
+    const onRefresh = () => {
+        setIsRefreshing(true);
+        loadFavorites()
+    }
+
     return (
         identify !== "Гость" ? (
             <Animatable.View
@@ -69,6 +76,9 @@ export default function FavoritesScreen({ navigation }) {
                 </View>
 
                 <FlatList
+                    style={{ marginBottom: '30%' }}
+                    onRefresh={onRefresh}
+                    refreshing={isRefreshing}
                     data={favorites}
                     keyExtractor={(item) => item.url}
                     renderItem={({ item }) => {
