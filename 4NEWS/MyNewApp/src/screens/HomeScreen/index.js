@@ -200,7 +200,7 @@ const HomeScreen = ({ navigation }) => {
                     </View>
 
                     <View style={{ flex: 1 }}>
-                        <View style={{ height: Dimensions.get("window").height * 0.85 }}>
+                        <View style={{ height: Dimensions.get("window").height * 0.78 }}>
                             <FlatList
                                 showsVerticalScrollIndicator={false}
                                 onRefresh={onRefresh}
