@@ -2,11 +2,12 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { Modal, View, Animated, Text, TouchableOpacity, Dimensions, BackHandler } from 'react-native';
 import LottieView from 'lottie-react-native';
-
+import { assets } from '../../../react-native.config';
+import CustomButton from '../CustomButton';
 
 
 const { width, height } = Dimensions.get('window');
-const ModalPopup = ({ visible, children }) => {
+const ModalPopup = ({ visible, children, route, navigation }) => {
     const [showModal, setShowModal] = useState(visible);
     const scaleValue = useRef(new Animated.Value(0)).current;
 
@@ -34,18 +35,16 @@ const ModalPopup = ({ visible, children }) => {
 
     };
 
-    const onYes = () => BackHandler.exitApp()
+
+
+
+
     return (
         <Modal transparent visible={showModal}>
             <View style={styles.modalBackGround}>
 
                 <Animated.View style={[styles.modalContainer, { transform: [{ scale: scaleValue }] }]}>
                     {children}
-                    <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
-                        <TouchableOpacity onPress={() => onYes()} style={styles.buttonYes}>
-                            <Text style={styles.buttonYes}>Да</Text>
-                        </TouchableOpacity>
-                    </View>
                 </Animated.View>
 
             </View>
@@ -89,6 +88,8 @@ const styles = {
         color: 'white',
         fontFamily: "Inter-Bold"
     },
+
+
 
 };
 

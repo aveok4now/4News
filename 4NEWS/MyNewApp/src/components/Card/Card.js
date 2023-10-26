@@ -8,14 +8,16 @@ import {
     ActivityIndicator,
     SafeAreaView,
     ScrollView,
-    Dimensions
+    Dimensions,
+    Alert
 } from 'react-native';
 import * as Animatable from 'react-native-animatable';
 import LinearGradient from 'react-native-linear-gradient';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { assets } from '../../../react-native.config';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
+import ModalPopup from '../CustomModal/CustomModal';
+import CustomButton from '../CustomButton';
 
 const Card = ({ item, navigation }) => {
     const defaultImage = 'https://arbeitgeber.de/wp-content/uploads/2020/11/bda-news-header-1920x1280px-1536x1024.jpg'
@@ -24,6 +26,8 @@ const Card = ({ item, navigation }) => {
     const [imageLoaded, setImageLoaded] = useState(false);
     const imageUrl = item.urlToImage || defaultImage;
     const [isLiked, setIsLiked] = useState(false);
+    const [identify, setIdenify] = useState('')
+    const [showModal, setShowModal] = useState(false);
 
     let getSaved = AsyncStorage.getItem('savedNewsItems');
 
@@ -37,6 +41,11 @@ const Card = ({ item, navigation }) => {
     const handleLike = async () => {
         setIsLiked(!isLiked)
         try {
+            if (identify == "Гость") {
+                setShowModal(!showModal)
+                setIsLiked(false)
+                return
+            }
             const savedNewsItems = await AsyncStorage.getItem('savedNewsItems');
             const parsedSavedNewsItems = JSON.parse(savedNewsItems) || [];
 
@@ -66,6 +75,24 @@ const Card = ({ item, navigation }) => {
 
 
     useEffect(() => {
+
+        const checkUserCredentials = async () => {
+            const savedUsername = await AsyncStorage.getItem('username');
+            const savedPassword = await AsyncStorage.getItem('password');
+            const guestID = await AsyncStorage.getItem('guestID');
+
+            if (savedUsername && savedPassword) {
+                //onSignInPressed({ username: savedUsername, password: savedPassword });
+                setIdenify(savedUsername)
+            } else if (savedUsername === 'guest') {
+                if (guestID) {
+                    setIdenify("Гость")
+                }
+            }
+        }
+
+        checkUserCredentials();
+
         const checkLiked = async () => {
             const likedNewsItems = await AsyncStorage.getItem('likedNewsItems');
             const parsedLikedNewsItems = JSON.parse(likedNewsItems) || [];
@@ -75,6 +102,10 @@ const Card = ({ item, navigation }) => {
 
         checkLiked();
     }, []);
+
+    const onOk = () => {
+        navigation.navigate("Добро пожаловать !", { status: "logout" })
+    }
 
 
     return (
@@ -136,6 +167,7 @@ const Card = ({ item, navigation }) => {
                                 <Text style={styles.moreText}>Подробнее</Text>
                                 <Icon name="arrow-right" size={20} color="#F7F6C5" style={{ marginLeft: 8 }} />
                             </TouchableOpacity>
+
                             <View style={
                                 [
                                     styles.more,
@@ -144,6 +176,7 @@ const Card = ({ item, navigation }) => {
                                         width: 'auto'
                                     }]}>
                                 <TouchableOpacity
+                                    //disabled={showModal}
                                     onPress={handleLike}
                                 >
                                     <Icon name={isLiked ? "heart" : "heart-o"} size={20} color="white" />
@@ -158,8 +191,44 @@ const Card = ({ item, navigation }) => {
                         <Text style={styles.sourceText}>Источник: {item.source.name}</Text>
 
                     </View>
+                    {showModal ? (
+                        <View style={{ flex: 1 }}>
+                            {/* {Alert.alert()} */}
+                            <ModalPopup
+                                navigation={navigation}
+                                visible={showModal}
+                                route="popup"
+                            >
+                                <View>
+                                    <Text style={styles.popUpText}>Чтобы добавлять новости в избранное,
+                                        пожалуйста, войдите или зарегестрируйтесь 🥰
+                                    </Text>
+                                    <View style={{
+                                        flexDirection: 'column',
+                                        justifyContent: 'center',
+                                        marginTop: 15
+                                    }}>
+                                        <CustomButton
+                                            text="ОК"
+                                            onPress={() => onOk()}
+                                        />
+                                        <CustomButton
+                                            type="Tertiary"
+                                            text="Отмена"
+                                            onPress={() => setShowModal(false)}
+                                        />
 
+                                        {/* <Text style={{ fontFamily: "Inter-ExtraBold" }}>ОК</Text> */}
+                                    </View>
+                                </View>
+                            </ModalPopup>
+                        </View>
+                    ) : (
+                        null
+                    )
+                    }
                 </Animatable.View>
+
             </LinearGradient>
 
         ));
@@ -265,6 +334,12 @@ const styles = StyleSheet.create({
         //fontWeight: '700',
         color: '#F7F6C5',
         fontFamily: "Inter-ExtraBold",
+    },
+
+    popUpText: {
+        fontFamily: 'Inter-Light',
+        fontSize: 18,
+        textAlign: 'center'
     }
 
 });

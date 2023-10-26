@@ -17,7 +17,8 @@ import LinearGradient from 'react-native-linear-gradient';
 import RadialGradient from 'react-native-radial-gradient';
 const { width, height } = Dimensions.get('window');
 import SQLite from 'react-native-sqlite-storage'
-
+import { assets } from './react-native.config';
+import CustomButton from './src/components/CustomButton';
 
 // SQLite.enablePromise(true);
 const App = () => {
@@ -38,7 +39,7 @@ const App = () => {
 
 
     const backAction = () => {
-      setVisible(true);
+      setVisible(!visible);
       return true;
     };
 
@@ -57,6 +58,9 @@ const App = () => {
   const failToOpenDB = (err) => {
     alert(err)
   }
+
+  const onYes = () => BackHandler.exitApp()
+
   return (
     <>
       <StatusBar backgroundColor="#36d1dc" />
@@ -79,7 +83,18 @@ const App = () => {
               source={require("./src/screens/assets/animations/exit.json")}
               autoPlay={true}
               loop={false} />
-            <Text style={{ marginVertical: 30, fontSize: 20, textAlign: 'center', textDecorationColor: 'white' }}>Вы уверены, что хотите выйти?</Text>
+            <Text style={{ marginBottom: 20, fontSize: 20, textAlign: 'center', textDecorationColor: 'white', fontFamily: "Inter-Bold" }}>Вы уверены, что хотите выйти?</Text>
+            <View style={{ flexDirection: 'column', justifyContent: 'center' }}>
+              <CustomButton
+                text="Да"
+                onPress={() => onYes()}
+              />
+              <CustomButton
+                type='Tertiary'
+                text="Отмена"
+                onPress={() => setVisible(false)}
+              />
+            </View>
           </ModalPopup>
           <Navigation />
         </SafeAreaView>
@@ -106,14 +121,16 @@ const styles = StyleSheet.create({
     height: width
   },
   lottieClose: {
-    width: 80,
-    height: 80
+    width: 90,
+    height: 90,
+    marginLeft: 55
   },
 
   header: {
-    width: '100%',
+    width: '120%',
     height: 40,
     alignItems: 'flex-end',
+    // paddingHorizontal: -15,
     justifyContent: 'center',
   },
 

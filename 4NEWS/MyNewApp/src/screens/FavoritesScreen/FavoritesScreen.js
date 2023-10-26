@@ -58,7 +58,7 @@ export default function FavoritesScreen({ navigation }) {
 
                     <TypeWriter
                         style={styles.headerText}
-                        minDelay={10}
+                        minDelay={5}
                         typing={1}
                     >
                         {state}{identify}
