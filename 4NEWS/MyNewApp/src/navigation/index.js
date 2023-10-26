@@ -22,8 +22,6 @@ import WeatherScreen from '../screens/WeatherScreen';
 import BottomTabBar from '../components/BottomTabBar';
 import FavoritesScreen from '../screens/FavoritesScreen';
 
-
-
 const Stack = createNativeStackNavigator();
 
 const navTheme = {

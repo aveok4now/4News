@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
     View,
     Text,
@@ -14,6 +14,7 @@ import * as Animatable from 'react-native-animatable';
 import LinearGradient from 'react-native-linear-gradient';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { assets } from '../../../react-native.config';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 const Card = ({ item, navigation }) => {
@@ -24,12 +25,56 @@ const Card = ({ item, navigation }) => {
     const imageUrl = item.urlToImage || defaultImage;
     const [isLiked, setIsLiked] = useState(false);
 
+    let getSaved = AsyncStorage.getItem('savedNewsItems');
+
 
     let includesG = item.url.includes("https://news.google.com/")
 
     const handleImageLoad = () => {
         setImageLoaded(true);
     };
+
+    const handleLike = async () => {
+        setIsLiked(!isLiked)
+        try {
+            const savedNewsItems = await AsyncStorage.getItem('savedNewsItems');
+            const parsedSavedNewsItems = JSON.parse(savedNewsItems) || [];
+
+            const isAlreadySaved = parsedSavedNewsItems.some((savedItem) => savedItem.url === item.url);
+
+            if (!isAlreadySaved) {
+                parsedSavedNewsItems.push(item);
+                await AsyncStorage.setItem('savedNewsItems', JSON.stringify(parsedSavedNewsItems));
+                console.log("saved")
+            }
+            const likedNewsItems = await AsyncStorage.getItem('likedNewsItems');
+            const parsedLikedNewsItems = JSON.parse(likedNewsItems) || [];
+
+            if (isLiked) {
+                const updatedLikedNewsItems = parsedLikedNewsItems.filter((likedItem) => likedItem.url !== item.url);
+                await AsyncStorage.setItem('likedNewsItems', JSON.stringify(updatedLikedNewsItems));
+            } else {
+                parsedLikedNewsItems.push(item);
+                await AsyncStorage.setItem('likedNewsItems', JSON.stringify(parsedLikedNewsItems));
+            }
+
+
+        } catch (error) {
+            console.error('Error saving news item:', error);
+        }
+    };
+
+
+    useEffect(() => {
+        const checkLiked = async () => {
+            const likedNewsItems = await AsyncStorage.getItem('likedNewsItems');
+            const parsedLikedNewsItems = JSON.parse(likedNewsItems) || [];
+            const isAlreadyLiked = parsedLikedNewsItems.some((likedItem) => likedItem.url === item.url);
+            setIsLiked(isAlreadyLiked);
+        };
+
+        checkLiked();
+    }, []);
 
 
     return (
@@ -99,7 +144,7 @@ const Card = ({ item, navigation }) => {
                                         width: 'auto'
                                     }]}>
                                 <TouchableOpacity
-                                    onPress={() => setIsLiked(!isLiked)}
+                                    onPress={handleLike}
                                 >
                                     <Icon name={isLiked ? "heart" : "heart-o"} size={20} color="white" />
                                 </TouchableOpacity>

@@ -152,7 +152,6 @@ const HomeScreen = ({ navigation }) => {
     }
 
 
-
     useEffect(() => {
         getData();
     }, []);
@@ -162,9 +161,6 @@ const HomeScreen = ({ navigation }) => {
         setIsRefreshing(true);
         getData();
     }
-
-
-
 
 
     return (
