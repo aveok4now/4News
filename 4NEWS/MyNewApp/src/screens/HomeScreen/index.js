@@ -107,14 +107,14 @@ const HomeScreen = ({ navigation }) => {
 
     const getData2 = async (category) => {
         try {
-            setIsLoading(true)
             const ruResponse = await fetch(
                 `https://newsapi.org/v2/top-headlines?country=ru&apiKey=${apiKeyList[apiKeyIndex]}&category=${category}`);
 
 
-            if (ruResponse == undefined) {
+            if (ruResponse.status === 429) {
                 apiKeyIndex = (apiKeyIndex + 1) % apiKeyList.length;
                 getData2()
+                return
                 //throw new Error(`RuResponse Error: ${ruResponse.status}`);
             }
 
@@ -123,15 +123,14 @@ const HomeScreen = ({ navigation }) => {
             const usResponse = await fetch(
                 `https://newsapi.org/v2/top-headlines?country=us&apiKey=${apiKeyList[apiKeyIndex]}&category=${category}`);
 
-            if (usResponse == undefined) {
-
+            if (usResponse.status === 429) {
                 apiKeyIndex = (apiKeyIndex + 1) % apiKeyList.length;
                 getData2()
+                return
                 //throw new Error(`UsResponse Error: ${usResponse.status}`);
             }
 
             const usData = await usResponse.json();
-
             const combinedData = [...ruData.articles, ...usData.articles];
 
             combinedData.sort(() => Math.random() - 0.5);

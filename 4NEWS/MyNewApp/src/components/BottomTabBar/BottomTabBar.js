@@ -4,8 +4,10 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import HomeScreen from '../../screens/HomeScreen';
 import WeatherScreen from '../../screens/WeatherScreen';
 import Icon from 'react-native-vector-icons/FontAwesome6';
+import Icon2 from 'react-native-vector-icons/Ionicons';
 import { assets } from '../../../react-native.config';
 import * as Animatable from 'react-native-animatable';
+import FavoritesScreen from '../../screens/FavoritesScreen';
 
 
 const Tab = createBottomTabNavigator();
@@ -52,6 +54,30 @@ export default function BottomTabBar() {
                                 duration={1500}
                                 style={focused ? styles.selIconText : styles.iconText}>
                                 Новости
+                            </Animatable.Text>
+                        </Animatable.View>
+                    )
+                }}
+            />
+            <Tab.Screen
+                name="Избранное"
+                component={FavoritesScreen}
+                options={{
+                    tabBarIcon: ({ focused }) => (
+                        <Animatable.View
+                            animation="fadeInDown"
+                            duration={1000}
+                            style={{ alignItems: "center", justifyContent: "center" }}>
+                            <Icon2
+                                name={focused ? "star" : "star-outline"}
+                                size={focused ? 28 : 24}
+                                color={focused ? "#EDFFAB" : "#28587B"}
+                            />
+                            <Animatable.Text
+                                animation="jello"
+                                duration={1500}
+                                style={focused ? styles.selIconText : styles.iconText}>
+                                Избранное
                             </Animatable.Text>
                         </Animatable.View>
                     )

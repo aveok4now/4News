@@ -20,6 +20,7 @@ import Splash from '../screens/SplashScreen/SplashScreen';
 import NewsViewer from '../components/NewsViewer/NewsViewer';
 import WeatherScreen from '../screens/WeatherScreen';
 import BottomTabBar from '../components/BottomTabBar';
+import FavoritesScreen from '../screens/FavoritesScreen';
 
 
 
@@ -78,6 +79,7 @@ const Navigation = () => {
                     <Stack.Screen name="Splash" component={Splash} />
                     <Stack.Screen name="Search" component={Search} />
                     <Stack.Screen name="NewsViewer" component={NewsViewer} />
+                    <Stack.Screen name="FavoritesScreen" component={FavoritesScreen} />
                     <Stack.Screen name="Weather Screen" component={WeatherScreen} />
                     <Stack.Screen name="Регистрация"
                         component={SignUpScreen}
