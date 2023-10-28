@@ -3,7 +3,7 @@ React Native News App project, bootstrapped using [`@react-native-community/cli`
 
 - [x] App Icon
 - [x] App Splash Screen - should be rebuild
-- [x] OnBoarding Screen
+- [x] OnBoarding Screen w/ Lottie Animations
   - [x] Page 1
   - [x] Page 2
   - [x] Page 3
@@ -12,29 +12,59 @@ React Native News App project, bootstrapped using [`@react-native-community/cli`
     - [x] SignIn as a Guest
   - [x] SignUp
     - [x] Terms of Use, Privacy Policy Bottom Sheets
+    - [x] Full Validation 
   - [x] New Password
   - [x] Forgot Password
     - [ ] Password Reset
   - [x] Confirm Email
   - [x] Home Screen
+    - [x] News cards
+      - [x] News title, description, authors, date
+      - [x] Read more with React WebView (only for US News)
+      - [x] Likes
+        - [x] Not Registered block with Custom Modal Popup
+        - [x] AsyncStorage integration
     - [x] Splash Screen
+      - [x] Dynamic Typewriter Greetings
+      - [x] Logo & Description Animations
     - [x] Page Refresh
+  - [x] News Search Screen
     - [x] Search Bar
-    - [ ] Search Functionality
+    - [x] Search Functionality
+  - [ ] Favorites Screen
+    - [x] Not Registered Block
+    - [x] Deleting Favorites Functionality
+    - [x] Favorites List Refresh (Auto & Manual)
+    - [x] No Favorite News info
+    - [ ] Fetching Users Favorites data from Database
   - [ ] News Screen
+    - [ ] Full Description
+    - [ ] Users Likes
+    - [ ] Users Comments
+  - [ ] Community Screen
+    - [ ] Users News w/ comments, likes, date, etc. 
+    - [ ] News Posting Functionality
+- [ ] Drawer Navigation 
   - [ ] About Screen
   - [ ] Help Screen
-- [x] OnExit ModalPopUp
-- [x] Forms validation
+  - [ ] Contact with us
+  - [ ] Rate Us
+ - [ ] Weather Screen
+ - [ ] Currency Screen 
+- [x] OnExit Custom ModalPopUp with Custom Buttons
+  - [x] Smooth Animation
+  - [x] Yes, Cancel, Close Buttons
+- [x] Sign In, Sign Up, etc. Forms validation via react-hook-forms
 - [x] News API
   - [x] US News
     - [x] Categories Search  
   - [X] RU News
     - [x] Categories Search  
-- [x] SQLite Integration
+- [x] SQLite Database Integration
 - [x] Async Storage
-
-
+- [x] Bottom TabBar Navigation
+- [x] Proccessing Internet connection with YouTube alike info banners
+- [ ] Admin Subsystem
 
 # Ссылки
 
