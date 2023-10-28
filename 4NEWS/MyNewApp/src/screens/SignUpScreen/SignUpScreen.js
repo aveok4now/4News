@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { View, Text, StyleSheet, ScrollView, useWindowDimensions } from 'react-native';
 import CustomInput from '../../components/CustomInput';
 import CustomButton from '../../components/CustomButton/CustomButton';
@@ -28,21 +28,34 @@ const SignUpScreen = () => {
     const [showTermsSheet, setShowTermsSheet] = useState(false);
     const [showPrivacySheet, setShowPrivacySheet] = useState(false);
     const [isTyping, setIsTyping] = useState(false);
-    const [isExist, setIsExist] = useState(false);
+    const [isExistByUsername, setIsExistByUsername] = useState(false);
+    const [isExistByUserEmail, setIsExistByUserEmail] = useState(false);
     const [isButtonPressed, setIsButtonPressed] = useState(false);
 
+    useEffect(() => {
+        if (isTyping || !isButtonPressed) {
+            setIsExistByUsername(false);
+            setIsExistByUserEmail(false);
+        }
+    }, [isTyping, isButtonPressed]);
+
+
+
     const onRegisterPressed = async (data) => {
-        setIsButtonPressed(true)
+        setIsButtonPressed(true);
+
         try {
             const db = await SQLite.openDatabase({ name: 'news.db', location: 1 });
 
-            const [existingUser] = await db.executeSql('SELECT * FROM Users WHERE userLogin = ?', [data.username]);
+            const [existingUserByUsername] = await db.executeSql('SELECT * FROM Users WHERE userLogin = ?', [data.username]);
+            const [existingUserByEmail] = await db.executeSql('SELECT * FROM Users WHERE userEmail = ?', [data.email]);
 
-            if (existingUser.rows.length > 0) {
-                //console.warn('Пользователь с таким именем уже существует');
-                setIsExist(true)
+            setIsExistByUsername(existingUserByUsername.rows.length > 0);
+            setIsExistByUserEmail(existingUserByEmail.rows.length > 0);
+
+            if (existingUserByUsername.rows.length > 0 || existingUserByEmail.rows.length > 0) {
+                console.log('Пользователь с таким именем или электронной почтой уже существует');
             } else {
-                setIsExist(false)
                 const getLastUserID = async () => {
                     return new Promise((resolve, reject) => {
                         db.transaction((tx) => {
@@ -56,6 +69,7 @@ const SignUpScreen = () => {
                         });
                     });
                 };
+
                 const lastUserID = await getLastUserID();
                 const newUserID = lastUserID + 1;
 
@@ -77,7 +91,6 @@ const SignUpScreen = () => {
         } catch (error) {
             console.error(error);
         }
-
     };
 
 
@@ -180,15 +193,25 @@ const SignUpScreen = () => {
                     type="Tertiary"
                 />
 
-                {isExist && isButtonPressed && !isTyping && (
+                {isExistByUsername && isButtonPressed && !isTyping && (
                     <Animatable.Text
                         animation="bounceIn"
                         duration={1000}
-                        style={styles.errorText}
+                        style={[styles.errorText, { textAlign: 'center' }]}
                     >
-                        Пользователь с таким именем уже существует
+                        ❌ Пользователь с таким <Text style={{ color: 'white' }}>именем</Text> уже существует
                     </Animatable.Text>
                 )}
+                {isExistByUserEmail && isButtonPressed && !isTyping && (
+                    <Animatable.Text
+                        animation="bounceIn"
+                        duration={1000}
+                        style={[styles.errorText, { textAlign: 'center' }]}
+                    >
+                        ❌ Пользователь с такой <Text style={{ color: 'white' }}>электронной почтой</Text> уже существует
+                    </Animatable.Text>
+                )}
+
             </View>
 
             {showTermsSheet && (
@@ -267,7 +290,11 @@ const styles = StyleSheet.create({
     errorText: {
         fontFamily: "Inter-ExtraBold",
         fontSize: 14,
-        color: "#EBB6B6"
+        color: "#F0A5A5",
+        paddingVertical: 5,
+        textShadowColor: 'rgba(0, 0, 0, 0.25)',
+        textShadowOffset: { width: 0, height: 2 },
+        textShadowRadius: 4,
     }
 
 })
