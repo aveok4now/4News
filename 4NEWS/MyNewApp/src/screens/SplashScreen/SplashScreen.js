@@ -47,15 +47,15 @@ const Splash = ({ navigation }) => {
     }
 
 
-    const getCurrentHour = 4;
+    const getCurrentHour = new Date().getHours();
 
     let hello;
 
-    (getCurrentHour >= 5 && getCurrentHour <= 10)
+    (getCurrentHour >= 4 && getCurrentHour <= 10)
         ? hello = "Доброе утро" : (
-            (getCurrentHour > 10 && getCurrentHour < 17)
+            (getCurrentHour > 10 && getCurrentHour <= 16)
                 ? hello = "Добрый день" : (
-                    (getCurrentHour >= 17 && getCurrentHour <= 21)
+                    (getCurrentHour >= 16 && getCurrentHour <= 23)
                         ? hello = "Добрый вечер" : hello = "Доброй ночи"
                 ))
 
@@ -73,54 +73,25 @@ const Splash = ({ navigation }) => {
                 duration={2000}
 
             >
-                {hello === "день" || hello === "вечер" ? (
-                    <View>
-                        <TypeWriter
-                            style={styles.greeting}
-                            minDelay={2}
-                            typing={1}
-                            onTypingEnd={handleTypeComplete}
-                        >
-                            {hello}, {identify}!
-                        </TypeWriter>
-                    </View>
+                <View style={{ alignItems: 'center', justifyContent: 'center', position: "absolute", top: '15%' }}>
+                    <TypeWriter
+                        style={styles.greeting}
+                        minDelay={2}
+                        typing={1}
+                        onTypingEnd={handleTypeComplete}
+                    >
+                        {hello}, {identify}!
+                    </TypeWriter>
+                </View>
 
-                ) : hello === "утро" ? (
-                    <View>
-                        <TypeWriter
-                            style={styles.greeting}
-                            minDelay={2}
-                            typing={1}
-                            onTypingEnd={handleTypeComplete}
-                        >
-                            {hello}, {identify}!
-                        </TypeWriter>
-                    </View>
-                ) : (
-                    <View style={{ alignItems: 'center', justifyContent: 'center', position: "absolute", top: '15%' }}>
-                        {/* <Text style={styles.greeting}>{hello}, {identify}</Text> */}
-                        <TypeWriter
-                            style={styles.greeting}
-                            minDelay={2}
-                            typing={1}
-                            onTypingEnd={handleTypeComplete}
-                        >
-                            {hello}, {identify}!
-                        </TypeWriter>
-                    </View>
-                )}
                 <View style={[styles.logo, { flex: 1, alignItems: 'center', justifyContent: 'center' }]}>
                     <Image
-                        // animation="bounceIn"
-                        // duration={1500}
                         source={Logo}
                         style={[styles.logo, { height: height * 0.18 }]}
                         resizeMode="contain"
                     />
                 </View>
                 <Text
-                    // animation="fadeInDownBig"
-                    // duration={2000}>
                     style={styles.splashText}
                 >
                     4News — Новостное приложение 📰
