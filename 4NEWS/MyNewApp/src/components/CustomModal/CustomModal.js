@@ -53,6 +53,8 @@ const styles = {
         backgroundColor: 'rgba(0,0,0,0.5)',
         justifyContent: 'center',
         alignItems: 'center',
+        height: height,
+
     },
     modalContainer: {
         width: '80%',
@@ -63,26 +65,7 @@ const styles = {
         overflow: 'hidden',
         fontFamily: "Inter-Bold"
     },
-    closeButton: {
-        alignSelf: 'flex-end',
-    },
-    closeButtonText: {
-        color: 'blue',
-        fontSize: 16,
-    },
-    buttonYes: {
-        backgroundColor: 'green',
-        padding: 5,
-        borderRadius: 5,
-        width: 55,
-        //margin: 10,
-        //width: '50%',
-        alignItems: 'center',
-        textAlign: 'center',
-        fontSize: 14,
-        color: 'white',
-        fontFamily: "Inter-Bold"
-    },
+
 
 
 

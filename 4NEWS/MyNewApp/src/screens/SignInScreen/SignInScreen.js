@@ -14,6 +14,8 @@ const { width, height } = Dimensions.get('window');
 import * as Animatable from 'react-native-animatable';
 import SQLite from 'react-native-sqlite-storage'
 import AsyncStorage from '@react-native-async-storage/async-storage';
+
+
 SQLite.enablePromise(true);
 
 
@@ -28,7 +30,7 @@ const SignInScreen = ({ route }) => {
     const [inputFocus, setIsInputFocus] = useState(false);
     //const [isLoggedOut, setIsLoggedOut] = useState(false);
 
-
+    const onYes = () => BackHandler.exitApp()
 
     useEffect(() => {
         const checkUserCredentials = async () => {
@@ -241,22 +243,33 @@ const SignInScreen = ({ route }) => {
                     </Animatable.View>
                 </TouchableOpacity>
 
-                <ModalPopup visible={modalVisible} onClose={closeModal}>
+                <ModalPopup visible={modalVisible}>
                     <View style={{ alignItems: 'center' }}>
                         <View style={styles.header}>
-                            <TouchableOpacity onPress={closeModal}>
+                            <TouchableOpacity onPress={() => setModalVisible(false)}>
                                 <LottieView style={styles.lottieClose}
-                                    source={require("D:/react/4NEWS/MyNewApp/src/screens/assets/animations/close.json")}
+                                    source={require("../assets/animations/close.json")}
                                     autoPlay={true}
                                     loop={false} />
                             </TouchableOpacity>
                         </View>
                     </View>
                     <LottieView style={styles.lottie}
-                        source={require("D:/react/4NEWS/MyNewApp/src/screens/assets/animations/exit.json")}
+                        source={require("../assets/animations/exit.json")}
                         autoPlay={true}
                         loop={false} />
-                    <Text style={{ marginVertical: 30, fontSize: 20, textAlign: 'center' }}>Вы уверены, что хотите выйти?</Text>
+                    <Text style={{ marginBottom: 20, fontSize: 20, textAlign: 'center', textDecorationColor: 'white', fontFamily: "Inter-Bold" }}>Вы уверены, что хотите выйти?</Text>
+                    <View style={{ flexDirection: 'column', justifyContent: 'center' }}>
+                        <CustomButton
+                            text="Да"
+                            onPress={() => onYes()}
+                        />
+                        <CustomButton
+                            type='Tertiary'
+                            text="Отмена"
+                            onPress={() => setModalVisible(false)}
+                        />
+                    </View>
                 </ModalPopup>
 
                 <CustomInput
@@ -358,12 +371,13 @@ const styles = StyleSheet.create({
         height: width
     },
     lottieClose: {
-        width: 80,
-        height: 80
+        width: 90,
+        height: 90,
+        marginLeft: 55
     },
 
     header: {
-        width: '100%',
+        width: '120%',
         height: 40,
         alignItems: 'flex-end',
         justifyContent: 'center'
