@@ -12,15 +12,18 @@ import SQLite from 'react-native-sqlite-storage'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 SQLite.enablePromise(true);
+
 const email_regex = /^[a-zA-Z0-9.!#$%&'+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)+$/;
 const name_regex = /^[a-zA-Z]+$/;
 const { width, height } = Dimensions.get('window');
 
 const SignUpScreen = () => {
+
     const { control, handleSubmit, watch } = useForm();
     const pwd = watch('password');
     const navigation = useNavigation();
     const panelRef = useRef(null);
+
     const [bottomSheetVisible, setBottomSheetVisible] = useState(false);
     const [showTermsSheet, setShowTermsSheet] = useState(false);
     const [showPrivacySheet, setShowPrivacySheet] = useState(false);
@@ -56,7 +59,7 @@ const SignUpScreen = () => {
                 const lastUserID = await getLastUserID();
                 const newUserID = lastUserID + 1;
 
-                const [result] = await db.executeSql('INSERT INTO Users (userID, userLogin, userPassword) VALUES (?, ?, ?)', [newUserID, data.username, data.password]);
+                const [result] = await db.executeSql('INSERT INTO Users (userID, userLogin, userPassword, userEmail) VALUES (?, ?, ?, ?)', [newUserID, data.username, data.password, data.email]);
 
                 if (result.rowsAffected > 0) {
                     await AsyncStorage.setItem('username', data.username);
@@ -76,8 +79,6 @@ const SignUpScreen = () => {
         }
 
     };
-
-
 
 
     const onSignInPress = () => {

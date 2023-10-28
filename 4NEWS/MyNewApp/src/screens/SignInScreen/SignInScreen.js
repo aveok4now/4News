@@ -1,30 +1,23 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, Image, StyleSheet, useWindowDimensions, ScrollView, TouchableOpacity, ImageBackground, Dimensions, TextInput, Vibration } from 'react-native';
+import { View, Text, StyleSheet, useWindowDimensions, ScrollView, TouchableOpacity, Dimensions, Vibration } from 'react-native';
 import Logo from '../../../assets/images/seved.png';
 import CustomInput from '../../components/CustomInput';
 import CustomButton from '../../components/CustomButton/CustomButton';
-import SocialSignInButtons from '../../components/SocialSignInButtons';
 import { useNavigation } from '@react-navigation/native';
 // import { Container } from './styles';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { removeItem } from '../../utils/asyncStorage';
-import { useForm, Controller } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import ModalPopup from '../../components/CustomModal/CustomModal';
 import LottieView from 'lottie-react-native';
 const { width, height } = Dimensions.get('window');
 import * as Animatable from 'react-native-animatable';
 import SQLite from 'react-native-sqlite-storage'
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { assets } from '../../../react-native.config';
 SQLite.enablePromise(true);
 
 
 const SignInScreen = ({ route }) => {
-
-    //const image = { uri: 'https://i.pinimg.com/736x/b3/4e/12/b34e12e24fe377683d2182d40a040f5c.jpg' };
-    // const image = { uri: 'https://i.pinimg.com/564x/c7/1f/00/c71f00ea86ee2bb9eac2d0c99b978d5b.jpg' };
-    //const image = require('D:/react/4NEWS/MyNewApp/assets/images/backgr.jpg');
-    const image = require('../assets/images/backgr.jpg');
 
     const [userExist, setUserExist] = useState(true);
     const { width, height } = useWindowDimensions();
@@ -116,6 +109,11 @@ const SignInScreen = ({ route }) => {
 
             console.log(data);
             const db = await SQLite.openDatabase({ name: 'news.db', location: 1 });
+
+
+            if (data.username.includes("@", ".com")) {
+                console.log("user entered an email")
+            }
 
             const [result] = await db.executeSql('SELECT * FROM users WHERE userLogin = ? AND userPassword = ?', [data.username, data.password]);
             if (result.rows.length > 0) {
