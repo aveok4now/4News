@@ -12,7 +12,8 @@ React Native News App project, bootstrapped using [`@react-native-community/cli`
     - [x] SignIn as a Guest
   - [x] SignUp
     - [x] Terms of Use, Privacy Policy Bottom Sheets
-    - [x] Full Validation 
+    - [x] Full Validation
+    - [x] User with this name/email already exists messages
   - [x] New Password
   - [x] Forgot Password
     - [ ] Password Reset
