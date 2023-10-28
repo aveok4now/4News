@@ -98,7 +98,7 @@ const HomeScreen = ({ navigation }) => {
             const combinedData = [...ruData.articles, ...usData.articles];
 
             combinedData.sort(() => Math.random() - 0.5);
-            console.log(combinedData)
+            //console.log(combinedData)
             setData(combinedData);
             setIsRefreshing(false);
             //console.log(combinedData)

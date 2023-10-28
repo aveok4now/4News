@@ -7,35 +7,19 @@ import { NavigationContainer } from '@react-navigation/native';
 import { assets } from '../../../react-native.config';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import TypeWriter from 'react-native-typewriter'
+import useUserCredentials from '../../utils/useUserCredentials';
 
 const { width, height } = Dimensions.get('window');
 
 const Splash = ({ navigation }) => {
 
     const { width, height } = useWindowDimensions()
-    const [identify, setIdenify] = useState('')
+
     const [isTyped, setIsTyped] = useState(false)
 
-    useEffect(() => {
-        const checkUserCredentials = async () => {
-            const savedUsername = await AsyncStorage.getItem('username');
-            const savedPassword = await AsyncStorage.getItem('password');
-            const guestID = await AsyncStorage.getItem('guestID');
 
-            if (savedUsername && savedPassword) {
-                //onSignInPressed({ username: savedUsername, password: savedPassword });
-                setIdenify(savedUsername)
-            } else if (savedUsername === 'guest') {
-                if (guestID) {
-                    setIdenify("Гость")
-                }
-            }
-        }
-
-        checkUserCredentials();
-
-    }, []);
-
+    let identify = useUserCredentials();
+    console.log("вызвал")
 
     const handleTypeComplete = () => {
         setIsTyped(true)

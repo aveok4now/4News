@@ -8,34 +8,16 @@ import TypeWriter from 'react-native-typewriter'
 import CustomButton from '../../components/CustomButton';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import LottieView from 'lottie-react-native';
-
+import useUserCredentials from '../../utils/useUserCredentials';
 
 const { width, height } = Dimensions.get('window');
 export default function FavoritesScreen({ navigation }) {
     const [favorites, setFavorites] = useState([]);
-    const [identify, setIdenify] = useState('')
+
     //const [state] = useState("📰 Ваши сохранённые новости, ")
     const [isRefreshing, setIsRefreshing] = useState(false);
 
-    useEffect(() => {
-        const checkUserCredentials = async () => {
-            const savedUsername = await AsyncStorage.getItem('username');
-            const savedPassword = await AsyncStorage.getItem('password');
-            const guestID = await AsyncStorage.getItem('guestID');
-
-            if (savedUsername && savedPassword) {
-                //onSignInPressed({ username: savedUsername, password: savedPassword });
-                setIdenify(savedUsername)
-            } else if (savedUsername === 'guest') {
-                if (guestID) {
-                    setIdenify("Гость")
-                }
-            }
-        }
-
-        checkUserCredentials();
-    }, []);
-
+    let identify = useUserCredentials();
 
     const loadFavorites = async () => {
         try {

@@ -17,6 +17,7 @@ import { assets } from '../../../react-native.config';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import ModalPopup from '../CustomModal/CustomModal';
 import CustomButton from '../CustomButton';
+import useUserCredentials from '../../utils/useUserCredentials';
 
 const Card = ({ item, navigation }) => {
     const defaultImage = 'https://arbeitgeber.de/wp-content/uploads/2020/11/bda-news-header-1920x1280px-1536x1024.jpg'
@@ -25,11 +26,11 @@ const Card = ({ item, navigation }) => {
     const [imageLoaded, setImageLoaded] = useState(false);
     const imageUrl = item.urlToImage || defaultImage;
     const [isLiked, setIsLiked] = useState(false);
-    const [identify, setIdenify] = useState('')
     const [showModal, setShowModal] = useState(false);
 
     let getSaved = AsyncStorage.getItem('savedNewsItems');
 
+    let identify = useUserCredentials();
 
     let includesG = item.url.includes("https://news.google.com/")
 
@@ -73,24 +74,9 @@ const Card = ({ item, navigation }) => {
     };
 
 
+
+
     useEffect(() => {
-
-        const checkUserCredentials = async () => {
-            const savedUsername = await AsyncStorage.getItem('username');
-            const savedPassword = await AsyncStorage.getItem('password');
-            const guestID = await AsyncStorage.getItem('guestID');
-
-            if (savedUsername && savedPassword) {
-                //onSignInPressed({ username: savedUsername, password: savedPassword });
-                setIdenify(savedUsername)
-            } else if (savedUsername === 'guest') {
-                if (guestID) {
-                    setIdenify("Гость")
-                }
-            }
-        }
-
-        checkUserCredentials();
 
         const checkLiked = async () => {
             const likedNewsItems = await AsyncStorage.getItem('likedNewsItems');
