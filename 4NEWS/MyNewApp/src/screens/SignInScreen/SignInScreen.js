@@ -104,23 +104,33 @@ const SignInScreen = ({ route }) => {
 
 
     const onSignInPressed = async (data) => {
-        //StartVibration();
         try {
-
             console.log(data);
             const db = await SQLite.openDatabase({ name: 'news.db', location: 1 });
 
-
-            if (data.username.includes("@", ".com")) {
-                console.log("user entered an email")
+            let query;
+            let queryArgs;
+            if (data.username.includes('@', '.com')) {
+                query = `
+                    SELECT u1.* 
+                    FROM Users u1 
+                    JOIN Users u2 ON u1.userID = u2.userID 
+                    WHERE u2.userEmail = ? AND u2.userPassword = ?
+                `;
+                queryArgs = [data.username, data.password];
+            } else {
+                query = 'SELECT * FROM Users WHERE userLogin = ? AND userPassword = ?';
+                queryArgs = [data.username, data.password];
             }
 
-            const [result] = await db.executeSql('SELECT * FROM users WHERE userLogin = ? AND userPassword = ?', [data.username, data.password]);
+            const [result] = await db.executeSql(query, queryArgs);
             if (result.rows.length > 0) {
+                const user = result.rows.item(0);
+                const username = user.userLogin;
                 setUserExist(true);
-                await AsyncStorage.setItem('username', data.username);
+                await AsyncStorage.setItem('username', username);
                 await AsyncStorage.setItem('password', data.password);
-                //navigation.navigate('Домашняя страница');
+                // navigation.navigate('Домашняя страница');
                 AsyncStorage.setItem('loggedOut', 'false');
                 navigation.navigate('Splash');
             } else {
@@ -130,7 +140,7 @@ const SignInScreen = ({ route }) => {
         } catch (error) {
             console.error(error);
         }
-    }
+    };
 
 
     const onSignInAsGuestPressed = async (data) => {
