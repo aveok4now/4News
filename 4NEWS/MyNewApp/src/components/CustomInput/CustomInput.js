@@ -15,6 +15,7 @@ const CustomInput = ({
     selectionColor,
     isUserExist
 }) => {
+
     const [isFocused, setIsFocused] = React.useState(false);
     return (
         <Controller
@@ -26,9 +27,10 @@ const CustomInput = ({
                     <View style={[
                         styles.container,
                         {
-                            borderColor: error ? 'red' : '#E8E8E8'
+                            borderColor: error ? 'red' : '#E8E8E8',
                         },
-                        isFocused && styles.inputFocused
+                        isFocused && styles.inputFocused,
+                        { borderColor: !error && isFocused ? '#154ED3' : error ? 'red' : '#E8E8E8' }
                     ]}>
                         <TextInput
                             value={value}
@@ -82,6 +84,7 @@ const styles = StyleSheet.create({
     },
     inputFocused: {
         backgroundColor: '#73A4BD70',
+
     },
 
 
@@ -91,6 +94,6 @@ const styles = StyleSheet.create({
         alignSelf: 'stretch',
 
     },
-})
+},)
 
 export default CustomInput;  
