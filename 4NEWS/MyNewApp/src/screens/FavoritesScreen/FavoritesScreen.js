@@ -9,6 +9,7 @@ import CustomButton from '../../components/CustomButton';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import LottieView from 'lottie-react-native';
 import useUserCredentials from '../../utils/useUserCredentials';
+import CustomDrawer from '../../components/CustomDrawer';
 
 const { width, height } = Dimensions.get('window');
 export default function FavoritesScreen({ navigation }) {
@@ -58,58 +59,50 @@ export default function FavoritesScreen({ navigation }) {
 
     return (
         identify !== "Гость" ? (
-            <Animatable.View
-                animation="fadeIn"
-                duration={1000}
-            >
+            <CustomDrawer type="Избранные новости" backgroundColor="#5b86e5">
+                <Animatable.View
+                    animation="fadeIn"
+                    duration={1000}
+                >
 
-                <View style={styles.header}>
-
-                    {/* <TypeWriter
-                        style={styles.headerText}
-                        minDelay={5}
-                        typing={1}
-                    >
-                        {state}{identify}
-                    </TypeWriter> */}
-
-                    <Text style={styles.headerText}>Избранные новости</Text>
-                </View>
-                <FlatList
-                    showsVerticalScrollIndicator={false}
-                    style={{ marginBottom: '27%' }}
-                    onRefresh={onRefresh}
-                    refreshing={isRefreshing}
-                    data={favorites}
-                    keyExtractor={(item) => item.url}
-                    renderItem={({ item }) => {
-                        return (
-                            <>
-                                <Card item={item} navigation={navigation} /><View>
-                                    <CustomButton
-                                        text='Удалить'
-                                        onPress={() => handleDelete(item.url)}
-                                    >
-                                    </CustomButton>
-                                </View>
-                            </>
-                        );
-                    }}
-                />
-                {favorites.length === 0 && (
-                    <View style={{ justifyContent: 'center', alignItems: 'center' }}>
-                        <Text style={{ fontFamily: "Inter-Light", fontSize: 20 }}>Здесь будут появляться избранные новости, нажимайте на кнопку {" "}
-                            <Icon name={"heart-o"} size={20} color="white" /> , чтобы сохранить их!
-                        </Text>
-                        <View>
-                            <LottieView style={styles.lottie} source={require("../assets/animations/interests.json")} autoPlay loop />
+                    <FlatList
+                        showsVerticalScrollIndicator={false}
+                        style={{ marginBottom: '27%' }}
+                        onRefresh={onRefresh}
+                        refreshing={isRefreshing}
+                        data={favorites}
+                        keyExtractor={(item) => item.url}
+                        renderItem={({ item }) => {
+                            return (
+                                <>
+                                    <Card item={item} navigation={navigation} /><View>
+                                        <CustomButton
+                                            text='Удалить'
+                                            onPress={() => handleDelete(item.url)}
+                                        >
+                                        </CustomButton>
+                                    </View>
+                                </>
+                            );
+                        }}
+                    />
+                    {favorites.length === 0 && (
+                        <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+                            <Text style={{ fontFamily: "Inter-Light", fontSize: 20 }}>Здесь будут появляться избранные новости, нажимайте на кнопку {" "}
+                                <Icon name={"heart-o"} size={20} color="white" /> , чтобы сохранить их!
+                            </Text>
+                            <View>
+                                <LottieView style={styles.lottie} source={require("../assets/animations/interests.json")} autoPlay loop />
+                            </View>
                         </View>
-                    </View>
-                )}
-            </Animatable.View>
+                    )}
+
+                </Animatable.View>
+            </CustomDrawer>
         ) : (
             <>
-                <View style={{ justifyContent: "center", alignItems: "center", flex: 1 }}>
+
+                <View style={{ justifyContent: "center", alignItems: "center", flex: 2, zIndex: 100 }}>
                     <Text style={styles.guestInfo}>Упс...</Text>
                     <Text style={styles.guestSubInfo}>Чтобы просматривать сохранённые новости, необходимо войти в аккаунт</Text>
 
@@ -118,9 +111,11 @@ export default function FavoritesScreen({ navigation }) {
                             text="Войти"
                             onPress={() => navigation.navigate("Добро пожаловать !", { status: "logout" })}
                         />
+
                     </View>
 
                 </View>
+
             </>
         )
 

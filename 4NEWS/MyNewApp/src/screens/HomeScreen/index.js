@@ -2,10 +2,11 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, FlatList, ScrollView, TouchableOpacity, StyleSheet, ActivityIndicator, Dimensions, Image, StatusBar } from 'react-native';
 import Header from '../../components/Header';
 import Card from '../../components/Card';
-import HorFlatList from '../../components/HorFlatList';
 import CategoryComp from '../../components/Category/CategoryComp';
 import NetInfo from '@react-native-community/netinfo'
 import * as Animatable from 'react-native-animatable'
+import Icon2 from 'react-native-vector-icons/SimpleLineIcons'
+import CustomDrawer from '../../components/CustomDrawer';
 
 const HomeScreen = ({ navigation }) => {
 
@@ -190,6 +191,7 @@ const HomeScreen = ({ navigation }) => {
     }
 
 
+
     return (
         <>
             {!isConnected ? (
@@ -223,39 +225,40 @@ const HomeScreen = ({ navigation }) => {
                     </ActivityIndicator>
                 </View>) : (
                 canBeShowed && (
-                    <View style={{ flex: 1 }}>
+                    <CustomDrawer type="Новости" showSearch="true" backgroundColor="#7371FC" navigation={navigation}>
+                        <View style={{ flex: 1 }}>
 
-                        <Header navigation={navigation} />
+                            {/* <Header navigation={navigation} /> */}
 
-                        <Animatable.View
-                            animation="fadeIn"
-                            duration={1500}
-                            style={styles.horList}>
-                            <FlatList
-                                horizontal
-                                showsHorizontalScrollIndicator={false}
-                                data={Category}
-                                renderItem={({ item, index }) => {
-                                    return (
-                                        <TouchableOpacity
-                                            style={index == Select ?
-                                                styles.selListItem : styles.horListItem}
-                                            onPress={() => {
-                                                setSelect(index)
-                                                getData2(Category[index].category)
-                                                //onRefresh()
-                                            }}
-                                        >
-                                            <Text
+                            <Animatable.View
+                                animation="fadeIn"
+                                duration={1500}
+                                style={styles.horList}>
+                                <FlatList
+                                    horizontal
+                                    showsHorizontalScrollIndicator={false}
+                                    data={Category}
+                                    renderItem={({ item, index }) => {
+                                        return (
+                                            <TouchableOpacity
                                                 style={index == Select ?
-                                                    styles.selListText : styles.horListText}>{item.nameRU}</Text>
-                                        </TouchableOpacity>
-                                    )
-                                }}
-                            />
-                        </Animatable.View>
+                                                    styles.selListItem : styles.horListItem}
+                                                onPress={() => {
+                                                    setSelect(index)
+                                                    getData2(Category[index].category)
+                                                    //onRefresh()
+                                                }}
+                                            >
+                                                <Text
+                                                    style={index == Select ?
+                                                        styles.selListText : styles.horListText}>{item.nameRU}</Text>
+                                            </TouchableOpacity>
+                                        )
+                                    }}
+                                />
+                            </Animatable.View>
 
-                        {/* <View style={{ flex: 1 }}>
+                            {/* <View style={{ flex: 1 }}>
         <View style={{
             width: Dimensions.get("window").width,
             height: Dimensions.get("window").height,
@@ -270,7 +273,7 @@ const HomeScreen = ({ navigation }) => {
             />
         </View>
     </View> */}
-                        {/* <ScrollView
+                            {/* <ScrollView
         style={{ flex: 1 }}
         scrollEventThrottle={16}
     >
@@ -306,7 +309,7 @@ const HomeScreen = ({ navigation }) => {
                     />
                 </ScrollView>
             </View> */}
-                        {/* <View style={{ marginTop: 40, paddingHorizontal: 20 }}>
+                            {/* <View style={{ marginTop: 40, paddingHorizontal: 20 }}>
                 <Text style={{ fontSize: 24, fontFamily: 'Inter-Bold' }}>
                     Lorem ipsum ...
                 </Text>
@@ -314,27 +317,28 @@ const HomeScreen = ({ navigation }) => {
                     Lorem ipsum ...  Lorem ipsum ...  Lorem ipsum ...  Lorem ipsum ...
                 </Text>
             </View> */}
-                        {/* </View>
+                            {/* </View>
 
     </ScrollView> */}
 
-                        <View style={{ flex: 2, }}>
-                            <View style={{ height: Dimensions.get("window").height * 0.78 }}>
-                                <FlatList
-                                    style={{ flex: 1, zIndex: 100, position: 'relative' }}
-                                    showsVerticalScrollIndicator={false}
-                                    onRefresh={onRefresh}
-                                    refreshing={isRefreshing}
-                                    data={Data}
-                                    renderItem={({ item, index }) => {
-                                        return <Card item={item} navigation={navigation} />;
-                                    }}
-                                />
+                            <View style={{ flex: 2 }}>
+                                <View style={{ height: Dimensions.get("window").height * 0.78 }}>
+                                    <FlatList
+                                        style={{ flex: 1, zIndex: 100, position: 'relative' }}
+                                        showsVerticalScrollIndicator={false}
+                                        onRefresh={onRefresh}
+                                        refreshing={isRefreshing}
+                                        data={Data}
+                                        renderItem={({ item, index }) => {
+                                            return <Card item={item} navigation={navigation} />;
+                                        }}
+                                    />
+                                </View>
                             </View>
+
+
                         </View>
-
-
-                    </View>
+                    </CustomDrawer>
                 )
 
 
@@ -369,8 +373,8 @@ const styles = StyleSheet.create({
     horList: {
         paddingHorizontal: 10,
         paddingVertical: 10,
-
     },
+
     horListItem: {
         backgroundColor: '#8EBBF3',
         paddingHorizontal: 15,
@@ -379,6 +383,14 @@ const styles = StyleSheet.create({
         borderRadius: 5,
         borderColor: 'white',
         borderWidth: 0.5,
+        shadowColor: '#000',
+        shadowOffset: {
+            width: 2,
+            height: 2,
+        },
+        shadowOpacity: 0.55,
+        shadowRadius: 3.84,
+
     },
 
     selListItem: {

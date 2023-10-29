@@ -1,14 +1,16 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import * as Animatable from 'react-native-animatable';
-import Icon from 'react-native-vector-icons/FontAwesome';
+import Icon from 'react-native-vector-icons/FontAwesome5';
 import Icon2 from 'react-native-vector-icons/SimpleLineIcons'
+import Icon3 from 'react-native-vector-icons/MaterialIcons'
 // import { Container } from './styles';
 import Search from '../../utils/Search';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Header = ({ navigation }) => {
     const [identify, setIdenify] = useState('')
+
 
     useEffect(() => {
         const checkUserCredentials = async () => {
@@ -32,7 +34,7 @@ const Header = ({ navigation }) => {
 
     return (
         <Animatable.View style={styles.header} animation="fadeIn" duration={1500}>
-            <TouchableOpacity onPress={async () => {
+            {/* <TouchableOpacity onPress={async () => {
                 const savedUsername = await AsyncStorage.getItem('username');
                 const savedPassword = await AsyncStorage.getItem('password');
 
@@ -53,12 +55,17 @@ const Header = ({ navigation }) => {
                 await AsyncStorage.setItem('loggedOut', 'true');
                 navigation.navigate('Добро пожаловать !', { status: "logout" });
             }}>
-                <Icon2 name="logout" size={24} color="#F7F6C5" />
+                <Icon2 name="menu" size={24} color="white" />
+            </TouchableOpacity> */}
+            <TouchableOpacity onPress={() => {
+
+            }}>
+                <Icon2 name="menu" size={24} color="white" />
             </TouchableOpacity>
 
-            <Text style={styles.text}>Привет, {identify}!</Text>
+            <Text style={styles.text}>Новости</Text>
             <TouchableOpacity onPress={() => navigation.navigate('Search')}>
-                <Icon name="search" size={24} color="#F7F6C5" />
+                <Icon name="search" size={24} color="white" />
             </TouchableOpacity>
 
         </Animatable.View>
@@ -68,7 +75,7 @@ const Header = ({ navigation }) => {
 export default Header;
 const styles = StyleSheet.create({
     header: {
-        paddingHorizontal: 4,
+        paddingHorizontal: 10,
         paddingVertical: 15,
         display: 'flex',
         flexDirection: 'row',
@@ -78,12 +85,13 @@ const styles = StyleSheet.create({
         borderColor: '#F3FAE1',
         backgroundColor: '#7371FC',
         elevation: 5,
-        verticalAlign: 'auto'
+        alignItems: 'center'
+        //verticalAlign: 'bottom'
     },
     text: {
         fontSize: 20,
         fontWeight: '500',
-        color: '#F7F6C5',
+        color: 'white',
         letterSpacing: 1,
         fontFamily: "Inter-Light"
 
