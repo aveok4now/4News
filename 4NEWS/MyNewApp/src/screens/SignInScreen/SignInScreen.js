@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, useWindowDimensions, ScrollView, TouchableOpacity, Dimensions, Vibration } from 'react-native';
+import { View, Text, StyleSheet, useWindowDimensions, ScrollView, TouchableOpacity, Dimensions, Vibration, BackHandler } from 'react-native';
 import Logo from '../../../assets/images/seved.png';
 import CustomInput from '../../components/CustomInput';
 import CustomButton from '../../components/CustomButton/CustomButton';
@@ -258,7 +258,8 @@ const SignInScreen = ({ route }) => {
                         source={require("../assets/animations/exit.json")}
                         autoPlay={true}
                         loop={false} />
-                    <Text style={{ marginBottom: 20, fontSize: 20, textAlign: 'center', textDecorationColor: 'white', fontFamily: "Inter-Bold" }}>Вы уверены, что хотите выйти?</Text>
+                    <Text style={{ marginBottom: 20, fontSize: 20, textAlign: 'center', textDecorationColor: 'white', fontFamily: "Inter-Bold" }}>Уже уходите ? 🥺</Text>
+                    <Text style={{ marginBottom: 20, fontSize: 16, textAlign: 'center', textDecorationColor: 'white', fontFamily: "Inter-Light" }}>Будем рады увидеть Вас снова!</Text>
                     <View style={{ flexDirection: 'column', justifyContent: 'center' }}>
                         <CustomButton
                             text="Да"
