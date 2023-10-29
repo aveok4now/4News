@@ -92,6 +92,35 @@ const Card = ({ item, navigation }) => {
         navigation.navigate("Добро пожаловать !", { status: "logout" })
     }
 
+    const today = new Date();
+    const publishedDate = new Date(item.publishedAt);
+
+    const diffInDays = (today - publishedDate) / (1000 * 60 * 60 * 24);
+
+    const time = publishedDate.toLocaleString('ru-RU', {
+        hour: '2-digit',
+        minute: '2-digit',
+        timeZone: 'UTC',
+    });
+
+    let formattedDate;
+    if (diffInDays < 1) {
+        formattedDate = 'Сегодня в' + time;
+    } else if (diffInDays < 2) {
+        formattedDate = 'Вчера в ' + time;
+    } else if (diffInDays < 3) {
+        formattedDate = 'Позавчера в ' + time;
+    }
+    else {
+        formattedDate = publishedDate.toLocaleString('ru-RU', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit',
+            timeZone: 'UTC',
+        });
+    }
 
     return (
         item.title.includes('Removed') ? null : (
@@ -127,18 +156,20 @@ const Card = ({ item, navigation }) => {
                     <View style={styles.titleView}>
                         <Text style={styles.title}>{item.title}</Text>
                         <Text style={styles.description}>{item.description || ''}</Text>
-                        <View style={[styles.podcard, item.author && item.author.length > 20 ? { flexDirection: 'column', alignItems: 'flex-start' } : null]}>
+                        <View style={[styles.podcard, item.author && item.author.length > 40 ? { flexDirection: 'column', alignItems: 'flex-start' } : null]}>
                             <Text style={styles.description}>{item.author || ''} </Text>
                             <Text style={styles.description}>
+                                {formattedDate}
+                                {/* {' '}
                                 {new Date(item.publishedAt).toLocaleString('ru-RU', {
                                     year: 'numeric',
                                     month: 'long',
                                     day: 'numeric',
                                     hour: '2-digit',
                                     minute: '2-digit',
-                                    second: '2-digit',
+                                    // second: '2-digit',
                                     timeZone: 'UTC',
-                                })}
+                                })} */}
                             </Text>
                         </View>
                         <View style={{ flexDirection: 'row', gap: 200 }}>
