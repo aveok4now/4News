@@ -78,6 +78,8 @@ const SignUpScreen = () => {
                 if (result.rowsAffected > 0) {
                     await AsyncStorage.setItem('username', data.username);
                     await AsyncStorage.setItem('password', data.password);
+                    await AsyncStorage.setItem('email', data.email);
+
                     console.log(data);
                     navigation.navigate('Домашняя страница');
                     navigation.reset({

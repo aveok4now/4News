@@ -59,7 +59,7 @@ export default function FavoritesScreen({ navigation }) {
 
     return (
         identify !== "Гость" ? (
-            <CustomDrawer type="Избранные новости" backgroundColor="#5b86e5">
+            <CustomDrawer type="Избранные новости" backgroundColor="#5b86e5" fgColor="#5b86e5">
                 <Animatable.View
                     animation="fadeIn"
                     duration={1000}

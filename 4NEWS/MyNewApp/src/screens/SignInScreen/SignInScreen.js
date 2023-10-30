@@ -42,6 +42,7 @@ const SignInScreen = ({ route }) => {
             const isLoggedOut = await AsyncStorage.getItem('loggedOut');
             const savedUsername = await AsyncStorage.getItem('username');
             const savedPassword = await AsyncStorage.getItem('password');
+
             const guestID = await AsyncStorage.getItem('guestID');
 
             console.log("loggedout" + isLoggedOut)

@@ -2,18 +2,15 @@ import { useEffect, useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import SQLite from 'react-native-sqlite-storage';
 
-const useUserCredentials = () => {
-    const [identify, setIdentify] = useState('')
+const useUserEmail = () => {
     const [userEmail, setUserEmail] = useState('')
+
     useEffect(() => {
-        const checkUserCredentials = async () => {
+        const checkUserEmail = async () => {
             const savedUsername = await AsyncStorage.getItem('username');
-            const savedPassword = await AsyncStorage.getItem('password');
             const guestID = await AsyncStorage.getItem('guestID');
 
-            if (savedUsername && savedPassword) {
-                //onSignInPressed({ username: savedUsername, password: savedPassword });
-                setIdentify(savedUsername);
+            if (savedUsername) {
                 try {
                     const db = await SQLite.openDatabase({ name: 'news.db', location: 1 });
 
@@ -35,15 +32,15 @@ const useUserCredentials = () => {
                 }
             } else if (savedUsername === 'guest') {
                 if (guestID) {
-                    setIdentify('Гость');
+                    setUserEmail('');
                 }
             }
         };
 
-        checkUserCredentials();
+        checkUserEmail();
     }, []);
-    return identify;
+    return userEmail;
 
 };
 
-export default useUserCredentials;
+export default useUserEmail;
