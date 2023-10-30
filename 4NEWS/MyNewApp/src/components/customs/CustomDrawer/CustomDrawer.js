@@ -4,6 +4,8 @@ import Icon2 from 'react-native-vector-icons/SimpleLineIcons';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import Icon3 from 'react-native-vector-icons/FontAwesome6';
 import Icon4 from 'react-native-vector-icons/MaterialCommunityIcons';
+import Icon5 from 'react-native-vector-icons/FontAwesome'
+import Icon6 from 'react-native-vector-icons/MaterialIcons'
 import * as Animatable from 'react-native-animatable'
 import useUserCredentials from '../../../utils/useUserCredentials';
 import useUserEmail from '../../../utils/useUserEmail';
@@ -50,20 +52,19 @@ export default function CustomDrawer({
     };
 
     const menu = [
-        { icon: 'home', title: 'Домашняя страница' },
-        { icon: 'newspaper', title: 'Новости' },
-        { icon: 'star', title: 'Избранное' },
-        { icon: 'cloud-sun-rain', title: 'Погода' },
+
         { icon: 'university', title: 'Университет' },
         { icon: 'email', title: 'Связь с нами' },
+        { icon: 'star-half-o', title: 'Оценить нас' },
         { icon: 'logout', title: 'Выход' },
 
     ];
 
     const iconMap = {
         Новости: { icon: <Icon3 size={24} />, color: 'white' },
-        Выход: { icon: <Icon2 size={24} />, color: 'white' },
+        Выход: { icon: <Icon6 size={24} />, color: 'white' },
         'Связь с нами': { icon: <Icon4 size={24} />, color: 'white' },
+        'Оценить нас': { icon: <Icon5 size={24} />, color: 'white' },
         default: { icon: <Icon size={24} />, color: 'white' },
     };
 
@@ -85,41 +86,13 @@ export default function CustomDrawer({
 
         switch (index) {
             case 0:
-                // Обработка нажатия на "Домашняя страница"
+
                 break;
             case 1:
-                //setShowMenu(!showMenu)
-                //toggleMenu(index)
-                //toggleMenu()
-                toggleMenu();
-                setSelectedMenuItem(index)
-                navigation.navigate("Домашняя страница")
-                toggleMenu()
-                setSelectedMenuItem(index)
-                //setSelectedMenuItem(1)
-
                 break;
             case 2:
-                //toggleMenu(index)
-                //setSelectedMenuItem(index)
-                toggleMenu()
-                setSelectedMenuItem(index)
-                navigation.navigate("FavoritesScreen")
-                toggleMenu()
-                setSelectedMenuItem(index)
-
                 break;
             case 3:
-                //toggleMenu()
-                toggleMenu();
-                setSelectedMenuItem(index)
-                navigation.navigate("Weather Screen")
-
-                toggleMenu()
-                setSelectedMenuItem(index)
-
-                break;
-            case 6:
                 // Обработка нажатия на "Выход"
                 const savedUsername = await AsyncStorage.getItem('username');
                 const savedPassword = await AsyncStorage.getItem('password');
@@ -141,6 +114,7 @@ export default function CustomDrawer({
                 await AsyncStorage.setItem('loggedOut', 'true');
                 navigation.navigate('Добро пожаловать !', { status: "logout" });
                 break;
+
             default:
                 break;
         }
@@ -165,7 +139,7 @@ export default function CustomDrawer({
                                 ? require('../../../../assets/images/guest.jpg')
                                 : require('../../../../assets/images/user.jpg')
                         }
-                            style={{ width: 70, height: 70, borderRadius: 35, marginLeft: 20 }} />
+                            style={{ width: 70, height: 70, borderRadius: 35, marginLeft: 20, borderWidth: 1, borderColor: 'purple' }} />
                         <View style={{ marginLeft: 15 }}>
                             <Text style={{ fontSize: 22, fontFamily: "Inter-Bold" }}>
                                 {identify} {identify === "Гость" ? '👾' : '💫'}
