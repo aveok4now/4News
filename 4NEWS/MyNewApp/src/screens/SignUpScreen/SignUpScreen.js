@@ -10,6 +10,7 @@ import { Dimensions } from 'react-native';
 import * as Animatable from 'react-native-animatable';
 import SQLite from 'react-native-sqlite-storage'
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { assets } from '../../../react-native.config';
 
 SQLite.enablePromise(true);
 
@@ -226,10 +227,10 @@ const SignUpScreen = () => {
                 >
                     <View style={{ height: 500 }}>
                         <Text style={styles.terms}>Условия использования</Text>
-                        <Text style={{ paddingVertical: 20, textAlign: 'justify' }}>
+                        <Text style={{ paddingVertical: 20, textAlign: 'justify', fontFamily: 'Inter-Light' }}>
                             Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Commodo elit at imperdiet dui accumsan sit amet nulla facilisi. Auctor neque vitae tempus quam pellentesque nec. Massa enim nec dui nunc mattis enim ut. Diam vulputate ut pharetra sit amet. Convallis aenean et tortor at risus viverra adipiscing. Dis parturient montes nascetur ridiculus mus mauris vitae ultricies leo. Volutpat lacus laoreet non curabitur gravida arcu. Nunc eget lorem dolor sed. Nullam ac tortor vitae purus faucibus ornare. Massa ultricies mi quis hendrerit. Neque sodales ut etiam sit amet nisl. Sed libero enim sed faucibus turpis in. Nulla facilisi morbi tempus iaculis urna id volutpat lacus. Ac ut consequat semper viverra nam.
 
-                            Sodales ut etiam sit amet nisl purus. Vitae semper quis lectus nulla at volutpat diam ut venenatis. Nullam ac tortor vitae purus faucibus ornare suspendisse sed. Eu volutpat odio facilisis mauris sit amet massa vitae. Porttitor rhoncus dolor purus non. Pharetra magna ac placerat vestibulum lectus mauris ultrices. Viverra mauris in aliquam sem fringilla ut morbi. Nam at lectus urna duis convallis. In cursus turpis massa tincidunt dui. Nibh venenatis cras sed felis eget velit aliquet sagittis. Pellentesque nec nam aliquam sem et tortor consequat.
+                            Sodales ut etiam sit amet nisl purus. Vitae semper quis lectus nulla at volutpat diam ut venenatis.
 
                             Vitae aliquet nec ullamcorper sit amet risus nullam.
 
@@ -247,10 +248,10 @@ const SignUpScreen = () => {
                 >
                     <View style={{ height: 500 }}>
                         <Text style={styles.terms}>Политика конфиденциальности</Text>
-                        <Text style={{ paddingVertical: 20, textAlign: 'justify' }}>
+                        <Text style={{ paddingVertical: 20, textAlign: 'justify', fontFamily: 'Inter-Light' }}>
                             Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Quis viverra nibh cras pulvinar mattis nunc sed blandit. Nec tincidunt praesent semper feugiat nibh sed pulvinar proin gravida. In est ante in nibh mauris cursus. Urna neque viverra justo nec ultrices dui sapien. Quam vulputate dignissim suspendisse in est ante in nibh mauris. Vel fringilla est ullamcorper eget nulla facilisi etiam dignissim. In arcu cursus euismod quis viverra nibh cras. Adipiscing elit ut aliquam purus sit amet luctus. Sagittis purus sit amet volutpat consequat. Cras ornare arcu dui vivamus arcu felis.
 
-                            Nunc id cursus metus aliquam eleifend mi in nulla. Nunc lobortis mattis aliquam faucibus purus in massa tempor nec. Aliquet sagittis id consectetur purus ut faucibus. Risus viverra adipiscing at in. Leo vel orci porta non pulvinar neque laoreet suspendisse. Vitae nunc sed velit dignissim sodales ut. Lorem dolor sed viverra ipsum nunc aliquet bibendum enim facilisis. Lobortis mattis aliquam faucibus purus in. Malesuada fames ac turpis egestas maecenas. Enim ut tellus elementum sagittis vitae et leo duis ut. Aliquet nec ullamcorper sit amet risus. Posuere urna nec tincidunt praesent semper feugiat. Egestas egestas fringilla phasellus faucibus scelerisque eleifend donec. Nibh nisl condimentum id venenatis a.
+                            Nunc id cursus metus aliquam eleifend mi in nulla. Nunc lobortis mattis aliquam faucibus purus in massa tempor nec. Aliquet sagittis id consectetur purus ut faucibus. Risus viverra adipiscing at in. Leo vel orci porta non pulvinar neque laoreet suspendisse.
 
 
                         </Text>
@@ -273,10 +274,15 @@ const styles = StyleSheet.create({
         fontSize: 12,
         color: '#FCF7F8',
         marginVertical: 10,
-        textAlign: 'center'
+        textAlign: 'center',
+        fontFamily: 'Inter-ExtraLight'
     },
     link: {
         color: '#9FFFCB',
+        textShadowColor: 'rgba(0, 0, 0, 0.25)',
+        textShadowOffset: { width: 0, height: 2 },
+        textShadowRadius: 4,
+        fontFamily: 'Inter-Light'
     },
     bottomSheet: {
         //marginTop: '50%'
@@ -287,7 +293,11 @@ const styles = StyleSheet.create({
     terms: {
         textAlign: 'center',
         fontSize: 20,
-        fontWeight: '600'
+        fontWeight: '600',
+        fontFamily: 'Inter-ExtraBold',
+        textShadowColor: 'rgba(0, 0, 0, 0.25)',
+        textShadowOffset: { width: 0, height: 2 },
+        textShadowRadius: 4,
     },
     errorText: {
         fontFamily: "Inter-ExtraBold",

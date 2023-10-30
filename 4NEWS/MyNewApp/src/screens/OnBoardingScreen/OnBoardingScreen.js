@@ -65,7 +65,7 @@ const OnBoardingScreen = () => {
                                     loop={true} />
                             </View>
                         ),
-                        title: 'Узнавайте всё первыми',
+                        title: <Text style={styles.title}>Узнавайте всё первыми</Text>,
                         subtitle: 'Новостная лента с регулярными обновлениями',
                     },
                     {
@@ -78,7 +78,7 @@ const OnBoardingScreen = () => {
                                     loop />
                             </View>
                         ),
-                        title: 'Лента не имеет конца!',
+                        title: <Text style={styles.title}>Лента не имеет конца!</Text>,
                         subtitle: 'Читайте, сколько угодно',
                     },
                     {
@@ -88,7 +88,7 @@ const OnBoardingScreen = () => {
                                 <LottieView style={styles.lottie} source={require("../assets/animations/interests.json")} autoPlay loop />
                             </View>
                         ),
-                        title: 'Находите Ваши интересы',
+                        title: <Text style={styles.title}>Находите Ваши интересы</Text>,
                         subtitle: 'И получайте новости о том, что Вам интересно',
                     },
 
@@ -101,6 +101,13 @@ const OnBoardingScreen = () => {
 
 const styles = StyleSheet.create({
 
+    title: {
+        fontFamily: 'Inter-ExtraBold',
+        fontSize: 24,
+        textShadowColor: 'rgba(0, 0, 0, 0.25)',
+        textShadowOffset: { width: 0, height: 2 },
+        textShadowRadius: 4,
+    },
     container: {
         flex: 1,
 

@@ -30,7 +30,7 @@ const CustomInput = ({
                             borderColor: error ? 'red' : '#E8E8E8',
                         },
                         isFocused && styles.inputFocused,
-                        { borderColor: !error && isFocused ? '#154ED3' : error ? 'red' : '#E8E8E8' }
+                        { borderColor: !error && isFocused ? '#7af5d1' : error ? 'red' : '#E8E8E8' }
                     ]}>
                         <TextInput
                             value={value}
@@ -80,7 +80,8 @@ const styles = StyleSheet.create({
         marginVertical: 5,
     },
     input: {
-        fontFamily: "Inter-Light"
+        fontFamily: "Inter-Light",
+
     },
     inputFocused: {
         backgroundColor: '#73A4BD70',

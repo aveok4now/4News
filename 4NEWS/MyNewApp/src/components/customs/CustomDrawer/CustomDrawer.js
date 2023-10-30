@@ -10,6 +10,7 @@ import useUserEmail from '../../../utils/useUserEmail';
 import { assets } from '../../../../react-native.config';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
+
 export default function CustomDrawer({
     children,
     backgroundColor,
@@ -21,14 +22,13 @@ export default function CustomDrawer({
 }) {
 
     let identify = useUserCredentials()
-    console.log(identify)
     let userEmail = useUserEmail()
 
     const [showMenu, setShowMenu] = useState(false);
     const moveToRight = useRef(new Animated.Value(0)).current;
     const scale = useRef(new Animated.Value(1)).current;
 
-    const [selectedMenuItem, setSelectedMenuItem] = useState(0)
+    const [selectedMenuItem, setSelectedMenuItem] = useState(1)
 
 
     const toggleMenu = () => {
@@ -45,6 +45,8 @@ export default function CustomDrawer({
             }),
         ]).start();
         setShowMenu(!showMenu);
+
+        //setSelectedMenuItem(selectedMenuItem)
     };
 
     const menu = [
@@ -66,9 +68,6 @@ export default function CustomDrawer({
     };
 
 
-
-
-
     const getIconInfo = (title, item) => {
         const iconInfo = iconMap[title] || iconMap.default;
         return {
@@ -78,14 +77,47 @@ export default function CustomDrawer({
     };
 
 
+
     const handleMenuItemPress = async (index) => {
-        // Обработка нажатия на пункт меню
+
+        //setSelectedMenuItem(index);
+        //toggleMenu();
+
         switch (index) {
             case 0:
                 // Обработка нажатия на "Домашняя страница"
                 break;
             case 1:
-                // Обработка нажатия на "Новости"
+                //setShowMenu(!showMenu)
+                //toggleMenu(index)
+                //toggleMenu()
+                toggleMenu();
+                setSelectedMenuItem(index)
+                navigation.navigate("Домашняя страница")
+                toggleMenu()
+                setSelectedMenuItem(index)
+                //setSelectedMenuItem(1)
+
+                break;
+            case 2:
+                //toggleMenu(index)
+                //setSelectedMenuItem(index)
+                toggleMenu()
+                setSelectedMenuItem(index)
+                navigation.navigate("FavoritesScreen")
+                toggleMenu()
+                setSelectedMenuItem(index)
+
+                break;
+            case 3:
+                //toggleMenu()
+                toggleMenu();
+                setSelectedMenuItem(index)
+                navigation.navigate("Weather Screen")
+
+                toggleMenu()
+                setSelectedMenuItem(index)
+
                 break;
             case 6:
                 // Обработка нажатия на "Выход"
@@ -112,9 +144,10 @@ export default function CustomDrawer({
             default:
                 break;
         }
+
+        //
     };
 
-    console.log("user email: " + userEmail)
 
     return (
         <View style={{ flex: 1, borderRadius: showMenu ? 15 : 0 }}>
@@ -127,7 +160,11 @@ export default function CustomDrawer({
                         alignItems: 'center',
                         marginTop: 40
                     }}>
-                        <Image source={require('../../../../assets/images/user.jpg')}
+                        <Image source={
+                            identify === 'Гость'
+                                ? require('../../../../assets/images/guest.jpg')
+                                : require('../../../../assets/images/user.jpg')
+                        }
                             style={{ width: 70, height: 70, borderRadius: 35, marginLeft: 20 }} />
                         <View style={{ marginLeft: 15 }}>
                             <Text style={{ fontSize: 22, fontFamily: "Inter-Bold" }}>
@@ -155,7 +192,7 @@ export default function CustomDrawer({
                                         marginLeft: 20,
                                         marginTop: 20,
                                         flexDirection: 'row',
-                                        backgroundColor: isSelected ? 'white' : 'transparent',
+                                        backgroundColor: index === selectedMenuItem ? 'white' : 'transparent',
                                         borderRadius: 10,
                                         alignItems: 'center'
                                     }}
