@@ -8,7 +8,7 @@ import * as Animatable from 'react-native-animatable'
 import useUserCredentials from '../../../utils/useUserCredentials';
 import useUserEmail from '../../../utils/useUserEmail';
 import { assets } from '../../../../react-native.config';
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function CustomDrawer({
     children,
@@ -21,6 +21,7 @@ export default function CustomDrawer({
 }) {
 
     let identify = useUserCredentials()
+    console.log(identify)
     let userEmail = useUserEmail()
 
     const [showMenu, setShowMenu] = useState(false);
@@ -64,6 +65,10 @@ export default function CustomDrawer({
         default: { icon: <Icon size={24} />, color: 'white' },
     };
 
+
+
+
+
     const getIconInfo = (title, item) => {
         const iconInfo = iconMap[title] || iconMap.default;
         return {
@@ -73,6 +78,43 @@ export default function CustomDrawer({
     };
 
 
+    const handleMenuItemPress = async (index) => {
+        // Обработка нажатия на пункт меню
+        switch (index) {
+            case 0:
+                // Обработка нажатия на "Домашняя страница"
+                break;
+            case 1:
+                // Обработка нажатия на "Новости"
+                break;
+            case 6:
+                // Обработка нажатия на "Выход"
+                const savedUsername = await AsyncStorage.getItem('username');
+                const savedPassword = await AsyncStorage.getItem('password');
+
+                if (savedUsername) {
+                    await AsyncStorage.removeItem(savedUsername);
+                }
+
+                if (savedPassword) {
+                    await AsyncStorage.removeItem(savedPassword);
+                }
+
+                const isGuestUser = savedUsername === 'guest';
+
+                if (isGuestUser) {
+                    await AsyncStorage.removeItem('guestID');
+                }
+
+                await AsyncStorage.setItem('loggedOut', 'true');
+                navigation.navigate('Добро пожаловать !', { status: "logout" });
+                break;
+            default:
+                break;
+        }
+    };
+
+    console.log("user email: " + userEmail)
 
     return (
         <View style={{ flex: 1, borderRadius: showMenu ? 15 : 0 }}>
@@ -89,22 +131,19 @@ export default function CustomDrawer({
                             style={{ width: 70, height: 70, borderRadius: 35, marginLeft: 20 }} />
                         <View style={{ marginLeft: 15 }}>
                             <Text style={{ fontSize: 22, fontFamily: "Inter-Bold" }}>
-                                {identify}
+                                {identify} {identify === "Гость" ? '👾' : '💫'}
                             </Text>
-                            {userEmail != null ? (
-                                <Text style={{ fontSize: 22, fontFamily: "Inter-Bold" }}>
+                            {(userEmail != '' && userEmail != null) ? (
+                                <Text style={{ fontSize: 14, fontFamily: "Inter-Light" }}>
                                     {userEmail}
                                 </Text>
                             ) : (
-                                <Text style={{ fontSize: 14, fontFamily: "Inter-Light" }}>
-                                    {identify}{`@gmail.com`}
-                                </Text>
-                            )
-                            }
+                                null
+                            )}
 
                         </View>
                     </View>
-                    <View style={{ marginTop: 30 }}>
+                    <View style={{ flexDirection: 'row', marginTop: 30 }}>
                         <FlatList data={menu} renderItem={({ item, index }) => {
                             const { icon, color } = getIconInfo(item.title, item);
                             const isSelected = selectedMenuItem === index;
@@ -119,7 +158,12 @@ export default function CustomDrawer({
                                         backgroundColor: isSelected ? 'white' : 'transparent',
                                         borderRadius: 10,
                                         alignItems: 'center'
-                                    }}>
+                                    }}
+                                    onPress={() => {
+                                        setSelectedMenuItem(index)
+                                        handleMenuItemPress(index)
+                                    }}
+                                >
                                     {icon && (
                                         <View style={{ marginLeft: 15 }}>
                                             {React.cloneElement(icon, { size: 24, color: isSelected ? 'black' : color })}

@@ -6,13 +6,13 @@ import CustomDrawer from '../../components/customs/CustomDrawer'
 
 
 
-export default function WeatherScreen() {
+export default function WeatherScreen({ navigation }) {
     return (
         <LinearGradient
             colors={['rgba(58, 131, 244, 0.4)', 'rgba(9, 181, 211, 0.4)']}
             style={{ width: '100%', flex: 1, }}
         >
-            <CustomDrawer type="Прогноз погоды" backgroundColor="#5b86e5" fgColor="#458fe6" elevation={35}>
+            <CustomDrawer type="Прогноз погоды" backgroundColor="#5b86e5" fgColor="#458fe6" elevation={35} navigation={navigation}>
                 <View style={styles.root}>
                     <Text>Прогноз погоды</Text>
                 </View>
