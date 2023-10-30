@@ -6,7 +6,7 @@ import CategoryComp from '../../components/Category/CategoryComp';
 import NetInfo from '@react-native-community/netinfo'
 import * as Animatable from 'react-native-animatable'
 import Icon2 from 'react-native-vector-icons/SimpleLineIcons'
-import CustomDrawer from '../../components/CustomDrawer';
+import CustomDrawer from '../../components/customs/CustomDrawer';
 
 const HomeScreen = ({ navigation }) => {
 

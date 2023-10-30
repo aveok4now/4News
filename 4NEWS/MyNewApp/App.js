@@ -1,24 +1,17 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- * @flow strict-local
- */
-
 import React, { useEffect, useState, useRef } from 'react';
 import { SafeAreaView, StyleSheet, Text, StatusBar, BackHandler, Modal, ListItem, View, Dimensions, TouchableOpacity, Animated } from 'react-native';
 import Navigation from './src/navigation';
 import SplashScreen from 'react-native-splash-screen';
 import LottieView from 'lottie-react-native';
 
-import ModalPopup from './src/components/CustomModal/CustomModal';
+import ModalPopup from './src/components/customs/CustomModal/CustomModal';
 import LinearGradient from 'react-native-linear-gradient';
 import RadialGradient from 'react-native-radial-gradient';
 const { width, height } = Dimensions.get('window');
 import SQLite from 'react-native-sqlite-storage'
 import { assets } from './react-native.config';
-import CustomButton from './src/components/CustomButton';
+//import CustomButton from 'D:/react/4NEWS/MyNewApp/src/components/customs/CustomButton/CustomButton.js';
+import CustomButton from './src/components/customs/CustomButton';
 
 // SQLite.enablePromise(true);
 const App = () => {

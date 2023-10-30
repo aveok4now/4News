@@ -15,8 +15,8 @@ import LinearGradient from 'react-native-linear-gradient';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { assets } from '../../../react-native.config';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import ModalPopup from '../CustomModal/CustomModal';
-import CustomButton from '../CustomButton';
+import ModalPopup from '../customs/CustomModal/CustomModal';
+import CustomButton from '../customs/CustomButton';
 import useUserCredentials from '../../utils/useUserCredentials';
 
 const Card = ({ item, navigation }) => {

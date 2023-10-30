@@ -5,11 +5,11 @@ import Card from '../../components/Card';
 import * as Animatable from 'react-native-animatable'
 import { assets } from '../../../react-native.config';
 import TypeWriter from 'react-native-typewriter'
-import CustomButton from '../../components/CustomButton';
+import CustomButton from '../../components/customs/CustomButton';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import LottieView from 'lottie-react-native';
 import useUserCredentials from '../../utils/useUserCredentials';
-import CustomDrawer from '../../components/CustomDrawer';
+import CustomDrawer from '../../components/customs/CustomDrawer';
 
 const { width, height } = Dimensions.get('window');
 export default function FavoritesScreen({ navigation }) {

@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet, Pressable, TouchableOpacity, Vibration } from 'react-native';
-import { assets } from '../../../react-native.config';
+import { assets } from '../../../../react-native.config';
 // import { Container } from './styles';
 
 const DURATION = 10

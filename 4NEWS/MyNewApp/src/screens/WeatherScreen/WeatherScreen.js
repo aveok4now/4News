@@ -1,7 +1,7 @@
 import { View, Text, StyleSheet } from 'react-native'
 import React, { useState } from 'react'
 import LinearGradient from 'react-native-linear-gradient'
-import CustomDrawer from '../../components/CustomDrawer'
+import CustomDrawer from '../../components/customs/CustomDrawer'
 
 
 

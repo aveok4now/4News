@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, ScrollView } from 'react-native';
-import CustomInput from '../../components/CustomInput';
-import CustomButton from '../../components/CustomButton/CustomButton';
+import CustomInput from '../../components/customs/CustomInput/CustomInput';
+import CustomButton from '../../components/customs/CustomButton/CustomButton';
 import { useNavigation } from '@react-navigation/native';
 import { set, useForm } from 'react-hook-form';
 // import { Container } from './styles';

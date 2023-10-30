@@ -1,8 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { View, Text, StyleSheet, ScrollView, useWindowDimensions } from 'react-native';
-import CustomInput from '../../components/CustomInput';
-import CustomButton from '../../components/CustomButton/CustomButton';
-import SocialSignInButtons from '../../components/SocialSignInButtons';
+import CustomInput from '../../components/customs/CustomInput/CustomInput';
+import CustomButton from '../../components/customs/CustomButton/CustomButton';
+import SocialSignInButtons from '../../components/customs/SocialSignInButtons';
 import { useNavigation } from '@react-navigation/native';
 import { useForm } from 'react-hook-form';
 import BottomSheet from 'react-native-simple-bottom-sheet';

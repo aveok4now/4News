@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, useWindowDimensions, ScrollView, TouchableOpacity, Dimensions, Vibration, BackHandler } from 'react-native';
 import Logo from '../../../assets/images/seved.png';
-import CustomInput from '../../components/CustomInput';
-import CustomButton from '../../components/CustomButton/CustomButton';
+import CustomInput from '../../components/customs/CustomInput/CustomInput';
+import CustomButton from '../../components/customs/CustomButton/CustomButton';
 import { useNavigation } from '@react-navigation/native';
 // import { Container } from './styles';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { removeItem } from '../../utils/asyncStorage';
 import { useForm } from 'react-hook-form';
-import ModalPopup from '../../components/CustomModal/CustomModal';
+import ModalPopup from '../../components/customs/CustomModal/CustomModal';
 import LottieView from 'lottie-react-native';
 const { width, height } = Dimensions.get('window');
 import * as Animatable from 'react-native-animatable';

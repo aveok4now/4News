@@ -2,8 +2,8 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { Modal, View, Animated, Text, TouchableOpacity, Dimensions, BackHandler } from 'react-native';
 import LottieView from 'lottie-react-native';
-import { assets } from '../../../react-native.config';
-import CustomButton from '../CustomButton';
+import { assets } from '../../../../react-native.config';
+import CustomButton from '../../customs/CustomButton/CustomButton';
 
 
 const { width, height } = Dimensions.get('window');
