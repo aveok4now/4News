@@ -27,6 +27,9 @@ export default function CustomDrawer({
     const moveToRight = useRef(new Animated.Value(0)).current;
     const scale = useRef(new Animated.Value(1)).current;
 
+    const [selectedMenuItem, setSelectedMenuItem] = useState(0)
+
+
     const toggleMenu = () => {
         Animated.parallel([
             Animated.timing(scale, {
@@ -53,6 +56,23 @@ export default function CustomDrawer({
         { icon: 'logout', title: 'Выход' },
 
     ];
+
+    const iconMap = {
+        Новости: { icon: <Icon3 size={24} />, color: 'white' },
+        Выход: { icon: <Icon2 size={24} />, color: 'white' },
+        'Связь с нами': { icon: <Icon4 size={24} />, color: 'white' },
+        default: { icon: <Icon size={24} />, color: 'white' },
+    };
+
+    const getIconInfo = (title, item) => {
+        const iconInfo = iconMap[title] || iconMap.default;
+        return {
+            icon: React.cloneElement(iconInfo.icon, { name: item.icon }),
+            color: iconInfo.color,
+        };
+    };
+
+
 
     return (
         <View style={{ flex: 1, borderRadius: showMenu ? 15 : 0 }}>
@@ -86,6 +106,8 @@ export default function CustomDrawer({
                     </View>
                     <View style={{ marginTop: 30 }}>
                         <FlatList data={menu} renderItem={({ item, index }) => {
+                            const { icon, color } = getIconInfo(item.title, item);
+                            const isSelected = selectedMenuItem === index;
                             return (
                                 <TouchableOpacity
                                     style={{
@@ -94,22 +116,23 @@ export default function CustomDrawer({
                                         marginLeft: 20,
                                         marginTop: 20,
                                         flexDirection: 'row',
-                                        backgroundColor: 'white',
+                                        backgroundColor: isSelected ? 'white' : 'transparent',
                                         borderRadius: 10,
                                         alignItems: 'center'
                                     }}>
-                                    {item.title === "Новости" ? (
-                                        <Icon3 style={{ marginLeft: 15 }} name={item.icon} size={24} color="black" />
-                                    ) : item.title === "Выход" ? (
-                                        <Icon2 style={{ marginLeft: 15 }} name={item.icon} size={24} color="black" />
-                                    ) : item.title === "Связь с нами" ? (
-                                        <Icon4 style={{ marginLeft: 15 }} name={item.icon} size={24} color="black" />
-                                    ) :
-                                        (
-                                            <Icon style={{ marginLeft: 15 }} name={item.icon} size={24} color="black" />
-                                        )}
+                                    {icon && (
+                                        <View style={{ marginLeft: 15 }}>
+                                            {React.cloneElement(icon, { size: 24, color: isSelected ? 'black' : color })}
+                                        </View>
+                                    )}
 
-                                    <Text style={{ marginLeft: 20, fontFamily: 'Inter-Light', color: "black", fontSize: 18 }}>{item.title}</Text>
+                                    <Text style={{
+                                        marginLeft: 20,
+                                        fontFamily: 'Inter-Light',
+                                        color: isSelected ? "black" : "white",
+                                        fontSize: 18
+                                    }}>
+                                        {item.title}</Text>
                                 </TouchableOpacity>
                             )
                         }} />
@@ -182,4 +205,6 @@ const styles = StyleSheet.create({
         fontFamily: 'Inter-Light',
         textAlign: 'center',
     },
+
+
 });
