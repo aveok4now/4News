@@ -1,11 +1,14 @@
 import React, { useState, useRef } from 'react';
-import { View, TouchableOpacity, Animated, StyleSheet, Text, Image } from 'react-native';
+import { View, TouchableOpacity, Animated, StyleSheet, Text, Image, FlatList } from 'react-native';
 import Icon2 from 'react-native-vector-icons/SimpleLineIcons';
 import Icon from 'react-native-vector-icons/FontAwesome5';
+import Icon3 from 'react-native-vector-icons/FontAwesome6';
+import Icon4 from 'react-native-vector-icons/MaterialCommunityIcons';
 import * as Animatable from 'react-native-animatable'
 import useUserCredentials from '../../../utils/useUserCredentials';
 import useUserEmail from '../../../utils/useUserEmail';
 import { assets } from '../../../../react-native.config';
+
 
 export default function CustomDrawer({
     children,
@@ -27,18 +30,29 @@ export default function CustomDrawer({
     const toggleMenu = () => {
         Animated.parallel([
             Animated.timing(scale, {
-                toValue: showMenu ? 1 : 0.75,
+                toValue: showMenu ? 1 : 0.7,
                 duration: 300,
                 useNativeDriver: true,
             }),
             Animated.timing(moveToRight, {
-                toValue: showMenu ? 0 : 200,
+                toValue: showMenu ? 0 : 250,
                 duration: 300,
                 useNativeDriver: true,
             }),
         ]).start();
         setShowMenu(!showMenu);
     };
+
+    const menu = [
+        { icon: 'home', title: 'Домашняя страница' },
+        { icon: 'newspaper', title: 'Новости' },
+        { icon: 'star', title: 'Избранное' },
+        { icon: 'cloud-sun-rain', title: 'Погода' },
+        { icon: 'university', title: 'Университет' },
+        { icon: 'email', title: 'Связь с нами' },
+        { icon: 'logout', title: 'Выход' },
+
+    ];
 
     return (
         <View style={{ flex: 1, borderRadius: showMenu ? 15 : 0 }}>
@@ -57,10 +71,48 @@ export default function CustomDrawer({
                             <Text style={{ fontSize: 22, fontFamily: "Inter-Bold" }}>
                                 {identify}
                             </Text>
-                            <Text style={{ fontSize: 22, fontFamily: "Inter-Bold" }}>
-                                {userEmail}
-                            </Text>
+                            {userEmail != null ? (
+                                <Text style={{ fontSize: 22, fontFamily: "Inter-Bold" }}>
+                                    {userEmail}
+                                </Text>
+                            ) : (
+                                <Text style={{ fontSize: 14, fontFamily: "Inter-Light" }}>
+                                    {identify}{`@gmail.com`}
+                                </Text>
+                            )
+                            }
+
                         </View>
+                    </View>
+                    <View style={{ marginTop: 30 }}>
+                        <FlatList data={menu} renderItem={({ item, index }) => {
+                            return (
+                                <TouchableOpacity
+                                    style={{
+                                        width: 200,
+                                        height: 50,
+                                        marginLeft: 20,
+                                        marginTop: 20,
+                                        flexDirection: 'row',
+                                        backgroundColor: 'white',
+                                        borderRadius: 10,
+                                        alignItems: 'center'
+                                    }}>
+                                    {item.title === "Новости" ? (
+                                        <Icon3 style={{ marginLeft: 15 }} name={item.icon} size={24} color="black" />
+                                    ) : item.title === "Выход" ? (
+                                        <Icon2 style={{ marginLeft: 15 }} name={item.icon} size={24} color="black" />
+                                    ) : item.title === "Связь с нами" ? (
+                                        <Icon4 style={{ marginLeft: 15 }} name={item.icon} size={24} color="black" />
+                                    ) :
+                                        (
+                                            <Icon style={{ marginLeft: 15 }} name={item.icon} size={24} color="black" />
+                                        )}
+
+                                    <Text style={{ marginLeft: 20, fontFamily: 'Inter-Light', color: "black", fontSize: 18 }}>{item.title}</Text>
+                                </TouchableOpacity>
+                            )
+                        }} />
                     </View>
 
                 </Animatable.View>
