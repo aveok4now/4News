@@ -11,7 +11,7 @@ import useUserCredentials from '../../../utils/useUserCredentials';
 import useUserEmail from '../../../utils/useUserEmail';
 import { assets } from '../../../../react-native.config';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
+import LinearGradient from 'react-native-linear-gradient';
 
 export default function CustomDrawer({
     children,
@@ -134,12 +134,36 @@ export default function CustomDrawer({
                         alignItems: 'center',
                         marginTop: 40
                     }}>
-                        <Image source={
-                            identify === 'Гость'
-                                ? require('../../../../assets/images/guest.jpg')
-                                : require('../../../../assets/images/user.jpg')
-                        }
-                            style={{ width: 70, height: 70, borderRadius: 35, marginLeft: 20, borderWidth: 1, borderColor: 'purple' }} />
+                        <LinearGradient
+                            colors={['#dd2dcf', '#f356b0']}
+                            style={{
+                                width: 80,
+                                height: 80,
+                                borderRadius: 45,
+                                marginLeft: 20,
+                            }}
+                        >
+                            <View
+                                style={{
+                                    width: '100%',
+                                    height: '100%',
+                                    borderRadius: 45,
+                                    borderWidth: 1.5,
+                                    borderColor: 'transparent',
+                                    alignSelf: 'center',
+                                    overflow: 'hidden',
+                                }}
+                            >
+                                <Image
+                                    source={
+                                        identify === 'Гость'
+                                            ? require('../../../../assets/images/guest.jpg')
+                                            : require('../../../../assets/images/user.jpg')
+                                    }
+                                    style={{ width: '100%', height: '100%', resizeMode: 'cover' }}
+                                />
+                            </View>
+                        </LinearGradient>
                         <View style={{ marginLeft: 15 }}>
                             <Text style={{ fontSize: 22, fontFamily: "Inter-Bold" }}>
                                 {identify} {identify === "Гость" ? '👾' : '💫'}
@@ -168,7 +192,7 @@ export default function CustomDrawer({
                                         flexDirection: 'row',
                                         backgroundColor: index === selectedMenuItem ? 'white' : 'transparent',
                                         borderRadius: 10,
-                                        alignItems: 'center'
+                                        alignItems: 'center',
                                     }}
                                     onPress={() => {
                                         setSelectedMenuItem(index)
