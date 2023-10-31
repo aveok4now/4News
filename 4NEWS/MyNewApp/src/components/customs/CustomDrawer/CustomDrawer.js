@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { View, TouchableOpacity, Animated, StyleSheet, Text, Image, FlatList } from 'react-native';
+import { View, TouchableOpacity, Animated, StyleSheet, Text, Image, FlatList, PanResponder } from 'react-native';
 import Icon2 from 'react-native-vector-icons/SimpleLineIcons';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import Icon3 from 'react-native-vector-icons/FontAwesome6';
@@ -128,6 +128,19 @@ export default function CustomDrawer({
         //
     };
 
+    state = {
+        panResponder: PanResponder.create({
+            onStartShouldSetPanResponder: (evt, gestureState) => true,
+            onMoveShouldSetPanResponder: (evt, gestureState) => true,
+            onPanResponderMove: (evt, gestureState) => {
+                if (gestureState.dx < -50) {
+                    toggleMenu();
+                }
+            },
+        }),
+    };
+
+
 
     return (
         <View style={{ flex: 1, borderRadius: showMenu ? 15 : 0 }}>
@@ -228,6 +241,7 @@ export default function CustomDrawer({
                 </Animatable.View>
             )}
             <Animated.View
+                {...this.state.panResponder.panHandlers}
                 style={{
                     flex: 1,
                     backgroundColor: fgColor,
