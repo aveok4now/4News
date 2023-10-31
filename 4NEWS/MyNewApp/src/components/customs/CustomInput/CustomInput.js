@@ -36,11 +36,11 @@ const CustomInput = ({
                             value={value}
                             onChangeText={(text) => {
                                 onChange(text);
-                                setIsTyping(true);
+                                if (setIsTyping) setIsTyping(true);
                             }}
                             onBlur={() => {
                                 onBlur();
-                                setIsTyping(false);
+                                if (setIsTyping) setIsTyping(false);
                                 setIsFocused(false);
                             }}
                             onFocus={() => setIsFocused(true)}

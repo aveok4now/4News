@@ -8,7 +8,9 @@ import {
     Image,
     FlatList,
     PanResponder,
-    Linking
+    Linking,
+    KeyboardAvoidingView,
+    ScrollView
 } from 'react-native';
 import Icon2 from 'react-native-vector-icons/SimpleLineIcons';
 import Icon from 'react-native-vector-icons/FontAwesome5';
@@ -22,6 +24,7 @@ import useUserEmail from '../../../utils/useUserEmail';
 import { assets } from '../../../../react-native.config';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import LinearGradient from 'react-native-linear-gradient';
+
 
 export default function CustomDrawer({
     children,
@@ -63,8 +66,8 @@ export default function CustomDrawer({
 
     const menu = [
         { icon: 'university', title: 'Университет' },
-        { icon: 'email', title: 'Связь с нами' },
         { icon: 'github', title: 'Коммит' },
+        { icon: 'email', title: 'Связь с нами' },
         { icon: 'star-half-o', title: 'Оценить нас' },
         { icon: 'logout', title: 'Выход' },
     ];
@@ -87,15 +90,32 @@ export default function CustomDrawer({
         };
     };
 
+    const webPages = ["https://www.sevsu.ru/", "https://www.github.com/dtb4life/4News/tree/master/4NEWS/MyNewApp"]
+
+    const openLinkInBrowserHandler = (index) => {
+        Linking.canOpenURL(webPages[index]).then((supported) => {
+            if (supported) {
+                Linking.openURL(webPages[index]).catch((err) => {
+                    console.error('Ошибка при открытии URL: ' + err);
+                });
+            } else {
+                console.error('Ссылка не поддерживается');
+            }
+        });
+    }
+
+
 
     const handleMenuItemPress = async (index) => {
         switch (index) {
             case 0:
-
+                openLinkInBrowserHandler(index);
                 break;
             case 1:
+                openLinkInBrowserHandler(index);
                 break;
             case 2:
+                navigation.navigate("FeedBack Screen")
                 break;
             case 3:
                 break;
@@ -152,7 +172,9 @@ export default function CustomDrawer({
 
 
 
+
     return (
+
         <View style={{ flex: 1, borderRadius: showMenu ? 15 : 0 }}>
             {showMenu && (
                 <Animatable.View animation="fadeIn"
@@ -247,9 +269,9 @@ export default function CustomDrawer({
                         }} />
 
                     </View>
-
                 </Animatable.View>
-            )}
+            )
+            }
             <Animated.View
                 {...this.state.panResponder.panHandlers}
                 style={{
@@ -293,9 +315,8 @@ export default function CustomDrawer({
                     )}
                 </View>
                 {children}
-
             </Animated.View>
-        </View>
+        </View >
     );
 }
 

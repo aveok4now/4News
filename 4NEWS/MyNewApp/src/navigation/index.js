@@ -21,6 +21,7 @@ import NewsViewer from '../components/NewsViewer/NewsViewer';
 import WeatherScreen from '../screens/WeatherScreen';
 import BottomTabBar from '../components/BottomTabBar';
 import FavoritesScreen from '../screens/FavoritesScreen';
+import FeedBackScreen from '../screens/FeedBackScreen/FeedBackScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -79,6 +80,7 @@ const Navigation = () => {
                     <Stack.Screen name="NewsViewer" component={NewsViewer} />
                     <Stack.Screen name="FavoritesScreen" component={FavoritesScreen} />
                     <Stack.Screen name="Weather Screen" component={WeatherScreen} />
+                    <Stack.Screen name="FeedBack Screen" component={FeedBackScreen} />
                     <Stack.Screen name="Регистрация"
                         component={SignUpScreen}
                         options={{

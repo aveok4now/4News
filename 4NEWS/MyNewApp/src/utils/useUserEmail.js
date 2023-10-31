@@ -20,7 +20,7 @@ const useUserEmail = () => {
                             if (rows.length > 0) {
                                 const { userEmail } = rows.item(0);
                                 setUserEmail(userEmail);
-                                console.log(userEmail)
+                                //console.log(userEmail)
                             }
                         },
                             (error) => {
