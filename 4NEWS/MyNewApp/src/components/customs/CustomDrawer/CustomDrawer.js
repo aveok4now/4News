@@ -30,7 +30,7 @@ export default function CustomDrawer({
     const moveToRight = useRef(new Animated.Value(0)).current;
     const scale = useRef(new Animated.Value(1)).current;
 
-    const [selectedMenuItem, setSelectedMenuItem] = useState(1)
+    const [selectedMenuItem, setSelectedMenuItem] = useState(null)
 
 
     const toggleMenu = () => {
@@ -55,15 +55,18 @@ export default function CustomDrawer({
 
         { icon: 'university', title: 'Университет' },
         { icon: 'email', title: 'Связь с нами' },
+        { icon: 'github', title: 'Коммит' },
         { icon: 'star-half-o', title: 'Оценить нас' },
         { icon: 'logout', title: 'Выход' },
+
 
     ];
 
     const iconMap = {
-        Новости: { icon: <Icon3 size={24} />, color: 'white' },
-        Выход: { icon: <Icon6 size={24} />, color: 'white' },
+        'Университет': { icon: <Icon size={24} />, color: 'white' },
+        'Выход': { icon: <Icon6 size={24} />, color: 'white' },
         'Связь с нами': { icon: <Icon4 size={24} />, color: 'white' },
+        'Коммит': { icon: <Icon size={24} />, color: 'white' },
         'Оценить нас': { icon: <Icon5 size={24} />, color: 'white' },
         default: { icon: <Icon size={24} />, color: 'white' },
     };
@@ -93,6 +96,8 @@ export default function CustomDrawer({
             case 2:
                 break;
             case 3:
+                break;
+            case 4:
                 // Обработка нажатия на "Выход"
                 const savedUsername = await AsyncStorage.getItem('username');
                 const savedPassword = await AsyncStorage.getItem('password');
@@ -115,6 +120,7 @@ export default function CustomDrawer({
                 navigation.navigate('Добро пожаловать !', { status: "logout" });
                 break;
 
+
             default:
                 break;
         }
@@ -132,7 +138,7 @@ export default function CustomDrawer({
                         width: '100%',
                         flexDirection: 'row',
                         alignItems: 'center',
-                        marginTop: 40
+                        marginTop: 40,
                     }}>
                         <LinearGradient
                             colors={['#dd2dcf', '#f356b0']}
@@ -152,6 +158,8 @@ export default function CustomDrawer({
                                     borderColor: 'transparent',
                                     alignSelf: 'center',
                                     overflow: 'hidden',
+                                    shadowColor: 'rgba(245, 40, 145, 1)',
+                                    elevation: 1,
                                 }}
                             >
                                 <Image
@@ -168,17 +176,13 @@ export default function CustomDrawer({
                             <Text style={{ fontSize: 22, fontFamily: "Inter-Bold" }}>
                                 {identify} {identify === "Гость" ? '👾' : '💫'}
                             </Text>
-                            {(userEmail != '' && userEmail != null) ? (
-                                <Text style={{ fontSize: 14, fontFamily: "Inter-Light" }}>
-                                    {userEmail}
-                                </Text>
-                            ) : (
-                                null
+                            {userEmail && (
+                                <Text style={{ fontSize: 14, fontFamily: "Inter-Light" }}>{userEmail}</Text>
                             )}
 
                         </View>
                     </View>
-                    <View style={{ flexDirection: 'row', marginTop: 30 }}>
+                    <View style={{ flexDirection: 'column', marginTop: 30 }}>
                         <FlatList data={menu} renderItem={({ item, index }) => {
                             const { icon, color } = getIconInfo(item.title, item);
                             const isSelected = selectedMenuItem === index;
@@ -190,9 +194,12 @@ export default function CustomDrawer({
                                         marginLeft: 20,
                                         marginTop: 20,
                                         flexDirection: 'row',
-                                        backgroundColor: index === selectedMenuItem ? 'white' : 'transparent',
+                                        backgroundColor: index === selectedMenuItem ? '#9fb4f0' : 'transparent',
                                         borderRadius: 10,
                                         alignItems: 'center',
+                                        paddingLeft: isSelected ? 2 : 0,
+                                        elevation: isSelected ? 5 : 0,
+                                        justifyContent: 'flex-start'
                                     }}
                                     onPress={() => {
                                         setSelectedMenuItem(index)
@@ -200,21 +207,22 @@ export default function CustomDrawer({
                                     }}
                                 >
                                     {icon && (
-                                        <View style={{ marginLeft: 15 }}>
-                                            {React.cloneElement(icon, { size: 24, color: isSelected ? 'black' : color })}
-                                        </View>
+                                        <Animatable.View style={{ marginLeft: 10 }} animation="fadeIn">
+                                            {React.cloneElement(icon, { color: isSelected ? 'black' : color, width: 24, height: 24 })}
+                                        </Animatable.View>
                                     )}
 
                                     <Text style={{
                                         marginLeft: 20,
                                         fontFamily: 'Inter-Light',
                                         color: isSelected ? "black" : "white",
-                                        fontSize: 18
+                                        fontSize: 18,
                                     }}>
                                         {item.title}</Text>
                                 </TouchableOpacity>
                             )
                         }} />
+
                     </View>
 
                 </Animatable.View>
@@ -242,7 +250,14 @@ export default function CustomDrawer({
                     ]}
                 >
                     <TouchableOpacity onPress={toggleMenu}>
-                        <Icon2 name="menu" size={24} color="white" style={{ transform: showMenu ? [{ rotate: '90deg' }] : [], }} />
+                        {showMenu ? (
+                            <Icon4 name={"close"} size={32} color="#21FA90" style={{ transform: showMenu ? [{ rotate: '90deg' }] : [], }} />
+
+                        ) : (
+                            <Icon2 name={"menu"} size={24} color="white" style={{ transform: showMenu ? [{ rotate: '90deg' }] : [], }} />
+                        )
+                        }
+
                     </TouchableOpacity>
                     <View style={styles.headerTextContainer}>
                         <Text style={styles.text}>{type}</Text>
@@ -254,6 +269,7 @@ export default function CustomDrawer({
                     )}
                 </View>
                 {children}
+
             </Animated.View>
         </View>
     );

@@ -59,7 +59,7 @@ export default function FavoritesScreen({ navigation }) {
 
     return (
         identify !== "Гость" ? (
-            <CustomDrawer type="Избранные новости" backgroundColor="#5b86e5" fgColor="#5b86e5" navigation={navigation}>
+            <CustomDrawer type="Избранные новости" backgroundColor="#5b86e5" elevation={35} fgColor="#5b86e5" navigation={navigation}>
                 <Animatable.View
                     animation="fadeIn"
                     duration={1000}
@@ -101,7 +101,7 @@ export default function FavoritesScreen({ navigation }) {
             </CustomDrawer>
         ) : (
             <>
-                <CustomDrawer fgColor="#5b86e5" navigation={navigation}>
+                <CustomDrawer fgColor="#5b86e5" navigation={navigation} elevation={35}>
                     <View style={{ justifyContent: "center", alignItems: "center", flex: 2, zIndex: 100 }}>
                         <Text style={styles.guestInfo}>Упс...</Text>
                         <Text style={styles.guestSubInfo}>Чтобы просматривать сохранённые новости, необходимо войти в аккаунт</Text>
@@ -115,7 +115,7 @@ export default function FavoritesScreen({ navigation }) {
                         </View>
 
                     </View>
-                </CustomDrawer>
+                </CustomDrawer >
             </>
         )
 
