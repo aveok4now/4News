@@ -1,5 +1,15 @@
 import React, { useState, useRef } from 'react';
-import { View, TouchableOpacity, Animated, StyleSheet, Text, Image, FlatList, PanResponder } from 'react-native';
+import {
+    View,
+    TouchableOpacity,
+    Animated,
+    StyleSheet,
+    Text,
+    Image,
+    FlatList,
+    PanResponder,
+    Linking
+} from 'react-native';
 import Icon2 from 'react-native-vector-icons/SimpleLineIcons';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import Icon3 from 'react-native-vector-icons/FontAwesome6';
@@ -52,14 +62,11 @@ export default function CustomDrawer({
     };
 
     const menu = [
-
         { icon: 'university', title: 'Университет' },
         { icon: 'email', title: 'Связь с нами' },
         { icon: 'github', title: 'Коммит' },
         { icon: 'star-half-o', title: 'Оценить нас' },
         { icon: 'logout', title: 'Выход' },
-
-
     ];
 
     const iconMap = {
@@ -81,12 +88,7 @@ export default function CustomDrawer({
     };
 
 
-
     const handleMenuItemPress = async (index) => {
-
-        //setSelectedMenuItem(index);
-        //toggleMenu();
-
         switch (index) {
             case 0:
 
@@ -124,21 +126,29 @@ export default function CustomDrawer({
             default:
                 break;
         }
-
-        //
     };
 
     state = {
         panResponder: PanResponder.create({
-            onStartShouldSetPanResponder: (evt, gestureState) => true,
-            onMoveShouldSetPanResponder: (evt, gestureState) => true,
+            onStartShouldSetPanResponder: (evt, gestureState) => {
+                return showMenu;
+            },
+            onMoveShouldSetPanResponder: (evt, gestureState) => {
+                return showMenu;
+            },
             onPanResponderMove: (evt, gestureState) => {
-                if (gestureState.dx < -50) {
+                if (showMenu && gestureState.dx < -50) {
+                    toggleMenu();
+                }
+            },
+            onPanResponderRelease: (evt, gestureState) => {
+                if (showMenu && Math.abs(gestureState.dx) < 5 && Math.abs(gestureState.dy) < 5) {
                     toggleMenu();
                 }
             },
         }),
     };
+
 
 
 
