@@ -45,11 +45,12 @@ React Native News App project, bootstrapped using [`@react-native-community/cli`
   - [ ] Community Screen
     - [ ] Users News w/ comments, likes, date, etc. 
     - [ ] News Posting Functionality
-- [ ] Drawer Navigation 
-  - [ ] About Screen
-  - [ ] Help Screen
-  - [ ] Contact with us
+- [ ] Custom Drawer
+  - [x] University Link
+  - [x] View commit Link
+  - [x] Feedback Screen with sending email-message functionality
   - [ ] Rate Us
+  - [x] LogOut
  - [ ] Weather Screen
  - [ ] Currency Screen 
 - [x] OnExit Custom ModalPopUp with Custom Buttons
