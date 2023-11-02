@@ -8,6 +8,8 @@ import CustomInput from '../../components/customs/CustomInput';
 import { useForm } from 'react-hook-form';
 import * as Animatable from 'react-native-animatable'
 import TypeWriter from 'react-native-typewriter'
+import { setStatusBarColor } from '../../utils/StatusBarManager';
+
 
 export default function FeedBackScreen({ navigation }) {
     const [showModal, setShowModal] = useState(true)
@@ -49,6 +51,8 @@ export default function FeedBackScreen({ navigation }) {
         }
     }, [countdown, isTyped, navigation]);
 
+
+    setStatusBarColor('rgba(54, 209, 220, 0.5)');
 
     return (
 
