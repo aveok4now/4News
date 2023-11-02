@@ -11,6 +11,7 @@ import {
     Linking,
     KeyboardAvoidingView,
     ScrollView,
+    Easing
 } from 'react-native';
 import Icon2 from 'react-native-vector-icons/SimpleLineIcons';
 import Icon from 'react-native-vector-icons/FontAwesome5';
@@ -28,6 +29,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import ModalPopup from '../../customs/CustomModal';
 import CustomButton from '../../customs/CustomButton';
 import CustomInput from '../../customs/CustomInput';
+import RateUs from '../../RateUs';
 
 export default function CustomDrawer({
     children,
@@ -48,7 +50,21 @@ export default function CustomDrawer({
     const [selectedMenuItem, setSelectedMenuItem] = useState(null);
 
     const [showExitModal, setShowExitModal] = useState(false);
+
+    const [showRateUSModal, setShowRateUSModal] = useState(false);
+
     const [isOnYesPressed, setIsOnYesPressed] = useState(false);
+
+    const [rating, setRating] = useState(1)
+    const animatedValue = useRef(new Animated.Value(1)).current;
+
+    const rate = (star) => {
+        setRating(star);
+    }
+
+
+
+
 
     const toggleMenu = () => {
         Animated.parallel([
@@ -128,6 +144,7 @@ export default function CustomDrawer({
                 navigation.navigate('FeedBack Screen');
                 break;
             case 3:
+                setShowRateUSModal(true)
                 break;
             case 4:
                 if (title === "Выход") {
@@ -247,6 +264,32 @@ export default function CustomDrawer({
                                 </Text>
                             )}
                         </View>
+                        {showRateUSModal && (
+                            <ModalPopup
+                                navigation={navigation}
+                                visible={showRateUSModal}
+                                backgroundColor="#7692FF">
+                                <View style={[styles.container, { flexDirection: 'row' }]}>
+                                    {[1, 2, 3, 4, 5].map((index) => (
+                                        <Animated.View key={index}>
+                                            <RateUs
+                                                key={index}
+                                                index={index}
+                                                filled={index <= rating ? true : false}
+                                                animatedValue={animatedValue}
+                                                rating={rating}
+                                                onPress={() => {
+                                                    rate(index)
+                                                }}
+                                            />
+                                        </Animated.View>
+                                    ))}
+
+                                </View>
+
+                            </ModalPopup>
+                        )}
+
                         {showExitModal && (
                             <>
                                 <ModalPopup
@@ -411,6 +454,10 @@ export default function CustomDrawer({
 }
 
 const styles = StyleSheet.create({
+    container: {
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
     header: {
         paddingHorizontal: 10,
         paddingVertical: 15,
