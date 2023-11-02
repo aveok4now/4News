@@ -48,6 +48,7 @@ export default function FeedBackScreen({ navigation }) {
     useEffect(() => {
         if (countdown === 0 && isTyped && navigation) {
             navigation.navigate("Домашняя страница");
+            setStatusBarColor('#36d1dc')
         }
     }, [countdown, isTyped, navigation]);
 
@@ -126,6 +127,7 @@ export default function FeedBackScreen({ navigation }) {
                                     onPress={() => {
                                         setShowModal(!showModal)
                                         navigation.navigate("Домашняя страница")
+                                        setStatusBarColor('#36d1dc')
                                     }}
                                 />
 

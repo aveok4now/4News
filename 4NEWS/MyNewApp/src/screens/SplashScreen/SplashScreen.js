@@ -8,26 +8,31 @@ import { assets } from '../../../react-native.config';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import TypeWriter from 'react-native-typewriter'
 import useUserCredentials from '../../utils/useUserCredentials';
+import { resetStatusBarColor, setStatusBarColor } from '../../utils/StatusBarManager';
 
 const { width, height } = Dimensions.get('window');
 
 const Splash = ({ navigation }) => {
 
+    setStatusBarColor('#5b86e5')
     const { width, height } = useWindowDimensions()
 
     const [isTyped, setIsTyped] = useState(false)
 
 
     let identify = useUserCredentials();
-    console.log("вызвал")
 
     const handleTypeComplete = () => {
-        setIsTyped(true)
+
+        setIsTyped(true);
+        resetStatusBarColor();
         navigation.navigate('Домашняя страница');
+
         navigation.reset({
             index: 0,
             routes: [{ name: 'Домашняя страница' }],
         });
+
     }
 
 

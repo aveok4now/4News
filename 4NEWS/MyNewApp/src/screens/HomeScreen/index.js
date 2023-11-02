@@ -7,9 +7,15 @@ import NetInfo from '@react-native-community/netinfo'
 import * as Animatable from 'react-native-animatable'
 import Icon2 from 'react-native-vector-icons/SimpleLineIcons'
 import CustomDrawer from '../../components/customs/CustomDrawer';
+import { setStatusBarColor, resetStatusBarColor } from '../../utils/StatusBarManager';
+
 
 const HomeScreen = ({ navigation }) => {
 
+
+    setTimeout(() => {
+        setStatusBarColor('#36d1dc')
+    }, 1000);
     const [isFetchingError, setIsFetchingError] = useState(false);
     const [Loading, setIsLoading] = useState(false);
     const [Data, setData] = useState([]);
@@ -158,8 +164,6 @@ const HomeScreen = ({ navigation }) => {
 
     useEffect(() => {
         const unsubscribe = NetInfo.addEventListener(state => {
-            console.log("Connection type", state.type);
-            console.log("Is connected?", state.isConnected);
             setIsConnected(state.isConnected);
             if (state.isConnected == true) {
                 getData();
@@ -169,7 +173,6 @@ const HomeScreen = ({ navigation }) => {
                 }, 2000);
             }
         });
-
         getData();
 
         return () => {

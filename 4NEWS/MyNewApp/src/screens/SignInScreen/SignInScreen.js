@@ -14,13 +14,14 @@ const { width, height } = Dimensions.get('window');
 import * as Animatable from 'react-native-animatable';
 import SQLite from 'react-native-sqlite-storage'
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
+import { setStatusBarColor, resetStatusBarColor } from '../../utils/StatusBarManager';
 
 SQLite.enablePromise(true);
 
 
 const SignInScreen = ({ route }) => {
 
+    resetStatusBarColor();
     const [userExist, setUserExist] = useState(true);
     const { width, height } = useWindowDimensions();
     const navigation = useNavigation();

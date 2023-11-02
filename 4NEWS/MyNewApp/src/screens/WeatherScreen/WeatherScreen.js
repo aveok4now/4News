@@ -5,7 +5,6 @@ import CustomDrawer from '../../components/customs/CustomDrawer'
 
 
 
-
 export default function WeatherScreen({ navigation }) {
     return (
         <LinearGradient
