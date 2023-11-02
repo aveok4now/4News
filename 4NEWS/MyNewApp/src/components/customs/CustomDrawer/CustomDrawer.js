@@ -67,7 +67,7 @@ export default function CustomDrawer({
     const menu = [
         { icon: 'university', title: 'Университет' },
         { icon: 'github', title: 'Коммит' },
-        { icon: 'email', title: 'Связь с нами' },
+        { icon: 'email', title: 'Оставить отзыв' },
         { icon: 'star-half-o', title: 'Оценить нас' },
         { icon: 'logout', title: 'Выход' },
     ];
@@ -75,7 +75,7 @@ export default function CustomDrawer({
     const iconMap = {
         'Университет': { icon: <Icon size={24} />, color: 'white' },
         'Выход': { icon: <Icon6 size={24} />, color: 'white' },
-        'Связь с нами': { icon: <Icon4 size={24} />, color: 'white' },
+        'Оставить отзыв': { icon: <Icon4 size={24} />, color: 'white' },
         'Коммит': { icon: <Icon size={24} />, color: 'white' },
         'Оценить нас': { icon: <Icon5 size={24} />, color: 'white' },
         default: { icon: <Icon size={24} />, color: 'white' },
@@ -242,7 +242,6 @@ export default function CustomDrawer({
                                         backgroundColor: index === selectedMenuItem ? '#9fb4f0' : 'transparent',
                                         borderRadius: 10,
                                         alignItems: 'center',
-                                        paddingLeft: isSelected ? 2 : 0,
                                         elevation: isSelected ? 5 : 0,
                                         justifyContent: 'flex-start'
                                     }}

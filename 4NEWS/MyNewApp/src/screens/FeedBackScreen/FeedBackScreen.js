@@ -64,6 +64,7 @@ export default function FeedBackScreen({ navigation }) {
                         <ModalPopup
                             navigation={navigation}
                             visible={showModal}
+                            backgroundColor='#7692FF'
                         >
                             {!isMessageSend ? (
                                 <View>
@@ -76,7 +77,7 @@ export default function FeedBackScreen({ navigation }) {
                                         control={control}
 
                                         rules={{
-                                            required: 'Пожалуйста, напишите Ваше сообщение',
+                                            required: 'Пожалуйста, напишите сообщение',
                                             minLength: { value: 3, message: 'Сообщение слишком короткое' },
 
                                         }}
@@ -100,6 +101,7 @@ export default function FeedBackScreen({ navigation }) {
                             ) : (
                                 isMessageSend && (
                                     <View style={{ justifyContent: 'center' }}>
+                                        <Text style={{ fontFamily: 'Inter-ExtraLight', opacity: isTyped ? 0.5 : 0, textAlign: 'center' }}>{countdown}</Text>
                                         <TypeWriter
                                             style={styles.text}
                                             minDelay={2}
@@ -122,7 +124,7 @@ export default function FeedBackScreen({ navigation }) {
                                         navigation.navigate("Домашняя страница")
                                     }}
                                 />
-                                {isTyped && <Text style={{ fontFamily: 'Inter-ExtraLight', opacity: 0.5, textAlign: 'center' }}>{countdown}</Text>}
+
                             </Animatable.View>
                         </ModalPopup>
 

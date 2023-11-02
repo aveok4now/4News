@@ -7,7 +7,7 @@ import CustomButton from '../../customs/CustomButton/CustomButton';
 
 
 const { width, height } = Dimensions.get('window');
-const ModalPopup = ({ visible, children, route, navigation }) => {
+const ModalPopup = ({ visible, children, route, navigation, backgroundColor = "#48ade0" }) => {
     const [showModal, setShowModal] = useState(visible);
     const scaleValue = useRef(new Animated.Value(0)).current;
 
@@ -38,7 +38,7 @@ const ModalPopup = ({ visible, children, route, navigation }) => {
         <Modal transparent visible={showModal}>
             <View style={styles.modalBackGround}>
 
-                <Animated.View style={[styles.modalContainer, { transform: [{ scale: scaleValue }] }]}>
+                <Animated.View style={[styles.modalContainer, { transform: [{ scale: scaleValue }], backgroundColor: backgroundColor }]}>
                     {children}
                 </Animated.View>
 
@@ -58,7 +58,6 @@ const styles = {
     },
     modalContainer: {
         width: '80%',
-        backgroundColor: '#48ade0',
         paddingHorizontal: 20,
         paddingVertical: 30,
         borderRadius: 20,
