@@ -24,14 +24,12 @@ export default function BottomTabBar() {
                 bottom: 0,
                 right: 0,
                 left: 0,
-                elevation: 1,
+                //elevation: 1,
                 height: 60,
-                borderTopRightRadius: 15,
-                borderTopLeftRadius: 15,
+                // borderTopRightRadius: 15,
+                // borderTopLeftRadius: 15,
                 //backgroundColor: '#3EF0FD',
                 backgroundColor: '#8EBBF3',
-                borderWidth: 1,
-                borderColor: "#B0ABD9",
             },
 
         }}>
@@ -46,13 +44,13 @@ export default function BottomTabBar() {
                             style={{ alignItems: "center", justifyContent: "center" }}>
                             <Icon
                                 name="newspaper"
-                                size={focused ? 28 : 24}
+                                size={24}
                                 color={focused ? "#7371FC" : "#28587B"}
                             />
                             <Animatable.Text
                                 animation="jello"
                                 duration={1500}
-                                style={focused ? styles.selIconText : styles.iconText}>
+                                style={[styles.iconText, { color: focused ? 'white' : 'black' }]}>
                                 Новости
                             </Animatable.Text>
                         </Animatable.View>
@@ -70,13 +68,13 @@ export default function BottomTabBar() {
                             style={{ alignItems: "center", justifyContent: "center" }}>
                             <Icon2
                                 name={focused ? "star" : "star-outline"}
-                                size={focused ? 28 : 24}
+                                size={24}
                                 color={focused ? "#EDFFAB" : "#28587B"}
                             />
                             <Animatable.Text
                                 animation="jello"
                                 duration={1500}
-                                style={focused ? styles.selIconText : styles.iconText}>
+                                style={[styles.iconText, { color: focused ? 'white' : 'black' }]}>
                                 Избранное
                             </Animatable.Text>
                         </Animatable.View>
@@ -94,13 +92,13 @@ export default function BottomTabBar() {
                             style={{ alignItems: "center", justifyContent: "center" }}>
                             <Icon
                                 name="cloud-sun-rain"
-                                size={focused ? 28 : 24}
-                                color={focused ? "#EDFFAB" : "#28587B"}
+                                size={24}
+                                color={focused ? "#3a86ff" : "#28587B"}
                             />
                             <Animatable.Text
                                 animation="jello"
                                 duration={1500}
-                                style={focused ? styles.selIconText : styles.iconText}>
+                                style={[styles.iconText, { color: focused ? 'white' : 'black' }]}>
                                 Погода
                             </Animatable.Text>
                         </Animatable.View>

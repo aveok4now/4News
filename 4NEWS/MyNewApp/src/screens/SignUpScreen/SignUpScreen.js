@@ -98,7 +98,7 @@ const SignUpScreen = () => {
 
 
     const onSignInPress = () => {
-        navigation.navigate("Добро пожаловать !")
+        navigation.navigate("Добро пожаловать !", { status: 'logout' })
     }
 
 
