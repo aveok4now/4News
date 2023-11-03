@@ -45,7 +45,7 @@ React Native News App project, bootstrapped using [`@react-native-community/cli`
   - [ ] Community Screen
     - [ ] Users News w/ comments, likes, date, etc. 
     - [ ] News Posting Functionality
-- [ ] Custom Drawer
+- [x] Custom Drawer
   - [x] University Link
   - [x] View commit Link
   - [x] Feedback Screen with sending email-message functionality
