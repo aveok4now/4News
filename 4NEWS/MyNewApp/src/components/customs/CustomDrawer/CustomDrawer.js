@@ -75,6 +75,8 @@ export default function CustomDrawer({
                 if (result.rows.length > 0) {
                     userId = result.rows.item(0).userId;
                 }
+            } else {
+                setRating(star);
             }
 
             if (userId) {

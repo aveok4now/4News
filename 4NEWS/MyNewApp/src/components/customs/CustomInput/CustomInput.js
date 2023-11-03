@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, StyleSheet, } from 'react-native';
+import { View, Text, TextInput, StyleSheet, TouchableOpacity } from 'react-native';
 import { Controller } from 'react-hook-form';
 // import { Container } from './styles';
 import { assets } from '../../../react-native.config';
+import EyeIcon from 'react-native-vector-icons/Entypo'
 
 const defaultColor1 = '#6274F8'
 const CustomInput = ({
@@ -16,7 +17,16 @@ const CustomInput = ({
     isUserExist
 }) => {
 
-    const [isFocused, setIsFocused] = React.useState(false);
+    const [isFocused, setIsFocused] = useState(false);
+    const [isPasswordVisible, setIsPasswordVisible] = useState(secureTextEntry);
+    const [iseyeFocused, setIseyeFocused] = useState(false);
+
+    const handleButtonPress = () => {
+        setIsPasswordVisible(!isPasswordVisible);
+        //setIsFocused(true);
+        setIseyeFocused(true)
+    }
+
     return (
         <Controller
             control={control}
@@ -47,8 +57,18 @@ const CustomInput = ({
                             selectionColor={selectionColor || defaultColor1}
                             placeholder={placeholder}
                             style={styles.input}
-                            secureTextEntry={secureTextEntry}
+                            secureTextEntry={isPasswordVisible}
+
                         />
+                        {secureTextEntry && (
+                            <TouchableOpacity
+                                onPress={handleButtonPress}
+
+                                style={styles.eyeIcon}>
+                                <EyeIcon name={isPasswordVisible ? "eye" : "eye-with-line"} size={24} />
+                            </TouchableOpacity>
+                        )}
+
                     </View>
                     {error && (
                         <Text style={styles.errorText}>
@@ -95,6 +115,13 @@ const styles = StyleSheet.create({
         alignSelf: 'stretch',
 
     },
+
+    eyeIcon: {
+        position: 'absolute',
+        top: 12,
+        right: 10,
+    },
+
 },)
 
 export default CustomInput;  
