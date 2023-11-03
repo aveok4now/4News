@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import {
     View,
     TouchableOpacity,
@@ -11,7 +11,7 @@ import {
     Linking,
     KeyboardAvoidingView,
     ScrollView,
-    Easing
+    Easing,
 } from 'react-native';
 import Icon2 from 'react-native-vector-icons/SimpleLineIcons';
 import Icon from 'react-native-vector-icons/FontAwesome5';
@@ -19,6 +19,7 @@ import Icon3 from 'react-native-vector-icons/FontAwesome6';
 import Icon4 from 'react-native-vector-icons/MaterialCommunityIcons';
 import Icon5 from 'react-native-vector-icons/FontAwesome';
 import Icon6 from 'react-native-vector-icons/MaterialIcons';
+import IconEvil from 'react-native-vector-icons/EvilIcons';
 import * as Animatable from 'react-native-animatable';
 import useUserCredentials from '../../../utils/useUserCredentials';
 import useUserEmail from '../../../utils/useUserEmail';
@@ -30,6 +31,7 @@ import ModalPopup from '../../customs/CustomModal';
 import CustomButton from '../../customs/CustomButton';
 import CustomInput from '../../customs/CustomInput';
 import RateUs from '../../RateUs';
+import SQLite from 'react-native-sqlite-storage';
 
 export default function CustomDrawer({
     children,
@@ -55,16 +57,114 @@ export default function CustomDrawer({
 
     const [isOnYesPressed, setIsOnYesPressed] = useState(false);
 
-    const [rating, setRating] = useState(1)
+    const [rating, setRating] = useState(1);
     const animatedValue = useRef(new Animated.Value(1)).current;
 
-    const rate = (star) => {
-        setRating(star);
-    }
+    const rate = async (star) => {
+        //
+
+        try {
+            const db = await SQLite.openDatabase({ name: 'news.db', location: 1 });
+            let userId = null;
+
+            if (identify !== "Гость") {
+                const query = `SELECT userId FROM users WHERE userLogin = ?`;
+                const queryArgs = [identify];
+                const [result] = await db.executeSql(query, queryArgs);
+
+                if (result.rows.length > 0) {
+                    userId = result.rows.item(0).userId;
+                }
+            }
+
+            if (userId) {
+                const queryRating = `SELECT COUNT(*) AS count FROM Rates WHERE userID = ?`;
+                const queryArgsRating = [userId];
+                const [resultRating] = await db.executeSql(queryRating, queryArgsRating);
+
+                if (resultRating.rows.length > 0) {
+                    const count = resultRating.rows.item(0).count;
+                    if (count > 0) {
+                        db.transaction((tx) => {
+                            tx.executeSql(
+                                `
+                                UPDATE Rates
+                                SET rating = ?
+                                WHERE userID = ?
+                                `,
+                                [star, userId],
+                                () => {
+                                    // Обработка успешного обновления рейтинга
+                                },
+                                (error) => {
+                                    // Обработка ошибки выполнения транзакции
+                                    console.error(error);
+                                }
+                            );
+                        });
+                    } else {
+                        // Если запись не существует, вставьте новую запись
+                        db.transaction((tx) => {
+                            tx.executeSql(
+                                `
+                                INSERT INTO Rates (userID, rating)
+                                VALUES (?, ?)
+                                `,
+                                [userId, star],
+                                () => {
+                                    // Обработка успешной вставки рейтинга
+                                },
+                                (error) => {
+                                    // Обработка ошибки выполнения транзакции
+                                    console.error(error);
+                                }
+                            );
+                        });
+                    }
+                }
+                setRating(star);
+            }
+        } catch (error) {
+            console.error(error);
+        }
+    };
 
 
+    const checkAndSetRating = async () => {
+        try {
+            let userRating = null;
+            let userId = null;
+            const db = await SQLite.openDatabase({ name: 'news.db', location: 1 });
 
+            if (identify !== 'Гость') {
+                const query = `SELECT userID FROM users WHERE userLogin = ?`;
+                const queryArgs = [identify];
+                const [result] = await db.executeSql(query, queryArgs);
 
+                if (result.rows.length > 0) {
+                    userId = result.rows.item(0).userId;
+                    const query2 = `SELECT rating FROM Rates WHERE userID = (?)`;
+                    const queryArgs2 = [userId];
+                    const [result2] = await db.executeSql(query2, queryArgs2);
+
+                    if (result2.rows.length > 0) {
+                        userRating = result2.rows.item(0).rating;
+                        setRating(userRating);
+                    } else {
+                        console.log('No user rating found');
+                    }
+                }
+            }
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
+    useEffect(() => {
+        if (showRateUSModal) {
+            checkAndSetRating();
+        }
+    }, [showRateUSModal, rating]);
 
     const toggleMenu = () => {
         Animated.parallel([
@@ -80,18 +180,17 @@ export default function CustomDrawer({
             }),
         ]).start();
         setShowMenu(!showMenu);
-
-        //setSelectedMenuItem(selectedMenuItem)
     };
 
     const menu = [
-
         { icon: 'university', title: 'Университет' },
         { icon: 'github', title: 'Коммит' },
         { icon: 'email', title: 'Оставить отзыв' },
         { icon: 'star-half-o', title: 'Оценить нас' },
-        identify === "Гость" ? { icon: 'user-circle', title: 'Регистрация' } : { icon: 'logout', title: 'Выход' },
-        { icon: 'home', title: 'Домой' },
+        identify === 'Гость'
+            ? { icon: 'user-circle', title: 'Регистрация' }
+            : { icon: 'logout', title: 'Выход' },
+        identify === 'Гость' && { icon: 'home', title: 'Домой' },
     ];
 
     const iconMap = {
@@ -129,10 +228,10 @@ export default function CustomDrawer({
     };
 
     const handleMenuItemPress = async (index, title) => {
-        if (title === "Домой") {
+        if (title === 'Домой') {
             navigation.navigate('Добро пожаловать !', { status: 'logout' });
-
         }
+
         switch (index) {
             case 0:
                 openLinkInBrowserHandler(index);
@@ -144,13 +243,13 @@ export default function CustomDrawer({
                 navigation.navigate('FeedBack Screen');
                 break;
             case 3:
-                setShowRateUSModal(true)
+                setShowRateUSModal(true);
                 break;
             case 4:
-                if (title === "Выход") {
+                if (title === 'Выход') {
                     setShowExitModal(!showExitModal);
                 } else {
-                    navigation.navigate("Регистрация")
+                    navigation.navigate('Регистрация');
                 }
                 break;
 
@@ -179,6 +278,7 @@ export default function CustomDrawer({
                     Math.abs(gestureState.dy) < 5
                 ) {
                     toggleMenu();
+                    setShowRateUSModal(false);
                 }
             },
         }),
@@ -269,8 +369,19 @@ export default function CustomDrawer({
                                 navigation={navigation}
                                 visible={showRateUSModal}
                                 backgroundColor="#7692FF">
-                                <View style={[styles.container, { flexDirection: 'row' }]}>
-                                    {[1, 2, 3, 4, 5].map((index) => (
+                                <TouchableOpacity
+                                    style={{ position: 'absolute', top: 10, right: 10 }}
+                                    onPress={() => {
+                                        setShowRateUSModal(!showRateUSModal);
+                                    }}>
+                                    <IconEvil name="close" color="white" size={24} />
+                                </TouchableOpacity>
+                                <View
+                                    style={[
+                                        styles.container,
+                                        { flexDirection: 'row', marginTop: 5 },
+                                    ]}>
+                                    {[1, 2, 3, 4, 5].map(index => (
                                         <Animated.View key={index}>
                                             <RateUs
                                                 key={index}
@@ -279,14 +390,13 @@ export default function CustomDrawer({
                                                 animatedValue={animatedValue}
                                                 rating={rating}
                                                 onPress={() => {
-                                                    rate(index)
+                                                    rate(index);
+                                                    //checkAndSetRating()
                                                 }}
                                             />
                                         </Animated.View>
                                     ))}
-
                                 </View>
-
                             </ModalPopup>
                         )}
 
@@ -456,7 +566,7 @@ export default function CustomDrawer({
 const styles = StyleSheet.create({
     container: {
         justifyContent: 'center',
-        alignItems: 'center'
+        alignItems: 'center',
     },
     header: {
         paddingHorizontal: 10,

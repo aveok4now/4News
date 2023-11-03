@@ -256,7 +256,7 @@ const HomeScreen = ({ navigation }) => {
                     <CustomDrawer
                         type="Новости"
                         showSearch="true"
-                        backgroundColor="#03045e"
+                        backgroundColor="#4361ee"
                         navigation={navigation}>
                         <View style={{ flex: 1 }}>
                             {/* <Header navigation={navigation} /> */}
