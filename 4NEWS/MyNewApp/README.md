@@ -49,7 +49,7 @@ React Native News App project, bootstrapped using [`@react-native-community/cli`
   - [x] University Link
   - [x] View commit Link
   - [x] Feedback Screen with sending email-message functionality
-  - [ ] Rate Us
+  - [x] Rate Us with saving Users ratings
   - [x] LogOut
  - [ ] Weather Screen
  - [ ] Currency Screen 
