@@ -25,6 +25,7 @@ import LottieView from 'lottie-react-native';
 import { setStatusBarColor } from '../../utils/StatusBarManager';
 import { debounce } from 'lodash'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+import { fetchLocations } from '../../api/weather';
 
 const { width, height } = Dimensions.get('window');
 
@@ -40,7 +41,12 @@ export default function WeatherScreen({ navigation }) {
     };
 
     const handleSearch = value => {
-        console.log(value)
+        if (value.length > 2) {
+            fetchLocations({ cityName: value }).then(data => {
+                console.log("Результат " + JSON.stringify(data))
+            })
+        }
+
     }
 
     const handleTextDebounce = useCallback(debounce(handleSearch, 1200), []);

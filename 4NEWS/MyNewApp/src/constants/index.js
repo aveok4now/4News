@@ -1,4 +1,4 @@
-export const apiKey = 'a4a101291a4740fe993102601230411'
+export const apiKey = 'a4a101291a4740fe993102601230411';
 
 export const weatherImages = {
     'Местами облачно': require('../screens/assets/animations/weather/partly_cloudy.json'),
