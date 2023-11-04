@@ -10,11 +10,13 @@ export const weatherImages = {
     'Облачно': require('../screens/assets/animations/weather/cloudy.json'),
     'Небольшой дождь': require('../screens/assets/animations/weather/light_rain.json'),
     'Местами небольшой дождь': require('../screens/assets/animations/weather/light_rain_moderate.json'),
+    'Кратковременный мелкий дождь': require('../screens/assets/animations/weather/light_rain_moderate.json'),
     'Дождь': require('../screens/assets/animations/weather/rain.json'),
     'Местами ливни': require('../screens/assets/animations/weather/light_rain_moderate.json'),
     'Дождь со снегом': require('../screens/assets/animations/weather/rain.json'),
     'Дождь со снегом': require('../screens/assets/animations/weather/rain.json'),
     'Умеренный или холодный дождь с грозой': require('../screens/assets/animations/weather/rain_with_thunder.json'),
+    'Туманно': require('../screens/assets/animations/weather/fog.json'),
     'other': require('../screens/assets/animations/weather/partly_cloudy.json'),
 }
 
@@ -36,4 +38,14 @@ export const weatherTranslations = {
     'Moderate or heavy freezing rain': 'Дождь со снегом',
     'Moderate or heavy rain shower': 'Дождь со снегом',
     'Moderate or heavy rain with thunder': 'Дождь с грозой',
+    'Patchy light rain': 'Кратковременный мелкий дождь',
+    'Fog': 'Туманно'
 };
+
+
+// export const moreInfo = {
+//     'Шанс дождя': '',
+//     'Шанс снега': '',
+//     'Минимальная температура': `${weather?.forecast?.forecastday[0]?.day?.mintemp_c}°C`,
+//     'Макисмальная температура': ''
+// }

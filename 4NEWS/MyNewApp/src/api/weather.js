@@ -16,7 +16,7 @@ const apiCall = async (endpoint) => {
         return response.data;
     } catch (error) {
         console.log("Ошибка", error);
-        return {};
+        return null;
     }
 }
 

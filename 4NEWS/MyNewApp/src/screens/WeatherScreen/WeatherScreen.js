@@ -23,10 +23,11 @@ import CalendarIcon from 'react-native-vector-icons/FontAwesome6';
 import * as Animatable from 'react-native-animatable';
 import LottieView from 'lottie-react-native';
 import { setStatusBarColor } from '../../utils/StatusBarManager';
-import { debounce } from 'lodash'
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+import { debounce } from 'lodash';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { fetchLocations, fetchWeatherForecast } from '../../api/weather';
-import { weatherTranslations } from '../../constants';
+import { weatherImages, weatherTranslations } from '../../constants';
+import * as Progress from 'react-native-progress';
 
 const { width, height } = Dimensions.get('window');
 
@@ -36,46 +37,100 @@ export default function WeatherScreen({ navigation }) {
     const [locations, setLocations] = useState([]);
     const [showBorder, setShowBorder] = useState(true);
 
-    const [weather, setWeather] = useState({})
+    const [weather, setWeather] = useState({});
+    const [loading, setLoading] = useState(true);
+
+    //const [moreInfo, setMoreInfo] = useState([moreInfo]);
 
     const handleLocation = loc => {
-        console.log('Локация' + JSON.stringify(loc));
         setLocations([]);
         setShowSearch(false);
+        setLoading(true);
         fetchWeatherForecast({
             cityName: loc.name,
-            days: '7'
+            days: '7',
         }).then(data => {
-            setWeather(data)
-            console.log('получено' + JSON.stringify(data))
-        })
+            setWeather(data);
+            setLoading(false);
+        });
     };
 
     const handleSearch = value => {
         if (value.length > 2) {
             fetchLocations({ cityName: value }).then(data => {
                 //console.log("Результат " + JSON.stringify(data))
-                setLocations(data)
-            })
+                setLocations(data);
+            });
         }
+    };
 
-    }
+    useEffect(() => {
+        fetchMyWeatherData();
+    }, []);
+
+    const fetchMyWeatherData = async () => {
+        fetchWeatherForecast({
+            cityName: 'Sevastopol',
+            days: '7',
+        }).then(data => {
+            setWeather(data);
+            setLoading(false);
+        });
+    };
+
+    const query = weather?.forecast?.forecastday[0]?.day;
+
+    const moreInfo = {
+        'Минимальная температура': `${query?.mintemp_c}°`,
+        'Максимальная температура': `${query?.maxtemp_c}°`,
+        'Шанс дождя': `${query?.daily_chance_of_rain}%`,
+        'Шанс снега': `${query?.daily_chance_of_snow}%`,
+        Закат: `${weather?.forecast?.forecastday[0]?.astro?.sunset}`,
+        'Восход Луны': `${weather?.forecast?.forecastday[0]?.astro?.moonrise}`,
+        'Заход Луны': `${weather?.forecast?.forecastday[0]?.astro?.moonset}`,
+        'Средння влажность': `${query?.avghumidity}%`,
+        'Средняя видимость': `${query?.avgvis_km} км`,
+        'Максимальная скорость ветра': `${query?.maxwind_kph} км/ч`,
+        'Уровень ультрафиолетового излучения': `${query?.uv}`,
+    };
+
+    // const imageSources = {
+    //     'Шанс дождя': weatherImages[weatherTranslations['Rain']],
+    //     'Шанс снега': weatherImages[weatherTranslations['Snow']],
+    //     'Минимальная температура': weatherImages[weatherTranslations['Light rain']],
+    //     'Максимальная температура': weatherImages[weatherTranslations['Sunny']],
+    //     'Средняя влажность': weatherImages[weatherTranslations['Sunny']],
+    // };
+
+    const combinedInfo = Object.entries(moreInfo).map(([key, value]) => ({
+        key,
+        value,
+        //imageSource: imageSources[key]
+    }));
 
     const handleTextDebounce = useCallback(debounce(handleSearch, 1200), []);
 
     const { current, location } = weather;
 
-
-
-    return (
-        <KeyboardAwareScrollView style={{ flex: 1, position: 'relative' }} showsVerticalScrollIndicator={false}>
+    return loading ? (
+        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
             <Image
                 blurRadius={200}
                 style={{ position: 'absolute', width: '100%', height: '100%' }}
                 source={require('../assets/images/weather-bg.jpg')}
             />
-            <SafeAreaView style={{ display: 'flex', flex: 1 }}
-            >
+            <Progress.CircleSnail thickness={10} size={140} color="white" />
+        </View>
+    ) : (
+        <KeyboardAwareScrollView
+            style={{ flex: 1, position: 'relative' }}
+            showsVerticalScrollIndicator={false}>
+            <Image
+                blurRadius={200}
+                style={{ position: 'absolute', width: '100%', height: '100%' }}
+                source={require('../assets/images/weather-bg.jpg')}
+            />
+            <SafeAreaView style={{ display: 'flex', flex: 1 }}>
                 <View
                     style={{
                         height: '7%',
@@ -190,7 +245,8 @@ export default function WeatherScreen({ navigation }) {
                             textAlign: 'center',
                             fontSize: 20,
                         }}>
-                        {location?.name},
+                        {location?.name === 'Sevastopol' ? 'Севастополь' : location?.name},
+                        {/* {location?.name} */}
                         <Text
                             style={{
                                 fontSize: 18,
@@ -198,14 +254,18 @@ export default function WeatherScreen({ navigation }) {
                                 fontFamily: 'Inter-Light',
                             }}>
                             {' '}
-                            {location?.country}
+                            {location?.country === 'Ukraine' ? 'Россия' : location?.country}
+                            {/* {location?.country} */}
                         </Text>
                     </Text>
 
                     <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
                         <LottieView
                             style={styles.lottie}
-                            source={require('../assets/animations/weather/partly_cloudy.json')}
+                            source={
+                                weatherImages[weatherTranslations[current?.condition?.text]]
+                            }
+                            //source={require('../assets/animations/weather/partly_cloudy.json')}
                             autoPlay
                             loop
                         />
@@ -229,7 +289,21 @@ export default function WeatherScreen({ navigation }) {
                                 color: 'white',
                                 fontSize: 20,
                             }}>
-                            {weatherTranslations[current?.condition?.text] || current?.condition?.text}
+                            {weatherTranslations[current?.condition?.text] ||
+                                current?.condition?.text}
+                        </Text>
+                        <Text
+                            style={{
+                                textAlign: 'center',
+                                fontFamily: 'Inter-ExtraLight',
+                                color: 'white',
+                                fontSize: 16,
+                                marginTop: 5,
+                            }}>
+                            Ощущается как{' '}
+                            <Text style={{ fontFamily: 'Inter-ExtraBold', color: 'yellow' }}>
+                                {current?.feelslike_c}&#176;
+                            </Text>
                         </Text>
                     </View>
 
@@ -254,7 +328,7 @@ export default function WeatherScreen({ navigation }) {
                                     fontSize: 16,
                                 }}>
                                 {' '}
-                                22 м/c
+                                {current?.wind_kph} м/c
                             </Text>
                         </View>
                         <View
@@ -272,7 +346,7 @@ export default function WeatherScreen({ navigation }) {
                                     fontSize: 16,
                                 }}>
                                 {' '}
-                                23%
+                                {current?.humidity}%
                             </Text>
                         </View>
                         <View
@@ -290,13 +364,16 @@ export default function WeatherScreen({ navigation }) {
                                     fontSize: 16,
                                 }}>
                                 {' '}
-                                06:00
+                                {
+                                    weather?.forecast?.forecastday[0]?.astro?.sunrise.split(
+                                        'AM',
+                                    )[0]
+                                }
                             </Text>
                         </View>
                     </View>
                 </View>
-
-                <View style={{ marginBottom: 80 }}>
+                <View style={{ marginBottom: 40 }}>
                     <View
                         style={{
                             flexDirection: 'row',
@@ -306,7 +383,8 @@ export default function WeatherScreen({ navigation }) {
                         }}>
                         <CalendarIcon name="calendar-days" size={22} color="white" />
                         <Text style={{ fontFamily: 'Inter-Light', color: 'white' }}>
-                            {'  '}Прогноз на неделю
+                            {'  '}Прогноз на{' '}
+                            <Text style={{ fontFamily: 'Inter-ExtraBold' }}>Неделю</Text>
                         </Text>
                     </View>
                     <ScrollView
@@ -315,28 +393,120 @@ export default function WeatherScreen({ navigation }) {
                         showsHorizontalScrollIndicator={false}
                     //keyboardShouldPersistTaps='handled'
                     >
-                        <View
-                            style={{
-                                display: 'flex',
-                                justifyContent: 'center',
-                                alignItems: 'center',
-                                width: 106,
-                                borderRadius: 24,
-                                paddingVertical: 12,
-                                marginTop: 8,
-                                marginRight: 16,
-                                backgroundColor: theme.bgWhite(0.15),
-                            }}>
-                            <LottieView
-                                style={{ height: 44, width: 44 }}
-                                source={require('../assets/animations/weather/cloudy.json')}
-                                autoPlay
-                                loop
-                            />
-                            <Text style={{ color: 'white', fontSize: 12, fontFamily: 'Inter-Light' }}>Понедельник</Text>
-                            <Text style={{ color: 'white', fontSize: 20, fontFamily: 'Inter-ExtraBold' }}>19&#176;</Text>
-                        </View>
-
+                        {weather?.forecast?.forecastday?.map((item, index) => {
+                            let date = new Date(item.date);
+                            let options = { weekday: 'long' };
+                            let dayName = date.toLocaleDateString('ru-RU', options);
+                            dayName = dayName.split(',')[0];
+                            dayName = dayName.charAt(0).toUpperCase() + dayName.slice(1);
+                            let currentDate = new Date();
+                            let isCurrentDate =
+                                date.toDateString() === currentDate.toDateString();
+                            return (
+                                <View
+                                    key={index}
+                                    style={{
+                                        display: 'flex',
+                                        justifyContent: 'center',
+                                        alignItems: 'center',
+                                        width: 106,
+                                        borderRadius: 24,
+                                        paddingVertical: 12,
+                                        marginTop: 8,
+                                        marginRight: 16,
+                                        backgroundColor: isCurrentDate
+                                            ? theme.bgWhite(0.3)
+                                            : theme.bgWhite(0.15),
+                                    }}>
+                                    <LottieView
+                                        style={{ height: 44, width: 44 }}
+                                        source={
+                                            weatherImages[
+                                            weatherTranslations[item?.day?.condition?.text]
+                                            ]
+                                        }
+                                        autoPlay
+                                        loop
+                                    />
+                                    <Text
+                                        style={{
+                                            color: 'white',
+                                            fontSize: 12,
+                                            fontFamily: 'Inter-Light',
+                                        }}>
+                                        {isCurrentDate ? 'Сегодня' : dayName}
+                                    </Text>
+                                    <Text
+                                        style={{
+                                            color: 'white',
+                                            fontSize: 20,
+                                            fontFamily: 'Inter-ExtraBold',
+                                        }}>
+                                        {item?.day?.avgtemp_c}&#176;
+                                    </Text>
+                                </View>
+                            );
+                        })}
+                    </ScrollView>
+                </View>
+                <View style={{ marginBottom: 80 }}>
+                    <View
+                        style={{
+                            flexDirection: 'row',
+                            alignItems: 'center',
+                            marginHorizontal: 20,
+                            marginLeft: 12,
+                        }}>
+                        <Icon name="information-circle-outline" size={28} color="white" />
+                        <Text style={{ fontFamily: 'Inter-Light', color: 'white' }}>
+                            {'  '}
+                            Дополнительная информация на{' '}
+                            <Text style={{ fontFamily: 'Inter-ExtraBold' }}>Сегодня</Text>
+                        </Text>
+                    </View>
+                    <ScrollView
+                        horizontal
+                        contentContainerStyle={{ paddingHorizontal: 15 }}
+                        showsHorizontalScrollIndicator={false}>
+                        {combinedInfo.map(({ key, value }) => (
+                            <View
+                                key={key}
+                                style={{
+                                    display: 'flex',
+                                    justifyContent: 'center',
+                                    alignItems: 'center',
+                                    width: 106,
+                                    borderRadius: 24,
+                                    paddingVertical: 12,
+                                    marginTop: 8,
+                                    marginRight: 16,
+                                    backgroundColor: theme.bgWhite(0.15),
+                                }}>
+                                {/* <LottieView
+                                        style={{ height: 44, width: 44 }}
+                                        source={imageSource}
+                                        autoPlay
+                                        loop
+                                    /> */}
+                                <Text
+                                    style={{
+                                        color: 'white',
+                                        fontSize: key.length < 30 ? 12 : 10,
+                                        fontFamily: 'Inter-Light',
+                                        textAlign: 'center',
+                                    }}>
+                                    {key}
+                                </Text>
+                                <Text
+                                    style={{
+                                        color: 'white',
+                                        fontSize: 20,
+                                        fontFamily: 'Inter-ExtraBold',
+                                    }}>
+                                    {value}
+                                </Text>
+                            </View>
+                        ))}
                     </ScrollView>
                 </View>
             </SafeAreaView>
