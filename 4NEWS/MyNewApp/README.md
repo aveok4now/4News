@@ -51,7 +51,13 @@ React Native News App project, bootstrapped using [`@react-native-community/cli`
   - [x] Feedback Screen with sending email-message functionality
   - [x] Rate Us with saving Users ratings
   - [x] LogOut
- - [ ] Weather Screen
+ - [x] Weather Screen
+   - [x] Search city
+   - [x] Weakly forecast
+   - [x] Lottie Animations
+   - [x] Progress Loader
+   - [x] Keyboard Avoiding Support   
+   - [x] More Info   
  - [ ] Currency Screen 
 - [x] OnExit Custom ModalPopUp with Custom Buttons
   - [x] Smooth Animation
