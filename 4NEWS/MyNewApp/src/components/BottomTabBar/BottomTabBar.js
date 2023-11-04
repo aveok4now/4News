@@ -30,9 +30,14 @@ export default function BottomTabBar() {
                 // borderTopLeftRadius: 15,
                 //backgroundColor: '#3EF0FD',
                 backgroundColor: '#8EBBF3',
+                activeTintColor: '#e91e63'
             },
-
-        }}>
+            tabBarHideOnKeyboard: true,
+            tabBarOptions: {
+                activeTintColor: 'red'
+            }
+        }}
+        >
             <Tab.Screen
                 name="Домашнняя страница"
                 component={HomeScreen}
