@@ -25,31 +25,47 @@ import LottieView from 'lottie-react-native';
 import { setStatusBarColor } from '../../utils/StatusBarManager';
 import { debounce } from 'lodash'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
-import { fetchLocations } from '../../api/weather';
+import { fetchLocations, fetchWeatherForecast } from '../../api/weather';
+import { weatherTranslations } from '../../constants';
 
 const { width, height } = Dimensions.get('window');
 
 export default function WeatherScreen({ navigation }) {
     setStatusBarColor('#092439');
     const [showSearch, setShowSearch] = useState(false);
-    const [locations, setLocations] = useState([1, 2, 3]);
+    const [locations, setLocations] = useState([]);
     const [showBorder, setShowBorder] = useState(true);
 
+    const [weather, setWeather] = useState({})
 
     const handleLocation = loc => {
-        console.log('Локация' + loc);
+        console.log('Локация' + JSON.stringify(loc));
+        setLocations([]);
+        setShowSearch(false);
+        fetchWeatherForecast({
+            cityName: loc.name,
+            days: '7'
+        }).then(data => {
+            setWeather(data)
+            console.log('получено' + JSON.stringify(data))
+        })
     };
 
     const handleSearch = value => {
         if (value.length > 2) {
             fetchLocations({ cityName: value }).then(data => {
-                console.log("Результат " + JSON.stringify(data))
+                //console.log("Результат " + JSON.stringify(data))
+                setLocations(data)
             })
         }
 
     }
 
     const handleTextDebounce = useCallback(debounce(handleSearch, 1200), []);
+
+    const { current, location } = weather;
+
+
 
     return (
         <KeyboardAwareScrollView style={{ flex: 1, position: 'relative' }} showsVerticalScrollIndicator={false}>
@@ -80,6 +96,7 @@ export default function WeatherScreen({ navigation }) {
                         }}>
                         {showSearch ? (
                             <TextInput
+                                selectionColor="white"
                                 onChangeText={handleTextDebounce}
                                 placeholder="Искать город"
                                 placeholderTextColor={'lightgray'}
@@ -149,7 +166,7 @@ export default function WeatherScreen({ navigation }) {
                                                 marginLeft: 8,
                                                 fontSize: 18,
                                             }}>
-                                            Москва, Россия
+                                            {loc?.name}, {loc?.country}
                                         </Text>
                                     </TouchableOpacity>
                                 );
@@ -173,7 +190,7 @@ export default function WeatherScreen({ navigation }) {
                             textAlign: 'center',
                             fontSize: 20,
                         }}>
-                        Москва,
+                        {location?.name},
                         <Text
                             style={{
                                 fontSize: 18,
@@ -181,7 +198,7 @@ export default function WeatherScreen({ navigation }) {
                                 fontFamily: 'Inter-Light',
                             }}>
                             {' '}
-                            Россия
+                            {location?.country}
                         </Text>
                     </Text>
 
@@ -203,7 +220,7 @@ export default function WeatherScreen({ navigation }) {
                                 marginLeft: 20,
                                 fontSize: 60,
                             }}>
-                            17&#176;
+                            {current?.temp_c}&#176;
                         </Text>
                         <Text
                             style={{
@@ -212,7 +229,7 @@ export default function WeatherScreen({ navigation }) {
                                 color: 'white',
                                 fontSize: 20,
                             }}>
-                            Местами облачно
+                            {weatherTranslations[current?.condition?.text] || current?.condition?.text}
                         </Text>
                     </View>
 

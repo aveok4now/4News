@@ -11,9 +11,29 @@ export const weatherImages = {
     'Небольшой дождь': require('../screens/assets/animations/weather/light_rain.json'),
     'Местами небольшой дождь': require('../screens/assets/animations/weather/light_rain_moderate.json'),
     'Дождь': require('../screens/assets/animations/weather/rain.json'),
-    'Местами дождь': require('../screens/assets/animations/weather/light_rain_moderate.json'),
+    'Местами ливни': require('../screens/assets/animations/weather/light_rain_moderate.json'),
     'Дождь со снегом': require('../screens/assets/animations/weather/rain.json'),
-    'Ливень со снегом': require('../screens/assets/animations/weather/rain.json'),
+    'Дождь со снегом': require('../screens/assets/animations/weather/rain.json'),
     'Умеренный или холодный дождь с грозой': require('../screens/assets/animations/weather/rain_with_thunder.json'),
     'other': require('../screens/assets/animations/weather/partly_cloudy.json'),
 }
+
+
+export const weatherTranslations = {
+    'Light rain': 'Небольшой дождь',
+    'Partly cloudy': 'Местами облачно',
+    'Moderate rain': 'Местами дождь',
+    'Patchy rain possible': 'Возможен кратковременный дождь',
+    'Moderate rain': 'Возможен кратковременный дождь',
+    'Sunny': 'Солнечно',
+    'Clear': 'Ясно',
+    'Overcast': 'Пасмурно',
+    'Cloudy': 'Облачно',
+    'Light rain': 'Небольшой дождь',
+    'Moderate rain at times': 'Местами небольшой дождь',
+    'Heavy rain': 'Небольшой дождь',
+    'Heavy rain at times': 'Местами ливни',
+    'Moderate or heavy freezing rain': 'Дождь со снегом',
+    'Moderate or heavy rain shower': 'Дождь со снегом',
+    'Moderate or heavy rain with thunder': 'Дождь с грозой',
+};
