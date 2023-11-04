@@ -8,7 +8,7 @@ import {
     Dimensions,
     ScrollView,
 } from 'react-native';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import LinearGradient from 'react-native-linear-gradient';
 import CustomDrawer from '../../components/customs/CustomDrawer';
 import { Image } from 'react-native-animatable';
@@ -23,6 +23,8 @@ import CalendarIcon from 'react-native-vector-icons/FontAwesome6';
 import * as Animatable from 'react-native-animatable';
 import LottieView from 'lottie-react-native';
 import { setStatusBarColor } from '../../utils/StatusBarManager';
+import { debounce } from 'lodash'
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
 const { width, height } = Dimensions.get('window');
 
@@ -32,18 +34,26 @@ export default function WeatherScreen({ navigation }) {
     const [locations, setLocations] = useState([1, 2, 3]);
     const [showBorder, setShowBorder] = useState(true);
 
+
     const handleLocation = loc => {
         console.log('Локация' + loc);
     };
 
+    const handleSearch = value => {
+        console.log(value)
+    }
+
+    const handleTextDebounce = useCallback(debounce(handleSearch, 1200), []);
+
     return (
-        <View style={{ flex: 1, position: 'relative' }}>
+        <KeyboardAwareScrollView style={{ flex: 1, position: 'relative' }} showsVerticalScrollIndicator={false}>
             <Image
                 blurRadius={200}
                 style={{ position: 'absolute', width: '100%', height: '100%' }}
                 source={require('../assets/images/weather-bg.jpg')}
             />
-            <SafeAreaView style={{ display: 'flex', flex: 1 }}>
+            <SafeAreaView style={{ display: 'flex', flex: 1 }}
+            >
                 <View
                     style={{
                         height: '7%',
@@ -64,6 +74,7 @@ export default function WeatherScreen({ navigation }) {
                         }}>
                         {showSearch ? (
                             <TextInput
+                                onChangeText={handleTextDebounce}
                                 placeholder="Искать город"
                                 placeholderTextColor={'lightgray'}
                                 style={{
@@ -278,7 +289,9 @@ export default function WeatherScreen({ navigation }) {
                     <ScrollView
                         horizontal
                         contentContainerStyle={{ paddingHorizontal: 15 }}
-                        showsHorizontalScrollIndicator={false}>
+                        showsHorizontalScrollIndicator={false}
+                    //keyboardShouldPersistTaps='handled'
+                    >
                         <View
                             style={{
                                 display: 'flex',
@@ -304,7 +317,7 @@ export default function WeatherScreen({ navigation }) {
                     </ScrollView>
                 </View>
             </SafeAreaView>
-        </View>
+        </KeyboardAwareScrollView>
     );
 }
 
