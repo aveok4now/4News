@@ -33,13 +33,15 @@ export const weatherTranslations = {
     'Cloudy': 'Облачно',
     'Light rain': 'Небольшой дождь',
     'Moderate rain at times': 'Местами небольшой дождь',
-    'Heavy rain': 'Небольшой дождь',
+    'Heavy rain': 'Дождь',
     'Heavy rain at times': 'Местами ливни',
     'Moderate or heavy freezing rain': 'Дождь со снегом',
     'Moderate or heavy rain shower': 'Дождь со снегом',
     'Moderate or heavy rain with thunder': 'Дождь с грозой',
     'Patchy light rain': 'Кратковременный мелкий дождь',
-    'Fog': 'Туманно'
+    'Light rain shower': 'Небольшой ливень',
+    'Fog': 'Туманно',
+    'Mist': 'Туманно'
 };
 
 

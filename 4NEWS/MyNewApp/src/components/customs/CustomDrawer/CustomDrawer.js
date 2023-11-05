@@ -189,11 +189,16 @@ export default function CustomDrawer({
         { icon: 'github', title: 'Коммит' },
         { icon: 'email', title: 'Оставить отзыв' },
         { icon: 'star-half-o', title: 'Оценить нас' },
-        identify === 'Гость'
-            ? { icon: 'user-circle', title: 'Регистрация' }
-            : { icon: 'logout', title: 'Выход' },
-        identify === 'Гость' && { icon: 'home', title: 'Домой' },
     ];
+
+    if (identify === 'Гость') {
+        menu.push({ icon: 'user-circle', title: 'Регистрация' });
+        menu.push({ icon: 'home', title: 'Домой' });
+    } else {
+        menu.push({ icon: 'logout', title: 'Выход' });
+    }
+
+
 
     const iconMap = {
         Университет: { icon: <Icon size={24} />, color: 'white' },
