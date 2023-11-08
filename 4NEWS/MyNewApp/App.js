@@ -18,11 +18,12 @@ import { setStatusBarColor, resetStatusBarColor } from './StatusBarManager';
 
 // SQLite.enablePromise(true);
 const App = () => {
-  const [statusBarColor, setStatusBarColor] = useState('#36d1dc');
+  const [statusBarColor, setStatusBarColor] = useState('transparent');
 
   const [visible, setVisible] = useState(false);
 
   SplashScreen.hide();
+
 
   useEffect(() => {
 
@@ -64,7 +65,7 @@ const App = () => {
       <StatusBar backgroundColor={statusBarColor} />
       {/* <LinearGradient colors={['#42275a', '#734b6d']} style={styles.gradient}> */}
 
-      <LinearGradient colors={['#36d1dc', '#5b86e5']} style={styles.gradient}>
+      <LinearGradient colors={['#57e0f3', '#357ae0']} style={styles.gradient}>
         <SafeAreaView style={styles.root}>
           <ModalPopup visible={visible}>
             <View style={{ alignItems: 'center' }}>

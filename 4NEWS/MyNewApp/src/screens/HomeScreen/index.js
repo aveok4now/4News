@@ -10,6 +10,7 @@ import {
     Dimensions,
     Image,
     StatusBar,
+    TouchableHighlight
 } from 'react-native';
 import Header from '../../components/Header';
 import Card from '../../components/Card';
@@ -22,6 +23,8 @@ import {
     setStatusBarColor,
     resetStatusBarColor,
 } from '../../utils/StatusBarManager';
+import { theme } from '../WeatherScreen/theme';
+import * as Progress from 'react-native-progress';
 
 const HomeScreen = ({ navigation }) => {
     setTimeout(() => {
@@ -248,15 +251,20 @@ const HomeScreen = ({ navigation }) => {
 
             {/* TODO: Lottie */}
             {Loading ? (
+                // <View style={styles.load}>
+                //     <ActivityIndicator color={'#754da6'} size={36}></ActivityIndicator>
+                // </View>
                 <View style={styles.load}>
-                    <ActivityIndicator color={'#754da6'} size={36}></ActivityIndicator>
+                    <Progress.CircleSnail thickness={10} size={140} color="white" />
                 </View>
+
             ) : (
                 canBeShowed && (
                     <CustomDrawer
                         type="Новости"
                         showSearch="true"
-                        backgroundColor="#4361ee"
+                        //backgroundColor="#4361ee"
+                        backgroundColor="#0ea5e9"
                         navigation={navigation}>
                         <View style={{ flex: 1 }}>
                             {/* <Header navigation={navigation} /> */}
@@ -268,7 +276,9 @@ const HomeScreen = ({ navigation }) => {
                                 <FlatList
                                     horizontal
                                     showsHorizontalScrollIndicator={false}
+                                    scrollEventThrottle={16}
                                     data={Category}
+                                    bounces={false}
                                     renderItem={({ item, index }) => {
                                         return (
                                             <TouchableOpacity
@@ -301,11 +311,17 @@ const HomeScreen = ({ navigation }) => {
                                     <FlatList
                                         style={{ flex: 1, zIndex: 100, position: 'relative' }}
                                         showsVerticalScrollIndicator={false}
+                                        scrollEventThrottle={16}
                                         onRefresh={onRefresh}
                                         refreshing={isRefreshing}
+                                        colors={['#D50000']}
+                                        tintColor={'#D50000'}
                                         data={Data}
                                         renderItem={({ item, index }) => {
-                                            return <Card item={item} navigation={navigation} />;
+                                            return (
+                                                <Card item={item} navigation={navigation} />
+
+                                            )
                                         }}
                                     />
                                 </View>
@@ -341,15 +357,20 @@ const styles = StyleSheet.create({
     horList: {
         paddingHorizontal: 10,
         paddingVertical: 10,
+        backgroundColor: '#0284c7',
+        borderWidth: 0.5,
+        borderColor: 'rgb(156 163 175)',
+
     },
 
     horListItem: {
-        backgroundColor: '#8EBBF3',
+        //backgroundColor: '#8EBBF3',
         paddingHorizontal: 15,
         paddingVertical: 5,
         marginRight: 12,
-        borderRadius: 5,
-        borderColor: 'white',
+        borderRadius: 24,
+        borderColor: 'rgb(156 163 175)',
+        backgroundColor: theme.bgWhite(0.15),
         borderWidth: 0.5,
         shadowColor: '#000',
         shadowOffset: {
@@ -361,23 +382,29 @@ const styles = StyleSheet.create({
     },
 
     selListItem: {
-        backgroundColor: '#754da6',
+        backgroundColor: theme.bgWhite(0.35),
         paddingHorizontal: 15,
         paddingVertical: 5,
         marginRight: 12,
-        borderRadius: 5,
-        borderColor: 'white',
-        borderWidth: 0.5,
+        borderRadius: 24,
+        borderColor: '#c7d2fe',
+        borderWidth: 0.75,
     },
 
     horListText: {
         //fontWeight: '500',
-        color: '#383738',
+        color: 'rgb(203 213 225)',
         fontFamily: 'Inter-Bold',
+        textShadowColor: 'rgba(0, 0, 0, 0.25)',
+        textShadowOffset: { width: 0, height: 2 },
+        textShadowRadius: 2,
     },
 
     selListText: {
         //fontWeight: 'bold',
-        fontFamily: 'Inter-Bold',
+        fontFamily: 'Inter-ExtraBold',
+        textShadowColor: 'rgba(0, 0, 0, 0.45)',
+        textShadowOffset: { width: 0, height: 2 },
+        textShadowRadius: 4,
     },
 });

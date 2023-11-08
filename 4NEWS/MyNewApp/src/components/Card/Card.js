@@ -134,15 +134,17 @@ const Card = ({ item, navigation }) => {
                 // colors={['#4E65FF', '#92EFFD']}
                 // start={{ x: 0, y: 0 }}
                 // end={{ x: 1, y: 1 }}
-                colors={['#764BA2', '#667EEA']}
+                //colors={['#764BA2', '#667EEA']}
+                colors={['rgb(59, 130, 246)', 'rgb(37, 99, 235)']}
                 start={{ x: 0, y: 0 }}
                 end={{ x: 1, y: 1 }}
-
             >
                 <Animatable.View style={styles.card} animation="fadeIn" duration={1500}>
                     {!imageLoaded && <ActivityIndicator style={styles.loader} />}
 
                     <Animatable.Image
+                        animation="fadeInLeft"
+                        duration={1000}
                         source={{ uri: imageUrl }}
                         style={[
                             styles.image,
@@ -265,7 +267,9 @@ const styles = StyleSheet.create({
         // marginBottom: 15,
         // marginTop: 15,
         elevation: 0,
-        borderRadius: 3
+        borderRadius: 9,
+        borderWidth: 0.15,
+        borderColor: 'rgb(156 163 175)',
     },
     image: {
         flex: 1,
