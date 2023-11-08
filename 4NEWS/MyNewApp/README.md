@@ -2,7 +2,7 @@ React Native News App project, bootstrapped using [`@react-native-community/cli`
 
 
 - [x] App Icon
-- [x] App Splash Screen - should be rebuild
+- [x] App Splash Screen
 - [x] OnBoarding Screen w/ Lottie Animations
   - [x] Page 1
   - [x] Page 2
