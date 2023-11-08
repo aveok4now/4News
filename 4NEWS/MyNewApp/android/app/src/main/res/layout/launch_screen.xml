@@ -1,9 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <ImageView android:layout_width="match_parent" 
-    android:layout_height="match_parent" 
-    android:src="@drawable/last"
-    android:scaleType="centerCrop" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/gradient_background">
+
+        <ImageView
+        android:id="@+id/logoImageView"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:src="@drawable/seved"
+            android:layout_centerInParent="true" 
+            android:elevation="8dp"
+            />
+
+
+    </RelativeLayout>
+
 </RelativeLayout>
