@@ -31,7 +31,7 @@ export default function BottomTabBar() {
                 //backgroundColor: '#3EF0FD',
                 backgroundColor: '#0f172a',
                 activeTintColor: '#e91e63',
-                borderTopColor: 'rgb(156 163 175)',
+                borderTopColor: '#0f172a',
             },
             tabBarHideOnKeyboard: true,
             tabBarOptions: {
@@ -51,12 +51,12 @@ export default function BottomTabBar() {
                             <Icon
                                 name="newspaper"
                                 size={24}
-                                color={focused ? "#7371FC" : "#28587B"}
+                                color={focused ? "#3a86ff" : "#28587B"}
                             />
                             <Animatable.Text
                                 animation="jello"
                                 duration={1500}
-                                style={[styles.iconText, { color: focused ? 'white' : 'black' }]}>
+                                style={[styles.iconText, { color: focused ? 'white' : '#2563eb' }]}>
                                 Новости
                             </Animatable.Text>
                         </Animatable.View>

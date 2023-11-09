@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import {
     View,
     Text,
@@ -10,7 +10,7 @@ import {
     Dimensions,
     Image,
     StatusBar,
-    TouchableHighlight
+    TouchableHighlight,
 } from 'react-native';
 import Header from '../../components/Header';
 import Card from '../../components/Card';
@@ -28,7 +28,7 @@ import * as Progress from 'react-native-progress';
 
 const HomeScreen = ({ navigation }) => {
     setTimeout(() => {
-        setStatusBarColor('#36d1dc');
+        setStatusBarColor('transparent');
     }, 1000);
     const [isFetchingError, setIsFetchingError] = useState(false);
     const [Loading, setIsLoading] = useState(false);
@@ -210,6 +210,8 @@ const HomeScreen = ({ navigation }) => {
         }, 1500);
     };
 
+    const flatListRef = useRef(null);
+
     return (
         <>
             {!isConnected ? (
@@ -257,7 +259,6 @@ const HomeScreen = ({ navigation }) => {
                 <View style={styles.load}>
                     <Progress.CircleSnail thickness={10} size={140} color="white" />
                 </View>
-
             ) : (
                 canBeShowed && (
                     <CustomDrawer
@@ -279,6 +280,7 @@ const HomeScreen = ({ navigation }) => {
                                     scrollEventThrottle={16}
                                     data={Category}
                                     bounces={false}
+                                    initialScrollIndex={0}
                                     renderItem={({ item, index }) => {
                                         return (
                                             <TouchableOpacity
@@ -290,7 +292,10 @@ const HomeScreen = ({ navigation }) => {
                                                 onPress={() => {
                                                     setSelect(index);
                                                     getData2(Category[index].category);
-                                                    //onRefresh()
+                                                    flatListRef.current.scrollToIndex({
+                                                        index: 0,
+                                                        animated: true,
+                                                    });
                                                 }}>
                                                 <Text
                                                     style={
@@ -309,19 +314,15 @@ const HomeScreen = ({ navigation }) => {
                             <View style={{ flex: 2 }}>
                                 <View style={{ height: Dimensions.get('window').height * 0.78 }}>
                                     <FlatList
+                                        ref={flatListRef}
                                         style={{ flex: 1, zIndex: 100, position: 'relative' }}
                                         showsVerticalScrollIndicator={false}
                                         scrollEventThrottle={16}
                                         onRefresh={onRefresh}
                                         refreshing={isRefreshing}
-                                        colors={['#D50000']}
-                                        tintColor={'#D50000'}
                                         data={Data}
                                         renderItem={({ item, index }) => {
-                                            return (
-                                                <Card item={item} navigation={navigation} />
-
-                                            )
+                                            return <Card item={item} navigation={navigation} />;
                                         }}
                                     />
                                 </View>
@@ -360,7 +361,6 @@ const styles = StyleSheet.create({
         backgroundColor: '#0284c7',
         borderWidth: 0.5,
         borderColor: 'rgb(156 163 175)',
-
     },
 
     horListItem: {
