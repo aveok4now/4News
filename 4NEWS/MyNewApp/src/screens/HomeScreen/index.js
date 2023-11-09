@@ -11,6 +11,7 @@ import {
     Image,
     StatusBar,
     TouchableHighlight,
+    Animated
 } from 'react-native';
 import Header from '../../components/Header';
 import Card from '../../components/Card';
@@ -25,6 +26,8 @@ import {
 } from '../../utils/StatusBarManager';
 import { theme } from '../WeatherScreen/theme';
 import * as Progress from 'react-native-progress';
+import FloatingButton from '../../components/customs/FloatingButton';
+
 
 const HomeScreen = ({ navigation }) => {
     setTimeout(() => {
@@ -212,6 +215,10 @@ const HomeScreen = ({ navigation }) => {
 
     const flatListRef = useRef(null);
 
+    const [showFloatingButton, setShowFloatingButton] = useState(false);
+    const [scrollPosition, setScrollPosition] = useState(0);
+    const [prevScrollPosition, setPrevScrollPosition] = useState(0);
+
     return (
         <>
             {!isConnected ? (
@@ -321,12 +328,27 @@ const HomeScreen = ({ navigation }) => {
                                         onRefresh={onRefresh}
                                         refreshing={isRefreshing}
                                         data={Data}
+                                        onScroll={(event) => {
+                                            const currentScrollPosition = event.nativeEvent.contentOffset.y;
+                                            setShowFloatingButton(currentScrollPosition < prevScrollPosition);
+                                            setPrevScrollPosition(currentScrollPosition);
+                                        }}
                                         renderItem={({ item, index }) => {
                                             return <Card item={item} navigation={navigation} />;
                                         }}
                                     />
                                 </View>
                             </View>
+
+                            {showFloatingButton && (
+                                <FloatingButton
+                                    onPress={() => flatListRef.current.scrollToIndex({
+                                        index: 0,
+                                        animated: true,
+                                    })}
+                                />
+                            )}
+
                         </View>
                     </CustomDrawer>
                 )
