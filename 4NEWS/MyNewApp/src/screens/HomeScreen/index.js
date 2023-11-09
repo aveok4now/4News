@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import {
     View,
     Text,
@@ -10,6 +10,8 @@ import {
     Dimensions,
     Image,
     StatusBar,
+    TouchableHighlight,
+    Animated
 } from 'react-native';
 import Header from '../../components/Header';
 import Card from '../../components/Card';
@@ -22,10 +24,14 @@ import {
     setStatusBarColor,
     resetStatusBarColor,
 } from '../../utils/StatusBarManager';
+import { theme } from '../WeatherScreen/theme';
+import * as Progress from 'react-native-progress';
+import FloatingButton from '../../components/customs/FloatingButton';
+
 
 const HomeScreen = ({ navigation }) => {
     setTimeout(() => {
-        setStatusBarColor('#36d1dc');
+        setStatusBarColor('transparent');
     }, 1000);
     const [isFetchingError, setIsFetchingError] = useState(false);
     const [Loading, setIsLoading] = useState(false);
@@ -207,6 +213,12 @@ const HomeScreen = ({ navigation }) => {
         }, 1500);
     };
 
+    const flatListRef = useRef(null);
+
+    const [showFloatingButton, setShowFloatingButton] = useState(false);
+    const [scrollPosition, setScrollPosition] = useState(0);
+    const [prevScrollPosition, setPrevScrollPosition] = useState(0);
+
     return (
         <>
             {!isConnected ? (
@@ -248,15 +260,19 @@ const HomeScreen = ({ navigation }) => {
 
             {/* TODO: Lottie */}
             {Loading ? (
+                // <View style={styles.load}>
+                //     <ActivityIndicator color={'#754da6'} size={36}></ActivityIndicator>
+                // </View>
                 <View style={styles.load}>
-                    <ActivityIndicator color={'#754da6'} size={36}></ActivityIndicator>
+                    <Progress.CircleSnail thickness={10} size={140} color="white" />
                 </View>
             ) : (
                 canBeShowed && (
                     <CustomDrawer
                         type="Новости"
                         showSearch="true"
-                        backgroundColor="#4361ee"
+                        //backgroundColor="#4361ee"
+                        backgroundColor="#0ea5e9"
                         navigation={navigation}>
                         <View style={{ flex: 1 }}>
                             {/* <Header navigation={navigation} /> */}
@@ -268,7 +284,10 @@ const HomeScreen = ({ navigation }) => {
                                 <FlatList
                                     horizontal
                                     showsHorizontalScrollIndicator={false}
+                                    scrollEventThrottle={16}
                                     data={Category}
+                                    bounces={false}
+                                    initialScrollIndex={0}
                                     renderItem={({ item, index }) => {
                                         return (
                                             <TouchableOpacity
@@ -280,7 +299,10 @@ const HomeScreen = ({ navigation }) => {
                                                 onPress={() => {
                                                     setSelect(index);
                                                     getData2(Category[index].category);
-                                                    //onRefresh()
+                                                    flatListRef.current.scrollToIndex({
+                                                        index: 0,
+                                                        animated: true,
+                                                    });
                                                 }}>
                                                 <Text
                                                     style={
@@ -299,17 +321,34 @@ const HomeScreen = ({ navigation }) => {
                             <View style={{ flex: 2 }}>
                                 <View style={{ height: Dimensions.get('window').height * 0.78 }}>
                                     <FlatList
+                                        ref={flatListRef}
                                         style={{ flex: 1, zIndex: 100, position: 'relative' }}
                                         showsVerticalScrollIndicator={false}
+                                        scrollEventThrottle={16}
                                         onRefresh={onRefresh}
                                         refreshing={isRefreshing}
                                         data={Data}
+                                        onScroll={(event) => {
+                                            const currentScrollPosition = event.nativeEvent.contentOffset.y;
+                                            setShowFloatingButton(currentScrollPosition < prevScrollPosition);
+                                            setPrevScrollPosition(currentScrollPosition);
+                                        }}
                                         renderItem={({ item, index }) => {
                                             return <Card item={item} navigation={navigation} />;
                                         }}
                                     />
                                 </View>
                             </View>
+
+                            {showFloatingButton && (
+                                <FloatingButton
+                                    onPress={() => flatListRef.current.scrollToIndex({
+                                        index: 0,
+                                        animated: true,
+                                    })}
+                                />
+                            )}
+
                         </View>
                     </CustomDrawer>
                 )
@@ -341,15 +380,19 @@ const styles = StyleSheet.create({
     horList: {
         paddingHorizontal: 10,
         paddingVertical: 10,
+        backgroundColor: '#0284c7',
+        borderWidth: 0.5,
+        borderColor: 'rgb(156 163 175)',
     },
 
     horListItem: {
-        backgroundColor: '#8EBBF3',
+        //backgroundColor: '#8EBBF3',
         paddingHorizontal: 15,
         paddingVertical: 5,
         marginRight: 12,
-        borderRadius: 5,
-        borderColor: 'white',
+        borderRadius: 24,
+        borderColor: 'rgb(156 163 175)',
+        backgroundColor: theme.bgWhite(0.15),
         borderWidth: 0.5,
         shadowColor: '#000',
         shadowOffset: {
@@ -361,23 +404,29 @@ const styles = StyleSheet.create({
     },
 
     selListItem: {
-        backgroundColor: '#754da6',
+        backgroundColor: theme.bgWhite(0.35),
         paddingHorizontal: 15,
         paddingVertical: 5,
         marginRight: 12,
-        borderRadius: 5,
-        borderColor: 'white',
-        borderWidth: 0.5,
+        borderRadius: 24,
+        borderColor: '#c7d2fe',
+        borderWidth: 0.75,
     },
 
     horListText: {
         //fontWeight: '500',
-        color: '#383738',
+        color: 'rgb(203 213 225)',
         fontFamily: 'Inter-Bold',
+        textShadowColor: 'rgba(0, 0, 0, 0.25)',
+        textShadowOffset: { width: 0, height: 2 },
+        textShadowRadius: 2,
     },
 
     selListText: {
         //fontWeight: 'bold',
-        fontFamily: 'Inter-Bold',
+        fontFamily: 'Inter-ExtraBold',
+        textShadowColor: 'rgba(0, 0, 0, 0.45)',
+        textShadowOffset: { width: 0, height: 2 },
+        textShadowRadius: 4,
     },
 });

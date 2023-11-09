@@ -29,8 +29,9 @@ export default function BottomTabBar() {
                 // borderTopRightRadius: 15,
                 // borderTopLeftRadius: 15,
                 //backgroundColor: '#3EF0FD',
-                backgroundColor: '#8EBBF3',
-                activeTintColor: '#e91e63'
+                backgroundColor: '#0f172a',
+                activeTintColor: '#e91e63',
+                borderTopColor: '#0f172a',
             },
             tabBarHideOnKeyboard: true,
             tabBarOptions: {
@@ -50,12 +51,12 @@ export default function BottomTabBar() {
                             <Icon
                                 name="newspaper"
                                 size={24}
-                                color={focused ? "#7371FC" : "#28587B"}
+                                color={focused ? "#3a86ff" : "#28587B"}
                             />
                             <Animatable.Text
                                 animation="jello"
                                 duration={1500}
-                                style={[styles.iconText, { color: focused ? 'white' : 'black' }]}>
+                                style={[styles.iconText, { color: focused ? 'white' : '#2563eb' }]}>
                                 Новости
                             </Animatable.Text>
                         </Animatable.View>
@@ -79,7 +80,7 @@ export default function BottomTabBar() {
                             <Animatable.Text
                                 animation="jello"
                                 duration={1500}
-                                style={[styles.iconText, { color: focused ? 'white' : 'black' }]}>
+                                style={[styles.iconText, { color: focused ? 'white' : '#2563eb' }]}>
                                 Избранное
                             </Animatable.Text>
                         </Animatable.View>
@@ -103,7 +104,7 @@ export default function BottomTabBar() {
                             <Animatable.Text
                                 animation="jello"
                                 duration={1500}
-                                style={[styles.iconText, { color: focused ? 'white' : 'black' }]}>
+                                style={[styles.iconText, { color: focused ? 'white' : '#2563eb' }]}>
                                 Погода
                             </Animatable.Text>
                         </Animatable.View>
