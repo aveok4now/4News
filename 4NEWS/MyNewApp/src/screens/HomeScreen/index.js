@@ -218,6 +218,7 @@ const HomeScreen = ({ navigation }) => {
     const [showFloatingButton, setShowFloatingButton] = useState(false);
     const [scrollPosition, setScrollPosition] = useState(0);
     const [prevScrollPosition, setPrevScrollPosition] = useState(0);
+    const [isScrolledToTop, setIsScrolledToTop] = useState(true);
 
     return (
         <>
@@ -332,6 +333,7 @@ const HomeScreen = ({ navigation }) => {
                                             const currentScrollPosition = event.nativeEvent.contentOffset.y;
                                             setShowFloatingButton(currentScrollPosition < prevScrollPosition);
                                             setPrevScrollPosition(currentScrollPosition);
+                                            setIsScrolledToTop(currentScrollPosition === 0);
                                         }}
                                         renderItem={({ item, index }) => {
                                             return <Card item={item} navigation={navigation} />;
@@ -340,7 +342,7 @@ const HomeScreen = ({ navigation }) => {
                                 </View>
                             </View>
 
-                            {showFloatingButton && (
+                            {showFloatingButton && !isScrolledToTop && (
                                 <FloatingButton
                                     onPress={() => flatListRef.current.scrollToIndex({
                                         index: 0,

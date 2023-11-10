@@ -1,6 +1,6 @@
 import { View, Text, StyleSheet } from 'react-native'
 import React from 'react'
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
+//import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import HomeScreen from '../../screens/HomeScreen';
 import WeatherScreen from '../../screens/WeatherScreen';
 import Icon from 'react-native-vector-icons/FontAwesome6';
@@ -8,36 +8,22 @@ import Icon2 from 'react-native-vector-icons/Ionicons';
 import { assets } from '../../../react-native.config';
 import * as Animatable from 'react-native-animatable';
 import FavoritesScreen from '../../screens/FavoritesScreen';
+import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
 
-
-const Tab = createBottomTabNavigator();
+//const Tab = createBottomTabNavigator();
+const Tab = createMaterialBottomTabNavigator();
 
 
 export default function BottomTabBar() {
     return (
 
-        <Tab.Navigator screenOptions={{
-            tabBarShowLabel: false,
-            headerShown: false,
-            tabBarStyle: {
-                position: "absolute",
-                bottom: 0,
-                right: 0,
-                left: 0,
-                //elevation: 1,
-                height: 60,
-                // borderTopRightRadius: 15,
-                // borderTopLeftRadius: 15,
-                //backgroundColor: '#3EF0FD',
-                backgroundColor: '#0f172a',
-                activeTintColor: '#e91e63',
-                borderTopColor: '#0f172a',
-            },
-            tabBarHideOnKeyboard: true,
-            tabBarOptions: {
-                activeTintColor: 'red'
-            }
-        }}
+        <Tab.Navigator
+            barStyle={{ backgroundColor: '#0f172a' }}
+            activeColor="#e91e63"
+            inactiveColor="#2563eb"
+            labeled={false}
+            shifting={true}
+            tabBarBadge={true}
         >
             <Tab.Screen
                 name="Домашнняя страница"
@@ -60,7 +46,8 @@ export default function BottomTabBar() {
                                 Новости
                             </Animatable.Text>
                         </Animatable.View>
-                    )
+                    ),
+
                 }}
             />
             <Tab.Screen
