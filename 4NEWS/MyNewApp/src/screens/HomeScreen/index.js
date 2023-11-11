@@ -30,9 +30,9 @@ import FloatingButton from '../../components/customs/FloatingButton';
 
 
 const HomeScreen = ({ navigation }) => {
-    setTimeout(() => {
-        setStatusBarColor('transparent');
-    }, 1000);
+    // setTimeout(() => {
+    //     setStatusBarColor('#0f172a');
+    // }, 1000);
     const [isFetchingError, setIsFetchingError] = useState(false);
     const [Loading, setIsLoading] = useState(false);
     const [Data, setData] = useState([]);
@@ -183,6 +183,7 @@ const HomeScreen = ({ navigation }) => {
         }
     };
 
+
     useEffect(() => {
         const unsubscribe = NetInfo.addEventListener(state => {
             setIsConnected(state.isConnected);
@@ -219,6 +220,12 @@ const HomeScreen = ({ navigation }) => {
     const [scrollPosition, setScrollPosition] = useState(0);
     const [prevScrollPosition, setPrevScrollPosition] = useState(0);
     const [isScrolledToTop, setIsScrolledToTop] = useState(true);
+
+    const [showTabBar, setShowTabBar] = useState(true);
+
+
+
+
 
     return (
         <>

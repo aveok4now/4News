@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, TextInput, FlatList, Dimensions } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, TextInput, FlatList, Dimensions, Image } from 'react-native';
 import * as Animatable from 'react-native-animatable';
 import RadialGradient from 'react-native-radial-gradient';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -7,9 +7,29 @@ import Card from '../components/Card';
 import LottieView from 'lottie-react-native';
 import { useNavigation } from '@react-navigation/native';
 const { width, height } = Dimensions.get('window');
+import { theme } from '../screens/WeatherScreen/theme';
+import { setStatusBarColor, resetStatusBarColor } from './StatusBarManager';
+import { useFocusEffect } from '@react-navigation/native';
+import { useIsFocused } from '@react-navigation/native';
 
 const Search = ({ navigation }) => {
     //const navigation = useNavigation();
+
+    const isFocusedScreen = useIsFocused();
+
+    useEffect(() => {
+        if (isFocusedScreen) {
+            setStatusBarColor('#2e408a');
+        } else {
+            resetStatusBarColor();
+        }
+
+        return () => {
+            // Сброс цвета statusBar при размонтировании компонента
+            resetStatusBarColor();
+        };
+    }, [isFocusedScreen]);
+
     const [SearchText, setSearchText] = useState('')
     const [Data, setData] = useState([])
 
@@ -72,58 +92,60 @@ const Search = ({ navigation }) => {
         searchNews(text);
     };
 
+    const [isFocused, setIsFocused] = useState(false)
+
     return (
-        <Animatable.View style={styles.searchRoot} animation="fadeIn" duration={1500}>
-            <RadialGradient
-                style={{ flex: 1 }}
-                colors={['#36d1dc', '#5b86e5']}
-                stops={[0.1, 0.9]}
-                center={[100, 360]}
-                radius={500}
+        <Animatable.View style={{ flex: 1 }} animation="fadeIn" duration={1500}>
+            <Image
+                blurRadius={100}
+                style={{ position: 'absolute', width: '100%', height: '100%' }}
+                source={require('../screens/assets/images/search-bg.jpg')}
+            />
+            <Animatable.View
+                style={[styles.search, { backgroundColor: isFocused ? theme.bgWhite(0.2) : ('transparent'), }]}
+                animation="fadeIn" duration={1000}
             >
-                <Animatable.View
-                    style={styles.search}
-                    animation="fadeIn" duration={1000}
-                >
-                    <TouchableOpacity onPress={() => {
-                        navigation.navigate("Домашняя страница")
-                    }}>
-                        <Icon
-                            style={styles.arrow}
-                            name="arrow-left"
-                            size={24}
-                            color="#F7F6C5"
+                <TouchableOpacity onPress={() => {
+                    navigation.navigate("Домашняя страница")
+                }}>
+                    <Icon
+                        style={styles.arrow}
+                        name="arrow-left"
+                        size={24}
+                        color="white"
 
-                        />
-                    </TouchableOpacity>
-                    <TextInput
-                        style={{ fontSize: 16, width: '100%' }}
-                        placeholder='Что будем искать?'
-                        placeholderTextColor={'white'}
-                        onChangeText={handleTextChange}
-                        selectionColor={'#F7F6C5'}
-                        value={SearchText}
-                        maxLength={20}
                     />
-                </Animatable.View>
+                </TouchableOpacity>
+                <TextInput
+                    style={{ fontSize: 16, width: '100%' }}
+                    placeholder='Что будем искать?'
+                    placeholderTextColor={'white'}
+                    onChangeText={handleTextChange}
+                    selectionColor={'#F7F6C5'}
+                    value={SearchText}
+                    maxLength={20}
+                    onFocus={() => setIsFocused(true)}
+                    onBlur={() => setIsFocused(false)}
+
+                />
+            </Animatable.View>
+            <View>
+                <FlatList
+                    data={Data}
+                    renderItem={({ item, index }) => {
+                        return <Card item={item} navigation={navigation} />;
+                    }}
+                />
+            </View>
+
+            {Data.length === 0 && (
                 <View>
-                    <FlatList
-                        data={Data}
-                        renderItem={({ item, index }) => {
-                            return <Card item={item} navigation={navigation} />;
-                        }}
-                    />
+                    <LottieView style={styles.lottie}
+                        source={require("../screens/assets/animations/news.json")}
+                        autoPlay={true}
+                        loop={true} />
                 </View>
-
-                {Data.length === 0 && (
-                    <View>
-                        <LottieView style={styles.lottie}
-                            source={require("../screens/assets/animations/news.json")}
-                            autoPlay={true}
-                            loop={true} />
-                    </View>
-                )}
-            </RadialGradient>
+            )}
         </Animatable.View>
     );
 }
@@ -137,11 +159,14 @@ const styles = StyleSheet.create({
     search: {
         flexDirection: 'row',
         alignItems: 'center',
-        backgroundColor: '#8EBCF3',
+
         borderWidth: 0.25,
         borderColor: "white",
         elevation: 1,
-        paddingHorizontal: 10
+        paddingHorizontal: 10,
+        borderRadius: 35,
+        marginVertical: 10,
+        marginHorizontal: 5
     },
     arrow: {
         // marginLeft: '2%',

@@ -12,20 +12,23 @@ import SQLite from 'react-native-sqlite-storage'
 import { assets } from './react-native.config';
 //import CustomButton from 'D:/react/4NEWS/MyNewApp/src/components/customs/CustomButton/CustomButton.js';
 import CustomButton from './src/components/customs/CustomButton';
-import { setStatusBarColor, resetStatusBarColor } from './StatusBarManager';
+import { setStatusBarColor, resetStatusBarColor } from './src/utils/StatusBarManager';
 
 
 
 // SQLite.enablePromise(true);
 const App = () => {
-  const [statusBarColor, setStatusBarColor] = useState('transparent');
+
 
   const [visible, setVisible] = useState(false);
 
   SplashScreen.hide();
 
 
+
   useEffect(() => {
+
+    //setStatusBarColor('#ffff');
 
     db = SQLite.openDatabase(
       {
@@ -47,7 +50,10 @@ const App = () => {
       backAction
     );
 
-    return () => backHandler.remove();
+    return () => {
+      resetStatusBarColor();
+      backHandler.remove();
+    }
   }, []);
 
   const successToOpenDB = () => {
@@ -62,7 +68,7 @@ const App = () => {
 
   return (
     <>
-      <StatusBar backgroundColor={statusBarColor} />
+
       {/* <LinearGradient colors={['#42275a', '#734b6d']} style={styles.gradient}> */}
 
       <LinearGradient colors={['#57e0f3', '#357ae0']} style={styles.gradient}>

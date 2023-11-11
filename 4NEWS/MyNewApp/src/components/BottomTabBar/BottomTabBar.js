@@ -9,6 +9,7 @@ import { assets } from '../../../react-native.config';
 import * as Animatable from 'react-native-animatable';
 import FavoritesScreen from '../../screens/FavoritesScreen';
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
+import UsersNewsScreen from '../../screens/UsersNewsScreen';
 
 const screens = [
     {
@@ -39,7 +40,7 @@ const screens = [
     },
     {
         name: 'Сообщество',
-        component: WeatherScreen,
+        component: UsersNewsScreen,
         icon: {
             type: UsersIcon,
             focusedName: 'users-line',
@@ -67,6 +68,8 @@ const screens = [
 
 const Tab = createMaterialBottomTabNavigator();
 
+
+
 export default function BottomTabBar({ showing }) {
     return (
         <Tab.Navigator
@@ -75,7 +78,9 @@ export default function BottomTabBar({ showing }) {
             inactiveColor="rgb(87 83 78)"
             labeled={true}
             shifting={true}
-            initialRouteName="Новости">
+            initialRouteName="Новости"
+            tabBarVisible={showing}
+        >
             {screens.map(screen => (
                 <Tab.Screen
                     key={screen.name}
