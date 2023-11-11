@@ -1,104 +1,111 @@
-import { View, Text, StyleSheet } from 'react-native'
-import React from 'react'
-//import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
+import { View, Text, StyleSheet } from 'react-native';
+import React from 'react';
 import HomeScreen from '../../screens/HomeScreen';
 import WeatherScreen from '../../screens/WeatherScreen';
-import Icon from 'react-native-vector-icons/FontAwesome6';
+import Icon from 'react-native-vector-icons/FontAwesome5';
 import Icon2 from 'react-native-vector-icons/Ionicons';
+import UsersIcon from 'react-native-vector-icons/FontAwesome6';
 import { assets } from '../../../react-native.config';
 import * as Animatable from 'react-native-animatable';
 import FavoritesScreen from '../../screens/FavoritesScreen';
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
 
-//const Tab = createBottomTabNavigator();
+const screens = [
+    {
+        name: 'Новости',
+        component: HomeScreen,
+        icon: {
+            type: Icon2,
+            focusedName: 'newspaper',
+            unfocusedName: 'newspaper-outline',
+            focusedColor: '#3a86ff',
+            unfocusedColor: '#28587B',
+        },
+        animation: 'flipInX',
+        animationDuration: 1000,
+    },
+    {
+        name: 'Избранное',
+        component: FavoritesScreen,
+        icon: {
+            type: Icon2,
+            focusedName: 'star',
+            unfocusedName: 'star-outline',
+            focusedColor: '#3a86ff',
+            unfocusedColor: '#28587B',
+        },
+        animation: 'flipInX',
+        animationDuration: 1100,
+    },
+    {
+        name: 'Сообщество',
+        component: WeatherScreen,
+        icon: {
+            type: UsersIcon,
+            focusedName: 'users-line',
+            unfocusedName: 'users',
+            focusedColor: '#3a86ff',
+            unfocusedColor: '#28587B',
+        },
+        animation: 'flipInX',
+        animationDuration: 1200,
+    },
+    {
+        name: 'Погода',
+        component: WeatherScreen,
+        icon: {
+            type: Icon,
+            focusedName: 'cloud-sun',
+            unfocusedName: 'cloud',
+            focusedColor: '#3a86ff',
+            unfocusedColor: '#28587B',
+        },
+        animation: 'flipInX',
+        animationDuration: 1300,
+    },
+];
+
 const Tab = createMaterialBottomTabNavigator();
 
-
-export default function BottomTabBar() {
+export default function BottomTabBar({ showing }) {
     return (
-
         <Tab.Navigator
             barStyle={{ backgroundColor: '#0f172a' }}
-            activeColor="#e91e63"
-            inactiveColor="#2563eb"
-            labeled={false}
+            activeColor="rgb(14 165 233)"
+            inactiveColor="rgb(87 83 78)"
+            labeled={true}
             shifting={true}
-            tabBarBadge={true}
-        >
-            <Tab.Screen
-                name="Домашнняя страница"
-                component={HomeScreen}
-                options={{
-                    tabBarIcon: ({ focused }) => (
-                        <Animatable.View
-                            animation="fadeInLeft"
-                            duration={1000}
-                            style={{ alignItems: "center", justifyContent: "center" }}>
-                            <Icon
-                                name="newspaper"
-                                size={24}
-                                color={focused ? "#3a86ff" : "#28587B"}
-                            />
-                            <Animatable.Text
-                                animation="jello"
-                                duration={1500}
-                                style={[styles.iconText, { color: focused ? 'white' : '#2563eb' }]}>
-                                Новости
-                            </Animatable.Text>
-                        </Animatable.View>
-                    ),
-
-                }}
-            />
-            <Tab.Screen
-                name="Избранное"
-                component={FavoritesScreen}
-                options={{
-                    tabBarIcon: ({ focused }) => (
-                        <Animatable.View
-                            animation="fadeInDown"
-                            duration={1000}
-                            style={{ alignItems: "center", justifyContent: "center" }}>
-                            <Icon2
-                                name={focused ? "star" : "star-outline"}
-                                size={24}
-                                color={focused ? "#EDFFAB" : "#28587B"}
-                            />
-                            <Animatable.Text
-                                animation="jello"
-                                duration={1500}
-                                style={[styles.iconText, { color: focused ? 'white' : '#2563eb' }]}>
-                                Избранное
-                            </Animatable.Text>
-                        </Animatable.View>
-                    )
-                }}
-            />
-            <Tab.Screen
-                name="Погода"
-                component={WeatherScreen}
-                options={{
-                    tabBarIcon: ({ focused }) => (
-                        <Animatable.View
-                            animation="fadeInRight"
-                            duration={1000}
-                            style={{ alignItems: "center", justifyContent: "center" }}>
-                            <Icon
-                                name="cloud-sun-rain"
-                                size={24}
-                                color={focused ? "#3a86ff" : "#28587B"}
-                            />
-                            <Animatable.Text
-                                animation="jello"
-                                duration={1500}
-                                style={[styles.iconText, { color: focused ? 'white' : '#2563eb' }]}>
-                                Погода
-                            </Animatable.Text>
-                        </Animatable.View>
-                    )
-                }}
-            />
-
+            initialRouteName="Новости">
+            {screens.map(screen => (
+                <Tab.Screen
+                    key={screen.name}
+                    name={screen.name}
+                    component={screen.component}
+                    options={{
+                        tabBarIcon: ({ focused }) => (
+                            <Animatable.View
+                                animation={screen.animation}
+                                duration={screen.animationDuration}
+                                style={{ alignItems: 'center', justifyContent: 'center' }}>
+                                <screen.icon.type
+                                    name={
+                                        focused
+                                            ? screen.icon.focusedName
+                                            : screen.icon.unfocusedName
+                                    }
+                                    size={24}
+                                    color={
+                                        focused
+                                            ? screen.icon.focusedColor
+                                            : screen.icon.unfocusedColor
+                                    }
+                                />
+                            </Animatable.View>
+                        ),
+                        accessibilityLabel: screen.name,
+                    }}
+                />
+            ))}
         </Tab.Navigator>
     );
 }
@@ -106,11 +113,11 @@ export default function BottomTabBar() {
 const styles = StyleSheet.create({
     iconText: {
         fontSize: 12,
-        color: "black",
-        fontFamily: "Inter-Light"
+        color: 'black',
+        fontFamily: 'Inter-Light',
     },
     selIconText: {
         fontSize: 14,
-        color: "white",
+        color: 'white',
     },
-})
+});
