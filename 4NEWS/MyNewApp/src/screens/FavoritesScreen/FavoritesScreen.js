@@ -70,6 +70,7 @@ export default function FavoritesScreen({ navigation }) {
             elevation={35}
             fgColor="#5b86e5"
             navigation={navigation}>
+
             <Animatable.View animation="fadeIn" duration={1000}>
                 <FlatList
                     showsVerticalScrollIndicator={false}
@@ -107,6 +108,7 @@ export default function FavoritesScreen({ navigation }) {
                         </View>
                     </View>
                 )}
+
             </Animatable.View>
         </CustomDrawer>
     ) : (
