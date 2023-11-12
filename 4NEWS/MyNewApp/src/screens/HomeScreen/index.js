@@ -349,7 +349,7 @@ const HomeScreen = ({ navigation }) => {
                                 </View>
                             </View>
 
-                            {showFloatingButton && !isScrolledToTop && (
+                            {showFloatingButton && !isScrolledToTop && Data.length > 0 && (
                                 <FloatingButton
                                     onPress={() => flatListRef.current.scrollToIndex({
                                         index: 0,

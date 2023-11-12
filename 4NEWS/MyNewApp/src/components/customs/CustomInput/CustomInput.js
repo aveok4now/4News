@@ -60,7 +60,7 @@ const CustomInput = ({
                             secureTextEntry={isPasswordVisible}
 
                         />
-                        {secureTextEntry && (
+                        {secureTextEntry && !isFocused && (
                             <TouchableOpacity
                                 onPress={handleButtonPress}
 

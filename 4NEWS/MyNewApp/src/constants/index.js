@@ -33,6 +33,7 @@ export const weatherTranslations = {
     'Overcast': 'Пасмурно',
     'Cloudy': 'Облачно',
     'Light rain': 'Небольшой дождь',
+    'Light drizzle': 'Небольшой дождь',
     'Moderate rain at times': 'Местами небольшой дождь',
     'Heavy rain': 'Дождь',
     'Heavy rain at times': 'Местами ливни',

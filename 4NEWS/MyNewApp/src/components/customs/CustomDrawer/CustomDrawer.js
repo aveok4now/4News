@@ -32,6 +32,7 @@ import CustomButton from '../../customs/CustomButton';
 import CustomInput from '../../customs/CustomInput';
 import RateUs from '../../RateUs';
 import SQLite from 'react-native-sqlite-storage';
+import { theme } from '../../../screens/WeatherScreen/theme';
 
 export default function CustomDrawer({
     children,
@@ -538,7 +539,8 @@ export default function CustomDrawer({
                             borderTopLeftRadius: showMenu ? 15 : 0,
                         },
                     ]}>
-                    <TouchableOpacity onPress={toggleMenu}>
+                    <TouchableOpacity
+                        onPress={toggleMenu}>
                         {showMenu ? (
                             <Icon4
                                 name={'close'}
@@ -559,7 +561,8 @@ export default function CustomDrawer({
                         <Text style={styles.text}>{type}</Text>
                     </View>
                     {showSearch == 'true' && (
-                        <TouchableOpacity onPress={() => navigation.navigate('Search')}>
+                        <TouchableOpacity
+                            onPress={() => navigation.navigate('Search')}>
                             <Icon name="search" size={24} color="white" />
                         </TouchableOpacity>
                     )}

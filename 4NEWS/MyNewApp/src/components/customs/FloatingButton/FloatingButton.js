@@ -7,7 +7,7 @@ export default function FloatingButton({ onPress }) {
     return (
         <Animatable.View
             animation="fadeIn"
-            duration={500}
+            duration={100}
         >
             <TouchableOpacity style={styles.floatButton} onPress={onPress}>
                 <Icon name="arrowup" color="white" size={32} />

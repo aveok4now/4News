@@ -224,7 +224,7 @@ const Card = ({ item, navigation }) => {
                             <Icon
                                 name="arrow-right"
                                 size={20}
-                                color="#F7F6C5"
+                                color="white"
                                 style={{ marginLeft: 8 }}
                             />
                         </TouchableOpacity>
@@ -394,7 +394,7 @@ const styles = StyleSheet.create({
 
     moreText: {
         //fontWeight: '700',
-        color: '#F7F6C5',
+        color: 'white',
         fontFamily: 'Inter-ExtraBold',
     },
 

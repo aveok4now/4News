@@ -77,7 +77,7 @@ export default function BottomTabBar({ showing }) {
             activeColor="rgb(14 165 233)"
             inactiveColor="rgb(87 83 78)"
             labeled={true}
-            shifting={true}
+            //shifting={true}
             initialRouteName="Новости"
             tabBarVisible={showing}
         >
