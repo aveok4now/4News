@@ -29,10 +29,15 @@ import { fetchLocations, fetchWeatherForecast } from '../../api/weather';
 import { weatherImages, weatherTranslations } from '../../constants';
 import * as Progress from 'react-native-progress';
 import { getItem, setItem } from '../../utils/asyncStorage';
+import useUserCredentials from '../../utils/useUserCredentials';
+import SQLite from 'react-native-sqlite-storage';
+
 
 const { width, height } = Dimensions.get('window');
 
 export default function WeatherScreen({ navigation }) {
+    let identify = useUserCredentials();
+
     setStatusBarColor('#092439');
     const [showSearch, setShowSearch] = useState(false);
     const [locations, setLocations] = useState([]);
@@ -53,7 +58,8 @@ export default function WeatherScreen({ navigation }) {
         }).then(data => {
             setWeather(data);
             setLoading(false);
-            setItem('city', loc.name);
+            //setItem('city', loc.name);
+            setUserCityToDB(loc.name);
         });
     };
 
@@ -68,12 +74,38 @@ export default function WeatherScreen({ navigation }) {
 
     useEffect(() => {
         fetchMyWeatherData();
-    }, []);
+    }, [identify]);
 
     const fetchMyWeatherData = async () => {
-        let myCity = await getItem('city');
+        const db = await SQLite.openDatabase({ name: 'news.db', location: 1 });
+        let myCity = null;
+
+        console.log("IDENTIFY" + identify);
+
+        await db.transaction((tx) => {
+            tx.executeSql(
+                `
+            SELECT userCity
+            FROM Users
+            WHERE userLogin = ?
+            `,
+                [identify],
+                (tx, resultSet) => {
+                    if (resultSet.rows.length > 0) {
+                        myCity = resultSet.rows.item(0).userCity;
+                    }
+                },
+                (tx, error) => {
+                    console.error(error);
+                }
+            );
+        });
+
+        console.log("Полученный город: " + myCity);
+
         let cityName = 'Sevastopol';
         if (myCity) cityName = myCity;
+
         fetchWeatherForecast({
             cityName,
             days: '7',
@@ -81,6 +113,44 @@ export default function WeatherScreen({ navigation }) {
             setWeather(data);
             setLoading(false);
         });
+    };
+
+    const setUserCityToDB = async (name) => {
+        try {
+            const db = await SQLite.openDatabase({ name: 'news.db', location: 1 });
+            let userId = null;
+
+            if (identify !== "Гость") {
+                const query = `SELECT userId FROM users WHERE userLogin = ?`;
+                const queryArgs = [identify];
+                const [result] = await db.executeSql(query, queryArgs);
+
+                if (result.rows.length > 0) {
+                    userId = result.rows.item(0).userId;
+                    if (userId > 0) {
+                        db.transaction((tx) => {
+                            tx.executeSql(
+                                `
+                    UPDATE Users
+                    SET userCity = ?
+                    WHERE userID = ?
+                    `,
+                                [name, userId],
+                                () => {
+                                    console.log("success")
+                                },
+                                (error) => {
+                                    // Обработка ошибки выполнения транзакции
+                                    console.error(error);
+                                }
+                            );
+                        });
+                    }
+                }
+            }
+        } catch (error) {
+            console.error(error);
+        }
     };
 
     const query = weather?.forecast?.forecastday[0]?.day;
