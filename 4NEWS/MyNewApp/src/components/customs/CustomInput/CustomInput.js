@@ -1,11 +1,17 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, StyleSheet, TouchableOpacity } from 'react-native';
+import {
+    View,
+    Text,
+    TextInput,
+    StyleSheet,
+    TouchableOpacity,
+} from 'react-native';
 import { Controller } from 'react-hook-form';
 // import { Container } from './styles';
 import { assets } from '../../../react-native.config';
-import EyeIcon from 'react-native-vector-icons/Entypo'
+import EyeIcon from 'react-native-vector-icons/Entypo';
 
-const defaultColor1 = '#6274F8'
+const defaultColor1 = 'white';
 const CustomInput = ({
     control,
     name,
@@ -14,9 +20,8 @@ const CustomInput = ({
     secureTextEntry,
     setIsTyping,
     selectionColor,
-    isUserExist
+    isUserExist,
 }) => {
-
     const [isFocused, setIsFocused] = useState(false);
     const [isPasswordVisible, setIsPasswordVisible] = useState(secureTextEntry);
     const [iseyeFocused, setIseyeFocused] = useState(false);
@@ -24,28 +29,40 @@ const CustomInput = ({
     const handleButtonPress = () => {
         setIsPasswordVisible(!isPasswordVisible);
         //setIsFocused(true);
-        setIseyeFocused(true)
-    }
+        setIseyeFocused(true);
+    };
 
     return (
         <Controller
             control={control}
             name={name}
             rules={rules}
-            render={({ field: { value, onChange, onBlur, onFocus }, fieldState: { error } }) => (
+            render={({
+                field: { value, onChange, onBlur, onFocus },
+                fieldState: { error },
+            }) => (
                 <>
-                    <View style={[
-                        styles.container,
-                        {
-                            borderColor: error ? 'red' : '#E8E8E8',
-                        },
-                        isFocused && styles.inputFocused,
-                        { borderColor: !error && isFocused ? '#7af5d1' : error ? 'red' : '#E8E8E8' }
-                    ]}>
+                    <View
+                        style={[
+                            styles.container,
+                            {
+                                borderColor: error ? 'red' : '#E8E8E8',
+                            },
+                            isFocused && styles.inputFocused,
+                            {
+                                borderColor:
+                                    !error && isFocused ? '#7af5d1' : error ? 'red' : '#E8E8E8',
+                            },
+                        ]}>
                         <TextInput
                             value={value}
-                            onChangeText={(text) => {
-                                onChange(text);
+                            onChangeText={text => {
+                                if (text.includes(' ')) {
+                                    onChange(text.trim());
+                                } else {
+                                    onChange(text);
+                                }
+
                                 if (setIsTyping) setIsTyping(true);
                             }}
                             onBlur={() => {
@@ -58,34 +75,32 @@ const CustomInput = ({
                             placeholder={placeholder}
                             style={styles.input}
                             secureTextEntry={isPasswordVisible}
-
                         />
                         {secureTextEntry && !isFocused && (
                             <TouchableOpacity
                                 onPress={handleButtonPress}
-
                                 style={styles.eyeIcon}>
-                                <EyeIcon name={isPasswordVisible ? "eye" : "eye-with-line"} size={24} />
+                                <EyeIcon
+                                    name={isPasswordVisible ? 'eye' : 'eye-with-line'}
+                                    size={24}
+                                />
                             </TouchableOpacity>
                         )}
-
                     </View>
                     {error && (
-                        <Text style={styles.errorText}>
-                            {error.message || 'Ошибка'}
-                        </Text>
+                        <Text style={styles.errorText}>{error.message || 'Ошибка'}</Text>
                     )}
-                    {rules.isUserExist == "Пользователь с таким именем уже существует" && (
-                        <Text style={styles.errorText}>
-                            {'Пользователь с таким именем уже существует'}
-                        </Text>
-                    )}
+                    {rules.isUserExist ==
+                        'Пользователь с таким именем уже существует' && (
+                            <Text style={styles.errorText}>
+                                {'Пользователь с таким именем уже существует'}
+                            </Text>
+                        )}
                 </>
             )}
         />
-
     );
-}
+};
 
 const styles = StyleSheet.create({
     container: {
@@ -100,20 +115,16 @@ const styles = StyleSheet.create({
         marginVertical: 5,
     },
     input: {
-        fontFamily: "Inter-Light",
-
+        fontFamily: 'Inter-Light',
     },
     inputFocused: {
         backgroundColor: '#73A4BD70',
-
     },
 
-
     errorText: {
-        fontFamily: "Inter-Regular",
+        fontFamily: 'Inter-Regular',
         color: 'red',
         alignSelf: 'stretch',
-
     },
 
     eyeIcon: {
@@ -121,7 +132,6 @@ const styles = StyleSheet.create({
         top: 12,
         right: 10,
     },
+});
 
-},)
-
-export default CustomInput;  
+export default CustomInput;

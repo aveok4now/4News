@@ -1,5 +1,15 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, useWindowDimensions, ScrollView, TouchableOpacity, Dimensions, Vibration, BackHandler } from 'react-native';
+import {
+    View,
+    Text,
+    StyleSheet,
+    useWindowDimensions,
+    ScrollView,
+    TouchableOpacity,
+    Dimensions,
+    Vibration,
+    BackHandler,
+} from 'react-native';
 import Logo from '../../../assets/images/seved.png';
 import CustomInput from '../../components/customs/CustomInput/CustomInput';
 import CustomButton from '../../components/customs/CustomButton/CustomButton';
@@ -12,31 +22,31 @@ import ModalPopup from '../../components/customs/CustomModal/CustomModal';
 import LottieView from 'lottie-react-native';
 const { width, height } = Dimensions.get('window');
 import * as Animatable from 'react-native-animatable';
-import SQLite from 'react-native-sqlite-storage'
+import SQLite from 'react-native-sqlite-storage';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { setStatusBarColor, resetStatusBarColor } from '../../utils/StatusBarManager';
+import {
+    setStatusBarColor,
+    resetStatusBarColor,
+} from '../../utils/StatusBarManager';
 
 SQLite.enablePromise(true);
 
-
 const SignInScreen = ({ route }) => {
-
     resetStatusBarColor();
     const [userExist, setUserExist] = useState(true);
     const { width, height } = useWindowDimensions();
     const navigation = useNavigation();
-    const invalidCredentialsText = "Неверный логин или пароль";
+    const invalidCredentialsText = 'Неверный логин или пароль';
     const [isTyping, setIsTyping] = useState(false);
 
     const [inputFocus, setIsInputFocus] = useState(false);
     //const [isLoggedOut, setIsLoggedOut] = useState(false);
 
-    const onYes = () => BackHandler.exitApp()
+    const onYes = () => BackHandler.exitApp();
 
     useEffect(() => {
         const checkUserCredentials = async () => {
-
-            if (route.params?.status === "logout") {
+            if (route.params?.status === 'logout') {
                 AsyncStorage.setItem('loggedOut', 'true');
             }
 
@@ -46,15 +56,15 @@ const SignInScreen = ({ route }) => {
 
             const guestID = await AsyncStorage.getItem('guestID');
 
-            console.log("loggedout" + isLoggedOut)
-            console.log("status" + route.params?.status)
+            console.log('loggedout' + isLoggedOut);
+            console.log('status' + route.params?.status);
 
-            if (route.params?.status === "logout") {
+            if (route.params?.status === 'logout') {
                 await AsyncStorage.removeItem('username');
                 await AsyncStorage.removeItem('password');
                 AsyncStorage.setItem('loggedOut', 'true');
-                console.log(savedUsername)
-                console.log(savedPassword)
+                console.log(savedUsername);
+                console.log(savedPassword);
                 return;
             } else {
                 if (savedUsername && savedPassword) {
@@ -70,17 +80,15 @@ const SignInScreen = ({ route }) => {
                     }
                 }
             }
-        }
+        };
 
         checkUserCredentials();
     }, []);
 
-
-
-
-    const { control,
+    const {
+        control,
         handleSubmit,
-        formState: { errors }
+        formState: { errors },
     } = useForm();
 
     // const onSignInPressed = (data) => {
@@ -106,8 +114,7 @@ const SignInScreen = ({ route }) => {
     //     }
     // };
 
-
-    const onSignInPressed = async (data) => {
+    const onSignInPressed = async data => {
         try {
             console.log(data);
             const db = await SQLite.openDatabase({ name: 'news.db', location: 1 });
@@ -146,20 +153,23 @@ const SignInScreen = ({ route }) => {
         }
     };
 
-
-    const onSignInAsGuestPressed = async (data) => {
+    const onSignInAsGuestPressed = async data => {
         try {
             const db = await SQLite.openDatabase({ name: 'news.db', location: 1 });
             const getLastGuestID = async () => {
                 return new Promise((resolve, reject) => {
-                    db.transaction((tx) => {
-                        tx.executeSql('SELECT MAX(guestId) AS maxID FROM Guests', [], (_, { rows }) => {
-                            const { maxID } = rows.item(0);
-                            resolve(maxID || 0);
-                        },
-                            (error) => {
+                    db.transaction(tx => {
+                        tx.executeSql(
+                            'SELECT MAX(guestId) AS maxID FROM Guests',
+                            [],
+                            (_, { rows }) => {
+                                const { maxID } = rows.item(0);
+                                resolve(maxID || 0);
+                            },
+                            error => {
                                 reject(error);
-                            });
+                            },
+                        );
                     });
                 });
             };
@@ -167,15 +177,17 @@ const SignInScreen = ({ route }) => {
             const lastGuestID = await getLastGuestID();
             const newGuestID = lastGuestID + 1;
 
-            const [result] = await db.executeSql('INSERT INTO Guests (guestId) VALUES (?)', [newGuestID]);
+            const [result] = await db.executeSql(
+                'INSERT INTO Guests (guestId) VALUES (?)',
+                [newGuestID],
+            );
 
             if (result.rowsAffected > 0) {
                 await AsyncStorage.setItem('username', 'guest');
                 await AsyncStorage.setItem('guestID', newGuestID.toString());
                 await AsyncStorage.removeItem('password');
-                console.log("Вошёл как гость" + newGuestID);
+                console.log('Вошёл как гость' + newGuestID);
                 navigation.navigate('Splash');
-
             } else {
                 console.log('Ошибка при добавлении гостя в базу данных');
             }
@@ -184,24 +196,21 @@ const SignInScreen = ({ route }) => {
         }
     };
 
-
-
     const onForgotPassword = () => {
         // console.warn("Забыли пароль");
-        navigation.navigate("Восстановление пароля");
-    }
+        navigation.navigate('Восстановление пароля');
+    };
 
     const onSignUpPress = () => {
         //  console.warn("Регистрация");
-        navigation.navigate("Регистрация");
-    }
+        navigation.navigate('Регистрация');
+    };
 
     const handleReset = async () => {
         Vibration.vibrate(10);
         await removeItem('onboarded');
         navigation.push('Приветствие');
-    }
-
+    };
 
     const [modalVisible, setModalVisible] = useState(false); // Состояние для видимости модального окна
 
@@ -215,21 +224,18 @@ const SignInScreen = ({ route }) => {
     };
 
     const handleInputFocus = () => {
-        setIsInputFocus(true)
-    }
-
+        setIsInputFocus(true);
+    };
 
     return (
         <ScrollView showsVerticalScrollIndicator={false}>
             {/* <ImageBackground source={image} resizeMode="cover" style={styles.image}> */}
             <View style={styles.root}>
-
                 <TouchableOpacity onPress={handleReset} style={styles.questionIcon}>
                     <Animatable.View animation="bounceIn" duration={1500}>
                         <Icon name="question-circle" size={30} color="white" />
                     </Animatable.View>
                 </TouchableOpacity>
-
 
                 <Animatable.Image
                     animation="bounceIn"
@@ -249,26 +255,45 @@ const SignInScreen = ({ route }) => {
                     <View style={{ alignItems: 'center' }}>
                         <View style={styles.header}>
                             <TouchableOpacity onPress={() => setModalVisible(false)}>
-                                <LottieView style={styles.lottieClose}
-                                    source={require("../assets/animations/close.json")}
+                                <LottieView
+                                    style={styles.lottieClose}
+                                    source={require('../assets/animations/close.json')}
                                     autoPlay={true}
-                                    loop={false} />
+                                    loop={false}
+                                />
                             </TouchableOpacity>
                         </View>
                     </View>
-                    <LottieView style={styles.lottie}
-                        source={require("../assets/animations/exit.json")}
+                    <LottieView
+                        style={styles.lottie}
+                        source={require('../assets/animations/exit.json')}
                         autoPlay={true}
-                        loop={false} />
-                    <Text style={{ marginBottom: 20, fontSize: 20, textAlign: 'center', textDecorationColor: 'white', fontFamily: "Inter-Bold" }}>Уже уходите ? 🥺</Text>
-                    <Text style={{ marginBottom: 20, fontSize: 16, textAlign: 'center', textDecorationColor: 'white', fontFamily: "Inter-Light" }}>Будем рады увидеть Вас снова!</Text>
+                        loop={false}
+                    />
+                    <Text
+                        style={{
+                            marginBottom: 20,
+                            fontSize: 20,
+                            textAlign: 'center',
+                            textDecorationColor: 'white',
+                            fontFamily: 'Inter-Bold',
+                        }}>
+                        Уже уходите ? 🥺
+                    </Text>
+                    <Text
+                        style={{
+                            marginBottom: 20,
+                            fontSize: 16,
+                            textAlign: 'center',
+                            textDecorationColor: 'white',
+                            fontFamily: 'Inter-Light',
+                        }}>
+                        Будем рады увидеть Вас снова!
+                    </Text>
                     <View style={{ flexDirection: 'column', justifyContent: 'center' }}>
+                        <CustomButton text="Да" onPress={() => onYes()} />
                         <CustomButton
-                            text="Да"
-                            onPress={() => onYes()}
-                        />
-                        <CustomButton
-                            type='Tertiary'
+                            type="Tertiary"
                             text="Отмена"
                             onPress={() => setModalVisible(false)}
                         />
@@ -281,11 +306,17 @@ const SignInScreen = ({ route }) => {
                     control={control}
                     rules={{
                         required: 'Ввведите имя или эл. почту 🤖',
-                        minLength: { value: 4, message: 'Имя пользователя должно быть не менее 4 символов' },
-                        maxLength: { value: 20, message: 'Имя пользователя или эл.почта должны быть не больше 20 символов' }
+                        minLength: {
+                            value: 4,
+                            message: 'Имя пользователя должно быть не менее 4 символов',
+                        },
+                        maxLength: {
+                            value: 20,
+                            message:
+                                'Имя пользователя или эл.почта должны быть не больше 20 символов',
+                        },
                     }}
                     setIsTyping={setIsTyping}
-
                 />
 
                 <CustomInput
@@ -295,16 +326,19 @@ const SignInScreen = ({ route }) => {
                     control={control}
                     rules={{
                         required: 'Введите пароль 👺',
-                        minLength: { value: 4, message: 'Длина пароля должна быть не менее 5 символов' },
-                        maxLength: { value: 15, message: 'Длина пароля должна быть не больше 15 символов' }
+                        minLength: {
+                            value: 4,
+                            message: 'Длина пароля должна быть не менее 5 символов',
+                        },
+                        maxLength: {
+                            value: 15,
+                            message: 'Длина пароля должна быть не больше 15 символов',
+                        },
                     }}
                     setIsTyping={setIsTyping}
                 />
 
-                <CustomButton
-                    text="Войти"
-                    onPress={handleSubmit(onSignInPressed)}
-                />
+                <CustomButton text="Войти" onPress={handleSubmit(onSignInPressed)} />
 
                 {!userExist && !isTyping && (
                     <Text style={styles.noUser}>{invalidCredentialsText}</Text>
@@ -328,14 +362,11 @@ const SignInScreen = ({ route }) => {
                     onPress={onSignUpPress}
                     type="Tertiary"
                 />
-
             </View>
             {/* </ImageBackground> */}
-
         </ScrollView>
     );
-}
-
+};
 
 const styles = StyleSheet.create({
     image: {
@@ -347,7 +378,6 @@ const styles = StyleSheet.create({
     root: {
         alignItems: 'center',
         padding: 20,
-
     },
     logo: {
         marginTop: '20%',
@@ -360,7 +390,7 @@ const styles = StyleSheet.create({
         position: 'absolute',
         top: 15,
         left: 15,
-        textAlign: 'center'
+        textAlign: 'center',
     },
     exitIcon: {
         position: 'absolute',
@@ -371,28 +401,29 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignSelf: 'center',
         width: width * 0.9,
-        height: width
+        height: width,
     },
     lottieClose: {
         width: 90,
         height: 90,
-        marginLeft: 55
+        marginLeft: 55,
     },
 
     header: {
         width: '120%',
         height: 40,
         alignItems: 'flex-end',
-        justifyContent: 'center'
+        justifyContent: 'center',
     },
     noUser: {
         color: 'red',
         marginTop: 10,
         marginBottom: 10,
-    }
-
-
-
-})
+        textShadowColor: 'rgba(226, 232, 240, 0.15)',
+        textShadowOffset: { width: -2, height: 1 },
+        textShadowRadius: 4,
+        fontFamily: 'Inter-Bold'
+    },
+});
 
 export default SignInScreen;
