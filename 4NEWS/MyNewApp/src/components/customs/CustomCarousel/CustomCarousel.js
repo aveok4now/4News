@@ -16,8 +16,12 @@ const ITEM_SIZE = width * 0.6;
 const SPACING = 5;
 
 export default function CustomCarousel() {
+
+
     const scrollX = useRef(new Animated.Value(0)).current;
     const NewsImages = [{ key: 'left-spacer' }, ...Images, { key: 'right-spacer' }];
+
+
 
     return (
         <View style={styles.container}>

@@ -28,6 +28,7 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import { fetchLocations, fetchWeatherForecast } from '../../api/weather';
 import { weatherImages, weatherTranslations } from '../../constants';
 import * as Progress from 'react-native-progress';
+import { getItem, setItem } from '../../utils/asyncStorage';
 
 const { width, height } = Dimensions.get('window');
 
@@ -52,6 +53,7 @@ export default function WeatherScreen({ navigation }) {
         }).then(data => {
             setWeather(data);
             setLoading(false);
+            setItem('city', loc.name);
         });
     };
 
@@ -69,8 +71,11 @@ export default function WeatherScreen({ navigation }) {
     }, []);
 
     const fetchMyWeatherData = async () => {
+        let myCity = await getItem('city');
+        let cityName = 'Sevastopol';
+        if (myCity) cityName = myCity;
         fetchWeatherForecast({
-            cityName: 'Sevastopol',
+            cityName,
             days: '7',
         }).then(data => {
             setWeather(data);

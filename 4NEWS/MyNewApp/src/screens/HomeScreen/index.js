@@ -11,7 +11,7 @@ import {
     Image,
     StatusBar,
     TouchableHighlight,
-    Animated
+    Animated,
 } from 'react-native';
 import Header from '../../components/Header';
 import Card from '../../components/Card';
@@ -27,7 +27,6 @@ import {
 import { theme } from '../WeatherScreen/theme';
 import * as Progress from 'react-native-progress';
 import FloatingButton from '../../components/customs/FloatingButton';
-
 
 const HomeScreen = ({ navigation }) => {
     // setTimeout(() => {
@@ -183,7 +182,6 @@ const HomeScreen = ({ navigation }) => {
         }
     };
 
-
     useEffect(() => {
         const unsubscribe = NetInfo.addEventListener(state => {
             setIsConnected(state.isConnected);
@@ -222,10 +220,6 @@ const HomeScreen = ({ navigation }) => {
     const [isScrolledToTop, setIsScrolledToTop] = useState(true);
 
     const [showTabBar, setShowTabBar] = useState(true);
-
-
-
-
 
     return (
         <>
@@ -326,6 +320,8 @@ const HomeScreen = ({ navigation }) => {
                                 />
                             </Animatable.View>
 
+
+
                             <View style={{ flex: 2 }}>
                                 <View style={{ height: Dimensions.get('window').height * 0.78 }}>
                                     <FlatList
@@ -336,9 +332,12 @@ const HomeScreen = ({ navigation }) => {
                                         onRefresh={onRefresh}
                                         refreshing={isRefreshing}
                                         data={Data}
-                                        onScroll={(event) => {
-                                            const currentScrollPosition = event.nativeEvent.contentOffset.y;
-                                            setShowFloatingButton(currentScrollPosition < prevScrollPosition);
+                                        onScroll={event => {
+                                            const currentScrollPosition =
+                                                event.nativeEvent.contentOffset.y;
+                                            setShowFloatingButton(
+                                                currentScrollPosition < prevScrollPosition,
+                                            );
                                             setPrevScrollPosition(currentScrollPosition);
                                             setIsScrolledToTop(currentScrollPosition === 0);
                                         }}
@@ -351,13 +350,14 @@ const HomeScreen = ({ navigation }) => {
 
                             {showFloatingButton && !isScrolledToTop && Data.length > 0 && (
                                 <FloatingButton
-                                    onPress={() => flatListRef.current.scrollToIndex({
-                                        index: 0,
-                                        animated: true,
-                                    })}
+                                    onPress={() =>
+                                        flatListRef.current.scrollToIndex({
+                                            index: 0,
+                                            animated: true,
+                                        })
+                                    }
                                 />
                             )}
-
                         </View>
                     </CustomDrawer>
                 )

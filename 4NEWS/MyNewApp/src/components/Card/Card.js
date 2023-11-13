@@ -19,6 +19,7 @@ import ModalPopup from '../customs/CustomModal/CustomModal';
 import CustomButton from '../customs/CustomButton';
 import useUserCredentials from '../../utils/useUserCredentials';
 import { createShimmerPlaceholder } from 'react-native-shimmer-placeholder';
+
 const ShimmerPlaceHolder = createShimmerPlaceholder(LinearGradient);
 
 const Card = ({ item, navigation }) => {
@@ -42,7 +43,6 @@ const Card = ({ item, navigation }) => {
     const handleImageLoad = () => {
         setImageLoaded(true);
     };
-
 
     const handleLike = async () => {
         setIsLiked(!isLiked);
@@ -90,23 +90,20 @@ const Card = ({ item, navigation }) => {
         }
     };
 
-    useEffect(
-        () => {
-            const checkLiked = async () => {
-                const likedNewsItems = await AsyncStorage.getItem('likedNewsItems');
-                const parsedLikedNewsItems = JSON.parse(likedNewsItems) || [];
-                const isAlreadyLiked = parsedLikedNewsItems.some(
-                    likedItem => likedItem.url === item.url,
-                );
-                setIsLiked(isAlreadyLiked);
-            };
+    useEffect(() => {
+        const checkLiked = async () => {
+            const likedNewsItems = await AsyncStorage.getItem('likedNewsItems');
+            const parsedLikedNewsItems = JSON.parse(likedNewsItems) || [];
+            const isAlreadyLiked = parsedLikedNewsItems.some(
+                likedItem => likedItem.url === item.url,
+            );
+            setIsLiked(isAlreadyLiked);
+        };
 
-            checkLiked();
+        checkLiked();
 
 
-        },
-        [],
-    );
+    }, []);
 
     const onOk = () => {
         navigation.navigate('Добро пожаловать !', { status: 'logout' });
@@ -141,6 +138,9 @@ const Card = ({ item, navigation }) => {
         });
     }
 
+
+
+
     return item.title.includes('Removed') ? null : (
         <LinearGradient
             // colors={['#8BC6EC', '#9599E2']}
@@ -157,6 +157,7 @@ const Card = ({ item, navigation }) => {
             colors={['rgb(15 23 42)', 'rgb(56 189 248)']}
             start={{ x: 0, y: 0 }}
             end={{ x: 1, y: 1 }}>
+
             <Animatable.View style={styles.card} animation="fadeIn" duration={1500}>
                 {!imageLoaded && !item.imageUrl === null ? (
                     <ShimmerPlaceHolder
