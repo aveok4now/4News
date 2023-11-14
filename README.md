@@ -7,6 +7,9 @@ React Native News App project, bootstrapped using [`@react-native-community/cli`
   - [x] Page 1
   - [x] Page 2
   - [x] Page 3
+- [x] Custom Inputs w/ full customization 
+- [x] Custom Buttons w/ full customization 
+- [x] Custom Modal w/ full customization 
 - [ ] Screens
   - [x] SignIn
     - [x] SignIn as a Guest
@@ -19,19 +22,23 @@ React Native News App project, bootstrapped using [`@react-native-community/cli`
     - [ ] Password Reset
   - [x] Confirm Email
   - [x] Home Screen
+    - [x] News Categories Search 
+    - [x] Animated Image Carousel
     - [x] News cards
       - [x] News title, description, authors, date
       - [x] Read more with React WebView (only for US News)
       - [x] Likes
         - [x] Not Registered block with Custom Modal Popup
         - [x] AsyncStorage integration
+      - [x] Scrolling by news categories or by floating button
     - [x] Splash Screen
-      - [x] Dynamic Typewriter Greetings
+      - [x] Dynamic Typewriter Greetings to user
       - [x] Logo & Description Animations
     - [x] Page Refresh
   - [x] News Search Screen
     - [x] Search Bar
     - [x] Search Functionality
+    - [x] Nothing found info
   - [ ] Favorites Screen
     - [x] Not Registered Block
     - [x] Deleting Favorites Functionality
@@ -49,17 +56,17 @@ React Native News App project, bootstrapped using [`@react-native-community/cli`
   - [x] University Link
   - [x] View commit Link
   - [x] Feedback Screen with sending email-message functionality
-  - [x] Rate Us with saving Users ratings
-  - [x] LogOut
+  - [x] Rate Us with saving Users ratings in the database
+  - [x] LogOut functionality
  - [x] Weather Screen
    - [x] Search city
    - [x] Weakly forecast
    - [x] Lottie Animations
    - [x] Progress Loader
    - [x] Keyboard Avoiding Support   
-   - [x] More Info   
- - [ ] Currency Screen 
-- [x] OnExit Custom ModalPopUp with Custom Buttons
+   - [x] More Info
+   - [x] Saving the city selected by the user in the database (or with ready to use async storage)
+- [x] OnExit Custom ModalPopUp with Custom Buttons (triggered by a Backhandler event or when a button is pressed)
   - [x] Smooth Animation
   - [x] Yes, Cancel, Close Buttons
 - [x] Sign In, Sign Up, etc. Forms validation via react-hook-forms
@@ -67,10 +74,14 @@ React Native News App project, bootstrapped using [`@react-native-community/cli`
   - [x] US News
     - [x] Categories Search  
   - [X] RU News
-    - [x] Categories Search  
+    - [x] Categories Search
+- [x] Custom hooks
+  - [x] useUserCredentials
+  - [x] useUserEmail
+- [x] StatusBarManager 
 - [x] SQLite Database Integration
-- [x] Async Storage
-- [x] Bottom TabBar Navigation
+- [x] Async Storage configuration
+- [x] Bottom TabBar Navigation w/ material style
 - [x] Proccessing Internet connection with YouTube alike info banners
 - [ ] Admin Subsystem
 
