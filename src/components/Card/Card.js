@@ -21,6 +21,7 @@ import useUserCredentials from '../../utils/useUserCredentials';
 import { createShimmerPlaceholder } from 'react-native-shimmer-placeholder';
 import { Icons } from '../Icons';
 import { theme } from '../../screens/WeatherScreen/theme';
+import Share from 'react-native-share';
 
 const ShimmerPlaceHolder = createShimmerPlaceholder(LinearGradient);
 
@@ -31,13 +32,14 @@ const Card = ({ item, navigation }) => {
     //console.log(item);
     const [imageLoaded, setImageLoaded] = useState(false);
     const imageUrl = item.urlToImage || defaultImage;
-    const [isLiked, setIsLiked] = useState(false);
-    const [showModal, setShowModal] = useState(false);
 
+    const [isLiked, setIsLiked] = useState(false);
+    const [isShared, setIsShared] = useState(false);
+
+    const [showModal, setShowModal] = useState(false);
     const [showShimmer, setshowShimmer] = useState(false);
 
     let getSaved = AsyncStorage.getItem('savedNewsItems');
-
     let identify = useUserCredentials();
 
     let includesG = item.url.includes('https://news.google.com/');
@@ -91,6 +93,21 @@ const Card = ({ item, navigation }) => {
             console.error('Error saving news item:', error);
         }
     };
+
+
+    const handleShare = async ({ url, newsTitle }) => {
+        console.log(url)
+        const options = {
+            title: 'Поделиться новостью',
+            message: `📰 Новость с приложения 4News\n\n${newsTitle}\n\n`,
+            url: url
+        }
+        Share.open(options)
+            .then(res => console.log(res))
+            .catch(
+                err => console.log(err)
+            )
+    }
 
     useEffect(() => {
         const checkLiked = async () => {
@@ -254,7 +271,12 @@ const Card = ({ item, navigation }) => {
                                     color="white"
                                 />
                             </TouchableOpacity>
-                            <TouchableOpacity style={{ paddingHorizontal: 10 }}>
+                            <TouchableOpacity style={{ paddingHorizontal: 10 }}
+                                onPress={() => handleShare({
+                                    url: item.url,
+                                    newsTitle: item.title
+                                })}
+                            >
                                 <Icon
                                     name={isLiked ? 'send' : 'send-o'}
                                     size={24}
@@ -386,7 +408,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: 2,
     },
     more: {
-        backgroundColor: theme.bgWhite(0.3),
+        backgroundColor: theme.bgWhite(0.),
         borderRadius: 10,
         //backgroundColor: 'rgb(30 64 175)',
         paddingHorizontal: 10,
