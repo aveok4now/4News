@@ -19,6 +19,7 @@ React Native News App project, bootstrapped using [`@react-native-community/cli`
     - [ ] Password Reset
   - [x] Confirm Email
   - [x] Home Screen
+    - [x] Scrolling by categories or by floating button
     - [x] News cards
       - [x] News title, description, authors, date
       - [x] Read more with React WebView (only for US News)
@@ -32,6 +33,7 @@ React Native News App project, bootstrapped using [`@react-native-community/cli`
   - [x] News Search Screen
     - [x] Search Bar
     - [x] Search Functionality
+    - [x] Nothing found info
   - [ ] Favorites Screen
     - [x] Not Registered Block
     - [x] Deleting Favorites Functionality
@@ -57,7 +59,8 @@ React Native News App project, bootstrapped using [`@react-native-community/cli`
    - [x] Lottie Animations
    - [x] Progress Loader
    - [x] Keyboard Avoiding Support   
-   - [x] More Info   
+   - [x] More Info 
+   - [x] Saving Users city in database (or with ready to use async storage)
  - [ ] Currency Screen 
 - [x] OnExit Custom ModalPopUp with Custom Buttons
   - [x] Smooth Animation
@@ -70,7 +73,7 @@ React Native News App project, bootstrapped using [`@react-native-community/cli`
     - [x] Categories Search  
 - [x] SQLite Database Integration
 - [x] Async Storage
-- [x] Bottom TabBar Navigation
+- [x] Bottom TabBar Navigation (material)
 - [x] Proccessing Internet connection with YouTube alike info banners
 - [ ] Admin Subsystem
 
