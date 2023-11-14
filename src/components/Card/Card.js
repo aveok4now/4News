@@ -19,6 +19,8 @@ import ModalPopup from '../customs/CustomModal/CustomModal';
 import CustomButton from '../customs/CustomButton';
 import useUserCredentials from '../../utils/useUserCredentials';
 import { createShimmerPlaceholder } from 'react-native-shimmer-placeholder';
+import { Icons } from '../Icons';
+import { theme } from '../../screens/WeatherScreen/theme';
 
 const ShimmerPlaceHolder = createShimmerPlaceholder(LinearGradient);
 
@@ -101,8 +103,6 @@ const Card = ({ item, navigation }) => {
         };
 
         checkLiked();
-
-
     }, []);
 
     const onOk = () => {
@@ -138,9 +138,6 @@ const Card = ({ item, navigation }) => {
         });
     }
 
-
-
-
     return item.title.includes('Removed') ? null : (
         <LinearGradient
             // colors={['#8BC6EC', '#9599E2']}
@@ -157,7 +154,6 @@ const Card = ({ item, navigation }) => {
             colors={['rgb(15 23 42)', 'rgb(56 189 248)']}
             start={{ x: 0, y: 0 }}
             end={{ x: 1, y: 1 }}>
-
             <Animatable.View style={styles.card} animation="fadeIn" duration={1500}>
                 {!imageLoaded && !item.imageUrl === null ? (
                     <ShimmerPlaceHolder
@@ -208,7 +204,7 @@ const Card = ({ item, navigation }) => {
                                 })} */}
                         </Text>
                     </View>
-                    <View style={{ flexDirection: 'row', gap: 200 }}>
+                    <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                         <TouchableOpacity
                             disabled={includesG}
                             style={[
@@ -234,17 +230,34 @@ const Card = ({ item, navigation }) => {
                             style={[
                                 styles.more,
                                 {
-                                    backgroundColor: isLiked ? '#DA2C38' : '#301315',
+                                    //backgroundColor: isLiked ? '#DA2C38' : '#301315',
+                                    paddingHorizontal: 5,
+                                    //paddingVertical: 0,
                                     width: 'auto',
+                                    flexWrap: 'wrap',
                                 },
                                 styles.shadowProp,
                             ]}>
                             <TouchableOpacity
-                                //disabled={showModal}
+                                style={{ paddingHorizontal: 10 }}
                                 onPress={handleLike}>
                                 <Icon
                                     name={isLiked ? 'heart' : 'heart-o'}
-                                    size={20}
+                                    size={24}
+                                    color="white"
+                                />
+                            </TouchableOpacity>
+                            <TouchableOpacity style={{ paddingHorizontal: 10 }}>
+                                <Icons.Fontisto
+                                    name={isLiked ? 'comment' : 'commenting'}
+                                    size={24}
+                                    color="white"
+                                />
+                            </TouchableOpacity>
+                            <TouchableOpacity style={{ paddingHorizontal: 10 }}>
+                                <Icon
+                                    name={isLiked ? 'send' : 'send-o'}
+                                    size={24}
                                     color="white"
                                 />
                             </TouchableOpacity>
@@ -373,17 +386,19 @@ const styles = StyleSheet.create({
         paddingHorizontal: 2,
     },
     more: {
-        backgroundColor: 'rgb(30 64 175)',
+        backgroundColor: theme.bgWhite(0.3),
+        borderRadius: 10,
+        //backgroundColor: 'rgb(30 64 175)',
         paddingHorizontal: 10,
         paddingVertical: 5,
         width: '33%',
         textAlign: 'center',
-        marginTop: 5,
-        borderRadius: 5,
-        flexDirection: 'row',
-        elevation: 1,
         marginTop: 10,
-        paddingTop: 6,
+        //borderRadius: 5,
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+        //elevation: 1,
     },
 
     shadowProp: {
