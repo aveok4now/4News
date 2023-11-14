@@ -342,7 +342,7 @@ const HomeScreen = ({ navigation }) => {
                                             setIsScrolledToTop(currentScrollPosition === 0);
                                         }}
                                         renderItem={({ item, index }) => {
-                                            return <Card item={item} navigation={navigation} />;
+                                            return <Card item={item} navigation={navigation} data={Data} />;
                                         }}
                                     />
                                 </View>

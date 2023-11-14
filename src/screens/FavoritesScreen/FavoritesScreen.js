@@ -81,7 +81,7 @@ export default function FavoritesScreen({ navigation }) {
                     renderItem={({ item }) => {
                         return (
                             <>
-                                <Card item={item} navigation={navigation} />
+                                <Card item={item} navigation={navigation} data={favorites} />
                                 <View>
                                     <CustomButton
                                         text="Удалить"
@@ -92,7 +92,7 @@ export default function FavoritesScreen({ navigation }) {
                     }}
                 />
                 {favorites.length === 0 && (
-                    <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+                    <View style={{ justifyContent: 'center', alignItems: 'center', marginTop: '30%' }}>
                         <Text style={{ fontFamily: 'Inter-Light', fontSize: 20 }}>
                             Здесь будут появляться избранные новости, нажимайте на кнопку{' '}
                             <Icon name={'heart-o'} size={20} color="white" /> , чтобы

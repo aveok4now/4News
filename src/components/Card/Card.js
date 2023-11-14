@@ -25,7 +25,7 @@ import Share from 'react-native-share';
 
 const ShimmerPlaceHolder = createShimmerPlaceholder(LinearGradient);
 
-const Card = ({ item, navigation }) => {
+const Card = ({ item, navigation, data }) => {
     const defaultImage =
         'https://arbeitgeber.de/wp-content/uploads/2020/11/bda-news-header-1920x1280px-1536x1024.jpg';
 
@@ -171,7 +171,7 @@ const Card = ({ item, navigation }) => {
             colors={['rgb(15 23 42)', 'rgb(56 189 248)']}
             start={{ x: 0, y: 0 }}
             end={{ x: 1, y: 1 }}>
-            <Animatable.View style={styles.card} animation="fadeIn" duration={1500}>
+            <Animatable.View style={[styles.card, item === data[data.length - 1] ? { marginBottom: '5%' } : null,]} animation="fadeIn" duration={1500}>
                 {!imageLoaded && !item.imageUrl === null ? (
                     <ShimmerPlaceHolder
                         visible={imageLoaded}
@@ -205,6 +205,7 @@ const Card = ({ item, navigation }) => {
                             item.author && item.author.length > 40
                                 ? { flexDirection: 'column', alignItems: 'flex-start' }
                                 : null,
+
                         ]}>
                         <Text style={styles.description}>{item.author || ''} </Text>
                         <Text style={styles.description}>
@@ -261,7 +262,7 @@ const Card = ({ item, navigation }) => {
                                 <Icon
                                     name={isLiked ? 'heart' : 'heart-o'}
                                     size={24}
-                                    color="white"
+                                    color={isLiked ? "rgb(220 38 38)" : "white"}
                                 />
                             </TouchableOpacity>
                             <TouchableOpacity style={{ paddingHorizontal: 10 }}>
@@ -408,7 +409,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: 2,
     },
     more: {
-        backgroundColor: theme.bgWhite(0.),
+        backgroundColor: theme.bgWhite(0.15),
         borderRadius: 10,
         //backgroundColor: 'rgb(30 64 175)',
         paddingHorizontal: 10,
