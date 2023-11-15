@@ -18,12 +18,9 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import ModalPopup from '../customs/CustomModal/CustomModal';
 import CustomButton from '../customs/CustomButton';
 import useUserCredentials from '../../utils/useUserCredentials';
-import { createShimmerPlaceholder } from 'react-native-shimmer-placeholder';
 import { Icons } from '../Icons';
 import { theme } from '../../screens/WeatherScreen/theme';
 import Share from 'react-native-share';
-
-const ShimmerPlaceHolder = createShimmerPlaceholder(LinearGradient);
 
 const Card = ({ item, navigation, data }) => {
     const defaultImage =
@@ -37,7 +34,6 @@ const Card = ({ item, navigation, data }) => {
     const [isShared, setIsShared] = useState(false);
 
     const [showModal, setShowModal] = useState(false);
-    const [showShimmer, setshowShimmer] = useState(false);
 
     let getSaved = AsyncStorage.getItem('savedNewsItems');
     let identify = useUserCredentials();
@@ -94,20 +90,17 @@ const Card = ({ item, navigation, data }) => {
         }
     };
 
-
     const handleShare = async ({ url, newsTitle }) => {
-        console.log(url)
+        console.log(url);
         const options = {
             title: 'Поделиться новостью',
             message: `📰 Новость с приложения 4News\n\n${newsTitle}\n\n`,
-            url: url
-        }
+            url: url,
+        };
         Share.open(options)
             .then(res => console.log(res))
-            .catch(
-                err => console.log(err)
-            )
-    }
+            .catch(err => console.log(err));
+    };
 
     useEffect(() => {
         const checkLiked = async () => {
@@ -171,30 +164,28 @@ const Card = ({ item, navigation, data }) => {
             colors={['rgb(15 23 42)', 'rgb(56 189 248)']}
             start={{ x: 0, y: 0 }}
             end={{ x: 1, y: 1 }}>
-            <Animatable.View style={[styles.card, item === data[data.length - 1] ? { marginBottom: '5%' } : null,]} animation="fadeIn" duration={1500}>
-                {!imageLoaded && !item.imageUrl === null ? (
-                    <ShimmerPlaceHolder
-                        visible={imageLoaded}
-                        style={[styles.image, { width: 'inherit' }]}
-                        shimmerColors={['#564d4d', '#8e8e8e', '#564d4d']}
-                    />
-                ) : (
-                    <Animatable.Image
-                        animation="fadeInLeft"
-                        duration={1000}
-                        source={{ uri: imageUrl }}
-                        style={[
-                            styles.image,
-                            {
-                                opacity: imageLoaded ? 1 : 0,
-                            },
-                            styles.shadowProp,
-                            { shadowOpacity: 0.8 },
-                        ]}
-                        onLoad={handleImageLoad}
-                        resizeMethod="resize"
-                    />
-                )}
+            <Animatable.View
+                style={[
+                    styles.card,
+                    item === data[data.length - 1] ? { marginBottom: '5%' } : null,
+                ]}
+                animation="fadeIn"
+                duration={1500}>
+                <Animatable.Image
+                    animation="fadeInLeft"
+                    duration={1000}
+                    source={{ uri: imageUrl }}
+                    style={[
+                        styles.image,
+                        {
+                            opacity: imageLoaded ? 1 : 0,
+                        },
+                        styles.shadowProp,
+                        { shadowOpacity: 0.8 },
+                    ]}
+                    onLoad={handleImageLoad}
+                    resizeMethod="resize"
+                />
 
                 <View style={styles.titleView}>
                     <Text style={styles.title}>{item.title}</Text>
@@ -205,22 +196,9 @@ const Card = ({ item, navigation, data }) => {
                             item.author && item.author.length > 40
                                 ? { flexDirection: 'column', alignItems: 'flex-start' }
                                 : null,
-
                         ]}>
                         <Text style={styles.description}>{item.author || ''} </Text>
-                        <Text style={styles.description}>
-                            {formattedDate}
-                            {/* {' '}
-                                {new Date(item.publishedAt).toLocaleString('ru-RU', {
-                                    year: 'numeric',
-                                    month: 'long',
-                                    day: 'numeric',
-                                    hour: '2-digit',
-                                    minute: '2-digit',
-                                    // second: '2-digit',
-                                    timeZone: 'UTC',
-                                })} */}
-                        </Text>
+                        <Text style={styles.description}>{formattedDate}</Text>
                     </View>
                     <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                         <TouchableOpacity
@@ -262,24 +240,33 @@ const Card = ({ item, navigation, data }) => {
                                 <Icon
                                     name={isLiked ? 'heart' : 'heart-o'}
                                     size={24}
-                                    color={isLiked ? "rgb(220 38 38)" : "white"}
+                                    color={isLiked ? 'rgb(220 38 38)' : 'white'}
                                 />
                             </TouchableOpacity>
-                            <TouchableOpacity style={{ paddingHorizontal: 10 }}>
+                            <TouchableOpacity
+                                onPress={() =>
+                                    navigation.navigate('Комментарии', {
+                                        title: item.title,
+                                        item: item
+                                    })
+                                }
+                                style={{ paddingHorizontal: 10 }}>
                                 <Icons.Fontisto
-                                    name={isLiked ? 'comment' : 'commenting'}
+                                    name={'comment'}
                                     size={24}
                                     color="white"
                                 />
                             </TouchableOpacity>
-                            <TouchableOpacity style={{ paddingHorizontal: 10 }}
-                                onPress={() => handleShare({
-                                    url: item.url,
-                                    newsTitle: item.title
-                                })}
-                            >
+                            <TouchableOpacity
+                                style={{ paddingHorizontal: 10 }}
+                                onPress={() =>
+                                    handleShare({
+                                        url: item.url,
+                                        newsTitle: item.title,
+                                    })
+                                }>
                                 <Icon
-                                    name={isLiked ? 'send' : 'send-o'}
+                                    name={'send-o'}
                                     size={24}
                                     color="white"
                                 />

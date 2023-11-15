@@ -114,7 +114,7 @@ const Search = ({ navigation }) => {
     const [isFocused, setIsFocused] = useState(false);
 
     return (
-        <Animatable.View style={{ flex: 1 }} animation="fadeIn" duration={1500}>
+        <Animatable.View style={[{ flex: 1 }, Data[Data.length - 1] ? { marginBottom: '10%' } : null]} animation="fadeIn" duration={1500}>
             <Image
                 blurRadius={100}
                 style={{ position: 'absolute', width: '100%', height: '100%' }}
@@ -154,7 +154,7 @@ const Search = ({ navigation }) => {
                 <FlatList
                     data={Data}
                     renderItem={({ item, index }) => {
-                        return <Card item={item} navigation={navigation} />;
+                        return <Card item={item} navigation={navigation} data={Data} />;
                     }}
                 />
             </View>

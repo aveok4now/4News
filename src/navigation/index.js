@@ -22,6 +22,7 @@ import WeatherScreen from '../screens/WeatherScreen';
 import BottomTabBar from '../components/BottomTabBar';
 import FavoritesScreen from '../screens/FavoritesScreen';
 import FeedBackScreen from '../screens/FeedBackScreen/FeedBackScreen';
+import CommentsScreen from '../screens/CommentsScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -116,6 +117,17 @@ const Navigation = () => {
                     {/* <Stack.Screen name="Восстановление пароля" component={NewPasswordScreen} /> */}
 
                     <Stack.Screen name="Домашняя страница" component={BottomTabBar} />
+                    <Stack.Screen name="Комментарии" component={CommentsScreen} options={{
+                        headerShown: true,
+                        headerTransparent: true,
+                        headerTintColor: 'white',
+                        //headerTitleAlign: 'flex-s',
+                        headerTitleStyle: {
+                            fontSize: 20,
+                            color: 'white',
+                            fontFamily: "Inter-ExtraBold"
+                        }
+                    }} />
 
                 </Stack.Navigator>
             </NavigationContainer>
