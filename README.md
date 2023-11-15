@@ -27,6 +27,7 @@ React Native News App project, bootstrapped using [`@react-native-community/cli`
     - [x] News cards
       - [x] News title, description, authors, date
       - [x] Read more with React WebView (only for US News)
+      - [x] News sharing with title and url 
       - [x] Likes
         - [x] Not Registered block with Custom Modal Popup
         - [x] AsyncStorage integration
