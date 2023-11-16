@@ -5,6 +5,7 @@ import {
     StyleSheet,
     StatusBar,
     TouchableOpacity,
+    ScrollView,
 } from 'react-native';
 import React from 'react';
 import * as Animatable from 'react-native-animatable';
@@ -13,6 +14,8 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { Pressable } from 'react-native';
 import { Icons } from '../../components/Icons';
 import { handleShare } from '../../utils/Share';
+import useUserCredentials from '../../utils/hooks/useUserCredentials';
+import userAvatar from '../../../assets/images/user.jpg';
 
 export default function CommentsScreen({ route }) {
     const {
@@ -34,9 +37,43 @@ export default function CommentsScreen({ route }) {
         }
     };
 
+    let identify = useUserCredentials();
+
+    const dataArray = [
+        {
+            userAvatar: userAvatar,
+            identify: identify,
+            postText: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+            postImage: defaultImage,
+        },
+        {
+            userAvatar: userAvatar,
+            identify: identify,
+            postText: 'Praesent eget convallis velit, ac molestie lectus.',
+        },
+        {
+            userAvatar: userAvatar,
+            identify: identify,
+            postText: 'Praesent eget convallis velit, ac molestie lectus.',
+            postImage: defaultImage,
+        },
+        {
+            userAvatar: userAvatar,
+            identify: identify,
+            postText: 'Praesent eget convallis velit, ac molestie lectus.',
+        },
+        {
+            userAvatar: userAvatar,
+            identify: identify,
+            postText: 'Praesent eget convallis velit, ac molestie lectus.',
+            postImage: defaultImage,
+        },
+    ];
+
     return (
         <>
             <StatusBar backgroundColor="#5fa3c5" />
+
             <SafeAreaView style={{ height: '100%' }}>
                 <Animatable.View
                     animation="fadeIn"
@@ -98,12 +135,12 @@ export default function CommentsScreen({ route }) {
                                 }}>
                                 {item.title}
                             </Text>
-
+                            {/* <View style={styles.seperator} /> */}
                             <View
                                 style={{
                                     flexDirection: 'row',
                                     justifyContent: 'space-between',
-                                    paddingHorizontal: 3,
+                                    //marginHorizontal: 5
                                 }}>
                                 <Text
                                     style={{
@@ -117,7 +154,7 @@ export default function CommentsScreen({ route }) {
                                     {formattedDate}
                                 </Text>
                                 <TouchableOpacity
-                                    style={{ paddingHorizontal: 10 }}
+                                    style={{ marginRight: 15 }}
                                     onPress={() =>
                                         handleShare({
                                             url: item.url,
@@ -128,6 +165,73 @@ export default function CommentsScreen({ route }) {
                                 </TouchableOpacity>
                             </View>
                         </Animatable.View>
+                    </View>
+                    <View
+                        style={{
+                            marginTop: 15,
+                            borderTopLeftRadius: 40,
+                            borderTopRightRadius: 40,
+                            paddingHorizontal: 20,
+                            flex: 1,
+                            backgroundColor: theme.bgWhite(0.4),
+                        }}>
+                        <ScrollView
+                            showsVerticalScrollIndicator={false}
+                            style={{ marginVertical: 20 }}
+                            scrollEventThrottle={16}
+                            bounces={false}>
+                            {dataArray.map((item, index) => (
+                                <View key={index} style={styles.feedItem}>
+                                    <Image source={item.userAvatar} style={styles.avatar} />
+                                    <View style={{ flex: 1 }}>
+                                        <View
+                                            style={{
+                                                flexDirection: 'row',
+                                                justifyContent: 'space-between',
+                                                alignItems: 'center',
+                                            }}>
+                                            <View>
+                                                <Text style={styles.name}>{item.identify}</Text>
+                                                <Text style={styles.timestamp}>12:15</Text>
+                                            </View>
+                                            <Icons.MaterialIcons
+                                                name="more-horiz"
+                                                size={24}
+                                                color="#73788B"
+                                            />
+                                        </View>
+                                        <Text style={styles.post}>{item.postText}</Text>
+                                        {item.postImage && (
+                                            <Image
+                                                src={item.postImage}
+                                                style={styles.postImage}
+                                                resizeMode="cover"
+                                            />
+                                        )}
+                                        <View style={{ flexDirection: 'row' }}>
+                                            <TouchableOpacity
+                                                style={{ marginRight: 16 }}
+                                                onPress={() => alert('pressed')}>
+                                                <Icons.FontAwesome
+                                                    name={'heart-o'}
+                                                    size={24}
+                                                    color="#73788b"
+                                                />
+                                            </TouchableOpacity>
+                                            <TouchableOpacity
+                                                onPress={() => alert('pressed')}
+                                                style={{}}>
+                                                <Icons.Fontisto
+                                                    name={'comment'}
+                                                    size={22}
+                                                    color="#73788B"
+                                                />
+                                            </TouchableOpacity>
+                                        </View>
+                                    </View>
+                                </View>
+                            ))}
+                        </ScrollView>
                     </View>
                 </Animatable.View>
             </SafeAreaView>
@@ -146,6 +250,55 @@ const styles = StyleSheet.create({
         overflow: 'hidden',
         shadowColor: 'rgba(245, 40, 145, 1)',
         elevation: 1,
-        marginHorizontal: '10%'
+        marginHorizontal: '10%',
+    },
+    seperator: {
+        height: 1,
+        width: '70%',
+        backgroundColor: '#ddd',
+        marginVertical: 5,
+        marginLeft: 'auto',
+        marginRight: 'auto',
+    },
+    headerTitle: {
+        fontSize: 20,
+        fontFamily: 'Inter-Bold',
+    },
+    feed: {
+        marginHorizontal: 16,
+    },
+    feedItem: {
+        backgroundColor: theme.bgWhite(0.7),
+        borderRadius: 5,
+        padding: 8,
+        flexDirection: 'row',
+        marginVertical: 8,
+    },
+    avatar: {
+        width: 36,
+        height: 36,
+        borderRadius: 18,
+        marginRight: 16,
+    },
+    name: {
+        fontSize: 16,
+        fontFamily: 'Inter-Light',
+        color: '#454D65',
+    },
+    timestamp: {
+        fontSize: 11,
+        color: '#A4AAC0',
+        marginTop: 4,
+    },
+    post: {
+        marginTop: 16,
+        fontSize: 14,
+        color: '#838899',
+    },
+    postImage: {
+        width: undefined,
+        height: 150,
+        borderRadius: 5,
+        marginVertical: 16,
     },
 });
