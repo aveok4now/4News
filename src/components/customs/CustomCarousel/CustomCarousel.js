@@ -19,9 +19,19 @@ const SPACING = 5;
 
 
 
-export default function CustomCarousel() {
+export default function CustomCarousel({ navigation }) {
     const scrollX = useRef(new Animated.Value(0)).current;
     const NewsImages = [{ key: 'left-spacer' }, ...Images, { key: 'right-spacer' }];
+
+
+    const handleCategoryPressed = () => {
+        try {
+            navigation.navigate('Новости по категориям')
+        } catch (err) {
+            console.warn(err)
+        }
+
+    }
 
     return (
         <View style={styles.container}>
@@ -69,7 +79,7 @@ export default function CustomCarousel() {
                                     opacity,
                                 },
                             ]}>
-                            <TouchableOpacity activeOpacity={0.75}>
+                            <TouchableOpacity activeOpacity={0.75} onPress={handleCategoryPressed}>
                                 <View style={styles.newsInner}>
                                     <Image source={{ uri: item }} style={styles.newsImage} />
 

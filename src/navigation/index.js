@@ -1,9 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-import {
-    DefaultTheme,
-    NavigationContainer,
-} from '@react-navigation/native';
+import { DefaultTheme, NavigationContainer } from '@react-navigation/native';
 
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
@@ -23,6 +20,7 @@ import BottomTabBar from '../components/BottomTabBar';
 import FavoritesScreen from '../screens/FavoritesScreen';
 import FeedBackScreen from '../screens/FeedBackScreen/FeedBackScreen';
 import CommentsScreen from '../screens/CommentsScreen';
+import NewsOverviewScreen from '../screens/NewsOverviewScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -37,8 +35,8 @@ const navTheme = {
 const Navigation = () => {
     const [showOnboarding, setShowOnboarding] = useState(null);
     useEffect(() => {
-        checkIfAlreadyOnboarded()
-    }, [])
+        checkIfAlreadyOnboarded();
+    }, []);
 
     const checkIfAlreadyOnboarded = async () => {
         let onboarded = await getItem('onboarded');
@@ -47,18 +45,35 @@ const Navigation = () => {
         } else {
             setShowOnboarding(true);
         }
-    }
+    };
 
     if (showOnboarding == null) return null;
 
+    const screenOptions = {
+        headerShown: true,
+        headerTransparent: true,
+        headerTintColor: 'white',
+        //headerTitleAlign: 'flex-s',
+        headerTitleStyle: {
+            fontSize: 20,
+            color: 'white',
+            fontFamily: 'Inter-ExtraBold',
+        },
+        headerTitleAlign: 'center',
+    };
 
     return (
         <>
             <NavigationContainer theme={navTheme} style={styles.container}>
                 {/* show header or not */}
-                <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName={showOnboarding ? 'Приветствие' : 'Добро пожаловать !'}>
+                <Stack.Navigator
+                    screenOptions={{ headerShown: false }}
+                    initialRouteName={
+                        showOnboarding ? 'Приветствие' : 'Добро пожаловать !'
+                    }>
                     <Stack.Screen name="Приветствие" component={OnBoardingScreen} />
-                    <Stack.Screen name="Добро пожаловать !"
+                    <Stack.Screen
+                        name="Добро пожаловать !"
                         component={SignInScreen}
                         options={{
                             headerStyle: {
@@ -75,74 +90,53 @@ const Navigation = () => {
                                 color: 'white',
                                 fontWeight: 'bold',
                             },
-                        }} />
+                        }}
+                    />
                     <Stack.Screen name="Splash" component={Splash} />
                     <Stack.Screen name="Search" component={Search} />
                     <Stack.Screen name="NewsViewer" component={NewsViewer} />
                     <Stack.Screen name="FavoritesScreen" component={FavoritesScreen} />
                     <Stack.Screen name="Weather Screen" component={WeatherScreen} />
                     <Stack.Screen name="FeedBack Screen" component={FeedBackScreen} />
-                    <Stack.Screen name="Регистрация"
+                    <Stack.Screen
+                        name="Регистрация"
                         component={SignUpScreen}
-                        options={{
-                            headerShown: true,
-                            headerTransparent: true,
-                            headerTintColor: 'white',
-                            headerStyle: {
-                                backgroundColor: 'transparent',
-                            },
-
-                            headerTitleAlign: 'center',
-                            headerTitleStyle: {
-                                fontSize: 24,
-                                color: 'white',
-                                //fontWeight: 'bold',
-                                fontFamily: "Inter-ExtraBold"
-                            },
-                        }} />
-                    <Stack.Screen name="Подтверждение почты" component={ConfirmEmailScreen} />
-                    <Stack.Screen name="Восстановление пароля"
+                        options={screenOptions}
+                    />
+                    <Stack.Screen
+                        name="Подтверждение почты"
+                        component={ConfirmEmailScreen}
+                    />
+                    <Stack.Screen
+                        name="Восстановление пароля"
                         component={ForgotPasswordScreen}
-                        options={{
-                            headerShown: true,
-                            headerTransparent: true,
-                            headerTintColor: 'white',
-                            headerTitleAlign: 'center',
-                            headerTitleStyle: {
-                                fontSize: 20,
-                                color: 'white',
-                                fontFamily: "Inter-ExtraBold"
-                            }
-                        }} />
-                    {/* <Stack.Screen name="Восстановление пароля" component={NewPasswordScreen} /> */}
-
+                        options={screenOptions}
+                    />
                     <Stack.Screen name="Домашняя страница" component={BottomTabBar} />
-                    <Stack.Screen name="Комментарии" component={CommentsScreen} options={{
-                        headerShown: true,
-                        headerTransparent: true,
-                        headerTintColor: 'white',
-                        //headerTitleAlign: 'flex-s',
-                        headerTitleStyle: {
-                            fontSize: 20,
-                            color: 'white',
-                            fontFamily: "Inter-ExtraBold"
-                        }
-                    }} />
-
-
+                    <Stack.Screen
+                        name="Комментарии"
+                        component={CommentsScreen}
+                        options={{
+                            ...screenOptions,
+                            headerTitleAlign: 'start',
+                        }}
+                    />
+                    <Stack.Screen
+                        name="Новости по категориям"
+                        component={NewsOverviewScreen}
+                        options={screenOptions}
+                    />
                 </Stack.Navigator>
             </NavigationContainer>
         </>
     );
-}
-
-
+};
 
 const styles = StyleSheet.create({
     container: {
         backgroundColor: '#B0ABD9',
         flex: 1,
-    }
-})
+    },
+});
 
 export default Navigation;
