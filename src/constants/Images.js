@@ -9,11 +9,11 @@ export const Images = [
 ];
 
 export const Captions = [
-    'Биткоин',
+    'Bitcoin',
     'IT',
-    'Игры',
-    'Кино',
-    'Погода',
+    'Games',
+    'Movies',
+    'Weather',
     'Apple',
-    'Музыка',
+    'Music',
 ];

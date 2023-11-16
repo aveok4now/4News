@@ -1,6 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
-import { DefaultTheme, NavigationContainer } from '@react-navigation/native';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import {
+    DefaultTheme,
+    NavigationContainer,
+    useNavigation,
+} from '@react-navigation/native';
 
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
@@ -21,6 +25,9 @@ import FavoritesScreen from '../screens/FavoritesScreen';
 import FeedBackScreen from '../screens/FeedBackScreen/FeedBackScreen';
 import CommentsScreen from '../screens/CommentsScreen';
 import NewsOverviewScreen from '../screens/NewsOverviewScreen';
+import { theme } from '../screens/WeatherScreen/theme';
+import { Icons } from '../components/Icons';
+import * as Animatable from 'react-native-animatable'
 
 const Stack = createNativeStackNavigator();
 
@@ -58,8 +65,8 @@ const Navigation = () => {
             fontSize: 20,
             color: 'white',
             fontFamily: 'Inter-ExtraBold',
+            headerTitleAlign: 'center',
         },
-        headerTitleAlign: 'center',
     };
 
     return (
@@ -124,7 +131,26 @@ const Navigation = () => {
                     <Stack.Screen
                         name="Новости по категориям"
                         component={NewsOverviewScreen}
-                        options={screenOptions}
+                        options={({ navigation }) => ({
+                            ...screenOptions,
+                            headerTitle: '',
+                            headerLeft: () => (
+                                <Animatable.View
+                                    animation="flipInX"
+                                >
+                                    <TouchableOpacity
+                                        onPress={() => navigation.goBack()}
+                                        style={{
+                                            padding: 8,
+                                            borderRadius: 100,
+                                            backgroundColor: '#041147',
+                                        }}
+                                    >
+                                        <Icons.AntDesign name="arrowleft" size={30} color="white" />
+                                    </TouchableOpacity>
+                                </Animatable.View>
+                            ),
+                        })}
                     />
                 </Stack.Navigator>
             </NavigationContainer>

@@ -19,18 +19,36 @@ const SPACING = 5;
 
 
 
-export default function CustomCarousel({ navigation }) {
+export default function CustomCarousel({ navigation, apiKeyList, apiKeyIndex }) {
     const scrollX = useRef(new Animated.Value(0)).current;
     const NewsImages = [{ key: 'left-spacer' }, ...Images, { key: 'right-spacer' }];
 
 
-    const handleCategoryPressed = () => {
+
+
+    const handleCategoryPressed = (curCaption) => {
+        switch (curCaption) {
+            case "Weather":
+                navigation.navigate("Weather Screen")
+                break;
+            default:
+                newsByCategoryNavigation(curCaption);
+                break;
+        }
+
+
+    }
+
+    const newsByCategoryNavigation = (curCaption) => {
         try {
-            navigation.navigate('Новости по категориям')
+            navigation.navigate('Новости по категориям', {
+                apiKeyList: apiKeyList,
+                apiKeyIndex: apiKeyIndex,
+                caption: curCaption,
+            })
         } catch (err) {
             console.warn(err)
         }
-
     }
 
     return (
@@ -79,7 +97,7 @@ export default function CustomCarousel({ navigation }) {
                                     opacity,
                                 },
                             ]}>
-                            <TouchableOpacity activeOpacity={0.75} onPress={handleCategoryPressed}>
+                            <TouchableOpacity activeOpacity={0.75} onPress={() => handleCategoryPressed(Captions[index - 1])}>
                                 <View style={styles.newsInner}>
                                     <Image source={{ uri: item }} style={styles.newsImage} />
 

@@ -347,7 +347,7 @@ const HomeScreen = ({ navigation }) => {
                                                     style={{ position: 'absolute', width: '100%', height: '100%' }}
                                                     source={require('../assets/images/newsoverview.jpg')}
                                                 />
-                                                <CustomCarousel navigation={navigation} />
+                                                <CustomCarousel apiKeyList={apiKeyList} apiKeyIndex={apiKeyIndex} navigation={navigation} />
 
                                             </View>
                                         )}
