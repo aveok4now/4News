@@ -27,6 +27,7 @@ import {
 import { theme } from '../WeatherScreen/theme';
 import * as Progress from 'react-native-progress';
 import FloatingButton from '../../components/customs/FloatingButton';
+import CustomCarousel from '../../components/customs/CustomCarousel';
 
 const HomeScreen = ({ navigation }) => {
     // setTimeout(() => {
@@ -221,6 +222,8 @@ const HomeScreen = ({ navigation }) => {
 
     const [showTabBar, setShowTabBar] = useState(true);
 
+
+
     return (
         <>
             {!isConnected ? (
@@ -321,7 +324,6 @@ const HomeScreen = ({ navigation }) => {
                             </Animatable.View>
 
 
-
                             <View style={{ flex: 2 }}>
                                 <View style={{ height: Dimensions.get('window').height * 0.78 }}>
                                     <FlatList
@@ -333,21 +335,28 @@ const HomeScreen = ({ navigation }) => {
                                         refreshing={isRefreshing}
                                         data={Data}
                                         onScroll={event => {
-                                            const currentScrollPosition =
-                                                event.nativeEvent.contentOffset.y;
-                                            setShowFloatingButton(
-                                                currentScrollPosition < prevScrollPosition,
-                                            );
+                                            const currentScrollPosition = event.nativeEvent.contentOffset.y;
+                                            setShowFloatingButton(currentScrollPosition < prevScrollPosition);
                                             setPrevScrollPosition(currentScrollPosition);
                                             setIsScrolledToTop(currentScrollPosition === 0);
                                         }}
+                                        ListHeaderComponent={() => (
+                                            <View style={{ flex: 3 }}>
+                                                <Image
+                                                    blurRadius={200}
+                                                    style={{ position: 'absolute', width: '100%', height: '100%' }}
+                                                    source={require('../assets/images/newsoverview.jpg')}
+                                                />
+                                                <CustomCarousel />
+
+                                            </View>
+                                        )}
                                         renderItem={({ item, index }) => {
                                             return <Card item={item} navigation={navigation} data={Data} />;
                                         }}
                                     />
                                 </View>
                             </View>
-
                             {showFloatingButton && !isScrolledToTop && Data.length > 0 && (
                                 <FloatingButton
                                     onPress={() =>

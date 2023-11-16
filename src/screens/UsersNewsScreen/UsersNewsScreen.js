@@ -5,7 +5,7 @@ export default class UsersNewsScreen extends Component {
     render() {
         return (
             <View style={{ flex: 1 }}>
-                <CustomCarousel />
+                {/* <CustomCarousel /> */}
             </View>
         )
     }

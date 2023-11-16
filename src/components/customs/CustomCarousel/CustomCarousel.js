@@ -7,13 +7,17 @@ import {
     StatusBar,
     FlatList,
     Animated,
+    TouchableOpacity
 } from 'react-native';
 import React, { Component, useRef } from 'react';
 import { Images } from '../../../constants/Images';
+import { Captions } from '../../../constants/Images';
 
 const { width, height } = Dimensions.get('window');
-const ITEM_SIZE = width * 0.6;
+const ITEM_SIZE = width * 0.5;
 const SPACING = 5;
+
+
 
 export default function CustomCarousel() {
     const scrollX = useRef(new Animated.Value(0)).current;
@@ -65,9 +69,13 @@ export default function CustomCarousel() {
                                     opacity,
                                 },
                             ]}>
-                            <View style={styles.newsInner}>
-                                <Image source={{ uri: item }} style={styles.newsImage} />
-                            </View>
+                            <TouchableOpacity activeOpacity={0.75}>
+                                <View style={styles.newsInner}>
+                                    <Image source={{ uri: item }} style={styles.newsImage} />
+
+                                    <Text style={styles.caption}>{Captions[index - 1]}</Text>
+                                </View>
+                            </TouchableOpacity>
                         </Animated.View>
                     );
                 }}
@@ -96,9 +104,18 @@ const styles = StyleSheet.create({
         borderRadius: 24,
         margin: 0,
         marginBottom: 10,
+        marginTop: '15%'
     },
     spacerContainer: {
         height: 200,
         width: width - ITEM_SIZE / 2,
     },
+    caption: {
+        color: "white",
+        fontFamily: "Inter-Light",
+        fontSize: 20,
+        textShadowColor: 'rgba(226, 232, 240, 0.25)',
+        textShadowOffset: { width: 0, height: 5 },
+        textShadowRadius: 4,
+    }
 });
