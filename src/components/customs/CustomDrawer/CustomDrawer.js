@@ -220,7 +220,7 @@ export default function CustomDrawer({
 
     const webPages = [
         'https://www.sevsu.ru/',
-        'https://www.github.com/dtb4life/4News/tree/master/4NEWS/MyNewApp',
+        'https://www.github.com/dtb4life/4News',
     ];
 
     const openLinkInBrowserHandler = index => {

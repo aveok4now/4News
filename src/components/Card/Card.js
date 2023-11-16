@@ -9,6 +9,7 @@ import {
     SafeAreaView,
     ScrollView,
     Dimensions,
+    Pressable,
 } from 'react-native';
 import * as Animatable from 'react-native-animatable';
 import LinearGradient from 'react-native-linear-gradient';
@@ -148,6 +149,16 @@ const Card = ({ item, navigation, data }) => {
         });
     }
 
+    const handleNewsPressed = () => {
+        navigation.navigate('Комментарии', {
+            item: item,
+            defaultImage: defaultImage,
+            navigation: navigation,
+            includesG: includesG,
+            formattedDate: formattedDate
+        });
+    };
+
     return item.title.includes('Removed') ? null : (
         <LinearGradient
             // colors={['#8BC6EC', '#9599E2']}
@@ -164,151 +175,141 @@ const Card = ({ item, navigation, data }) => {
             colors={['rgb(15 23 42)', 'rgb(56 189 248)']}
             start={{ x: 0, y: 0 }}
             end={{ x: 1, y: 1 }}>
-            <Animatable.View
-                style={[
-                    styles.card,
-                    item === data[data.length - 1] ? { marginBottom: '5%' } : null,
-                ]}
-                animation="fadeIn"
-                duration={1500}>
-                <Animatable.Image
-                    animation="fadeInLeft"
-                    duration={1000}
-                    source={{ uri: imageUrl }}
+            <Pressable onPress={handleNewsPressed}>
+                <Animatable.View
                     style={[
-                        styles.image,
-                        {
-                            opacity: imageLoaded ? 1 : 0,
-                        },
-                        styles.shadowProp,
-                        { shadowOpacity: 0.8 },
+                        styles.card,
+                        item === data[data.length - 1] ? { marginBottom: '5%' } : null,
                     ]}
-                    onLoad={handleImageLoad}
-                    resizeMethod="resize"
-                />
-
-                <View style={styles.titleView}>
-                    <Text style={styles.title}>{item.title}</Text>
-                    <Text style={styles.description}>{item.description || ''}</Text>
-                    <View
+                    animation="fadeIn"
+                    duration={1500}>
+                    <Animatable.Image
+                        animation="fadeInLeft"
+                        duration={1000}
+                        source={{ uri: imageUrl }}
                         style={[
-                            styles.podcard,
-                            item.author && item.author.length > 40
-                                ? { flexDirection: 'column', alignItems: 'flex-start' }
-                                : null,
-                        ]}>
-                        <Text style={styles.description}>{item.author || ''} </Text>
-                        <Text style={styles.description}>{formattedDate}</Text>
-                    </View>
-                    <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-                        <TouchableOpacity
-                            disabled={includesG}
-                            style={[
-                                styles.more,
-                                { opacity: includesG ? 0 : 1 },
-                                styles.shadowProp,
-                            ]}
-                            onPress={() =>
-                                navigation.navigate('NewsViewer', {
-                                    url: item.url,
-                                })
-                            }>
-                            <Text style={styles.moreText}>Подробнее</Text>
-                            <Icon
-                                name="arrow-right"
-                                size={20}
-                                color="white"
-                                style={{ marginLeft: 8 }}
-                            />
-                        </TouchableOpacity>
+                            styles.image,
+                            {
+                                opacity: imageLoaded ? 1 : 0,
+                            },
+                            styles.shadowProp,
+                            { shadowOpacity: 0.8 },
+                        ]}
+                        onLoad={handleImageLoad}
+                        resizeMethod="resize"
+                    />
 
+                    <View style={styles.titleView}>
+                        <Text style={styles.title}>{item.title}</Text>
+                        <Text style={styles.description}>{item.description || ''}</Text>
                         <View
                             style={[
-                                styles.more,
-                                {
-                                    //backgroundColor: isLiked ? '#DA2C38' : '#301315',
-                                    paddingHorizontal: 5,
-                                    //paddingVertical: 0,
-                                    width: 'auto',
-                                    flexWrap: 'wrap',
-                                },
-                                styles.shadowProp,
+                                styles.podcard,
+                                item.author && item.author.length > 40
+                                    ? { flexDirection: 'column', alignItems: 'flex-start' }
+                                    : null,
                             ]}>
+                            <Text style={styles.description}>{item.author || ''} </Text>
+                            <Text style={styles.description}>{formattedDate}</Text>
+                        </View>
+                        <View
+                            style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                             <TouchableOpacity
-                                style={{ paddingHorizontal: 10 }}
-                                onPress={handleLike}>
-                                <Icon
-                                    name={isLiked ? 'heart' : 'heart-o'}
-                                    size={24}
-                                    color={isLiked ? 'rgb(220 38 38)' : 'white'}
-                                />
-                            </TouchableOpacity>
-                            <TouchableOpacity
+                                disabled={includesG}
+                                style={[
+                                    styles.more,
+                                    { opacity: includesG ? 0 : 1 },
+                                    styles.shadowProp,
+                                ]}
                                 onPress={() =>
-                                    navigation.navigate('Комментарии', {
-                                        title: item.title,
-                                        item: item
-                                    })
-                                }
-                                style={{ paddingHorizontal: 10 }}>
-                                <Icons.Fontisto
-                                    name={'comment'}
-                                    size={24}
-                                    color="white"
-                                />
-                            </TouchableOpacity>
-                            <TouchableOpacity
-                                style={{ paddingHorizontal: 10 }}
-                                onPress={() =>
-                                    handleShare({
+                                    navigation.navigate('NewsViewer', {
                                         url: item.url,
-                                        newsTitle: item.title,
                                     })
                                 }>
+                                <Text style={styles.moreText}>Подробнее</Text>
                                 <Icon
-                                    name={'send-o'}
-                                    size={24}
+                                    name="arrow-right"
+                                    size={20}
                                     color="white"
+                                    style={{ marginLeft: 8 }}
                                 />
                             </TouchableOpacity>
+
+                            <View
+                                style={[
+                                    styles.more,
+                                    {
+                                        //backgroundColor: isLiked ? '#DA2C38' : '#301315',
+                                        paddingHorizontal: 5,
+                                        //paddingVertical: 0,
+                                        width: 'auto',
+                                        flexWrap: 'wrap',
+                                    },
+                                    styles.shadowProp,
+                                ]}>
+                                <TouchableOpacity
+                                    style={{ paddingHorizontal: 10 }}
+                                    onPress={handleLike}>
+                                    <Icon
+                                        name={isLiked ? 'heart' : 'heart-o'}
+                                        size={24}
+                                        color={isLiked ? 'rgb(220 38 38)' : 'white'}
+                                    />
+                                </TouchableOpacity>
+                                <TouchableOpacity
+                                    onPress={handleNewsPressed}
+                                    style={{ paddingHorizontal: 10 }}>
+                                    <Icons.Fontisto name={'comment'} size={24} color="white" />
+                                </TouchableOpacity>
+                                <TouchableOpacity
+                                    style={{ paddingHorizontal: 10 }}
+                                    onPress={() =>
+                                        handleShare({
+                                            url: item.url,
+                                            newsTitle: item.title,
+                                        })
+                                    }>
+                                    <Icon name={'send-o'} size={24} color="white" />
+                                </TouchableOpacity>
+                            </View>
                         </View>
                     </View>
-                </View>
-                <View style={styles.source}>
-                    <Text style={styles.sourceText}>Источник: {item.source.name}</Text>
-                </View>
-                {showModal ? (
-                    <View style={{ flex: 1 }}>
-                        {/* {Alert.alert()} */}
-                        <ModalPopup
-                            navigation={navigation}
-                            visible={showModal}
-                            route="popup">
-                            <View>
-                                <Text style={styles.popUpText}>
-                                    Чтобы добавлять новости в избранное, пожалуйста, войдите или
-                                    зарегестрируйтесь 🥰
-                                </Text>
-                                <View
-                                    style={{
-                                        flexDirection: 'column',
-                                        justifyContent: 'center',
-                                        marginTop: 15,
-                                    }}>
-                                    <CustomButton text="ОК" onPress={() => onOk()} />
-                                    <CustomButton
-                                        type="Tertiary"
-                                        text="Отмена"
-                                        onPress={() => setShowModal(false)}
-                                    />
-
-                                    {/* <Text style={{ fontFamily: "Inter-ExtraBold" }}>ОК</Text> */}
-                                </View>
-                            </View>
-                        </ModalPopup>
+                    <View style={styles.source}>
+                        <Text style={styles.sourceText}>Источник: {item.source.name}</Text>
                     </View>
-                ) : null}
-            </Animatable.View>
+                    {showModal ? (
+                        <View style={{ flex: 1 }}>
+                            {/* {Alert.alert()} */}
+                            <ModalPopup
+                                navigation={navigation}
+                                visible={showModal}
+                                route="popup">
+                                <View>
+                                    <Text style={styles.popUpText}>
+                                        Чтобы добавлять новости в избранное, пожалуйста, войдите или
+                                        зарегестрируйтесь 🥰
+                                    </Text>
+                                    <View
+                                        style={{
+                                            flexDirection: 'column',
+                                            justifyContent: 'center',
+                                            marginTop: 15,
+                                        }}>
+                                        <CustomButton text="ОК" onPress={() => onOk()} />
+                                        <CustomButton
+                                            type="Tertiary"
+                                            text="Отмена"
+                                            onPress={() => setShowModal(false)}
+                                        />
+
+                                        {/* <Text style={{ fontFamily: "Inter-ExtraBold" }}>ОК</Text> */}
+                                    </View>
+                                </View>
+                            </ModalPopup>
+                        </View>
+                    ) : null}
+                </Animatable.View>
+            </Pressable>
         </LinearGradient>
     );
 };
