@@ -7,7 +7,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { assets } from '../../../react-native.config';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import TypeWriter from 'react-native-typewriter'
-import useUserCredentials from '../../utils/useUserCredentials';
+import useUserCredentials from '../../utils/hooks/useUserCredentials';
 import { resetStatusBarColor, setStatusBarColor } from '../../utils/StatusBarManager';
 
 const { width, height } = Dimensions.get('window');

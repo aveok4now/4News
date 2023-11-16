@@ -18,12 +18,14 @@ export const weatherImages = {
     'Дождь со снегом': require('../screens/assets/animations/weather/rain.json'),
     'Умеренный или холодный дождь с грозой': require('../screens/assets/animations/weather/rain_with_thunder.json'),
     'Туманно': require('../screens/assets/animations/weather/fog.json'),
+    'Небольшой снег': require('../screens/assets/animations/weather/light-snow.json'),
     'other': require('../screens/assets/animations/weather/partly_cloudy.json'),
 }
 
 
 export const weatherTranslations = {
     'Light rain': 'Небольшой дождь',
+    'Light snow': 'Небольшой снег',
     'Partly cloudy': 'Местами облачно',
     'Moderate rain': 'Местами дождь',
     'Patchy rain possible': 'Возможен кратковременный дождь',

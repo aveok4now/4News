@@ -1,14 +1,29 @@
-import { View, Text, Image, StyleSheet, StatusBar } from 'react-native';
+import {
+    View,
+    Text,
+    Image,
+    StyleSheet,
+    StatusBar,
+    TouchableOpacity,
+} from 'react-native';
 import React from 'react';
 import * as Animatable from 'react-native-animatable';
 import { theme } from '../WeatherScreen/theme';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Pressable } from 'react-native';
+import { Icons } from '../../components/Icons';
+import { handleShare } from '../../utils/Share';
 
-export default function CommentsScreen({ route, navigation }) {
-    const { item, defaultImage, includesG, formattedDate } = route.params;
+export default function CommentsScreen({ route }) {
+    const {
+        item,
+        defaultImage,
+        includesG,
+        formattedDate,
+        navigation,
+        imageLoaded,
+    } = route?.params;
 
-    console.log(includesG);
     const handleImagePressed = () => {
         try {
             if (includesG) return;
@@ -44,19 +59,24 @@ export default function CommentsScreen({ route, navigation }) {
                             flexDirection: 'row',
                             justifyContent: 'center',
                             alignItems: 'center',
+                            marginHorizontal: '2%',
                         }}>
                         <Pressable onPress={handleImagePressed}>
                             <View
                                 style={{
-                                    width: 70,
-                                    height: 70,
+                                    width: 65,
+                                    height: 65,
                                 }}>
                                 <Animatable.View
                                     animation="slideInLeft"
                                     duration={1000}
                                     style={styles.imageContainer}>
                                     <Image
-                                        source={{ uri: item.urlToImage || defaultImage }}
+                                        source={{
+                                            uri: imageLoaded
+                                                ? item.urlToImage || defaultImage
+                                                : defaultImage,
+                                        }}
                                         style={{
                                             width: '100%',
                                             height: '100%',
@@ -73,22 +93,40 @@ export default function CommentsScreen({ route, navigation }) {
                                     fontFamily: 'Inter-ExtraBold',
                                     textAlign: 'justify',
                                     paddingHorizontal: 15,
-                                    fontSize: 20,
+                                    fontSize: 18,
                                     letterSpacing: -1,
                                 }}>
                                 {item.title}
                             </Text>
-                            <Text
+
+                            <View
                                 style={{
-                                    color: 'white',
-                                    opacity: 0.8,
-                                    fontFamily: 'Inter-Light',
-                                    textAlign: 'justify',
-                                    paddingHorizontal: 15,
-                                    fontSize: 14,
+                                    flexDirection: 'row',
+                                    justifyContent: 'space-between',
+                                    paddingHorizontal: 3,
                                 }}>
-                                {formattedDate}
-                            </Text>
+                                <Text
+                                    style={{
+                                        color: 'white',
+                                        opacity: 0.8,
+                                        fontFamily: 'Inter-Light',
+                                        textAlign: 'justify',
+                                        paddingHorizontal: 15,
+                                        fontSize: 14,
+                                    }}>
+                                    {formattedDate}
+                                </Text>
+                                <TouchableOpacity
+                                    style={{ paddingHorizontal: 10 }}
+                                    onPress={() =>
+                                        handleShare({
+                                            url: item.url,
+                                            newsTitle: item.title,
+                                        })
+                                    }>
+                                    <Icons.FontAwesome name={'send-o'} size={24} color="white" />
+                                </TouchableOpacity>
+                            </View>
                         </Animatable.View>
                     </View>
                 </Animatable.View>
@@ -108,7 +146,6 @@ const styles = StyleSheet.create({
         overflow: 'hidden',
         shadowColor: 'rgba(245, 40, 145, 1)',
         elevation: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
+        marginHorizontal: '10%'
     },
 });

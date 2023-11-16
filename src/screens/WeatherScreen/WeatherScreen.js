@@ -29,7 +29,7 @@ import { fetchLocations, fetchWeatherForecast } from '../../api/weather';
 import { weatherImages, weatherTranslations } from '../../constants';
 import * as Progress from 'react-native-progress';
 import { getItem, setItem } from '../../utils/asyncStorage';
-import useUserCredentials from '../../utils/useUserCredentials';
+import useUserCredentials from '../../utils/hooks/useUserCredentials';
 import SQLite from 'react-native-sqlite-storage';
 
 

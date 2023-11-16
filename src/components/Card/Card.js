@@ -18,10 +18,10 @@ import { assets } from '../../../react-native.config';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import ModalPopup from '../customs/CustomModal/CustomModal';
 import CustomButton from '../customs/CustomButton';
-import useUserCredentials from '../../utils/useUserCredentials';
+import useUserCredentials from '../../utils/hooks/useUserCredentials';
 import { Icons } from '../Icons';
 import { theme } from '../../screens/WeatherScreen/theme';
-import Share from 'react-native-share';
+import { handleShare } from '../../utils/Share';
 
 const Card = ({ item, navigation, data }) => {
     const defaultImage =
@@ -91,18 +91,6 @@ const Card = ({ item, navigation, data }) => {
         }
     };
 
-    const handleShare = async ({ url, newsTitle }) => {
-        console.log(url);
-        const options = {
-            title: 'Поделиться новостью',
-            message: `📰 Новость с приложения 4News\n\n${newsTitle}\n\n`,
-            url: url,
-        };
-        Share.open(options)
-            .then(res => console.log(res))
-            .catch(err => console.log(err));
-    };
-
     useEffect(() => {
         const checkLiked = async () => {
             const likedNewsItems = await AsyncStorage.getItem('likedNewsItems');
@@ -151,11 +139,13 @@ const Card = ({ item, navigation, data }) => {
 
     const handleNewsPressed = () => {
         navigation.navigate('Комментарии', {
+            navigation,
             item: item,
             defaultImage: defaultImage,
-            navigation: navigation,
+            //navigation: navigation,
             includesG: includesG,
-            formattedDate: formattedDate
+            formattedDate: formattedDate,
+            imageLoaded: imageLoaded
         });
     };
 
@@ -175,14 +165,15 @@ const Card = ({ item, navigation, data }) => {
             colors={['rgb(15 23 42)', 'rgb(56 189 248)']}
             start={{ x: 0, y: 0 }}
             end={{ x: 1, y: 1 }}>
-            <Pressable onPress={handleNewsPressed}>
-                <Animatable.View
-                    style={[
-                        styles.card,
-                        item === data[data.length - 1] ? { marginBottom: '5%' } : null,
-                    ]}
-                    animation="fadeIn"
-                    duration={1500}>
+
+            <Animatable.View
+                style={[
+                    styles.card,
+                    item === data[data.length - 1] ? { marginBottom: '5%' } : null,
+                ]}
+                animation="fadeIn"
+                duration={1500}>
+                <Pressable onPress={handleNewsPressed}>
                     <Animatable.Image
                         animation="fadeInLeft"
                         duration={1000}
@@ -198,118 +189,117 @@ const Card = ({ item, navigation, data }) => {
                         onLoad={handleImageLoad}
                         resizeMethod="resize"
                     />
+                </Pressable>
+                <View style={styles.titleView}>
+                    <Text style={styles.title}>{item.title}</Text>
+                    <Text style={styles.description}>{item.description || ''}</Text>
+                    <View
+                        style={[
+                            styles.podcard,
+                            item.author && item.author.length > 40
+                                ? { flexDirection: 'column', alignItems: 'flex-start' }
+                                : null,
+                        ]}>
+                        <Text style={styles.description}>{item.author || ''} </Text>
+                        <Text style={styles.description}>{formattedDate}</Text>
+                    </View>
+                    <View
+                        style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                        <TouchableOpacity
+                            disabled={includesG}
+                            style={[
+                                styles.more,
+                                { opacity: includesG ? 0 : 1 },
+                                styles.shadowProp,
+                            ]}
+                            onPress={() =>
+                                navigation.navigate('NewsViewer', {
+                                    url: item.url,
+                                })
+                            }>
+                            <Text style={styles.moreText}>Подробнее</Text>
+                            <Icon
+                                name="arrow-right"
+                                size={20}
+                                color="white"
+                                style={{ marginLeft: 8 }}
+                            />
+                        </TouchableOpacity>
 
-                    <View style={styles.titleView}>
-                        <Text style={styles.title}>{item.title}</Text>
-                        <Text style={styles.description}>{item.description || ''}</Text>
                         <View
                             style={[
-                                styles.podcard,
-                                item.author && item.author.length > 40
-                                    ? { flexDirection: 'column', alignItems: 'flex-start' }
-                                    : null,
+                                styles.more,
+                                {
+                                    //backgroundColor: isLiked ? '#DA2C38' : '#301315',
+                                    paddingHorizontal: 5,
+                                    //paddingVertical: 0,
+                                    width: 'auto',
+                                    flexWrap: 'wrap',
+                                },
+                                styles.shadowProp,
                             ]}>
-                            <Text style={styles.description}>{item.author || ''} </Text>
-                            <Text style={styles.description}>{formattedDate}</Text>
-                        </View>
-                        <View
-                            style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                             <TouchableOpacity
-                                disabled={includesG}
-                                style={[
-                                    styles.more,
-                                    { opacity: includesG ? 0 : 1 },
-                                    styles.shadowProp,
-                                ]}
-                                onPress={() =>
-                                    navigation.navigate('NewsViewer', {
-                                        url: item.url,
-                                    })
-                                }>
-                                <Text style={styles.moreText}>Подробнее</Text>
+                                style={{ paddingHorizontal: 10 }}
+                                onPress={handleLike}>
                                 <Icon
-                                    name="arrow-right"
-                                    size={20}
-                                    color="white"
-                                    style={{ marginLeft: 8 }}
+                                    name={isLiked ? 'heart' : 'heart-o'}
+                                    size={24}
+                                    color={isLiked ? 'rgb(220 38 38)' : 'white'}
                                 />
                             </TouchableOpacity>
-
-                            <View
-                                style={[
-                                    styles.more,
-                                    {
-                                        //backgroundColor: isLiked ? '#DA2C38' : '#301315',
-                                        paddingHorizontal: 5,
-                                        //paddingVertical: 0,
-                                        width: 'auto',
-                                        flexWrap: 'wrap',
-                                    },
-                                    styles.shadowProp,
-                                ]}>
-                                <TouchableOpacity
-                                    style={{ paddingHorizontal: 10 }}
-                                    onPress={handleLike}>
-                                    <Icon
-                                        name={isLiked ? 'heart' : 'heart-o'}
-                                        size={24}
-                                        color={isLiked ? 'rgb(220 38 38)' : 'white'}
+                            <TouchableOpacity
+                                onPress={handleNewsPressed}
+                                style={{ paddingHorizontal: 10 }}>
+                                <Icons.Fontisto name={'comment'} size={24} color="white" />
+                            </TouchableOpacity>
+                            <TouchableOpacity
+                                style={{ paddingHorizontal: 10 }}
+                                onPress={() =>
+                                    handleShare({
+                                        url: item.url,
+                                        newsTitle: item.title,
+                                    })
+                                }>
+                                <Icon name={'send-o'} size={24} color="white" />
+                            </TouchableOpacity>
+                        </View>
+                    </View>
+                </View>
+                <View style={styles.source}>
+                    <Text style={styles.sourceText}>Источник: {item.source.name}</Text>
+                </View>
+                {showModal ? (
+                    <View style={{ flex: 1 }}>
+                        {/* {Alert.alert()} */}
+                        <ModalPopup
+                            navigation={navigation}
+                            visible={showModal}
+                            route="popup">
+                            <View>
+                                <Text style={styles.popUpText}>
+                                    Чтобы добавлять новости в избранное, пожалуйста, войдите или
+                                    зарегестрируйтесь 🥰
+                                </Text>
+                                <View
+                                    style={{
+                                        flexDirection: 'column',
+                                        justifyContent: 'center',
+                                        marginTop: 15,
+                                    }}>
+                                    <CustomButton text="ОК" onPress={() => onOk()} />
+                                    <CustomButton
+                                        type="Tertiary"
+                                        text="Отмена"
+                                        onPress={() => setShowModal(false)}
                                     />
-                                </TouchableOpacity>
-                                <TouchableOpacity
-                                    onPress={handleNewsPressed}
-                                    style={{ paddingHorizontal: 10 }}>
-                                    <Icons.Fontisto name={'comment'} size={24} color="white" />
-                                </TouchableOpacity>
-                                <TouchableOpacity
-                                    style={{ paddingHorizontal: 10 }}
-                                    onPress={() =>
-                                        handleShare({
-                                            url: item.url,
-                                            newsTitle: item.title,
-                                        })
-                                    }>
-                                    <Icon name={'send-o'} size={24} color="white" />
-                                </TouchableOpacity>
-                            </View>
-                        </View>
-                    </View>
-                    <View style={styles.source}>
-                        <Text style={styles.sourceText}>Источник: {item.source.name}</Text>
-                    </View>
-                    {showModal ? (
-                        <View style={{ flex: 1 }}>
-                            {/* {Alert.alert()} */}
-                            <ModalPopup
-                                navigation={navigation}
-                                visible={showModal}
-                                route="popup">
-                                <View>
-                                    <Text style={styles.popUpText}>
-                                        Чтобы добавлять новости в избранное, пожалуйста, войдите или
-                                        зарегестрируйтесь 🥰
-                                    </Text>
-                                    <View
-                                        style={{
-                                            flexDirection: 'column',
-                                            justifyContent: 'center',
-                                            marginTop: 15,
-                                        }}>
-                                        <CustomButton text="ОК" onPress={() => onOk()} />
-                                        <CustomButton
-                                            type="Tertiary"
-                                            text="Отмена"
-                                            onPress={() => setShowModal(false)}
-                                        />
 
-                                        {/* <Text style={{ fontFamily: "Inter-ExtraBold" }}>ОК</Text> */}
-                                    </View>
+                                    {/* <Text style={{ fontFamily: "Inter-ExtraBold" }}>ОК</Text> */}
                                 </View>
-                            </ModalPopup>
-                        </View>
-                    ) : null}
-                </Animatable.View>
-            </Pressable>
+                            </View>
+                        </ModalPopup>
+                    </View>
+                ) : null}
+            </Animatable.View>
         </LinearGradient>
     );
 };
