@@ -532,7 +532,7 @@ export default function CustomDrawer({
                     borderRadius: showMenu ? 15 : 0,
                     // elevation: showMenu ? 35 : 0,
                     // shadowOpacity: showMenu ? 1 : 0,
-                    elevation: elevation,
+                    elevation: showMenu ? elevation : 0,
                     borderWidth: showBorder && showMenu ? 0.25 : 0,
                     borderColor: showBorder && showMenu ? 'black' : 'null',
                 }}>
