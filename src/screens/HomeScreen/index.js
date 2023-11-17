@@ -336,6 +336,7 @@ const HomeScreen = ({ navigation }) => {
                                         data={Data}
                                         onScroll={event => {
                                             const currentScrollPosition = event.nativeEvent.contentOffset.y;
+                                            console.log(currentScrollPosition)
                                             setShowFloatingButton(currentScrollPosition < prevScrollPosition);
                                             setPrevScrollPosition(currentScrollPosition);
                                             setIsScrolledToTop(currentScrollPosition === 0);
@@ -360,8 +361,8 @@ const HomeScreen = ({ navigation }) => {
                             {showFloatingButton && !isScrolledToTop && Data.length > 0 && (
                                 <FloatingButton
                                     onPress={() =>
-                                        flatListRef.current.scrollToIndex({
-                                            index: 0,
+                                        flatListRef.current.scrollToOffset({
+                                            offset: 0,
                                             animated: true,
                                         })
                                     }

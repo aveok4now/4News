@@ -121,7 +121,7 @@ const Card = ({ item, navigation, data }) => {
 
     let formattedDate;
     if (diffInDays < 1) {
-        formattedDate = 'Сегодня в' + time;
+        formattedDate = 'Сегодня в ' + time;
     } else if (diffInDays < 2) {
         formattedDate = 'Вчера в ' + time;
     } else if (diffInDays < 3) {

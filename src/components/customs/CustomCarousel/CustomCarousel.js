@@ -12,7 +12,6 @@ import {
 import React, { Component, useRef } from 'react';
 import { Images, Captions, ruCaptions } from '../../../constants/Images';
 
-
 const { width, height } = Dimensions.get('window');
 const ITEM_SIZE = width * 0.5;
 const SPACING = 5;
@@ -23,7 +22,7 @@ export default function CustomCarousel({ navigation, apiKeyList, apiKeyIndex }) 
 
     const handleCategoryPressed = curCaption => {
         switch (curCaption) {
-            case 'Weather':
+            case 'weather':
                 navigation.navigate('Weather Screen');
                 break;
             default:
