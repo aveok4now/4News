@@ -69,6 +69,8 @@ export default function FavoritesScreen({ navigation }) {
             backgroundColor="#5b86e5"
             elevation={35}
             fgColor="#5b86e5"
+            letterSpacing={1}
+            fontFamily='Inter-ExtraBold'
             navigation={navigation}>
 
             <Animatable.View animation="fadeIn" duration={1000}>

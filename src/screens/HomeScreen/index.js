@@ -278,6 +278,8 @@ const HomeScreen = ({ navigation }) => {
                         showSearch="true"
                         //backgroundColor="#4361ee"
                         backgroundColor="#0ea5e9"
+                        fontFamily='Inter-ExtraBold'
+                        letterSpacing={1}
                         navigation={navigation}>
                         <View style={{ flex: 1 }}>
                             {/* <Header navigation={navigation} /> */}

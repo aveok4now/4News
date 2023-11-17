@@ -88,7 +88,7 @@ export default function UsersNewsScreen() {
                     style={{ position: 'absolute', width: '100%', height: '100%' }}
                     source={require('../assets/images/newsoverview.jpg')}
                 />
-                <CustomDrawer>
+                <CustomDrawer showBorder={true} type="Сообщество" fontFamily='Inter-ExtraBold' letterSpacing={1}>
                     <View style={styles.cardContainer}>
                         <FlatList
                             onRefresh={onRefresh}

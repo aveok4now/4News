@@ -42,6 +42,9 @@ export default function CustomDrawer({
     showSearch,
     navigation,
     elevation = 0,
+    showBorder = false,
+    fontFamily = 'Inter-Light',
+    letterSpacing = 1,
 }) {
     let identify = useUserCredentials();
     let userEmail = useUserEmail();
@@ -61,14 +64,14 @@ export default function CustomDrawer({
     const [rating, setRating] = useState(1);
     const animatedValue = useRef(new Animated.Value(1)).current;
 
-    const rate = async (star) => {
+    const rate = async star => {
         //
 
         try {
             const db = await SQLite.openDatabase({ name: 'news.db', location: 1 });
             let userId = null;
 
-            if (identify !== "Гость") {
+            if (identify !== 'Гость') {
                 const query = `SELECT userId FROM users WHERE userLogin = ?`;
                 const queryArgs = [identify];
                 const [result] = await db.executeSql(query, queryArgs);
@@ -83,12 +86,15 @@ export default function CustomDrawer({
             if (userId) {
                 const queryRating = `SELECT COUNT(*) AS count FROM Rates WHERE userID = ?`;
                 const queryArgsRating = [userId];
-                const [resultRating] = await db.executeSql(queryRating, queryArgsRating);
+                const [resultRating] = await db.executeSql(
+                    queryRating,
+                    queryArgsRating,
+                );
 
                 if (resultRating.rows.length > 0) {
                     const count = resultRating.rows.item(0).count;
                     if (count > 0) {
-                        db.transaction((tx) => {
+                        db.transaction(tx => {
                             tx.executeSql(
                                 `
                                 UPDATE Rates
@@ -99,15 +105,15 @@ export default function CustomDrawer({
                                 () => {
                                     // Обработка успешного обновления рейтинга
                                 },
-                                (error) => {
+                                error => {
                                     // Обработка ошибки выполнения транзакции
                                     console.error(error);
-                                }
+                                },
                             );
                         });
                     } else {
                         // Если запись не существует, вставьте новую запись
-                        db.transaction((tx) => {
+                        db.transaction(tx => {
                             tx.executeSql(
                                 `
                                 INSERT INTO Rates (userID, rating)
@@ -117,10 +123,10 @@ export default function CustomDrawer({
                                 () => {
                                     // Обработка успешной вставки рейтинга
                                 },
-                                (error) => {
+                                error => {
                                     // Обработка ошибки выполнения транзакции
                                     console.error(error);
-                                }
+                                },
                             );
                         });
                     }
@@ -131,7 +137,6 @@ export default function CustomDrawer({
             console.error(error);
         }
     };
-
 
     const checkAndSetRating = async () => {
         try {
@@ -198,8 +203,6 @@ export default function CustomDrawer({
     } else {
         menu.push({ icon: 'logout', title: 'Выход' });
     }
-
-
 
     const iconMap = {
         Университет: { icon: <Icon size={24} />, color: 'white' },
@@ -530,6 +533,8 @@ export default function CustomDrawer({
                     // elevation: showMenu ? 35 : 0,
                     // shadowOpacity: showMenu ? 1 : 0,
                     elevation: elevation,
+                    borderWidth: showBorder && showMenu ? 0.25 : 0,
+                    borderColor: showBorder && showMenu ? 'black' : 'null',
                 }}>
                 <View
                     style={[
@@ -539,8 +544,7 @@ export default function CustomDrawer({
                             borderTopLeftRadius: showMenu ? 15 : 0,
                         },
                     ]}>
-                    <TouchableOpacity
-                        onPress={toggleMenu}>
+                    <TouchableOpacity onPress={toggleMenu}>
                         {showMenu ? (
                             <Icon4
                                 name={'close'}
@@ -558,13 +562,20 @@ export default function CustomDrawer({
                         )}
                     </TouchableOpacity>
                     <View style={styles.headerTextContainer}>
-                        <Text style={styles.text}>{type}</Text>
+                        <Text
+                            style={[
+                                styles.text,
+                                { fontFamily: fontFamily, letterSpacing: letterSpacing },
+                            ]}>
+                            {type}
+                        </Text>
                     </View>
-                    {showSearch == 'true' && (
-                        <TouchableOpacity
-                            onPress={() => navigation.navigate('Search')}>
+                    {showSearch == 'true' ? (
+                        <TouchableOpacity onPress={() => navigation.navigate('Search')}>
                             <Icon name="search" size={24} color="white" />
                         </TouchableOpacity>
+                    ) : (
+                        <View style={{ width: 24, height: 24 }}></View>
                     )}
                 </View>
                 {children}
@@ -581,25 +592,23 @@ const styles = StyleSheet.create({
     header: {
         paddingHorizontal: 10,
         paddingVertical: 15,
-        display: 'flex',
         flexDirection: 'row',
-        justifyContent: 'space-evenly',
+        justifyContent: 'space-between',
         // borderWidth: 0.25,
         // borderColor: '#F3FAE1',
         alignItems: 'center',
     },
     headerTextContainer: {
         flex: 1,
-        flexDirection: 'row',
+        //flexDirection: 'row',
         justifyContent: 'center',
         alignItems: 'center',
+        alignSelf: 'center',
     },
     text: {
         fontSize: 20,
-        fontWeight: '500',
         color: 'white',
-        letterSpacing: 1,
-        fontFamily: 'Inter-Light',
         textAlign: 'center',
+        alignSelf: 'center',
     },
 });
