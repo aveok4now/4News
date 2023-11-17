@@ -346,7 +346,6 @@ const HomeScreen = ({ navigation }) => {
                                             data={Data}
                                             onScroll={event => {
                                                 const currentScrollPosition = event.nativeEvent.contentOffset.y;
-                                                console.log(currentScrollPosition)
                                                 setShowFloatingButton(currentScrollPosition < prevScrollPosition);
                                                 setPrevScrollPosition(currentScrollPosition);
                                                 setIsScrolledToTop(currentScrollPosition === 0);

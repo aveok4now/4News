@@ -67,24 +67,15 @@ const Card = ({ item, navigation, data }) => {
                     JSON.stringify(parsedSavedNewsItems),
                 );
                 console.log('saved');
-            }
-            const likedNewsItems = await AsyncStorage.getItem('likedNewsItems');
-            const parsedLikedNewsItems = JSON.parse(likedNewsItems) || [];
-
-            if (isLiked) {
-                const updatedLikedNewsItems = parsedLikedNewsItems.filter(
-                    likedItem => likedItem.url !== item.url,
-                );
-                await AsyncStorage.setItem(
-                    'likedNewsItems',
-                    JSON.stringify(updatedLikedNewsItems),
-                );
             } else {
-                parsedLikedNewsItems.push(item);
-                await AsyncStorage.setItem(
-                    'likedNewsItems',
-                    JSON.stringify(parsedLikedNewsItems),
+                const updatedSavedNewsItems = parsedSavedNewsItems.filter(
+                    savedItem => savedItem.url !== item.url,
                 );
+                await AsyncStorage.setItem(
+                    'savedNewsItems',
+                    JSON.stringify(updatedSavedNewsItems),
+                );
+                console.log('removed');
             }
         } catch (error) {
             console.error('Error saving news item:', error);
@@ -93,16 +84,16 @@ const Card = ({ item, navigation, data }) => {
 
     useEffect(() => {
         const checkLiked = async () => {
-            const likedNewsItems = await AsyncStorage.getItem('likedNewsItems');
-            const parsedLikedNewsItems = JSON.parse(likedNewsItems) || [];
-            const isAlreadyLiked = parsedLikedNewsItems.some(
-                likedItem => likedItem.url === item.url,
+            const savedNewsItems = await AsyncStorage.getItem('savedNewsItems');
+            const parsedSavedNewsItems = JSON.parse(savedNewsItems) || [];
+            const isAlreadySaved = parsedSavedNewsItems.some(
+                savedItem => savedItem.url === item.url,
             );
-            setIsLiked(isAlreadyLiked);
+            setIsLiked(isAlreadySaved);
         };
 
         checkLiked();
-    }, []);
+    }, [isLiked]);
 
     const onOk = () => {
         navigation.navigate('Добро пожаловать !', { status: 'logout' });
@@ -151,17 +142,6 @@ const Card = ({ item, navigation, data }) => {
 
     return item.title.includes('Removed') ? null : (
         <LinearGradient
-            // colors={['#8BC6EC', '#9599E2']}
-            // start={{ x: 0, y: 0 }}
-            // end={{ x: 1, y: 1 }}
-            // colors={['#D8B5FF', '#1EAE98']}
-            // start={{ x: 0, y: 0 }}
-            // end={{ x: 1, y: 1 }}
-            // colors={['#4E65FF', '#92EFFD']}
-            // start={{ x: 0, y: 0 }}
-            // end={{ x: 1, y: 1 }}
-            //colors={['#764BA2', '#667EEA']}
-            //colors={['rgb(59, 130, 246)', 'rgb(37, 99, 235)']}
             colors={['rgb(15 23 42)', 'rgb(56 189 248)']}
             start={{ x: 0, y: 0 }}
             end={{ x: 1, y: 1 }}>
@@ -169,7 +149,8 @@ const Card = ({ item, navigation, data }) => {
             <Animatable.View
                 style={[
                     styles.card,
-                    item === data[data.length - 1] ? { marginBottom: '5%' } : null,
+                    item === data[data.length - 1] && data.length !== 1 ? { marginBottom: '13%' } : null,
+
                 ]}
                 animation="fadeIn"
                 duration={1500}>
