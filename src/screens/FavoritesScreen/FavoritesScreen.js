@@ -6,6 +6,7 @@ import {
     StyleSheet,
     Dimensions,
     Button,
+    Image
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Card from '../../components/Card';
@@ -64,53 +65,64 @@ export default function FavoritesScreen({ navigation }) {
     };
 
     return identify !== 'Гость' ? (
-        <CustomDrawer
-            type="Избранные новости"
-            backgroundColor="#5b86e5"
-            elevation={35}
-            fgColor="#5b86e5"
-            navigation={navigation}>
 
-            <Animatable.View animation="fadeIn" duration={1000}>
-                <FlatList
-                    showsVerticalScrollIndicator={false}
-                    onRefresh={onRefresh}
-                    refreshing={isRefreshing}
-                    data={favorites}
-                    keyExtractor={item => item.url}
-                    renderItem={({ item }) => {
-                        return (
-                            <>
-                                <Card item={item} navigation={navigation} data={favorites} />
-                                <View>
-                                    <CustomButton
-                                        text="Удалить"
-                                        onPress={() => handleDelete(item.url)}></CustomButton>
-                                </View>
-                            </>
-                        );
-                    }}
-                />
-                {favorites.length === 0 && (
-                    <View style={{ justifyContent: 'center', alignItems: 'center', marginTop: '30%' }}>
-                        <Text style={{ fontFamily: 'Inter-Light', fontSize: 20 }}>
-                            Здесь будут появляться избранные новости, нажимайте на кнопку{' '}
-                            <Icon name={'heart-o'} size={20} color="white" /> , чтобы
-                            сохранить их!
-                        </Text>
-                        <View>
-                            <LottieView
-                                style={styles.lottie}
-                                source={require('../assets/animations/interests.json')}
-                                autoPlay
-                                loop
-                            />
+        <View style={{ flex: 1 }}>
+            <Image
+                blurRadius={200}
+                style={{ position: 'absolute', width: '100%', height: '100%' }}
+                source={require('../assets/images/backgr.jpg')}
+            />
+
+            <CustomDrawer
+                type="Избранное"
+                //backgroundColor="#5b86e5"
+                //fgColor="#5b86e5"
+                showBorder={true}
+                letterSpacing={1}
+                fontFamily='Inter-ExtraBold'
+                navigation={navigation}>
+
+                <Animatable.View animation="fadeIn" duration={1000}>
+                    <FlatList
+                        showsVerticalScrollIndicator={false}
+                        onRefresh={onRefresh}
+                        refreshing={isRefreshing}
+                        data={favorites}
+                        keyExtractor={item => item.url}
+                        renderItem={({ item }) => {
+                            return (
+                                <>
+                                    <Card item={item} navigation={navigation} data={favorites} />
+                                    <View>
+                                        <CustomButton
+                                            text="Удалить"
+                                            onPress={() => handleDelete(item.url)}></CustomButton>
+                                    </View>
+                                </>
+                            );
+                        }}
+                    />
+                    {favorites.length === 0 && (
+                        <View style={{ justifyContent: 'center', alignItems: 'center', marginTop: '30%' }}>
+                            <Text style={{ fontFamily: 'Inter-Light', fontSize: 20 }}>
+                                Здесь будут появляться избранные новости, нажимайте на кнопку{' '}
+                                <Icon name={'heart-o'} size={20} color="white" /> , чтобы
+                                сохранить их!
+                            </Text>
+                            <View>
+                                <LottieView
+                                    style={styles.lottie}
+                                    source={require('../assets/animations/interests.json')}
+                                    autoPlay
+                                    loop
+                                />
+                            </View>
                         </View>
-                    </View>
-                )}
+                    )}
 
-            </Animatable.View>
-        </CustomDrawer>
+                </Animatable.View>
+            </CustomDrawer>
+        </View>
     ) : (
         <>
             <CustomDrawer fgColor="#5b86e5" navigation={navigation} elevation={35}>
