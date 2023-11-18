@@ -42,6 +42,7 @@ React Native News App project, bootstrapped using [`@react-native-community/cli`
     - [x] Search Functionality
     - [x] Nothing found info
   - [ ] Favorites Screen
+    - [x] Saving News in database 
     - [x] Not Registered Block
     - [x] Deleting Favorites Functionality
     - [x] Favorites List Refresh (Auto & Manual)
@@ -49,10 +50,12 @@ React Native News App project, bootstrapped using [`@react-native-community/cli`
     - [ ] Fetching Users Favorites data from Database
   - [ ] Comments Screen
     - [x] News Data (image, title, publication date)
-    - [x] Users comments  
+    - [x] Users comments UI
   - [ ] Community Screen
     - [ ] Users News w/ comments, likes, date, etc. 
+      - [x] UI
     - [ ] News Posting Functionality
+      - [x] Text Posts
 - [x] Custom Drawer
   - [x] University Link
   - [x] View commit Link
