@@ -1,14 +1,28 @@
-import { StatusBar, FlatList, StyleSheet, View, Image } from 'react-native';
-import React, { useState } from 'react';
+import {
+    StatusBar,
+    FlatList,
+    StyleSheet,
+    View,
+    Image,
+    TextInput,
+    TouchableOpacity,
+    Platform,
+} from 'react-native';
+import React, { useCallback, useState } from 'react';
 import userImage from '../../../assets/images/user.jpg';
 import useUserCredentials from '../../utils/hooks/useUserCredentials';
 import defaultImage from '../assets/images/newsoverview.jpg';
 import CustomPostCard from '../../components/customs/CustomPostCard';
 import CustomDrawer from '../../components/customs/CustomDrawer';
+import CustomInput from '../../components/customs/CustomInput';
+import { theme } from '../WeatherScreen/theme';
+import { Icons } from '../../components/Icons/Icons';
 
 export default function UsersNewsScreen() {
     let identify = useUserCredentials();
-    const [isRefreshing, setIsRefreshing] = useState(false)
+    const [isRefreshing, setIsRefreshing] = useState(false);
+    const [postText, setPostText] = useState(null);
+
 
     const Posts = [
         {
@@ -20,7 +34,7 @@ export default function UsersNewsScreen() {
             liked: true,
             likes: 6,
             comments: 5,
-            userImage: userImage
+            userImage: userImage,
         },
         {
             id: '2',
@@ -31,7 +45,7 @@ export default function UsersNewsScreen() {
             liked: false,
             likes: 4,
             comments: 0,
-            userImage: userImage
+            userImage: userImage,
         },
         {
             id: '3',
@@ -42,7 +56,7 @@ export default function UsersNewsScreen() {
             liked: false,
             likes: 7,
             comments: '1',
-            userImage: userImage
+            userImage: userImage,
         },
         {
             id: '4',
@@ -53,7 +67,7 @@ export default function UsersNewsScreen() {
             liked: true,
             likes: 16,
             comments: '7',
-            userImage: userImage
+            userImage: userImage,
         },
         {
             id: '5',
@@ -64,19 +78,42 @@ export default function UsersNewsScreen() {
             liked: false,
             likes: 6,
             comments: '3',
-            userImage: userImage
+            userImage: userImage,
         },
-    ]
+    ];
+
+    const [UsersPosts, setUsersPosts] = useState(Posts);
 
     //TODO
     const getPosts = async () => {
-        setIsRefreshing(false)
-    }
+        setIsRefreshing(false);
+    };
 
     const onRefresh = () => {
         setIsRefreshing(true);
         getPosts();
     };
+
+
+
+    const handleSendPost = () => {
+        const newPost = {
+            id: String(UsersPosts.length + 1),
+            userName: identify,
+            postTime: 'Только что',
+            post: postText,
+            postImage: 'none',
+            liked: false,
+            likes: 0,
+            comments: 0,
+            userImage: userImage,
+        };
+
+        const updatedPosts = [newPost, ...UsersPosts];
+        setPostText('');
+        setUsersPosts(updatedPosts);
+    };
+
 
 
     return (
@@ -88,7 +125,11 @@ export default function UsersNewsScreen() {
                     style={{ position: 'absolute', width: '100%', height: '100%' }}
                     source={require('../assets/images/newsoverview.jpg')}
                 />
-                <CustomDrawer showBorder={true} type="Сообщество" fontFamily='Inter-ExtraBold' letterSpacing={1}>
+                <CustomDrawer
+                    showBorder={true}
+                    type="Сообщество"
+                    fontFamily="Inter-ExtraBold"
+                    letterSpacing={1}>
                     <View style={styles.cardContainer}>
                         <FlatList
                             onRefresh={onRefresh}
@@ -96,9 +137,38 @@ export default function UsersNewsScreen() {
                             showsVerticalScrollIndicator={false}
                             scrollEventThrottle={16}
                             bounces={false}
-                            data={Posts}
+                            data={UsersPosts}
                             renderItem={({ item }) => <CustomPostCard item={item} />}
                             keyExtractor={item => item.id}
+                            ListHeaderComponent={() => (
+                                <>
+                                    <View style={styles.inputContainer}>
+                                        <Image source={userImage} style={styles.avatar} />
+                                        <TextInput
+                                            //autoFocus={true}
+                                            multiline={true}
+                                            numberOfLines={4}
+                                            style={{ flex: 1 }}
+                                            placeholder="Что у Вас нового?"
+                                            value={postText}
+                                            onChangeText={setPostText}
+
+                                        />
+                                        <TouchableOpacity style={styles.photo}>
+                                            <Icons.FontAwesome6
+                                                name="image"
+                                                size={24}
+                                                color="#d8d9d8"
+                                            />
+                                        </TouchableOpacity>
+                                        <TouchableOpacity
+                                            style={[styles.photo, { marginHorizontal: 0 }]}
+                                            onPress={() => handleSendPost(postText)}>
+                                            <Icons.Ionicons name="send" size={24} color="#d8d9d8" />
+                                        </TouchableOpacity>
+                                    </View>
+                                </>
+                            )}
                         />
                     </View>
                 </CustomDrawer>
@@ -107,11 +177,29 @@ export default function UsersNewsScreen() {
     );
 }
 
-
 const styles = StyleSheet.create({
     cardContainer: {
         flex: 1,
         alignItems: 'center',
         padding: 20,
     },
-})
+    inputContainer: {
+        margin: 16,
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: theme.bgWhite(0.1),
+        borderRadius: 15,
+        paddingHorizontal: 16,
+    },
+    avatar: {
+        width: 48,
+        height: 48,
+        borderRadius: 24,
+        marginRight: 16,
+    },
+    photo: {
+        alignItems: 'flex-end',
+        marginHorizontal: 16,
+    },
+});

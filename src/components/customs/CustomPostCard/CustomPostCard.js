@@ -27,64 +27,67 @@ export default function CustomPostCard({ item }) {
     }, [item.liked]);
 
     return (
-        <View style={styles.card}>
-            <View style={styles.userInfo}>
-                <Image style={styles.userImage} source={item.userImage} />
-                <View style={styles.userInfoText}>
-                    <Text style={styles.userName}>{item.userName}</Text>
-                    <Text style={styles.postTime}>{item.postTime}</Text>
+        <>
+
+            <View style={styles.card}>
+                <View style={styles.userInfo}>
+                    <Image style={styles.userImage} source={item.userImage} />
+                    <View style={styles.userInfoText}>
+                        <Text style={styles.userName}>{item.userName}</Text>
+                        <Text style={styles.postTime}>{item.postTime}</Text>
+                    </View>
+                </View>
+                <Text style={styles.postText}>{item.post}</Text>
+                {item.postImage !== 'none' ? (
+                    <Image style={styles.postImage} source={item.postImage} />
+                ) : (
+                    <View style={styles.divider} />
+                )}
+
+                <View style={styles.interactionWrapper}>
+                    <TouchableOpacity
+                        onPress={() => {
+                            if (isLiked) {
+                                setLikesCount(likesCount - 1);
+                                setIsLiked(false);
+                                setLikeIcon('heart-outline');
+                                setLikeIconColor('#2E64E5');
+                            } else {
+                                setLikesCount(likesCount + 1);
+                                setIsLiked(true);
+                                setLikeIcon('heart');
+                                setLikeIconColor('blue');
+                            }
+                        }}
+                        style={[
+                            styles.interaction,
+                            { backgroundColor: isLiked ? '#2e64e515' : 'transparent' },
+                        ]}>
+                        <Icons.Ionicons
+                            name={likeIcon}
+                            size={25}
+                            style={{ color: likeIconColor }}
+                        />
+                        <Text
+                            style={[
+                                styles.interactionText,
+                                { color: isLiked ? '#2e64e5' : '#333' },
+                            ]}>
+                            {likesCount}
+                        </Text>
+                    </TouchableOpacity>
+
+                    <TouchableOpacity style={styles.interaction}>
+                        <Icons.FontAwesome
+                            name="comments-o"
+                            size={25}
+                            style={{ color: 'blue' }}
+                        />
+                        <Text style={styles.interactionText}>{item.comments !== 0 && item.comments}</Text>
+                    </TouchableOpacity>
                 </View>
             </View>
-            <Text style={styles.postText}>{item.post}</Text>
-            {item.postImage !== 'none' ? (
-                <Image style={styles.postImage} source={item.postImage} />
-            ) : (
-                <View style={styles.divider} />
-            )}
-
-            <View style={styles.interactionWrapper}>
-                <TouchableOpacity
-                    onPress={() => {
-                        if (isLiked) {
-                            setLikesCount(likesCount - 1);
-                            setIsLiked(false);
-                            setLikeIcon('heart-outline');
-                            setLikeIconColor('#2E64E5');
-                        } else {
-                            setLikesCount(likesCount + 1);
-                            setIsLiked(true);
-                            setLikeIcon('heart');
-                            setLikeIconColor('blue');
-                        }
-                    }}
-                    style={[
-                        styles.interaction,
-                        { backgroundColor: isLiked ? '#2e64e515' : 'transparent' },
-                    ]}>
-                    <Icons.Ionicons
-                        name={likeIcon}
-                        size={25}
-                        style={{ color: likeIconColor }}
-                    />
-                    <Text
-                        style={[
-                            styles.interactionText,
-                            { color: isLiked ? '#2e64e5' : '#333' },
-                        ]}>
-                        {likesCount}
-                    </Text>
-                </TouchableOpacity>
-
-                <TouchableOpacity style={styles.interaction}>
-                    <Icons.FontAwesome
-                        name="comments-o"
-                        size={25}
-                        style={{ color: 'blue' }}
-                    />
-                    <Text style={styles.interactionText}>{item.comments}</Text>
-                </TouchableOpacity>
-            </View>
-        </View>
+        </>
     );
 }
 
@@ -94,6 +97,15 @@ const styles = StyleSheet.create({
         width: '100%',
         marginBottom: 20,
         borderRadius: 10,
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 1,
+        },
+        shadowOpacity: 0.22,
+        shadowRadius: 2.22,
+
+        elevation: 3,
     },
     userInfo: {
         flexDirection: 'row',
