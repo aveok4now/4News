@@ -17,6 +17,7 @@ import CustomDrawer from '../../components/customs/CustomDrawer';
 import CustomInput from '../../components/customs/CustomInput';
 import { theme } from '../WeatherScreen/theme';
 import { Icons } from '../../components/Icons/Icons';
+import { debounce } from 'lodash';
 
 export default function UsersNewsScreen() {
     let identify = useUserCredentials();
@@ -96,24 +97,31 @@ export default function UsersNewsScreen() {
 
 
 
-    const handleSendPost = () => {
-        const newPost = {
-            id: String(UsersPosts.length + 1),
-            userName: identify,
-            postTime: 'Только что',
-            post: postText,
-            postImage: 'none',
-            liked: false,
-            likes: 0,
-            comments: 0,
-            userImage: userImage,
-        };
 
-        const updatedPosts = [newPost, ...UsersPosts];
-        setPostText('');
-        setUsersPosts(updatedPosts);
-    };
+    const handleSendPost = useCallback(() => {
+        if (postText && postText.length > 3) {
+            const newPost = {
+                id: String(UsersPosts.length + 1),
+                userName: identify,
+                postTime: 'Только что',
+                post: postText,
+                postImage: 'none',
+                liked: false,
+                likes: 0,
+                comments: 0,
+                userImage: userImage,
+            };
 
+            const updatedPosts = [newPost, ...UsersPosts];
+            setPostText(null);
+            setUsersPosts(updatedPosts);
+        }
+    }, [UsersPosts, postText, identify, userImage]);
+
+
+
+
+    const handleTextChange = useCallback(debounce((text) => setPostText(text), 1200), [postText]);
 
 
     return (
@@ -145,14 +153,14 @@ export default function UsersNewsScreen() {
                                     <View style={styles.inputContainer}>
                                         <Image source={userImage} style={styles.avatar} />
                                         <TextInput
-                                            //autoFocus={true}
+                                            autoFocus={false}
+                                            selectionColor="white"
                                             multiline={true}
-                                            numberOfLines={4}
+                                            numberOfLines={3}
                                             style={{ flex: 1 }}
                                             placeholder="Что у Вас нового?"
                                             value={postText}
-                                            onChangeText={setPostText}
-
+                                            onChangeText={handleTextChange}
                                         />
                                         <TouchableOpacity style={styles.photo}>
                                             <Icons.FontAwesome6
@@ -163,7 +171,7 @@ export default function UsersNewsScreen() {
                                         </TouchableOpacity>
                                         <TouchableOpacity
                                             style={[styles.photo, { marginHorizontal: 0 }]}
-                                            onPress={() => handleSendPost(postText)}>
+                                            onPress={handleSendPost}>
                                             <Icons.Ionicons name="send" size={24} color="#d8d9d8" />
                                         </TouchableOpacity>
                                     </View>
