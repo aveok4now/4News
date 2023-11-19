@@ -23,6 +23,7 @@ export default function UsersNewsScreen() {
     let identify = useUserCredentials();
     const [isRefreshing, setIsRefreshing] = useState(false);
     const [postText, setPostText] = useState(null);
+    const [isSendButtonDisabled, setIsSendButtonDisabled] = useState(true);
 
 
     const Posts = [
@@ -171,7 +172,9 @@ export default function UsersNewsScreen() {
                                         </TouchableOpacity>
                                         <TouchableOpacity
                                             style={[styles.photo, { marginHorizontal: 0 }]}
-                                            onPress={handleSendPost}>
+                                            onPress={handleSendPost}
+                                            disabled={!postText || postText.length <= 3}
+                                        >
                                             <Icons.Ionicons name="send" size={24} color="#d8d9d8" />
                                         </TouchableOpacity>
                                     </View>
