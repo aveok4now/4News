@@ -4,6 +4,7 @@ import { Icons } from '../../Icons/Icons';
 import { theme } from '../../../screens/WeatherScreen/theme';
 import * as Animatable from 'react-native-animatable';
 import CustomDropDown from '../CustomDropDown';
+import CustomToast from '../CustomToast';
 import useUserCredentials from '../../../utils/hooks/useUserCredentials';
 import { handleUsersNewsShare } from '../../../utils/Share';
 
@@ -20,6 +21,16 @@ export default function CustomPostCard({ item, onDeletePost }) {
     const [likeIconColor, setLikeIconColor] = useState(
         item.liked ? 'blue' : '#2E64E5',
     );
+
+    const [toastMessage, setToastMessage] = useState('');
+
+    const [isShowToast, setShowToast] = useState(false);
+
+    const showToast = (message) => {
+        setToastMessage(message);
+        setShowToast(true)
+        console.log("heree", isShowToast)
+    };
 
     useEffect(() => {
         if (item.liked === true) {
@@ -62,6 +73,9 @@ export default function CustomPostCard({ item, onDeletePost }) {
             case "share":
                 sharePost(postText);
                 break;
+            case 'alert-circle-outline':
+                showToast('Спасибо, что помогаете в улучшении сообщества!');
+                break;
 
             default:
                 break;
@@ -72,8 +86,24 @@ export default function CustomPostCard({ item, onDeletePost }) {
 
     return (
         <>
+
             {!item.deleted && (
                 <Animatable.View animation="fadeIn" duration={1000} style={styles.card}>
+                    {isShowToast && (
+                        <View
+                            style={{ flex: 1 }}
+                        >
+                            <CustomToast
+                                message={toastMessage}
+                                onClose={() => {
+                                    setToastMessage('');
+                                    setShowToast(false);
+                                }}
+                            />
+                        </View>
+
+
+                    )}
                     <View style={styles.userInfo}>
                         <Image style={styles.userImage} source={item.userImage} />
                         <View style={{ position: 'absolute', top: 15, right: 15 }}>

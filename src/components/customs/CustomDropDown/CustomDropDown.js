@@ -11,13 +11,21 @@ import React from 'react';
 import { Icons } from '../../Icons';
 import { assets } from '../../../../react-native.config';
 
-export default function CustomDropDown({ visible, onClose, onOptionSelect, identify, authorName }) {
-
+export default function CustomDropDown({
+    visible,
+    onClose,
+    onOptionSelect,
+    identify,
+    authorName,
+}) {
     const condition = identify === authorName ? true : false;
 
-
     const options = [
-        { id: condition ? 'delete' : 'alert-circle-outline', label: condition ? 'Удалить' : 'Пожаловаться', icon: condition ? 'delete' : 'alert-circle-outline' },
+        {
+            id: condition ? 'delete' : 'alert-circle-outline',
+            label: condition ? 'Удалить' : 'Пожаловаться',
+            icon: condition ? 'delete' : 'alert-circle-outline',
+        },
         { id: 'share', label: 'Поделиться', icon: 'share' },
     ];
 
