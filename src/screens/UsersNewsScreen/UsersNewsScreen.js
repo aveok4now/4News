@@ -8,7 +8,7 @@ import {
     TouchableOpacity,
     Platform,
 } from 'react-native';
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useState, useEffect } from 'react';
 import userImage from '../../../assets/images/user.jpg';
 import useUserCredentials from '../../utils/hooks/useUserCredentials';
 import defaultImage from '../assets/images/newsoverview.jpg';
@@ -25,7 +25,6 @@ export default function UsersNewsScreen() {
     const [postText, setPostText] = useState(null);
     const [isSendButtonDisabled, setIsSendButtonDisabled] = useState(true);
 
-
     const Posts = [
         {
             id: '1',
@@ -37,6 +36,7 @@ export default function UsersNewsScreen() {
             likes: 6,
             comments: 5,
             userImage: userImage,
+            deleted: false
         },
         {
             id: '2',
@@ -48,6 +48,7 @@ export default function UsersNewsScreen() {
             likes: 4,
             comments: 0,
             userImage: userImage,
+            deleted: false
         },
         {
             id: '3',
@@ -59,6 +60,7 @@ export default function UsersNewsScreen() {
             likes: 7,
             comments: '1',
             userImage: userImage,
+            deleted: false
         },
         {
             id: '4',
@@ -70,6 +72,7 @@ export default function UsersNewsScreen() {
             likes: 16,
             comments: '7',
             userImage: userImage,
+            deleted: false
         },
         {
             id: '5',
@@ -81,6 +84,7 @@ export default function UsersNewsScreen() {
             likes: 6,
             comments: '3',
             userImage: userImage,
+            deleted: false
         },
     ];
 
@@ -96,9 +100,6 @@ export default function UsersNewsScreen() {
         getPosts();
     };
 
-
-
-
     const handleSendPost = useCallback(() => {
         if (postText && postText.length > 3) {
             const newPost = {
@@ -111,6 +112,7 @@ export default function UsersNewsScreen() {
                 likes: 0,
                 comments: 0,
                 userImage: userImage,
+                deleted: false
             };
 
             const updatedPosts = [newPost, ...UsersPosts];
@@ -119,10 +121,18 @@ export default function UsersNewsScreen() {
         }
     }, [UsersPosts, postText, identify, userImage]);
 
+    const handleTextChange = useCallback(
+        debounce(text => setPostText(text), 1200),
+        [postText],
+    );
 
 
+    const handleDeletePost = (postId) => {
+        setUsersPosts(prevPosts => (
+            prevPosts.map(post => (post.id === postId ? { ...post, deleted: true } : post))
 
-    const handleTextChange = useCallback(debounce((text) => setPostText(text), 1200), [postText]);
+        ));
+    };
 
 
     return (
@@ -147,7 +157,7 @@ export default function UsersNewsScreen() {
                             scrollEventThrottle={16}
                             bounces={false}
                             data={UsersPosts}
-                            renderItem={({ item }) => <CustomPostCard item={item} />}
+                            renderItem={({ item }) => <CustomPostCard item={item} onDeletePost={handleDeletePost} />}
                             keyExtractor={item => item.id}
                             ListHeaderComponent={() => (
                                 <>
@@ -173,8 +183,7 @@ export default function UsersNewsScreen() {
                                         <TouchableOpacity
                                             style={[styles.photo, { marginHorizontal: 0 }]}
                                             onPress={handleSendPost}
-                                            disabled={!postText || postText.length <= 3}
-                                        >
+                                            disabled={!postText || postText.length <= 3}>
                                             <Icons.Ionicons name="send" size={24} color="#d8d9d8" />
                                         </TouchableOpacity>
                                     </View>

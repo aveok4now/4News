@@ -4,8 +4,11 @@ import { Icons } from '../../Icons/Icons';
 import { theme } from '../../../screens/WeatherScreen/theme';
 import * as Animatable from 'react-native-animatable';
 import CustomDropDown from '../CustomDropDown';
+import useUserCredentials from '../../../utils/hooks/useUserCredentials';
+import { handleUsersNewsShare } from '../../../utils/Share';
 
-export default function CustomPostCard({ item }) {
+export default function CustomPostCard({ item, onDeletePost }) {
+    let identify = useUserCredentials();
     const [isLiked, setIsLiked] = useState(false);
     const [likesCount, setLikesCount] = useState(item.likes);
 
@@ -31,90 +34,124 @@ export default function CustomPostCard({ item }) {
     }, [item.liked]);
 
 
+    const deletePost = (postId) => {
+
+        onDeletePost(postId);
+        item.deleted = true;
+    };
+
+    const sharePost = () => {
+        handleUsersNewsShare({
+            //url: item.url,
+            author: item.userName,
+            newsTitle: item.post,
+            postTime: item.postTime
+        })
+    }
+
+
     const handleDropdownClose = () => { setIsDropdownVisible(false); };
 
-    const handleOptionSelect = (option) => {
-        console.log('Выбрана опция:', option);
+    const handleOptionSelect = (option, postId, postText) => {
+        console.log('Выбрана опция:', option, postText);
+
+        switch (option) {
+            case "delete":
+                deletePost(postId);
+                break;
+            case "share":
+                sharePost(postText);
+                break;
+
+            default:
+                break;
+        }
 
         setIsDropdownVisible(false);
     };
 
     return (
         <>
-            <Animatable.View animation="fadeIn" duration={1000} style={styles.card}>
-                <View style={styles.userInfo}>
-                    <Image style={styles.userImage} source={item.userImage} />
-                    <View style={{ position: 'absolute', top: 15, right: 15 }}>
-                        <TouchableOpacity onPress={() => setIsDropdownVisible(!isDropdownVisible)}>
-                            <Icons.MaterialIcons
-                                name="more-horiz"
-                                size={24}
-                                color="#73788B"
-                            />
-                        </TouchableOpacity>
-                        <CustomDropDown visible={isDropdownVisible}
-                            onClose={handleDropdownClose}
-                            onOptionSelect={handleOptionSelect} />
-                    </View>
-                    <View style={styles.userInfoText}>
-                        <Text style={styles.userName}>{item.userName}</Text>
-                        <Text style={styles.postTime}>{item.postTime}</Text>
+            {!item.deleted && (
+                <Animatable.View animation="fadeIn" duration={1000} style={styles.card}>
+                    <View style={styles.userInfo}>
+                        <Image style={styles.userImage} source={item.userImage} />
+                        <View style={{ position: 'absolute', top: 15, right: 15 }}>
+                            <TouchableOpacity onPress={() => setIsDropdownVisible(!isDropdownVisible)}>
+                                <Icons.MaterialIcons
+                                    name="more-horiz"
+                                    size={24}
+                                    color="#73788B"
+                                />
+                            </TouchableOpacity>
+                            <CustomDropDown
+                                identify={identify}
+                                authorName={item.userName}
+                                visible={isDropdownVisible}
+                                onClose={handleDropdownClose}
+                                onOptionSelect={handleOptionSelect} />
+                        </View>
+                        <View style={styles.userInfoText}>
+                            <Text style={styles.userName}>{item.userName}</Text>
+                            <Text style={styles.postTime}>{item.postTime}</Text>
 
+                        </View>
                     </View>
-                </View>
-                <Text style={styles.postText}>{item.post}</Text>
-                {item.postImage !== 'none' ? (
-                    <Image style={styles.postImage} source={item.postImage} />
-                ) : (
-                    <View style={styles.divider} />
-                )}
+                    <Text style={styles.postText}>{item.post}</Text>
+                    {item.postImage !== 'none' ? (
+                        <Image style={styles.postImage} source={item.postImage} />
+                    ) : (
+                        <View style={styles.divider} />
+                    )}
 
-                <View style={styles.interactionWrapper}>
-                    <Animatable.View animation="pulse">
-                        <TouchableOpacity
-                            onPress={() => {
-                                if (isLiked) {
-                                    setLikesCount(likesCount - 1);
-                                    setIsLiked(false);
-                                    setLikeIcon('heart-outline');
-                                    setLikeIconColor('#2E64E5');
-                                } else {
-                                    setLikesCount(likesCount + 1);
-                                    setIsLiked(true);
-                                    setLikeIcon('heart');
-                                    setLikeIconColor('blue');
-                                }
-                            }}
-                            style={[
-                                styles.interaction,
-                                { backgroundColor: isLiked ? '#2e64e515' : 'transparent' },
-                            ]}>
-                            <Icons.Ionicons
-                                name={likeIcon}
-                                size={25}
-                                style={{ color: likeIconColor }}
-                            />
-                            <Text
+                    <View style={styles.interactionWrapper}>
+                        <Animatable.View animation="pulse">
+                            <TouchableOpacity
+                                onPress={() => {
+                                    if (isLiked) {
+                                        setLikesCount(likesCount - 1);
+                                        setIsLiked(false);
+                                        setLikeIcon('heart-outline');
+                                        setLikeIconColor('#2E64E5');
+                                    } else {
+                                        setLikesCount(likesCount + 1);
+                                        setIsLiked(true);
+                                        setLikeIcon('heart');
+                                        setLikeIconColor('blue');
+                                    }
+                                }}
                                 style={[
-                                    styles.interactionText,
-                                    { color: isLiked ? '#2e64e5' : '#333' },
+                                    styles.interaction,
+                                    { backgroundColor: isLiked ? '#2e64e515' : 'transparent' },
                                 ]}>
-                                {likesCount !== 0 && likesCount}
+                                <Icons.Ionicons
+                                    name={likeIcon}
+                                    size={25}
+                                    style={{ color: likeIconColor }}
+                                />
+                                <Text
+                                    style={[
+                                        styles.interactionText,
+                                        { color: isLiked ? '#2e64e5' : '#333' },
+                                    ]}>
+                                    {likesCount !== 0 && likesCount}
+                                </Text>
+                            </TouchableOpacity>
+                        </Animatable.View>
+                        <TouchableOpacity style={styles.interaction}>
+                            <Icons.FontAwesome
+                                name="comments-o"
+                                size={25}
+                                style={{ color: 'blue' }}
+                            />
+                            <Text style={styles.interactionText}>
+                                {item.comments !== 0 && item.comments}
                             </Text>
                         </TouchableOpacity>
-                    </Animatable.View>
-                    <TouchableOpacity style={styles.interaction}>
-                        <Icons.FontAwesome
-                            name="comments-o"
-                            size={25}
-                            style={{ color: 'blue' }}
-                        />
-                        <Text style={styles.interactionText}>
-                            {item.comments !== 0 && item.comments}
-                        </Text>
-                    </TouchableOpacity>
-                </View>
-            </Animatable.View>
+                    </View>
+                </Animatable.View>
+            )}
+
         </>
     );
 }

@@ -11,9 +11,13 @@ import React from 'react';
 import { Icons } from '../../Icons';
 import { assets } from '../../../../react-native.config';
 
-export default function CustomDropDown({ visible, onClose, onOptionSelect }) {
+export default function CustomDropDown({ visible, onClose, onOptionSelect, identify, authorName }) {
+
+    const condition = identify === authorName ? true : false;
+
+
     const options = [
-        { id: 'delete', label: 'Удалить', icon: 'delete' },
+        { id: condition ? 'delete' : 'alert-circle-outline', label: condition ? 'Удалить' : 'Пожаловаться', icon: condition ? 'delete' : 'alert-circle-outline' },
         { id: 'share', label: 'Поделиться', icon: 'share' },
     ];
 
@@ -74,7 +78,7 @@ const styles = StyleSheet.create({
         fontSize: 16,
         paddingVertical: 10,
         color: 'white',
-        fontFamily: 'Inter-Regular',
-        letterSpacing: 1,
+        fontFamily: 'Inter-Black',
+        //letterSpacing: 1,
     },
 });
