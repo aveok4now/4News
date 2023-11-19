@@ -54,7 +54,7 @@ export default function CustomDropDown({
                                         <Text style={styles.optionText}>{item.label}</Text>
                                         <Icons.MaterialCommunityIcons
                                             name={item.icon}
-                                            color="#003F91"
+                                            color="rgb(186 230 253)"
                                             size={28}
                                             style={{ marginLeft: 8 }}
                                         />
@@ -77,7 +77,7 @@ const styles = StyleSheet.create({
         backgroundColor: 'rgba(0, 0, 0, 0.5)',
     },
     modalContent: {
-        backgroundColor: '#5DA9E9',
+        backgroundColor: 'rgb(2 132 199)',
         padding: 20,
         borderRadius: 10,
         width: 200,

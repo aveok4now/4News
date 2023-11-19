@@ -1,4 +1,11 @@
-import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
+import {
+    View,
+    Text,
+    Image,
+    TouchableOpacity,
+    StyleSheet,
+    Alert,
+} from 'react-native';
 import React, { useState, useEffect } from 'react';
 import { Icons } from '../../Icons/Icons';
 import { theme } from '../../../screens/WeatherScreen/theme';
@@ -7,6 +14,9 @@ import CustomDropDown from '../CustomDropDown';
 import CustomToast from '../CustomToast';
 import useUserCredentials from '../../../utils/hooks/useUserCredentials';
 import { handleUsersNewsShare } from '../../../utils/Share';
+import CustomModal from '../CustomModal';
+import ModalPopup from '../CustomModal/CustomModal';
+import CustomButton from '../CustomButton';
 
 export default function CustomPostCard({ item, onDeletePost }) {
     let identify = useUserCredentials();
@@ -25,11 +35,12 @@ export default function CustomPostCard({ item, onDeletePost }) {
     const [toastMessage, setToastMessage] = useState('');
 
     const [isShowToast, setShowToast] = useState(false);
+    const [showDeleteModal, setShowDeleteModal] = useState(false);
 
-    const showToast = (message) => {
+    const showToast = message => {
         setToastMessage(message);
-        setShowToast(true)
-        console.log("heree", isShowToast)
+        setShowToast(true);
+        console.log('heree', isShowToast);
     };
 
     useEffect(() => {
@@ -44,9 +55,7 @@ export default function CustomPostCard({ item, onDeletePost }) {
         }
     }, [item.liked]);
 
-
-    const deletePost = (postId) => {
-
+    const deletePost = postId => {
         onDeletePost(postId);
         item.deleted = true;
     };
@@ -56,21 +65,23 @@ export default function CustomPostCard({ item, onDeletePost }) {
             //url: item.url,
             author: item.userName,
             newsTitle: item.post,
-            postTime: item.postTime
-        })
-    }
+            postTime: item.postTime,
+        });
+    };
 
-
-    const handleDropdownClose = () => { setIsDropdownVisible(false); };
+    const handleDropdownClose = () => {
+        setIsDropdownVisible(false);
+    };
 
     const handleOptionSelect = (option, postId, postText) => {
         console.log('Выбрана опция:', option, postText);
 
         switch (option) {
-            case "delete":
-                deletePost(postId);
+            case 'delete':
+                //deletePost(postId);
+                setShowDeleteModal(true);
                 break;
-            case "share":
+            case 'share':
                 sharePost(postText);
                 break;
             case 'alert-circle-outline':
@@ -86,13 +97,10 @@ export default function CustomPostCard({ item, onDeletePost }) {
 
     return (
         <>
-
             {!item.deleted && (
                 <Animatable.View animation="fadeIn" duration={1000} style={styles.card}>
                     {isShowToast && (
-                        <View
-                            style={{ flex: 1 }}
-                        >
+                        <View style={{ flex: 1 }}>
                             <CustomToast
                                 message={toastMessage}
                                 onClose={() => {
@@ -101,13 +109,42 @@ export default function CustomPostCard({ item, onDeletePost }) {
                                 }}
                             />
                         </View>
-
-
+                    )}
+                    {showDeleteModal && (
+                        <ModalPopup visible={showDeleteModal}>
+                            <View style={{ padding: 5 }}>
+                                <Text style={{ fontFamily: 'Inter-Bold', fontSize: 18 }}>
+                                    Подтверждение
+                                </Text>
+                            </View>
+                            <View style={{ width: '100%', padding: 5 }}>
+                                <Text style={{ fontFamily: 'Inter-Light', fontSize: 18 }}>
+                                    Вы действительно хотите удалить этот пост?
+                                </Text>
+                            </View>
+                            <View style={styles.divider} />
+                            <View
+                                style={{
+                                    flexDirection: 'row',
+                                    width: '50%',
+                                    padding: 5,
+                                    justifyContent: 'space-between',
+                                    gap: 10,
+                                }}>
+                                <CustomButton
+                                    text="Нет"
+                                    type="Tertiary"
+                                    onPress={() => setShowDeleteModal(!showDeleteModal)}
+                                />
+                                <CustomButton text="Да" type="Tertiary" onPress={deletePost} />
+                            </View>
+                        </ModalPopup>
                     )}
                     <View style={styles.userInfo}>
                         <Image style={styles.userImage} source={item.userImage} />
                         <View style={{ position: 'absolute', top: 15, right: 15 }}>
-                            <TouchableOpacity onPress={() => setIsDropdownVisible(!isDropdownVisible)}>
+                            <TouchableOpacity
+                                onPress={() => setIsDropdownVisible(!isDropdownVisible)}>
                                 <Icons.MaterialIcons
                                     name="more-horiz"
                                     size={24}
@@ -119,12 +156,12 @@ export default function CustomPostCard({ item, onDeletePost }) {
                                 authorName={item.userName}
                                 visible={isDropdownVisible}
                                 onClose={handleDropdownClose}
-                                onOptionSelect={handleOptionSelect} />
+                                onOptionSelect={handleOptionSelect}
+                            />
                         </View>
                         <View style={styles.userInfoText}>
                             <Text style={styles.userName}>{item.userName}</Text>
                             <Text style={styles.postTime}>{item.postTime}</Text>
-
                         </View>
                     </View>
                     <Text style={styles.postText}>{item.post}</Text>
@@ -181,7 +218,6 @@ export default function CustomPostCard({ item, onDeletePost }) {
                     </View>
                 </Animatable.View>
             )}
-
         </>
     );
 }
