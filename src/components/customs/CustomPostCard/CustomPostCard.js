@@ -52,7 +52,7 @@ export default function CustomPostCard({ item, onDeletePost }) {
         const intervalId = setInterval(() => {
             const newTime = new Date();
             setLocalTime(newTime);
-            setFormattedPostTime(formatPostTime(item.postTime, new Date()));
+            setFormattedPostTime(formatPostTime(item.postTime, newTime));
             setPostTime(item.postTime)
             console.log(postTime)
         }, 1000);
@@ -65,15 +65,6 @@ export default function CustomPostCard({ item, onDeletePost }) {
         console.log("localTime:", localTime);
         console.log("formattedPostTime", formattedPostTime)
 
-        if (item.liked) {
-            setIsLiked(true);
-            setLikeIcon('heart');
-            setLikeIconColor('blue');
-        } else {
-            setIsLiked(false);
-            setLikeIcon('heart-outline');
-            setLikeIconColor('#2E64E5');
-        }
 
         const intervalId = startInterval();
 
@@ -82,7 +73,16 @@ export default function CustomPostCard({ item, onDeletePost }) {
             console.log('Cleaning up interval');
             clearInterval(intervalId);
         };
-    }, [item.liked, item.id, startInterval, postTime, item.postTime]);
+    }, [item.id, startInterval, postTime, item.postTime]);
+
+
+
+
+
+
+    // useEffect(() => {
+
+    // }, [item.liked])
 
 
     // useEffect(() => {
