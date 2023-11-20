@@ -41,6 +41,7 @@ export default function UsersNewsScreen({ navigation }) {
     const [isSendButtonDisabled, setIsSendButtonDisabled] = useState(true);
 
     const [showGuestModal, setShowGuestModal] = useState(false);
+    const [isTextValid, setIsTextValid] = useState(false);
 
 
 
@@ -136,22 +137,26 @@ export default function UsersNewsScreen({ navigation }) {
                 deleted: false,
             };
 
-
+            setIsTextValid(false);
+            setPostText(null);
             if (!(newPost.postTime instanceof Date && !isNaN(newPost.postTime.getTime()))) {
                 console.log('Invalid date in handleSendPost');
                 return;
             }
 
             const updatedPosts = [newPost, ...UsersPosts];
-            setPostText(null);
+
             setUsersPosts(updatedPosts);
         }
     }, [UsersPosts, postText, identify, userImage]);
 
-    const handleTextChange = useCallback(
-        debounce(text => setPostText(text), 1200),
-        [postText],
-    );
+    const handleTextChange = useCallback((text) => {
+        setPostText(text);
+        setIsTextValid(text.length > 3);
+    }, []);
+
+
+
 
     const handleDeletePost = postId => {
         setUsersPosts(prevPosts =>
@@ -220,6 +225,39 @@ export default function UsersNewsScreen({ navigation }) {
                             </View>
                         </ModalPopup>
                     )}
+                    <View style={{
+
+                    }}>
+                        <View style={styles.inputContainer}>
+                            <Image source={condition} style={styles.avatar} />
+                            <TextInput
+                                autoFocus={false}
+                                selectionColor="white"
+                                multiline={true}
+                                numberOfLines={3}
+                                style={{ flex: 1 }}
+                                placeholder="Что у Вас нового?"
+                                value={postText}
+                                onChangeText={(text) => {
+                                    handleTextChange(text);
+                                    checkPerson();
+                                }}
+                            />
+                            <TouchableOpacity style={styles.photo}>
+                                <Icons.FontAwesome6
+                                    name="image"
+                                    size={24}
+                                    color="#d8d9d8"
+                                />
+                            </TouchableOpacity>
+                            <TouchableOpacity
+                                style={[styles.photo, { marginHorizontal: 0 }]}
+                                onPress={handleSendPost}
+                                disabled={!isTextValid}>
+                                <Icons.Ionicons name="send" size={24} color={!isTextValid ? 'lightgray' : "rgb(56 189 248)"} />
+                            </TouchableOpacity>
+                        </View>
+                    </View>
                     <View style={styles.cardContainer}>
                         <FlatList
                             onRefresh={onRefresh}
@@ -241,37 +279,9 @@ export default function UsersNewsScreen({ navigation }) {
 
                             )}
                             keyExtractor={item => item.id}
-                            ListHeaderComponent={() => (
-                                <>
-                                    <View style={styles.inputContainer}>
-                                        <Image source={condition} style={styles.avatar} />
-                                        <TextInput
-                                            autoFocus={false}
-                                            selectionColor="white"
-                                            multiline={true}
-                                            numberOfLines={3}
-                                            style={{ flex: 1 }}
-                                            placeholder="Что у Вас нового?"
-                                            value={postText}
-                                            onChangeText={handleTextChange}
-                                            onFocus={checkPerson}
-                                        />
-                                        <TouchableOpacity style={styles.photo}>
-                                            <Icons.FontAwesome6
-                                                name="image"
-                                                size={24}
-                                                color="#d8d9d8"
-                                            />
-                                        </TouchableOpacity>
-                                        <TouchableOpacity
-                                            style={[styles.photo, { marginHorizontal: 0 }]}
-                                            onPress={handleSendPost}
-                                            disabled={!postText || postText.length <= 3}>
-                                            <Icons.Ionicons name="send" size={24} color="rgb(56 189 248)" />
-                                        </TouchableOpacity>
-                                    </View>
-                                </>
-                            )}
+                        // ListHeaderComponent={() => (
+
+                        // )}
                         />
                     </View>
                 </CustomDrawer>
@@ -287,13 +297,15 @@ const styles = StyleSheet.create({
         padding: 20,
     },
     inputContainer: {
-        margin: 16,
+        margin: 12,
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'center',
         backgroundColor: theme.bgWhite(0.1),
         borderRadius: 15,
         paddingHorizontal: 16,
+        borderWidth: 0.5,
+        borderColor: 'rgb(226 232 240)'
     },
     avatar: {
         width: 48,
