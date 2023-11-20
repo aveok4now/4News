@@ -17,6 +17,7 @@ import { handleUsersNewsShare } from '../../../utils/Share';
 import CustomModal from '../CustomModal';
 import ModalPopup from '../CustomModal/CustomModal';
 import CustomButton from '../CustomButton';
+import { formatPostTime } from '../../../utils/formatPostTime';
 
 export default function CustomPostCard({ item, onDeletePost }) {
     let identify = useUserCredentials();
@@ -37,13 +38,34 @@ export default function CustomPostCard({ item, onDeletePost }) {
     const [isShowToast, setShowToast] = useState(false);
     const [showDeleteModal, setShowDeleteModal] = useState(false);
 
+    const [localTime, setLocalTime] = useState(new Date());
+    const [formattedPostTime, setFormattedPostTime] = useState(formatPostTime(item.postTime, localTime));
+
+    const [postTime, setPostTime] = useState(item.postTime)
+
     const showToast = message => {
         setToastMessage(message);
         setShowToast(true);
     };
 
+    const startInterval = () => {
+        const intervalId = setInterval(() => {
+            const newTime = new Date();
+            setLocalTime(newTime);
+            setFormattedPostTime(formatPostTime(item.postTime, new Date()));
+            setPostTime(item.postTime)
+            console.log(postTime)
+        }, 1000);
+        return intervalId;
+    };
+
     useEffect(() => {
-        if (item.liked === true) {
+        console.log('useEffect is running');
+        console.log("item.postTime:", item.postTime);
+        console.log("localTime:", localTime);
+        console.log("formattedPostTime", formattedPostTime)
+
+        if (item.liked) {
             setIsLiked(true);
             setLikeIcon('heart');
             setLikeIconColor('blue');
@@ -52,7 +74,21 @@ export default function CustomPostCard({ item, onDeletePost }) {
             setLikeIcon('heart-outline');
             setLikeIconColor('#2E64E5');
         }
-    }, [item.liked]);
+
+        const intervalId = startInterval();
+
+
+        return () => {
+            console.log('Cleaning up interval');
+            clearInterval(intervalId);
+        };
+    }, [item.liked, item.id, startInterval, postTime, item.postTime]);
+
+
+    // useEffect(() => {
+    //     setFormattedPostTime(formatPostTime(localTime));
+    // }, [localTime]);
+
 
     const deletePost = postId => {
         onDeletePost(postId);
@@ -160,7 +196,7 @@ export default function CustomPostCard({ item, onDeletePost }) {
                         </View>
                         <View style={styles.userInfoText}>
                             <Text style={styles.userName}>{item.userName}</Text>
-                            <Text style={styles.postTime}>{item.postTime}</Text>
+                            <Text style={styles.postTime}>{formatPostTime(item.postTime, new Date())}</Text>
                         </View>
                     </View>
                     <Text style={styles.postText}>{item.post}</Text>

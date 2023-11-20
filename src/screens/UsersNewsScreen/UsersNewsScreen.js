@@ -24,6 +24,7 @@ import { debounce } from 'lodash';
 import ModalPopup from '../../components/customs/CustomModal/CustomModal';
 import TypeWriter from 'react-native-typewriter';
 import CustomButton from '../../components/customs/CustomButton';
+import { formatPostTime } from '../../utils/formatPostTime';
 
 export default function UsersNewsScreen({ navigation }) {
     let identify = useUserCredentials();
@@ -41,15 +42,17 @@ export default function UsersNewsScreen({ navigation }) {
 
     const [showGuestModal, setShowGuestModal] = useState(false);
 
+
+
     const Posts = [
         {
             id: '1',
             userName: 'Иван Иванов',
-            postTime: '5 минут назад',
+            postTime: new Date(),
             post: 'Sint nulla commodo cupidatat aliqua et dolor id minim non fugiat.',
             postImage: 'none',
             liked: true,
-            likes: 6,
+            likes: '6',
             comments: 5,
             userImage: userImage,
             deleted: false,
@@ -57,7 +60,7 @@ export default function UsersNewsScreen({ navigation }) {
         {
             id: '2',
             userName: 'Роберт Сидоров',
-            postTime: '2 часа назад',
+            postTime: new Date(),
             post: 'Lorem est nostrud dolore deserunt. Ullamco velit elit ullamco consequat voluptate.',
             postImage: defaultImage,
             liked: false,
@@ -69,7 +72,7 @@ export default function UsersNewsScreen({ navigation }) {
         {
             id: '3',
             userName: 'Пётр Азимов',
-            postTime: '4 минуты назад',
+            postTime: new Date(),
             post: 'Cillum nisi do tempor tempor voluptate duis dolore velit id sit. Aute mollit sunt excepteur non.',
             postImage: 'none',
             liked: false,
@@ -81,7 +84,7 @@ export default function UsersNewsScreen({ navigation }) {
         {
             id: '4',
             userName: 'Варвара Иванова',
-            postTime: '26 минут назад',
+            postTime: new Date(),
             post: 'Sint nulla commodo cupidatat aliqua et dolor id minim non fugiat.',
             postImage: 'none',
             liked: true,
@@ -93,7 +96,7 @@ export default function UsersNewsScreen({ navigation }) {
         {
             id: '5',
             userName: 'Стас Иванов',
-            postTime: '15 минут назад',
+            postTime: new Date(),
             post: 'Voluptate consequat duis tempor excepteur ea ad reprehenderit.',
             postImage: defaultImage,
             liked: false,
@@ -116,12 +119,14 @@ export default function UsersNewsScreen({ navigation }) {
         getPosts();
     };
 
+    const [localTime, setLocalTime] = useState(new Date());
+
     const handleSendPost = useCallback(() => {
         if (postText && postText.length > 3) {
             const newPost = {
                 id: String(UsersPosts.length + 1),
                 userName: identify,
-                postTime: 'Только что',
+                postTime: new Date(),
                 post: postText,
                 postImage: 'none',
                 liked: false,
@@ -130,6 +135,12 @@ export default function UsersNewsScreen({ navigation }) {
                 userImage: condition,
                 deleted: false,
             };
+
+
+            if (!(newPost.postTime instanceof Date && !isNaN(newPost.postTime.getTime()))) {
+                console.log('Invalid date in handleSendPost');
+                return;
+            }
 
             const updatedPosts = [newPost, ...UsersPosts];
             setPostText(null);
@@ -218,7 +229,16 @@ export default function UsersNewsScreen({ navigation }) {
                             bounces={false}
                             data={UsersPosts}
                             renderItem={({ item }) => (
-                                <CustomPostCard item={item} onDeletePost={handleDeletePost} />
+                                <CustomPostCard
+                                    key={item.id}
+                                    localTime={localTime}
+                                    item={{
+                                        ...item,
+                                        postTime: formatPostTime(item.postTime, new Date()),
+                                    }}
+                                    onDeletePost={handleDeletePost}
+                                />
+
                             )}
                             keyExtractor={item => item.id}
                             ListHeaderComponent={() => (
