@@ -11,6 +11,8 @@ import {
 } from 'react-native';
 import React, { useCallback, useState, useEffect } from 'react';
 import userImage from '../../../assets/images/user.jpg';
+import guestImage from '../../../assets/images/guest.jpg';
+import adminImage from '../../../assets/images/admin.jpg';
 import useUserCredentials from '../../utils/hooks/useUserCredentials';
 import defaultImage from '../assets/images/newsoverview.jpg';
 import CustomPostCard from '../../components/customs/CustomPostCard';
@@ -25,6 +27,14 @@ import CustomButton from '../../components/customs/CustomButton';
 
 export default function UsersNewsScreen({ navigation }) {
     let identify = useUserCredentials();
+
+    condition =
+        identify === 'Гость'
+            ? guestImage
+            : identify.includes('admin')
+                ? adminImage
+                : userImage;
+
     const [isRefreshing, setIsRefreshing] = useState(false);
     const [postText, setPostText] = useState(null);
     const [isSendButtonDisabled, setIsSendButtonDisabled] = useState(true);
@@ -117,7 +127,7 @@ export default function UsersNewsScreen({ navigation }) {
                 liked: false,
                 likes: 0,
                 comments: 0,
-                userImage: userImage,
+                userImage: condition,
                 deleted: false,
             };
 
@@ -175,8 +185,8 @@ export default function UsersNewsScreen({ navigation }) {
                                         color: 'white',
                                         opacity: 0.85,
                                     }}>
-                                    Чтобы делиться своими новостями, зарегестрируйтесь или
-                                    ввойдите в аккаунт!
+                                    Чтобы делиться своими новостями, зарегестрируйтесь или войдите
+                                    в аккаунт!
                                 </Text>
                             </View>
                             <View
@@ -192,7 +202,10 @@ export default function UsersNewsScreen({ navigation }) {
                                     type="Tertiary"
                                     onPress={() => setShowGuestModal(!showGuestModal)}
                                 />
-                                <CustomButton text="Войти" onPress={() => navigation.navigate('Регистрация')} />
+                                <CustomButton
+                                    text="Войти"
+                                    onPress={() => navigation.navigate('Регистрация')}
+                                />
                             </View>
                         </ModalPopup>
                     )}
@@ -211,7 +224,7 @@ export default function UsersNewsScreen({ navigation }) {
                             ListHeaderComponent={() => (
                                 <>
                                     <View style={styles.inputContainer}>
-                                        <Image source={userImage} style={styles.avatar} />
+                                        <Image source={condition} style={styles.avatar} />
                                         <TextInput
                                             autoFocus={false}
                                             selectionColor="white"
@@ -234,7 +247,7 @@ export default function UsersNewsScreen({ navigation }) {
                                             style={[styles.photo, { marginHorizontal: 0 }]}
                                             onPress={handleSendPost}
                                             disabled={!postText || postText.length <= 3}>
-                                            <Icons.Ionicons name="send" size={24} color="#d8d9d8" />
+                                            <Icons.Ionicons name="send" size={24} color="rgb(56 189 248)" />
                                         </TouchableOpacity>
                                     </View>
                                 </>

@@ -40,7 +40,6 @@ export default function CustomPostCard({ item, onDeletePost }) {
     const showToast = message => {
         setToastMessage(message);
         setShowToast(true);
-        console.log('heree', isShowToast);
     };
 
     useEffect(() => {

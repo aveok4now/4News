@@ -18,7 +18,7 @@ export default function CustomDropDown({
     identify,
     authorName,
 }) {
-    const condition = identify === authorName ? true : false;
+    const condition = (identify === authorName || identify === 'admin') ? true : false;
 
     const options = [
         {
