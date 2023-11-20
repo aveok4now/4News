@@ -8,6 +8,7 @@ import {
     TouchableOpacity,
     Platform,
     Text,
+    Animated,
 } from 'react-native';
 import React, { useCallback, useState, useEffect } from 'react';
 import userImage from '../../../assets/images/user.jpg';
@@ -42,8 +43,6 @@ export default function UsersNewsScreen({ navigation }) {
 
     const [showGuestModal, setShowGuestModal] = useState(false);
     const [isTextValid, setIsTextValid] = useState(false);
-
-
 
     const Posts = [
         {
@@ -139,7 +138,11 @@ export default function UsersNewsScreen({ navigation }) {
 
             setIsTextValid(false);
             setPostText(null);
-            if (!(newPost.postTime instanceof Date && !isNaN(newPost.postTime.getTime()))) {
+            if (
+                !(
+                    newPost.postTime instanceof Date && !isNaN(newPost.postTime.getTime())
+                )
+            ) {
                 console.log('Invalid date in handleSendPost');
                 return;
             }
@@ -150,13 +153,10 @@ export default function UsersNewsScreen({ navigation }) {
         }
     }, [UsersPosts, postText, identify, userImage]);
 
-    const handleTextChange = useCallback((text) => {
+    const handleTextChange = useCallback(text => {
         setPostText(text);
         setIsTextValid(text.length > 3);
     }, []);
-
-
-
 
     const handleDeletePost = postId => {
         setUsersPosts(prevPosts =>
@@ -169,6 +169,16 @@ export default function UsersNewsScreen({ navigation }) {
     const checkPerson = () => {
         if (identify === 'Гость') setShowGuestModal(!showGuestModal);
     };
+
+    const scrollY = new Animated.Value(0);
+    const diffClamp = Animated.diffClamp(scrollY, 0, 150);
+    const translateY = diffClamp.interpolate({
+        inputRange: [0, 150],
+        outputRange: [0, -150],
+    });
+
+    const [isScrolling, setIsScrolling] = useState(false);
+    const [isScrolledToTop, setIsScrolledToTop] = useState(false);
 
     return (
         <>
@@ -225,9 +235,13 @@ export default function UsersNewsScreen({ navigation }) {
                             </View>
                         </ModalPopup>
                     )}
-                    <View style={{
-
-                    }}>
+                    <Animated.View
+                        style={{
+                            transform: [{ translateY: translateY }],
+                            //zIndex: 2,
+                            elevation: 4,
+                            zIndex: 100,
+                        }}>
                         <View style={styles.inputContainer}>
                             <Image source={condition} style={styles.avatar} />
                             <TextInput
@@ -238,33 +252,48 @@ export default function UsersNewsScreen({ navigation }) {
                                 style={{ flex: 1 }}
                                 placeholder="Что у Вас нового?"
                                 value={postText}
-                                onChangeText={(text) => {
+                                onChangeText={text => {
                                     handleTextChange(text);
                                     checkPerson();
                                 }}
                             />
                             <TouchableOpacity style={styles.photo}>
-                                <Icons.FontAwesome6
-                                    name="image"
-                                    size={24}
-                                    color="#d8d9d8"
-                                />
+                                <Icons.FontAwesome6 name="image" size={24} color="#d8d9d8" />
                             </TouchableOpacity>
                             <TouchableOpacity
                                 style={[styles.photo, { marginHorizontal: 0 }]}
                                 onPress={handleSendPost}
                                 disabled={!isTextValid}>
-                                <Icons.Ionicons name="send" size={24} color={!isTextValid ? 'lightgray' : "rgb(56 189 248)"} />
+                                <Icons.Ionicons
+                                    name="send"
+                                    size={24}
+                                    color={!isTextValid ? 'lightgray' : 'rgb(56 189 248)'}
+                                />
                             </TouchableOpacity>
                         </View>
-                    </View>
-                    <View style={styles.cardContainer}>
+                    </Animated.View>
+                    <View
+                        style={[
+                            styles.cardContainer,
+                            { marginTop: isScrolledToTop ? '25%' : 0 },
+                        ]}>
                         <FlatList
+                            contentContainerStyle={{}}
                             onRefresh={onRefresh}
                             refreshing={isRefreshing}
                             showsVerticalScrollIndicator={false}
                             scrollEventThrottle={16}
                             bounces={false}
+                            onScroll={e => {
+                                scrollY.setValue(e.nativeEvent.contentOffset.y);
+                                const currentScrollPosition = e.nativeEvent.contentOffset.y;
+                                setIsScrolling(true);
+                                setIsScrolledToTop(prevState => {
+                                    const scrolledToTop = currentScrollPosition === 0;
+                                    console.log(scrolledToTop);
+                                    return scrolledToTop;
+                                });
+                            }}
                             data={UsersPosts}
                             renderItem={({ item }) => (
                                 <CustomPostCard
@@ -276,7 +305,6 @@ export default function UsersNewsScreen({ navigation }) {
                                     }}
                                     onDeletePost={handleDeletePost}
                                 />
-
                             )}
                             keyExtractor={item => item.id}
                         // ListHeaderComponent={() => (
@@ -295,8 +323,10 @@ const styles = StyleSheet.create({
         flex: 1,
         alignItems: 'center',
         padding: 20,
+        //marginTop: '25%'
     },
     inputContainer: {
+        //height: 75,
         margin: 12,
         flexDirection: 'row',
         alignItems: 'center',
@@ -305,7 +335,11 @@ const styles = StyleSheet.create({
         borderRadius: 15,
         paddingHorizontal: 16,
         borderWidth: 0.5,
-        borderColor: 'rgb(226 232 240)'
+        borderColor: 'rgb(94 234 212)',
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
     },
     avatar: {
         width: 48,

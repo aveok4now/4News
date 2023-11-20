@@ -39,9 +39,11 @@ export default function CustomPostCard({ item, onDeletePost }) {
     const [showDeleteModal, setShowDeleteModal] = useState(false);
 
     const [localTime, setLocalTime] = useState(new Date());
-    const [formattedPostTime, setFormattedPostTime] = useState(formatPostTime(item.postTime, localTime));
+    const [formattedPostTime, setFormattedPostTime] = useState(
+        formatPostTime(item.postTime, localTime),
+    );
 
-    const [postTime, setPostTime] = useState(item.postTime)
+    const [postTime, setPostTime] = useState(item.postTime);
 
     const showToast = message => {
         setToastMessage(message);
@@ -53,42 +55,19 @@ export default function CustomPostCard({ item, onDeletePost }) {
             const newTime = new Date();
             setLocalTime(newTime);
             setFormattedPostTime(formatPostTime(item.postTime, newTime));
-            setPostTime(item.postTime)
-            console.log(postTime)
+            setPostTime(item.postTime);
+            console.log(postTime);
         }, 1000);
         return intervalId;
     };
 
     useEffect(() => {
-        console.log('useEffect is running');
-        console.log("item.postTime:", item.postTime);
-        console.log("localTime:", localTime);
-        console.log("formattedPostTime", formattedPostTime)
-
-
         const intervalId = startInterval();
 
-
         return () => {
-            console.log('Cleaning up interval');
             clearInterval(intervalId);
         };
     }, [item.id, startInterval, postTime, item.postTime]);
-
-
-
-
-
-
-    // useEffect(() => {
-
-    // }, [item.liked])
-
-
-    // useEffect(() => {
-    //     setFormattedPostTime(formatPostTime(localTime));
-    // }, [localTime]);
-
 
     const deletePost = postId => {
         onDeletePost(postId);
@@ -196,7 +175,9 @@ export default function CustomPostCard({ item, onDeletePost }) {
                         </View>
                         <View style={styles.userInfoText}>
                             <Text style={styles.userName}>{item.userName}</Text>
-                            <Text style={styles.postTime}>{formatPostTime(item.postTime, new Date())}</Text>
+                            <Text style={styles.postTime}>
+                                {formatPostTime(item.postTime, new Date())}
+                            </Text>
                         </View>
                     </View>
                     <Text style={styles.postText}>{item.post}</Text>

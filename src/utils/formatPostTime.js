@@ -36,12 +36,18 @@ export const formatPostTime = (postTime, localTime) => {
         }
     }
 
-    const options = { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' };
-    console.log("posttime", postTimeObject.toLocaleDateString('ru-RU', options));
+    const options = {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+    };
+    //console.log('posttime', postTimeObject.toLocaleDateString('ru-RU', options));
 
     const currentTime = localTime || new Date();
     const timeDiffInSeconds = Math.floor((currentTime - postTimeObject) / 1000);
-    console.log("timediff", timeDiffInSeconds);
+    //console.log('timediff', timeDiffInSeconds);
 
     if (timeDiffInSeconds < 5) {
         return 'Только что';
