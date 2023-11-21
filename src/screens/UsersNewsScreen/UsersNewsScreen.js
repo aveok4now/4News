@@ -178,7 +178,7 @@ export default function UsersNewsScreen({ navigation }) {
     });
 
     const [isScrolling, setIsScrolling] = useState(false);
-    const [isScrolledToTop, setIsScrolledToTop] = useState(false);
+    const [isScrolledToTop, setIsScrolledToTop] = useState(true);
 
     return (
         <>
@@ -242,14 +242,23 @@ export default function UsersNewsScreen({ navigation }) {
                             elevation: 4,
                             zIndex: 100,
                         }}>
-                        <View style={styles.inputContainer}>
+                        <View
+                            style={[
+                                styles.inputContainer,
+                                {
+                                    backgroundColor: isScrolledToTop
+                                        ? theme.bgWhite(0.1)
+                                        : 'rgb(30 64 175)',
+                                    borderColor: isScrolledToTop ? 'rgb(186 230 253)' : 'rgb(94 234 212)',
+                                },
+                            ]}>
                             <Image source={condition} style={styles.avatar} />
                             <TextInput
                                 autoFocus={false}
                                 selectionColor="white"
                                 multiline={true}
                                 numberOfLines={3}
-                                style={{ flex: 1 }}
+                                style={{ flex: 1, fontFamily: 'Inter-Light' }}
                                 placeholder="Что у Вас нового?"
                                 value={postText}
                                 onChangeText={text => {
@@ -257,28 +266,20 @@ export default function UsersNewsScreen({ navigation }) {
                                     checkPerson();
                                 }}
                             />
-                            <TouchableOpacity style={styles.photo}>
-                                <Icons.FontAwesome6 name="image" size={24} color="#d8d9d8" />
-                            </TouchableOpacity>
+
                             <TouchableOpacity
-                                style={[styles.photo, { marginHorizontal: 0 }]}
                                 onPress={handleSendPost}
                                 disabled={!isTextValid}>
                                 <Icons.Ionicons
                                     name="send"
-                                    size={24}
+                                    size={32}
                                     color={!isTextValid ? 'lightgray' : 'rgb(56 189 248)'}
                                 />
                             </TouchableOpacity>
                         </View>
                     </Animated.View>
-                    <View
-                        style={[
-                            styles.cardContainer,
-                            { marginTop: isScrolledToTop ? '25%' : 0 },
-                        ]}>
+                    <View style={[styles.cardContainer]}>
                         <FlatList
-                            contentContainerStyle={{}}
                             onRefresh={onRefresh}
                             refreshing={isRefreshing}
                             showsVerticalScrollIndicator={false}
@@ -290,7 +291,7 @@ export default function UsersNewsScreen({ navigation }) {
                                 setIsScrolling(true);
                                 setIsScrolledToTop(prevState => {
                                     const scrolledToTop = currentScrollPosition === 0;
-                                    console.log(scrolledToTop);
+                                    //console.log(scrolledToTop);
                                     return scrolledToTop;
                                 });
                             }}
@@ -307,9 +308,9 @@ export default function UsersNewsScreen({ navigation }) {
                                 />
                             )}
                             keyExtractor={item => item.id}
-                        // ListHeaderComponent={() => (
-
-                        // )}
+                            ListHeaderComponent={() => (
+                                <View style={{ marginTop: '25%' }}></View>
+                            )}
                         />
                     </View>
                 </CustomDrawer>
@@ -323,19 +324,16 @@ const styles = StyleSheet.create({
         flex: 1,
         alignItems: 'center',
         padding: 20,
-        //marginTop: '25%'
     },
     inputContainer: {
         //height: 75,
         margin: 12,
         flexDirection: 'row',
         alignItems: 'center',
-        justifyContent: 'center',
-        backgroundColor: theme.bgWhite(0.1),
+        justifyContent: 'space-between',
         borderRadius: 15,
         paddingHorizontal: 16,
         borderWidth: 0.5,
-        borderColor: 'rgb(94 234 212)',
         position: 'absolute',
         top: 0,
         left: 0,
@@ -346,9 +344,5 @@ const styles = StyleSheet.create({
         height: 48,
         borderRadius: 24,
         marginRight: 16,
-    },
-    photo: {
-        alignItems: 'flex-end',
-        marginHorizontal: 16,
     },
 });

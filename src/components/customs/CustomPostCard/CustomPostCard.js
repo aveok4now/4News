@@ -50,13 +50,18 @@ export default function CustomPostCard({ item, onDeletePost }) {
         setShowToast(true);
     };
 
+    const onShowToastClose = () => {
+        console.log('onClose function called');
+        setToastMessage('');
+        setShowToast(false);
+    };
+
     const startInterval = () => {
         const intervalId = setInterval(() => {
             const newTime = new Date();
             setLocalTime(newTime);
             setFormattedPostTime(formatPostTime(item.postTime, newTime));
             setPostTime(item.postTime);
-            console.log(postTime);
         }, 1000);
         return intervalId;
     };
@@ -114,20 +119,12 @@ export default function CustomPostCard({ item, onDeletePost }) {
             {!item.deleted && (
                 <Animatable.View animation="fadeIn" duration={1000} style={styles.card}>
                     {isShowToast && (
-                        <View style={{ flex: 1 }}>
-                            <CustomToast
-                                message={toastMessage}
-                                onClose={() => {
-                                    setToastMessage('');
-                                    setShowToast(false);
-                                }}
-                            />
-                        </View>
+                        <CustomToast message={toastMessage} onClose={onShowToastClose} />
                     )}
                     {showDeleteModal && (
                         <ModalPopup visible={showDeleteModal}>
                             <View style={{ padding: 5 }}>
-                                <Text style={{ fontFamily: 'Inter-Bold', fontSize: 18 }}>
+                                <Text style={{ fontFamily: 'Inter-ExtraBold', fontSize: 18 }}>
                                     Подтверждение
                                 </Text>
                             </View>
@@ -150,7 +147,11 @@ export default function CustomPostCard({ item, onDeletePost }) {
                                     type="Tertiary"
                                     onPress={() => setShowDeleteModal(!showDeleteModal)}
                                 />
-                                <CustomButton text="Да" type="Tertiary" onPress={deletePost} />
+                                <CustomButton
+                                    text="Да"
+                                    type="Tertiary"
+                                    onPress={() => deletePost(item.id)}
+                                />
                             </View>
                         </ModalPopup>
                     )}
