@@ -180,6 +180,12 @@ export default function UsersNewsScreen({ navigation }) {
     const [isScrolling, setIsScrolling] = useState(false);
     const [isScrolledToTop, setIsScrolledToTop] = useState(true);
 
+    const inputContainerOpacity = diffClamp.interpolate({
+        inputRange: [0, 150],
+        outputRange: [1, 0],
+        extrapolate: 'clamp',
+    });
+
     return (
         <>
             <StatusBar backgroundColor="transparent" />
@@ -242,14 +248,18 @@ export default function UsersNewsScreen({ navigation }) {
                             elevation: 4,
                             zIndex: 100,
                         }}>
-                        <View
+                        <Animated.View
                             style={[
                                 styles.inputContainer,
                                 {
                                     backgroundColor: isScrolledToTop
                                         ? theme.bgWhite(0.1)
                                         : 'rgb(30 64 175)',
-                                    borderColor: isScrolledToTop ? 'rgb(186 230 253)' : 'rgb(94 234 212)',
+                                    borderColor: isScrolledToTop
+                                        ? 'rgb(186 230 253)'
+                                        : 'rgb(94 234 212)',
+                                    opacity: inputContainerOpacity,
+                                    transform: [{ translateY }],
                                 },
                             ]}>
                             <Image source={condition} style={styles.avatar} />
@@ -276,7 +286,7 @@ export default function UsersNewsScreen({ navigation }) {
                                     color={!isTextValid ? 'lightgray' : 'rgb(56 189 248)'}
                                 />
                             </TouchableOpacity>
-                        </View>
+                        </Animated.View>
                     </Animated.View>
                     <View style={[styles.cardContainer]}>
                         <FlatList
@@ -291,7 +301,6 @@ export default function UsersNewsScreen({ navigation }) {
                                 setIsScrolling(true);
                                 setIsScrolledToTop(prevState => {
                                     const scrolledToTop = currentScrollPosition === 0;
-                                    //console.log(scrolledToTop);
                                     return scrolledToTop;
                                 });
                             }}

@@ -87,6 +87,9 @@ const styles = StyleSheet.create({
         paddingVertical: 10,
         color: 'white',
         fontFamily: 'Inter-Black',
+        textShadowColor: 'rgba(226, 232, 240, 0.25)',
+        textShadowOffset: { width: 0, height: 2 },
+        textShadowRadius: 4,
         //letterSpacing: 1,
     },
 });

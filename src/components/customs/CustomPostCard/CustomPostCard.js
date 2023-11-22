@@ -118,9 +118,6 @@ export default function CustomPostCard({ item, onDeletePost }) {
         <>
             {!item.deleted && (
                 <Animatable.View animation="fadeIn" duration={1000} style={styles.card}>
-                    {isShowToast && (
-                        <CustomToast message={toastMessage} onClose={onShowToastClose} />
-                    )}
                     {showDeleteModal && (
                         <ModalPopup visible={showDeleteModal}>
                             <View style={{ padding: 5 }}>
@@ -233,6 +230,9 @@ export default function CustomPostCard({ item, onDeletePost }) {
                             </Text>
                         </TouchableOpacity>
                     </View>
+                    {isShowToast && (
+                        <CustomToast message={toastMessage} onClose={onShowToastClose} />
+                    )}
                 </Animatable.View>
             )}
         </>
