@@ -2,6 +2,7 @@ import { View, Text, Image, StatusBar, FlatList } from 'react-native';
 import React, { useState, useEffect } from 'react';
 import * as Progress from 'react-native-progress';
 import Card from '../../components/Card';
+//import { ruCaptions } from '../../constants/Images';
 
 const NewsOverviewScreen = ({ route, navigation }) => {
     const { apiKeyList, apiKeyIndex, caption, ruCaption } = route.params;
@@ -25,44 +26,56 @@ const NewsOverviewScreen = ({ route, navigation }) => {
     var formattedDate = year + '-' + month + '-' + day;
     console.log(formattedDate);
 
+    const newsWebsites = ['Газета.Ru', 'Lenta.ru'];
+
     const getDataByQ = async () => {
         try {
             setIsLoading(true);
 
             let apiEndpoint;
 
-            if (ruCaption === 'Газета.Ru') {
-                apiEndpoint = `domains=gazeta.ru&apiKey=${newApiKeyList[newApiKeyIndex]}`;
+            if (newsWebsites.includes(ruCaption)) {
+                apiEndpoint = `domains=${ruCaption === 'Газета.Ru' ? 'gazeta.ru' : 'lenta.ru'
+                    }&apiKey=${newApiKeyList[newApiKeyIndex]}`;
             } else {
-                apiEndpoint = `q=${ruCaption.toLowerCase()}&from=${formattedDate}&to=${currentDate}&sortBy=publishedAt&apiKey=${newApiKeyList[newApiKeyIndex]}`
-            }
+                const response = await fetch(
+                    `https://newsapi.org/v2/everything?q=${caption.toLowerCase()}&from=${formattedDate}&to=${currentDate}&sortBy=publishedAt&apiKey=${newApiKeyList[newApiKeyIndex]
+                    }`,
+                );
+                const ruResponse = await fetch(
+                    `https://newsapi.org/v2/everything?q=${ruCaption.toLowerCase()}&from=${formattedDate}&to=${currentDate}&sortBy=publishedAt&apiKey=${newApiKeyList[newApiKeyIndex]
+                    }`,
+                );
 
+                if (response.status === 429 || ruResponse.status === 429) {
+                    newApiKeyIndex = (newApiKeyIndex + 1) % newApiKeyList.length;
+                    getDataByQ();
+                    return;
+                }
+
+                const fetchedData = await response.json();
+                const rusFetchedData = await ruResponse.json();
+                const Data = [...rusFetchedData.articles, ...fetchedData.articles];
+
+                setData(Data);
+                setIsLoading(false);
+                return;
+            }
             const response = await fetch(
-                `https://newsapi.org/v2/everything?q=${caption}&from=${formattedDate}&to=${currentDate}&sortBy=publishedAt&apiKey=${newApiKeyList[newApiKeyIndex]}`,
-            );
-            const ruResponse = await fetch(
                 `https://newsapi.org/v2/everything?${apiEndpoint}`,
             );
 
-            if (response.status === 429 || ruResponse.status === 429) {
+            if (response.status === 429) {
                 newApiKeyIndex = (newApiKeyIndex + 1) % newApiKeyList.length;
                 getDataByQ();
                 return;
             }
 
             const fetchedData = await response.json();
-            const rusFetchedData = await ruResponse.json();
-            console.log(rusFetchedData);
-            const Data = [...rusFetchedData.articles, ...fetchedData.articles];
-
-            setData(Data);
-
-            //setIsRefreshing(false);
+            setData(fetchedData.articles);
             setIsLoading(false);
         } catch (error) {
             console.error('Error in getDataByQ:', error);
-            //setIsFetchingError(true);
-            //setIsRefreshing(false);
         }
     };
 

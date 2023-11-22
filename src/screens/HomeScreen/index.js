@@ -28,6 +28,7 @@ import { theme } from '../WeatherScreen/theme';
 import * as Progress from 'react-native-progress';
 import FloatingButton from '../../components/customs/FloatingButton';
 import CustomCarousel from '../../components/customs/CustomCarousel';
+import { apiKeyList } from '../../utils/apiKeys/newsApiKeys';
 
 const HomeScreen = ({ navigation }) => {
     // setTimeout(() => {
@@ -84,12 +85,6 @@ const HomeScreen = ({ navigation }) => {
         },
     ]);
 
-    const apiKeyList = [
-        'ef0cca7fb1924225a4c6c42e0f32924b',
-        'abc3f76eb9ec4195b35c7c5b3771a40b',
-        '5bb375e99be54883b8b9aee7001fc660',
-        '2c7f28792cc64ca699bfd3bbf2768105',
-    ];
     let apiKeyIndex = 0;
 
     const [isConnected, setIsConnected] = useState(false);
@@ -362,6 +357,7 @@ const HomeScreen = ({ navigation }) => {
                                                         }}
                                                         source={require('../assets/images/newsoverview.jpg')}
                                                     />
+
                                                     <CustomCarousel
                                                         apiKeyList={apiKeyList}
                                                         apiKeyIndex={apiKeyIndex}
