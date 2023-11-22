@@ -71,12 +71,12 @@ const CustomInput = ({
                                 setIsFocused(false);
                             }}
                             onFocus={() => setIsFocused(true)}
-                            selectionColor={selectionColor || defaultColor1}
+                            selectionColor={error ? 'rgb(239 68 68)' : selectionColor || defaultColor1}
                             placeholder={placeholder}
                             style={styles.input}
                             secureTextEntry={isPasswordVisible}
                         />
-                        {secureTextEntry && !isFocused && (
+                        {secureTextEntry && !isFocused && value && value.length > 0 && (
                             <TouchableOpacity
                                 onPress={handleButtonPress}
                                 style={styles.eyeIcon}>

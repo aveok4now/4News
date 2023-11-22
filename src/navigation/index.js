@@ -27,7 +27,6 @@ import CommentsScreen from '../screens/CommentsScreen';
 import NewsOverviewScreen from '../screens/NewsOverviewScreen';
 import { theme } from '../screens/WeatherScreen/theme';
 import { Icons } from '../components/Icons';
-import * as Animatable from 'react-native-animatable'
 import UsersNewsScreen from '../screens/UsersNewsScreen';
 
 const Stack = createNativeStackNavigator();
@@ -120,6 +119,11 @@ const Navigation = () => {
                         component={ForgotPasswordScreen}
                         options={screenOptions}
                     />
+                    <Stack.Screen
+                        name="Новый пароль"
+                        component={NewPasswordScreen}
+                        options={screenOptions}
+                    />
                     <Stack.Screen name="Домашняя страница" component={BottomTabBar} />
                     <Stack.Screen
                         name="Комментарии"
@@ -136,27 +140,21 @@ const Navigation = () => {
                             ...screenOptions,
                             headerTitle: '',
                             headerLeft: () => (
-                                <Animatable.View
-                                    animation="flipInX"
-                                >
+                                <Animatable.View animation="flipInX">
                                     <TouchableOpacity
                                         onPress={() => navigation.goBack()}
                                         style={{
                                             padding: 8,
                                             borderRadius: 100,
                                             backgroundColor: '#041147',
-                                        }}
-                                    >
+                                        }}>
                                         <Icons.AntDesign name="arrowleft" size={30} color="white" />
                                     </TouchableOpacity>
                                 </Animatable.View>
                             ),
                         })}
                     />
-                    <Stack.Screen
-                        name="Сообщество"
-                        component={UsersNewsScreen}
-                    />
+                    <Stack.Screen name="Сообщество" component={UsersNewsScreen} />
                 </Stack.Navigator>
             </NavigationContainer>
         </>

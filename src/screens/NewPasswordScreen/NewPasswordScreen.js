@@ -8,7 +8,10 @@ import { useForm } from 'react-hook-form';
 
 
 
-const NewPasswordScreen = () => {
+const NewPasswordScreen = ({ route }) => {
+
+    const { username } = route?.params;
+    console.log("newpassword screen" + username)
 
     const { control, handleSubmit, watch } = useForm();
     const navigation = useNavigation();
@@ -30,7 +33,6 @@ const NewPasswordScreen = () => {
     return (
         <ScrollView showsVerticalScrollIndicator={false}>
             <View style={styles.root}>
-                <Text style={styles.title}>Сброс пароля</Text>
 
                 <CustomInput
                     placeholder="Код подтверждения"
@@ -58,6 +60,7 @@ const NewPasswordScreen = () => {
                             message: 'Длина пароля должна быть не больше 15 символов'
                         }
                     }}
+                    secureTextEntry
                 />
 
                 <CustomInput
@@ -93,12 +96,7 @@ const styles = StyleSheet.create({
     root: {
         alignItems: 'center',
         padding: 20,
-    },
-    title: {
-        fontSize: 24,
-        fontWeight: 'bold',
-        color: "#0400FC",
-        margin: 10,
+        paddingVertical: 55,
     },
     text: {
         fontSize: 12,

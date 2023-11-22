@@ -130,7 +130,7 @@ const SignUpScreen = () => {
                     }}
 
                     setIsTyping={setIsTyping}
-                    selectionColor={'#C2F970'}
+                //selectionColor={'#C2F970'}
                 />
 
                 <CustomInput
@@ -142,7 +142,7 @@ const SignUpScreen = () => {
                         pattern: { value: email_regex, message: 'Неправильный ввод электронной почты' }
                     }}
                     setIsTyping={setIsTyping}
-                    selectionColor={'#00EEFB'}
+                //selectionColor={'#00EEFB'}
                 />
 
                 <CustomInput
@@ -162,7 +162,7 @@ const SignUpScreen = () => {
                         }
                     }}
                     setIsTyping={setIsTyping}
-                    selectionColor={'#DF57BC'}
+                //selectionColor={'#DF57BC'}
                 />
 
                 <CustomInput
@@ -175,7 +175,7 @@ const SignUpScreen = () => {
                             value === pwd || 'Пароли не совпадают',
                     }}
                     setIsTyping={setIsTyping}
-                    selectionColor={'#F6AE2D'}
+                //selectionColor={'#F6AE2D'}
                 />
 
                 <CustomButton
