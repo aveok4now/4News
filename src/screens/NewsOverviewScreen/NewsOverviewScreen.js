@@ -4,7 +4,7 @@ import * as Progress from 'react-native-progress';
 import Card from '../../components/Card';
 
 const NewsOverviewScreen = ({ route, navigation }) => {
-    const { apiKeyList, apiKeyIndex, caption } = route.params;
+    const { apiKeyList, apiKeyIndex, caption, ruCaption } = route.params;
     console.log(apiKeyList);
     console.log(apiKeyIndex);
 
@@ -15,26 +15,49 @@ const NewsOverviewScreen = ({ route, navigation }) => {
 
     const [Data, setData] = useState([]);
 
+    var currentDate = new Date();
+    currentDate.setDate(currentDate.getDate() - 7);
+
+    var year = currentDate.getFullYear();
+    var month = ('0' + (currentDate.getMonth() + 1)).slice(-2);
+    var day = ('0' + currentDate.getDate()).slice(-2);
+
+    var formattedDate = year + '-' + month + '-' + day;
+    console.log(formattedDate);
+
     const getDataByQ = async () => {
         try {
             setIsLoading(true);
+
+            let apiEndpoint;
+
+            if (ruCaption === 'Газета.Ru') {
+                apiEndpoint = `domains=gazeta.ru&apiKey=${newApiKeyList[newApiKeyIndex]}`;
+            } else {
+                apiEndpoint = `q=${ruCaption.toLowerCase()}&from=${formattedDate}&to=${currentDate}&sortBy=publishedAt&apiKey=${newApiKeyList[newApiKeyIndex]}`
+            }
+
             const response = await fetch(
-                `https://newsapi.org/v2/everything?q=${caption}&from=2023-11-15&to=2023-11-15&sortBy=popularity&apiKey=${newApiKeyList[newApiKeyIndex]}`,
+                `https://newsapi.org/v2/everything?q=${caption}&from=${formattedDate}&to=${currentDate}&sortBy=publishedAt&apiKey=${newApiKeyList[newApiKeyIndex]}`,
+            );
+            const ruResponse = await fetch(
+                `https://newsapi.org/v2/everything?${apiEndpoint}`,
             );
 
-            if (response.status === 429) {
+            if (response.status === 429 || ruResponse.status === 429) {
                 newApiKeyIndex = (newApiKeyIndex + 1) % newApiKeyList.length;
                 getDataByQ();
                 return;
             }
 
             const fetchedData = await response.json();
-            const Data = [...fetchedData.articles];
+            const rusFetchedData = await ruResponse.json();
+            console.log(rusFetchedData);
+            const Data = [...rusFetchedData.articles, ...fetchedData.articles];
 
             setData(Data);
+
             //setIsRefreshing(false);
-            console.log(Data);
-            //apiKeyIndex = (apiKeyIndex + 1) % apiKeyList.lrength;
             setIsLoading(false);
         } catch (error) {
             console.error('Error in getDataByQ:', error);
@@ -44,6 +67,8 @@ const NewsOverviewScreen = ({ route, navigation }) => {
     };
 
     useEffect(() => {
+        console.log(ruCaption.toLowerCase());
+        console.log(caption);
         setIsLoading(true);
         getDataByQ();
     }, []);
@@ -65,6 +90,7 @@ const NewsOverviewScreen = ({ route, navigation }) => {
                 ) : (
                     <View>
                         <FlatList
+                            showsVerticalScrollIndicator={false}
                             data={Data}
                             renderItem={({ item, index }) => {
                                 return <Card item={item} navigation={navigation} data={Data} />;

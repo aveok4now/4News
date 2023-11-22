@@ -222,8 +222,6 @@ const HomeScreen = ({ navigation }) => {
 
     const [showTabBar, setShowTabBar] = useState(true);
 
-
-
     return (
         <>
             <StatusBar backgroundColor="transparent" />
@@ -286,7 +284,7 @@ const HomeScreen = ({ navigation }) => {
                             showBorder={true}
                             //backgroundColor="#4361ee"
                             //backgroundColor="#0ea5e9"
-                            fontFamily='Inter-ExtraBold'
+                            fontFamily="Inter-ExtraBold"
                             letterSpacing={1}
                             navigation={navigation}>
                             <View style={{ flex: 1 }}>
@@ -333,9 +331,9 @@ const HomeScreen = ({ navigation }) => {
                                     />
                                 </Animatable.View>
 
-
-                                <View style={{ flex: 2 }}>
-                                    <View style={{ height: Dimensions.get('window').height * 0.78 }}>
+                                <View style={{ flex: 1 }}>
+                                    <View
+                                        style={{ height: Dimensions.get('window').height * 0.78 }}>
                                         <FlatList
                                             ref={flatListRef}
                                             style={{ flex: 1, zIndex: 100, position: 'relative' }}
@@ -345,24 +343,40 @@ const HomeScreen = ({ navigation }) => {
                                             refreshing={isRefreshing}
                                             data={Data}
                                             onScroll={event => {
-                                                const currentScrollPosition = event.nativeEvent.contentOffset.y;
-                                                setShowFloatingButton(currentScrollPosition < prevScrollPosition);
+                                                const currentScrollPosition =
+                                                    event.nativeEvent.contentOffset.y;
+                                                setShowFloatingButton(
+                                                    currentScrollPosition < prevScrollPosition,
+                                                );
                                                 setPrevScrollPosition(currentScrollPosition);
                                                 setIsScrolledToTop(currentScrollPosition === 0);
                                             }}
-                                            ListHeaderComponent={() => (
-                                                <View style={{ flex: 3 }}>
+                                            ListHeaderComponent={React.memo(() => (
+                                                <View>
                                                     <Image
                                                         blurRadius={200}
-                                                        style={{ position: 'absolute', width: '100%', height: '100%' }}
+                                                        style={{
+                                                            position: 'absolute',
+                                                            width: '100%',
+                                                            height: '100%',
+                                                        }}
                                                         source={require('../assets/images/newsoverview.jpg')}
                                                     />
-                                                    <CustomCarousel apiKeyList={apiKeyList} apiKeyIndex={apiKeyIndex} navigation={navigation} />
-
+                                                    <CustomCarousel
+                                                        apiKeyList={apiKeyList}
+                                                        apiKeyIndex={apiKeyIndex}
+                                                        navigation={navigation}
+                                                    />
                                                 </View>
-                                            )}
+                                            ))}
                                             renderItem={({ item, index }) => {
-                                                return <Card item={item} navigation={navigation} data={Data} />;
+                                                return (
+                                                    <Card
+                                                        item={item}
+                                                        navigation={navigation}
+                                                        data={Data}
+                                                    />
+                                                );
                                             }}
                                         />
                                     </View>
