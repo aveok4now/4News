@@ -28,6 +28,7 @@ import NewsOverviewScreen from '../screens/NewsOverviewScreen';
 import { theme } from '../screens/WeatherScreen/theme';
 import { Icons } from '../components/Icons';
 import * as Animatable from 'react-native-animatable'
+import UsersNewsScreen from '../screens/UsersNewsScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -151,6 +152,10 @@ const Navigation = () => {
                                 </Animatable.View>
                             ),
                         })}
+                    />
+                    <Stack.Screen
+                        name="Сообщество"
+                        component={UsersNewsScreen}
                     />
                 </Stack.Navigator>
             </NavigationContainer>

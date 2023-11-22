@@ -359,7 +359,7 @@ export default function CustomDrawer({
                                     source={
                                         identify === 'Гость'
                                             ? require('../../../../assets/images/guest.jpg')
-                                            : require('../../../../assets/images/user.jpg')
+                                            : identify.includes('admin') ? require('../../../../assets/images/admin.jpg') : require('../../../../assets/images/user.jpg')
                                     }
                                     style={{ width: '100%', height: '100%', resizeMode: 'cover' }}
                                 />
