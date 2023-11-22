@@ -1,33 +1,39 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { SafeAreaView, StyleSheet, Text, StatusBar, BackHandler, Modal, ListItem, View, Dimensions, TouchableOpacity, Animated } from 'react-native';
+import {
+  SafeAreaView,
+  StyleSheet,
+  Text,
+  StatusBar,
+  BackHandler,
+  Modal,
+  ListItem,
+  View,
+  Dimensions,
+  TouchableOpacity,
+  Animated,
+} from 'react-native';
 import Navigation from './src/navigation';
 import SplashScreen from 'react-native-splash-screen';
 import LottieView from 'lottie-react-native';
-
 import ModalPopup from './src/components/customs/CustomModal/CustomModal';
 import LinearGradient from 'react-native-linear-gradient';
 import RadialGradient from 'react-native-radial-gradient';
 const { width, height } = Dimensions.get('window');
-import SQLite from 'react-native-sqlite-storage'
+import SQLite from 'react-native-sqlite-storage';
 import { assets } from './react-native.config';
-//import CustomButton from 'D:/react/4NEWS/MyNewApp/src/components/customs/CustomButton/CustomButton.js';
 import CustomButton from './src/components/customs/CustomButton';
-import { setStatusBarColor, resetStatusBarColor } from './src/utils/StatusBarManager';
-
-
+import {
+  setStatusBarColor,
+  resetStatusBarColor,
+} from './src/utils/StatusBarManager';
 
 // SQLite.enablePromise(true);
 const App = () => {
-
-
   const [visible, setVisible] = useState(false);
 
   SplashScreen.hide();
 
-
-
   useEffect(() => {
-
     //setStatusBarColor('#ffff');
 
     db = SQLite.openDatabase(
@@ -36,9 +42,8 @@ const App = () => {
         createFromLocation: 1,
       },
       successToOpenDB,
-      failToOpenDB
+      failToOpenDB,
     );
-
 
     const backAction = () => {
       setVisible(!visible);
@@ -46,29 +51,28 @@ const App = () => {
     };
 
     const backHandler = BackHandler.addEventListener(
-      "hardwareBackPress",
-      backAction
+      'hardwareBackPress',
+      backAction,
     );
 
     return () => {
       resetStatusBarColor();
       backHandler.remove();
-    }
+    };
   }, []);
 
   const successToOpenDB = () => {
     //alert("База данных подключена!");
-  }
+  };
 
-  const failToOpenDB = (err) => {
-    alert(err)
-  }
+  const failToOpenDB = err => {
+    alert(err);
+  };
 
-  const onYes = () => BackHandler.exitApp()
+  const onYes = () => BackHandler.exitApp();
 
   return (
     <>
-
       {/* <LinearGradient colors={['#42275a', '#734b6d']} style={styles.gradient}> */}
 
       <LinearGradient colors={['#57e0f3', '#357ae0']} style={styles.gradient}>
@@ -77,25 +81,35 @@ const App = () => {
             <View style={{ alignItems: 'center' }}>
               <View style={styles.header}>
                 <TouchableOpacity onPress={() => setVisible(false)}>
-                  <LottieView style={styles.lottieClose}
-                    source={require("./src/screens/assets/animations/close.json")}
+                  <LottieView
+                    style={styles.lottieClose}
+                    source={require('./src/screens/assets/animations/close.json')}
                     autoPlay={true}
-                    loop={false} />
+                    loop={false}
+                  />
                 </TouchableOpacity>
               </View>
             </View>
-            <LottieView style={styles.lottie}
-              source={require("./src/screens/assets/animations/exit.json")}
+            <LottieView
+              style={styles.lottie}
+              source={require('./src/screens/assets/animations/exit.json')}
               autoPlay={true}
-              loop={false} />
-            <Text style={{ marginBottom: 20, fontSize: 20, textAlign: 'center', textDecorationColor: 'white', fontFamily: "Inter-Bold" }}>Вы уверены, что хотите выйти?</Text>
+              loop={false}
+            />
+            <Text
+              style={{
+                marginBottom: 20,
+                fontSize: 20,
+                textAlign: 'center',
+                textDecorationColor: 'white',
+                fontFamily: 'Inter-Bold',
+              }}>
+              Вы уверены, что хотите выйти?
+            </Text>
             <View style={{ flexDirection: 'column', justifyContent: 'center' }}>
+              <CustomButton text="Да" onPress={() => onYes()} />
               <CustomButton
-                text="Да"
-                onPress={() => onYes()}
-              />
-              <CustomButton
-                type='Tertiary'
+                type="Tertiary"
                 text="Отмена"
                 onPress={() => setVisible(false)}
               />
@@ -106,10 +120,7 @@ const App = () => {
       </LinearGradient>
     </>
   );
-}
-
-
-
+};
 
 const styles = StyleSheet.create({
   root: {
@@ -123,12 +134,12 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignSelf: 'center',
     width: width * 0.9,
-    height: width
+    height: width,
   },
   lottieClose: {
     width: 90,
     height: 90,
-    marginLeft: 55
+    marginLeft: 55,
   },
 
   header: {
@@ -138,8 +149,6 @@ const styles = StyleSheet.create({
     // paddingHorizontal: -15,
     justifyContent: 'center',
   },
-
-
 });
 
 export default App;
