@@ -3,27 +3,16 @@ import {
     View,
     Text,
     FlatList,
-    ScrollView,
     TouchableOpacity,
     StyleSheet,
-    ActivityIndicator,
     Dimensions,
     Image,
     StatusBar,
-    TouchableHighlight,
-    Animated,
 } from 'react-native';
-import Header from '../../components/Header';
 import Card from '../../components/Card';
-import CategoryComp from '../../components/Category/CategoryComp';
 import NetInfo from '@react-native-community/netinfo';
 import * as Animatable from 'react-native-animatable';
-import Icon2 from 'react-native-vector-icons/SimpleLineIcons';
 import CustomDrawer from '../../components/customs/CustomDrawer';
-import {
-    setStatusBarColor,
-    resetStatusBarColor,
-} from '../../utils/StatusBarManager';
 import { theme } from '../WeatherScreen/theme';
 import * as Progress from 'react-native-progress';
 import FloatingButton from '../../components/customs/FloatingButton';
@@ -96,37 +85,24 @@ const HomeScreen = ({ navigation }) => {
             const ruResponse = await fetch(
                 `https://newsapi.org/v2/top-headlines?country=ru&apiKey=${apiKeyList[apiKeyIndex]}&category=${Category[Select].category}`,
             );
-
-            if (ruResponse.status === 429) {
-                apiKeyIndex = (apiKeyIndex + 1) % apiKeyList.length;
-                getData();
-                return;
-                //throw new Error(`RuResponse Error: ${ruResponse.status}`);
-            }
-
-            const ruData = await ruResponse.json();
-
             const usResponse = await fetch(
                 `https://newsapi.org/v2/top-headlines?country=us&apiKey=${apiKeyList[apiKeyIndex]}&category=${Category[Select].category}`,
             );
 
-            if (usResponse.status === 429) {
+            if (ruResponse.status === 429 || usResponse.status === 429) {
                 apiKeyIndex = (apiKeyIndex + 1) % apiKeyList.length;
-                getData();
-                return;
-                //throw new Error(`UsResponse Error: ${usResponse.status}`);
+                return await getData();
+                //throw new Error(`RuResponse Error: ${ruResponse.status}`);
             }
 
+            const ruData = await ruResponse.json();
             const usData = await usResponse.json();
 
             const combinedData = [...ruData.articles, ...usData.articles];
 
             combinedData.sort(() => Math.random() - 0.5);
-            //console.log(combinedData)
             setData(combinedData);
             setIsRefreshing(false);
-            //console.log(combinedData)
-            //apiKeyIndex = (apiKeyIndex + 1) % apiKeyList.lrength;
             setIsLoading(false);
         } catch (error) {
             console.error('Error in getData:', error);
@@ -142,27 +118,18 @@ const HomeScreen = ({ navigation }) => {
                 `https://newsapi.org/v2/top-headlines?country=ru&apiKey=${apiKeyList[apiKeyIndex]}&category=${category}`,
             );
 
-            if (ruResponse.status === 429) {
-                apiKeyIndex = (apiKeyIndex + 1) % apiKeyList.length;
-                getData2();
-                return;
-                //throw new Error(`RuResponse Error: ${ruResponse.status}`);
-            }
-
-            const ruData = await ruResponse.json();
-
             const usResponse = await fetch(
                 `https://newsapi.org/v2/top-headlines?country=us&apiKey=${apiKeyList[apiKeyIndex]}&category=${category}`,
             );
 
-            if (usResponse.status === 429) {
+            if (ruResponse.status === 429 || usResponse.status === 429) {
                 apiKeyIndex = (apiKeyIndex + 1) % apiKeyList.length;
-                getData2();
-                return;
-                //throw new Error(`UsResponse Error: ${usResponse.status}`);
+                return await getData2(category);
             }
 
+            const ruData = await ruResponse.json();
             const usData = await usResponse.json();
+
             const combinedData = [...ruData.articles, ...usData.articles];
 
             combinedData.sort(() => Math.random() - 0.5);
@@ -175,6 +142,7 @@ const HomeScreen = ({ navigation }) => {
             console.error('Error in getData2:', error);
             setIsFetchingError(true);
             setIsRefreshing(false);
+            setIsLoading(false);
         }
     };
 
@@ -257,11 +225,7 @@ const HomeScreen = ({ navigation }) => {
                 )
             )}
 
-            {/* TODO: Lottie */}
             {Loading ? (
-                // <View style={styles.load}>
-                //     <ActivityIndicator color={'#754da6'} size={36}></ActivityIndicator>
-                // </View>
                 <View style={styles.load}>
                     <Progress.CircleSnail thickness={10} size={140} color="white" />
                 </View>
@@ -277,14 +241,10 @@ const HomeScreen = ({ navigation }) => {
                             type="Новости"
                             showSearch="true"
                             showBorder={true}
-                            //backgroundColor="#4361ee"
-                            //backgroundColor="#0ea5e9"
                             fontFamily="Inter-ExtraBold"
                             letterSpacing={1}
                             navigation={navigation}>
                             <View style={{ flex: 1 }}>
-                                {/* <Header navigation={navigation} /> */}
-
                                 <Animatable.View
                                     animation="fadeIn"
                                     duration={1500}
@@ -392,11 +352,6 @@ const HomeScreen = ({ navigation }) => {
                     </View>
                 )
             )}
-
-            {/* <Tab.Navigator screenOptions={screenOptions} initialRouteName='Домашняя страница'>
-                <Tab.Screen name="Домашняя страница" component={HomeScreen} />
-                <Tab.Screen name="Добро пожаловать !" component={SignInScreen} />
-            </Tab.Navigator> */}
         </>
     );
 };

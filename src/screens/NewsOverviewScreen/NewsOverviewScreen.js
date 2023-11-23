@@ -54,8 +54,8 @@ const NewsOverviewScreen = ({ route, navigation }) => {
 
 
     const getDataByQ = async () => {
+        setIsLoading(true);
         try {
-            setIsLoading(true);
 
             let apiEndpoint;
 
@@ -105,10 +105,6 @@ const NewsOverviewScreen = ({ route, navigation }) => {
         newApiKeyIndex = (newApiKeyIndex + 1) % newApiKeyList.length;
         await getDataByQ();
     };
-
-
-
-
 
     const onRefresh = () => {
         setIsRefreshing(true);

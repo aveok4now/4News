@@ -156,7 +156,7 @@ const Card = ({ item, navigation, data }) => {
                 duration={1500}>
                 <Pressable onPress={handleNewsPressed}>
                     <Animatable.Image
-                        animation="fadeInLeft"
+                        animation="fadeIn"
                         duration={1000}
                         source={{ uri: imageUrl }}
                         style={[
