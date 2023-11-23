@@ -13,6 +13,7 @@ const NewsOverviewScreen = ({ route, navigation }) => {
     let newApiKeyIndex = apiKeyIndex;
 
     const [isLoading, setIsLoading] = useState(false);
+    const [isRefreshing, setIsRefreshing] = useState(false);
 
     const [Data, setData] = useState([]);
 
@@ -24,9 +25,33 @@ const NewsOverviewScreen = ({ route, navigation }) => {
     var day = ('0' + currentDate.getDate()).slice(-2);
 
     var formattedDate = year + '-' + month + '-' + day;
-    console.log(formattedDate);
 
-    const newsWebsites = ['Газета.Ru', 'Lenta.ru'];
+    const apiConfig = {
+        baseUrl: 'https://newsapi.org/v2/everything',
+        apiKeyList: [...apiKeyList],
+        apiKeyIndex: apiKeyIndex
+    };
+
+    const newsWebsites = {
+        'Газета.Ru': 'gazeta.ru',
+        'Lenta.ru': 'lenta.ru',
+        'ТАСС': 'tass.ru',
+        'Известия': 'iz.ru',
+        'Хабр': 'habr.com',
+        'IXBT': 'ixbt.com',
+        'Мэйл.ру': 'mail.ru',
+        'Onliner': 'onliner.by',
+        'YouTube': 'youtube.com',
+        'КиноПоиск': 'kinopoisk.ru',
+        'Пикабу': 'pikabu.ru',
+        'Игромания': 'igromania.ru',
+        'Ведомости': 'vedomosti.ru',
+        'Биллборд': 'billboard.com',
+        'Коммерсантъ': 'kommersant.ru',
+        'Канобу': 'kanobu.ru',
+        'Apple': 'apple.com'
+    };
+
 
     const getDataByQ = async () => {
         try {
@@ -34,22 +59,18 @@ const NewsOverviewScreen = ({ route, navigation }) => {
 
             let apiEndpoint;
 
-            if (newsWebsites.includes(ruCaption)) {
-                apiEndpoint = `domains=${ruCaption === 'Газета.Ru' ? 'gazeta.ru' : 'lenta.ru'
-                    }&apiKey=${newApiKeyList[newApiKeyIndex]}`;
+            if (newsWebsites.hasOwnProperty(ruCaption)) {
+                apiEndpoint = `domains=${newsWebsites[ruCaption]}&apiKey=${newApiKeyList[newApiKeyIndex]}`;
             } else {
                 const response = await fetch(
-                    `https://newsapi.org/v2/everything?q=${caption.toLowerCase()}&from=${formattedDate}&to=${currentDate}&sortBy=publishedAt&apiKey=${newApiKeyList[newApiKeyIndex]
-                    }`,
+                    `https://newsapi.org/v2/everything?q=${caption.toLowerCase()}&from=${formattedDate}&to=${currentDate}&sortBy=publishedAt&apiKey=${newApiKeyList[newApiKeyIndex]}`,
                 );
                 const ruResponse = await fetch(
-                    `https://newsapi.org/v2/everything?q=${ruCaption.toLowerCase()}&from=${formattedDate}&to=${currentDate}&sortBy=publishedAt&apiKey=${newApiKeyList[newApiKeyIndex]
-                    }`,
+                    `https://newsapi.org/v2/everything?q=${ruCaption.toLowerCase()}&from=${formattedDate}&to=${currentDate}&sortBy=publishedAt&apiKey=${newApiKeyList[newApiKeyIndex]}`,
                 );
 
                 if (response.status === 429 || ruResponse.status === 429) {
-                    newApiKeyIndex = (newApiKeyIndex + 1) % newApiKeyList.length;
-                    getDataByQ();
+                    await handleApiError();
                     return;
                 }
 
@@ -58,6 +79,7 @@ const NewsOverviewScreen = ({ route, navigation }) => {
                 const Data = [...rusFetchedData.articles, ...fetchedData.articles];
 
                 setData(Data);
+                setIsRefreshing(false);
                 setIsLoading(false);
                 return;
             }
@@ -66,17 +88,31 @@ const NewsOverviewScreen = ({ route, navigation }) => {
             );
 
             if (response.status === 429) {
-                newApiKeyIndex = (newApiKeyIndex + 1) % newApiKeyList.length;
-                getDataByQ();
+                await handleApiError();
                 return;
             }
 
             const fetchedData = await response.json();
             setData(fetchedData.articles);
             setIsLoading(false);
+            setIsRefreshing(false);
         } catch (error) {
             console.error('Error in getDataByQ:', error);
         }
+    };
+
+    const handleApiError = async () => {
+        newApiKeyIndex = (newApiKeyIndex + 1) % newApiKeyList.length;
+        await getDataByQ();
+    };
+
+
+
+
+
+    const onRefresh = () => {
+        setIsRefreshing(true);
+        getDataByQ();
     };
 
     useEffect(() => {
@@ -103,6 +139,8 @@ const NewsOverviewScreen = ({ route, navigation }) => {
                 ) : (
                     <View>
                         <FlatList
+                            onRefresh={onRefresh}
+                            refreshing={isRefreshing}
                             showsVerticalScrollIndicator={false}
                             data={Data}
                             renderItem={({ item, index }) => {
