@@ -10,6 +10,7 @@ import {
     Image,
     KeyboardAvoidingView,
     ImageBackground,
+    ScrollView,
 } from 'react-native';
 import * as Animatable from 'react-native-animatable';
 import RadialGradient from 'react-native-radial-gradient';
@@ -24,9 +25,8 @@ import { useFocusEffect } from '@react-navigation/native';
 import { useIsFocused } from '@react-navigation/native';
 import { apiKeyList } from './apiKeys/newsApiKeys';
 import * as Progress from 'react-native-progress';
-import { createShimmerPlaceholder } from 'react-native-shimmer-placeholder';
-import LinearGradient from 'react-native-linear-gradient';
-const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
+
+import ShimmerCard from '../components/ShimmerCard';
 
 const Search = ({ navigation }) => {
     //const navigation = useNavigation();
@@ -103,58 +103,7 @@ const Search = ({ navigation }) => {
         }
     };
 
-
     const [isFocused, setIsFocused] = useState(false);
-
-
-    const shimmerConfigs = [
-        {
-            style: {
-                width: 'inherit',
-                height: 200,
-                borderRadius: 9,
-            },
-        },
-        {
-            style: {
-                width: 'inherit',
-                height: 52,
-                marginTop: 4,
-            },
-        },
-        {
-            style: {
-                width: 'inherit',
-                height: 30,
-                marginTop: 4,
-            },
-        },
-        {
-            style: {
-                width: 80,
-                height: 25,
-                marginTop: 4,
-                alignSelf: 'flex-end',
-                borderRadius: 10,
-            },
-        },
-        {
-            style: {
-                width: 125,
-                height: 30,
-                borderRadius: 10,
-            },
-        },
-        {
-            style: {
-                width: 125,
-                height: 30,
-                borderRadius: 10,
-            },
-        },
-    ];
-
-
 
     return (
         <View style={{ flex: 1 }}>
@@ -174,7 +123,6 @@ const Search = ({ navigation }) => {
             <Animatable.View
                 style={[
                     { flex: 1 },
-                    //Data[Data.length - 1] ? { marginBottom: '10%' } : null,
                 ]}
                 animation="fadeIn"
                 duration={1500}>
@@ -209,79 +157,10 @@ const Search = ({ navigation }) => {
                     />
                 </Animatable.View>
 
-                {/* //Data.length === 0 && isLoading && SearchText.length !== 0 && */}
                 {Data.length === 0 && isLoading && SearchText.length !== 0 && (
-                    <View style={{ flex: 1, alignItems: 'center' }}>
-                        {[...Array(10)].map((_, index) => (
-                            <View key={index} style={styles.placeholder}>
-                                <ShimmerPlaceholder
-                                    shimmerColors={['#F3F3F391', '#707070', '#F3F3F36C']}
-                                    style={{
-                                        width: 'inherit',
-                                        height: 200,
-                                        borderRadius: 9,
-                                    }}
-                                    autoRun={true}
-                                />
-                                <ShimmerPlaceholder
-                                    shimmerColors={['#F3F3F391', '#707070', '#F3F3F36C']}
-                                    style={{
-                                        width: 'inherit',
-                                        height: 52,
-                                        marginTop: 4,
-                                    }}
-                                    autoRun={true}
-                                />
-                                <ShimmerPlaceholder
-                                    shimmerColors={['#F3F3F391', '#707070', '#F3F3F36C']}
-                                    style={{
-                                        width: 'inherit',
-                                        height: 30,
-                                        marginTop: 4,
-                                    }}
-                                    autoRun={true}
-                                />
-                                <ShimmerPlaceholder
-                                    shimmerColors={['#F3F3F391', '#707070', '#F3F3F36C']}
-                                    style={{
-                                        width: 80,
-                                        height: 25,
-                                        marginTop: 4,
-                                        alignSelf: 'flex-end',
-                                        borderRadius: 10,
-                                    }}
-                                    autoRun={true}
-                                />
-                                <View
-                                    style={{
-                                        flexDirection: 'row',
-                                        marginTop: 10,
-                                        justifyContent: 'space-between',
-                                    }}
-                                >
-                                    <ShimmerPlaceholder
-                                        shimmerColors={['#F3F3F391', '#707070', '#F3F3F36C']}
-                                        style={{
-                                            width: 125,
-                                            height: 30,
-                                            borderRadius: 10,
-                                        }}
-                                        autoRun={true}
-                                    />
-                                    <ShimmerPlaceholder
-                                        shimmerColors={['#F3F3F391', '#707070', '#F3F3F36C']}
-                                        style={{
-                                            width: 125,
-                                            height: 30,
-                                            borderRadius: 10,
-                                        }}
-                                        autoRun={true}
-                                    />
-                                </View>
-                            </View>
-                        ))}
-                    </View>
-
+                    <ScrollView>
+                        <ShimmerCard />
+                    </ScrollView>
                 )}
 
                 {Data.length === 0 && !isLoading && (
@@ -342,14 +221,5 @@ const styles = StyleSheet.create({
         width: width,
         height: width,
         marginTop: '30%',
-    },
-    placeholder: {
-        width: '100%',
-        paddingHorizontal: 4,
-        paddingVertical: 14,
-        marginBottom: 4,
-        borderRadius: 9,
-        borderWidth: 0.65,
-        borderColor: 'rgb(156 163 175)',
     },
 });
