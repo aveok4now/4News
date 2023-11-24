@@ -23,7 +23,6 @@ export default function CommentsScreen({ route }) {
         defaultImage,
         includesG,
         formattedDate,
-        navigation,
         imageLoaded,
     } = route?.params;
 

@@ -130,10 +130,8 @@ const Card = ({ item, navigation, data }) => {
 
     const handleNewsPressed = () => {
         navigation.navigate('Комментарии', {
-            navigation,
             item: item,
             defaultImage: defaultImage,
-            //navigation: navigation,
             includesG: includesG,
             formattedDate: formattedDate,
             imageLoaded: imageLoaded
