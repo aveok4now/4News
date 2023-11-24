@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, ScrollView } from 'react-native';
 import CustomInput from '../../components/customs/CustomInput/CustomInput';
 import CustomButton from '../../components/customs/CustomButton/CustomButton';
@@ -17,6 +17,7 @@ const ForgotPasswordScreen = () => {
     const navigation = useNavigation();
 
     const [error, setError] = useState('');
+    const [isTyping, setIsTyping] = useState(false);
 
     const showToast = (text, type = 'error') => {
         Toast.show({
@@ -29,22 +30,19 @@ const ForgotPasswordScreen = () => {
     };
 
     const onSendPressed = async data => {
-        //console.warn("Отправить");
-        // валидация ...
         const userExists = await checkUser(data.username);
 
         if (userExists) {
             console.log('Пользователь существует');
             navigation.navigate('Новый пароль', { username: data.username });
+            setError(false);
         } else {
             console.log('Пользователь не существует');
             setError('Аккаунт не найден. Проверьте имя пользователя');
-            showToast(error);
         }
     };
 
     const onSignInPress = () => {
-        //console.warn("Вернуться к входу в аккаунт");
         navigation.navigate('Добро пожаловать !');
     };
 
@@ -70,14 +68,16 @@ const ForgotPasswordScreen = () => {
         } catch (error) { }
     };
 
-    const [isTyping, setIsTyping] = useState(false);
+    useEffect(() => {
+        if (error) {
+            showToast(error);
+        }
+    }, [error]);
+
     return (
         <>
-            <Toast />
             <ScrollView showsVerticalScrollIndicator={false}>
                 <View style={styles.root}>
-                    {/* <Text style={styles.title}>Сброс пароля</Text> */}
-
                     <CustomInput
                         name="username"
                         control={control}
@@ -118,6 +118,7 @@ const ForgotPasswordScreen = () => {
                     </View>
                 </View>
             </ScrollView>
+            <Toast />
         </>
     );
 };
