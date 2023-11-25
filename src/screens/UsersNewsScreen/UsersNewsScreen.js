@@ -10,7 +10,7 @@ import {
     Text,
     Animated,
 } from 'react-native';
-import React, { useCallback, useState, useEffect } from 'react';
+import React, { useCallback, useState, useEffect, useRef } from 'react';
 import userImage from '../../../assets/images/user.jpg';
 import guestImage from '../../../assets/images/guest.jpg';
 import adminImage from '../../../assets/images/admin.jpg';
@@ -166,8 +166,13 @@ export default function UsersNewsScreen({ navigation }) {
         );
     };
 
+    let inputRef = useRef(null);
+
     const checkPerson = () => {
-        if (identify === 'Гость') setShowGuestModal(!showGuestModal);
+        if (identify === 'Гость') {
+            setShowGuestModal(!showGuestModal);
+            inputRef.current.blur();
+        }
     };
 
     const scrollY = new Animated.Value(0);
@@ -264,6 +269,7 @@ export default function UsersNewsScreen({ navigation }) {
                             ]}>
                             <Image source={condition} style={styles.avatar} />
                             <TextInput
+                                ref={inputRef}
                                 autoFocus={false}
                                 selectionColor="white"
                                 multiline={true}
@@ -271,10 +277,8 @@ export default function UsersNewsScreen({ navigation }) {
                                 style={{ flex: 1, fontFamily: 'Inter-Light' }}
                                 placeholder="Что у Вас нового?"
                                 value={postText}
-                                onChangeText={text => {
-                                    handleTextChange(text);
-                                    checkPerson();
-                                }}
+                                onFocus={checkPerson}
+                                onChangeText={text => { handleTextChange(text) }}
                             />
 
                             <TouchableOpacity

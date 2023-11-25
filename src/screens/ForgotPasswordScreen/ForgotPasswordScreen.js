@@ -33,6 +33,10 @@ const ForgotPasswordScreen = () => {
         const userExists = await checkUser(data.username);
 
         if (userExists) {
+            //const randomCode = generateRandomCode();
+            //const userEmail = await getUserEmail(data.username);
+            //await sendCodeByEmail(userEmail, randomCode);
+
             console.log('Пользователь существует');
             navigation.navigate('Новый пароль', { username: data.username });
             setError(false);
@@ -65,7 +69,33 @@ const ForgotPasswordScreen = () => {
             } else {
                 console.log('user is not exists');
             }
-        } catch (error) { }
+        } catch (error) {
+            console.log('DB Error ' + error);
+        }
+    };
+
+    const getUserEmail = async userName => {
+        try {
+            console.log(userName);
+            const db = await SQLite.openDatabase({ name: 'news.db', location: 1 });
+
+            let query;
+            let queryArgs;
+
+            query = 'SELECT userEmail FROM Users WHERE userLogin = ?';
+            queryArgs = [userName];
+
+            const [result] = await db.executeSql(query, queryArgs);
+
+            if (result.rows.length > 0) {
+                console.log('users email exists');
+                return true;
+            } else {
+                console.log('user is not exists');
+            }
+        } catch (error) {
+            console.log('DB Error ' + error);
+        }
     };
 
     useEffect(() => {
