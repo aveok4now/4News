@@ -7,9 +7,9 @@ React Native News App project, bootstrapped using [`@react-native-community/cli`
   - [x] Page 1
   - [x] Page 2
   - [x] Page 3
-- [x] Custom Inputs w/ full customization 
-- [x] Custom Buttons w/ full customization 
-- [x] Custom Modal w/ full customization 
+- [x] Custom Inputs w/ full customization (still upgrading)
+- [x] Custom Buttons w/ full customization (still upgrading)
+- [x] Custom Modal w/ full customization (still upgrading)
 - [ ] Screens
   - [x] SignIn
     - [x] SignIn as a Guest
@@ -62,7 +62,9 @@ React Native News App project, bootstrapped using [`@react-native-community/cli`
     - [ ] Users News w/ comments, likes, date, etc.
       - [x] Realtime publication date changing 
       - [x] UI
-      - [x] Floating input container w/ opacity and etc. animations 
+      - [x] Floating input container w/ opacity and etc. animations
+      - [x] View w/ lottie animations and text inforamation. Shows when there are no available posts
+      - [x] Optimizied cards by using user's phone dimensions   
     - [x] News Posting Functionality
     - [x] News Deleting providing w/ "Are you sure?" CustomModal
     - [x] Avoiding Guests posting providing w/ "You don't have permission" CustomModalPopUp   
@@ -105,9 +107,15 @@ React Native News App project, bootstrapped using [`@react-native-community/cli`
       - [x] Tass.ru
       - [x] IZ.ru
       - [x] Ixbt.com
+      - [x] RG.ru
+      - [x] Meduza.ru
+      - [x] Interfax.ru
+      - [x] LIFE.ru
+      - [x] VZ.ru     
       - [x] Billboard
       - [x] Kinopoisk.ru
       - [x] Onliner.by
+      - [x] F1NEWS.ru 
       - [x] Youtube.com
 - [x] Custom hooks
   - [x] useUserCredentials
