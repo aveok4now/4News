@@ -83,7 +83,7 @@ export default function FavoritesScreen({ navigation }) {
                     letterSpacing={1}
                     fontFamily="Inter-ExtraBold"
                     navigation={navigation}>
-                    <Animatable.View animation="fadeIn" duration={1000}>
+                    <Animatable.View animation="fadeIn" duration={500}>
                         <FlatList
                             showsVerticalScrollIndicator={false}
                             onRefresh={onRefresh}

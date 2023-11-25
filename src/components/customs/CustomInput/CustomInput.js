@@ -21,6 +21,7 @@ const CustomInput = ({
     setIsTyping,
     selectionColor,
     isUserExist,
+    needTrim = true
 }) => {
     const [isFocused, setIsFocused] = useState(false);
     const [isPasswordVisible, setIsPasswordVisible] = useState(secureTextEntry);
@@ -57,7 +58,7 @@ const CustomInput = ({
                         <TextInput
                             value={value}
                             onChangeText={text => {
-                                if (text.includes(' ')) {
+                                if (text.includes(' ') && needTrim) {
                                     onChange(text.trim());
                                 } else {
                                     onChange(text);
