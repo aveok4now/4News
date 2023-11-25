@@ -26,6 +26,7 @@ import ModalPopup from '../../components/customs/CustomModal/CustomModal';
 import TypeWriter from 'react-native-typewriter';
 import CustomButton from '../../components/customs/CustomButton';
 import { formatPostTime } from '../../utils/formatPostTime';
+import NoNewsInfo from '../../components/NoNewsInfo';
 
 export default function UsersNewsScreen({ navigation }) {
     let identify = useUserCredentials();
@@ -278,7 +279,9 @@ export default function UsersNewsScreen({ navigation }) {
                                 placeholder="Что у Вас нового?"
                                 value={postText}
                                 onFocus={checkPerson}
-                                onChangeText={text => { handleTextChange(text) }}
+                                onChangeText={text => {
+                                    handleTextChange(text);
+                                }}
                             />
 
                             <TouchableOpacity
@@ -293,38 +296,42 @@ export default function UsersNewsScreen({ navigation }) {
                         </Animated.View>
                     </Animated.View>
                     <View style={[styles.cardContainer]}>
-                        <FlatList
-                            onRefresh={onRefresh}
-                            refreshing={isRefreshing}
-                            showsVerticalScrollIndicator={false}
-                            scrollEventThrottle={16}
-                            bounces={false}
-                            onScroll={e => {
-                                scrollY.setValue(e.nativeEvent.contentOffset.y);
-                                const currentScrollPosition = e.nativeEvent.contentOffset.y;
-                                setIsScrolling(true);
-                                setIsScrolledToTop(prevState => {
-                                    const scrolledToTop = currentScrollPosition === 0;
-                                    return scrolledToTop;
-                                });
-                            }}
-                            data={UsersPosts}
-                            renderItem={({ item }) => (
-                                <CustomPostCard
-                                    key={item.id}
-                                    localTime={localTime}
-                                    item={{
-                                        ...item,
-                                        postTime: formatPostTime(item.postTime, new Date()),
-                                    }}
-                                    onDeletePost={handleDeletePost}
-                                />
-                            )}
-                            keyExtractor={item => item.id}
-                            ListHeaderComponent={() => (
-                                <View style={{ marginTop: '25%' }}></View>
-                            )}
-                        />
+                        {UsersPosts.some(post => !post.deleted) ? (
+                            <FlatList
+                                onRefresh={onRefresh}
+                                refreshing={isRefreshing}
+                                showsVerticalScrollIndicator={false}
+                                scrollEventThrottle={16}
+                                bounces={false}
+                                onScroll={e => {
+                                    scrollY.setValue(e.nativeEvent.contentOffset.y);
+                                    const currentScrollPosition = e.nativeEvent.contentOffset.y;
+                                    setIsScrolling(true);
+                                    setIsScrolledToTop(prevState => {
+                                        const scrolledToTop = currentScrollPosition === 0;
+                                        return scrolledToTop;
+                                    });
+                                }}
+                                data={UsersPosts.filter(post => !post.deleted)}
+                                renderItem={({ item }) => (
+                                    <CustomPostCard
+                                        key={item.id}
+                                        localTime={localTime}
+                                        item={{
+                                            ...item,
+                                            postTime: formatPostTime(item.postTime, new Date()),
+                                        }}
+                                        onDeletePost={handleDeletePost}
+                                    />
+                                )}
+                                keyExtractor={item => item.id}
+                                ListHeaderComponent={() => (
+                                    <View style={{ marginTop: '25%' }}></View>
+                                )}
+                            />
+                        ) : (
+                            <NoNewsInfo primaryText="Постов пока нет 🥲" secondaryText="Пускай Ваш будет первым!" />
+                        )}
                     </View>
                 </CustomDrawer>
             </View>

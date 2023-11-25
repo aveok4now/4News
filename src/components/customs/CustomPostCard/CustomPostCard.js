@@ -18,6 +18,7 @@ import CustomModal from '../CustomModal';
 import ModalPopup from '../CustomModal/CustomModal';
 import CustomButton from '../CustomButton';
 import { formatPostTime } from '../../../utils/formatPostTime';
+import { width } from '../../../utils/getDimensions';
 
 export default function CustomPostCard({ item, onDeletePost }) {
     let identify = useUserCredentials();
@@ -242,7 +243,7 @@ export default function CustomPostCard({ item, onDeletePost }) {
 const styles = StyleSheet.create({
     card: {
         backgroundColor: '#f8f8f8',
-        width: '100%',
+        width: width * 0.9,
         marginBottom: 20,
         borderRadius: 10,
         shadowColor: '#000',
