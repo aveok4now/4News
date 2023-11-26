@@ -8,7 +8,7 @@ import { width } from '../../../utils/getDimensions';
 
 export default function TrendingMovies({ data, navigation }) {
 
-    const handleCardPress = () => {
+    const handleCardPress = (item) => {
         navigation.navigate('MovieScreen', item);
     }
 
@@ -30,7 +30,7 @@ export default function TrendingMovies({ data, navigation }) {
             </Text>
             <Carousel
                 data={data}
-                renderItem={({ item }) => <MovieCard item={item} handleCardPress={handleCardPress} />}
+                renderItem={({ item }) => <MovieCard item={item} handleCardPress={() => handleCardPress(item)} />}
                 firstItem={1}
                 inactiveSlideOpacity={0.6}
                 sliderWidth={width}

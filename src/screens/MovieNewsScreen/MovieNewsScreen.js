@@ -11,8 +11,8 @@ import { setStatusBarColor } from '../../utils/StatusBarManager';
 import CustomDrawer from '../../components/customs/CustomDrawer';
 import TrendingMoves from '../../components/MovieNewsComponents/TrendingMoves';
 import MovieList from '../../components/MovieNewsComponents/MovieList';
+import { ios } from '../../utils/getDimensions';
 
-const ios = Platform.OS == 'ios';
 export default function MovieNewsScreen({ navigation }) {
     const [trending, setTrending] = useState([1, 2, 3]);
     const [upcoming, setUpcoming] = useState([1, 2, 3]);
@@ -36,14 +36,26 @@ export default function MovieNewsScreen({ navigation }) {
                 showSearch="true"
                 navigation={navigation}
                 destination="Добро пожаловать !">
-                <SafeAreaView style={{ marginBottom: ios ? -8 : 16 }}>
+                {/* <SafeAreaView style={{ marginBottom: ios ? -8 : 16 }}>
                     <StatusBar style="light" />
-                </SafeAreaView>
+                </SafeAreaView> */}
                 <ScrollView
                     showsVerticalScrollIndicator={false}
                     contentContainerStyle={{ paddingBottom: 10 }}>
+                    {/* Сейчас в тренде */}
                     <TrendingMoves data={trending} navigation={navigation} />
-                    <MovieList title="Будущие новинки" data={upcoming} navigation={navigation} />
+                    {/* Будущие новинки */}
+                    <MovieList
+                        title="Будущие новинки"
+                        data={upcoming}
+                        navigation={navigation}
+                    />
+                    {/* Топ рейтинга */}
+                    <MovieList
+                        title="Топ рейтинга"
+                        data={topRated}
+                        navigation={navigation}
+                    />
                 </ScrollView>
             </CustomDrawer>
         </View>

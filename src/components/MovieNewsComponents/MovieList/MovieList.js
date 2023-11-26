@@ -11,7 +11,7 @@ import { assets } from '../../../../react-native.config';
 import { styles } from '../../../screens/MovieNewsScreen/theme';
 import { width, height } from '../../../utils/getDimensions';
 
-export default function MovieList({ title, data, navigation }) {
+export default function MovieList({ title, data, navigation, hideSeeAll }) {
     let movieName = 'Остров проклятых';
     return (
         <View style={{ marginBottom: 32, marginTop: 16 }}>
@@ -25,12 +25,16 @@ export default function MovieList({ title, data, navigation }) {
                 <Text
                     style={{
                         color: 'white',
-                        fontFamily: 'Inter-SemiBold',
+                        fontFamily: 'Inter-Black',
                         fontSize: 20,
                         lineHeight: 28,
+                        textShadowColor: 'rgba(226, 232, 240, 0.25)',
+                        textShadowOffset: { width: 0, height: 3 },
+                        textShadowRadius: 4,
                     }}>
                     {title.split(' ').map((word, index) =>
-                        word.toLowerCase() === 'новинки' ? (
+                        word.toLowerCase() === 'новинки' ||
+                            word.toLowerCase() === 'рейтинга' ? (
                             <Text key={index} style={{ fontFamily: 'Inter-ExtraBold' }}>
                                 {word}{' '}
                             </Text>
@@ -39,15 +43,17 @@ export default function MovieList({ title, data, navigation }) {
                         ),
                     )}
                 </Text>
-                <TouchableOpacity>
-                    <Text
-                        style={[
-                            styles.text,
-                            { fontSize: 16, lineHeight: 24, fontFamily: 'Inter-Light' },
-                        ]}>
-                        Смотреть все
-                    </Text>
-                </TouchableOpacity>
+                {!hideSeeAll && (
+                    <TouchableOpacity>
+                        <Text
+                            style={[
+                                styles.text,
+                                { fontSize: 16, lineHeight: 24, fontFamily: 'Inter-Light' },
+                            ]}>
+                            Смотреть все
+                        </Text>
+                    </TouchableOpacity>
+                )}
             </View>
             <ScrollView
                 horizontal
@@ -57,7 +63,7 @@ export default function MovieList({ title, data, navigation }) {
                     return (
                         <TouchableWithoutFeedback
                             key={index}
-                            onPress={() => navigation.navigate('MovieScreen', item)}>
+                            onPress={() => navigation.push('MovieScreen', item)}>
                             <View style={{ marginTop: 4, marginRight: 16 }}>
                                 <Image
                                     style={{
@@ -69,10 +75,15 @@ export default function MovieList({ title, data, navigation }) {
                                         uri: 'https://upload.wikimedia.org/wikipedia/ru/thumb/2/22/Kinopoisk.ru-Shutter-Island-1094940.jpg/203px-Kinopoisk.ru-Shutter-Island-1094940.jpg',
                                     }}
                                 />
-                                <Text style={{ color: 'rgb(209 213 219)', marginLeft: 4, fontFamily: 'Inter-Black' }}>
-                                    {
-                                        movieName.length > 14 ? movieName.slice(0, 14) + '...' : movieName
-                                    }
+                                <Text
+                                    style={{
+                                        color: 'rgb(209 213 219)',
+                                        marginLeft: 4,
+                                        fontFamily: 'Inter-Black',
+                                    }}>
+                                    {movieName.length > 14
+                                        ? movieName.slice(0, 14) + '...'
+                                        : movieName}
                                 </Text>
                             </View>
                         </TouchableWithoutFeedback>
