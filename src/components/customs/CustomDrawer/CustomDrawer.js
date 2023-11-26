@@ -45,6 +45,7 @@ export default function CustomDrawer({
     showBorder = false,
     fontFamily = 'Inter-Light',
     letterSpacing = 1,
+    destination = "Search"
 }) {
     let identify = useUserCredentials();
     let userEmail = useUserEmail();
@@ -571,7 +572,7 @@ export default function CustomDrawer({
                         </Text>
                     </View>
                     {showSearch == 'true' ? (
-                        <TouchableOpacity onPress={() => navigation.navigate('Search')}>
+                        <TouchableOpacity onPress={() => navigation.navigate(destination)}>
                             <Icon name="search" size={24} color="white" />
                         </TouchableOpacity>
                     ) : (
