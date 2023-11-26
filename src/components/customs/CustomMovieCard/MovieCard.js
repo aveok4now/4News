@@ -7,7 +7,7 @@ export default function MovieCard({ item, handleCardPress }) {
     return (
         <TouchableWithoutFeedback onPress={handleCardPress}>
             <Image
-                source={require('../../../screens/assets/images/backgr.jpg')}
+                source={{ uri: 'https://avatars.mds.yandex.net/get-ott/2439731/2a0000017c2848de9b46e75b6e6d33e7be3d/375x375' }}
                 style=
                 {{
                     width: width * 0.6,

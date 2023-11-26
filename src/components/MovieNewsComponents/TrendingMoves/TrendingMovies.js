@@ -24,8 +24,8 @@ export default function TrendingMovies({ data, navigation }) {
                     marginBottom: 20,
                 }}>
                 Сейчас в{' '}
-                <Text style={{ fontFamily: 'Inter-ExtraBold', color: styles.text }}>
-                    тренде:
+                <Text style={{ fontFamily: 'Inter-ExtraBold' }}>
+                    тренде
                 </Text>
             </Text>
             <Carousel

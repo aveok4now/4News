@@ -10,10 +10,13 @@ import React, { useEffect, useState } from 'react';
 import { setStatusBarColor } from '../../utils/StatusBarManager';
 import CustomDrawer from '../../components/customs/CustomDrawer';
 import TrendingMoves from '../../components/MovieNewsComponents/TrendingMoves';
+import MovieList from '../../components/MovieNewsComponents/MovieList';
 
 const ios = Platform.OS == 'ios';
 export default function MovieNewsScreen({ navigation }) {
     const [trending, setTrending] = useState([1, 2, 3]);
+    const [upcoming, setUpcoming] = useState([1, 2, 3]);
+    const [topRated, setTopRated] = useState([1, 2, 3]);
 
     let mainColor = 'rgb(49 46 129)';
 
@@ -40,6 +43,7 @@ export default function MovieNewsScreen({ navigation }) {
                     showsVerticalScrollIndicator={false}
                     contentContainerStyle={{ paddingBottom: 10 }}>
                     <TrendingMoves data={trending} navigation={navigation} />
+                    <MovieList title="Будущие новинки" data={upcoming} navigation={navigation} />
                 </ScrollView>
             </CustomDrawer>
         </View>
