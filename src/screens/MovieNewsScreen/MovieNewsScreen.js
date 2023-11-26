@@ -35,7 +35,7 @@ export default function MovieNewsScreen({ navigation }) {
                 showBorder={true}
                 showSearch="true"
                 navigation={navigation}
-                destination="Добро пожаловать !">
+                destination="MovieSearchScreen">
                 {/* <SafeAreaView style={{ marginBottom: ios ? -8 : 16 }}>
                     <StatusBar style="light" />
                 </SafeAreaView> */}

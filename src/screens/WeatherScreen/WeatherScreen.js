@@ -32,7 +32,6 @@ import { getItem, setItem } from '../../utils/asyncStorage';
 import useUserCredentials from '../../utils/hooks/useUserCredentials';
 import SQLite from 'react-native-sqlite-storage';
 
-
 const { width, height } = Dimensions.get('window');
 
 export default function WeatherScreen({ navigation }) {
@@ -80,9 +79,9 @@ export default function WeatherScreen({ navigation }) {
         const db = await SQLite.openDatabase({ name: 'news.db', location: 1 });
         let myCity = null;
 
-        console.log("IDENTIFY" + identify);
+        console.log('IDENTIFY' + identify);
 
-        await db.transaction((tx) => {
+        await db.transaction(tx => {
             tx.executeSql(
                 `
             SELECT userCity
@@ -97,11 +96,11 @@ export default function WeatherScreen({ navigation }) {
                 },
                 (tx, error) => {
                     console.error(error);
-                }
+                },
             );
         });
 
-        console.log("Полученный город: " + myCity);
+        console.log('Полученный город: ' + myCity);
 
         let cityName = 'Sevastopol';
         if (myCity) cityName = myCity;
@@ -115,12 +114,12 @@ export default function WeatherScreen({ navigation }) {
         });
     };
 
-    const setUserCityToDB = async (name) => {
+    const setUserCityToDB = async name => {
         try {
             const db = await SQLite.openDatabase({ name: 'news.db', location: 1 });
             let userId = null;
 
-            if (identify !== "Гость") {
+            if (identify !== 'Гость') {
                 const query = `SELECT userId FROM users WHERE userLogin = ?`;
                 const queryArgs = [identify];
                 const [result] = await db.executeSql(query, queryArgs);
@@ -128,7 +127,7 @@ export default function WeatherScreen({ navigation }) {
                 if (result.rows.length > 0) {
                     userId = result.rows.item(0).userId;
                     if (userId > 0) {
-                        db.transaction((tx) => {
+                        db.transaction(tx => {
                             tx.executeSql(
                                 `
                     UPDATE Users
@@ -137,12 +136,12 @@ export default function WeatherScreen({ navigation }) {
                     `,
                                 [name, userId],
                                 () => {
-                                    console.log("success")
+                                    console.log('success');
                                 },
-                                (error) => {
+                                error => {
                                     // Обработка ошибки выполнения транзакции
                                     console.error(error);
-                                }
+                                },
                             );
                         });
                     }

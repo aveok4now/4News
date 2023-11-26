@@ -30,6 +30,7 @@ import { Icons } from '../components/Icons';
 import UsersNewsScreen from '../screens/UsersNewsScreen';
 import MovieScreen from '../screens/MovieNewsScreen/MovieScreen';
 import MoviePersonScreen from '../screens/MovieNewsScreen/MoviePersonScreen';
+import MovieSeacrhScreen from '../screens/MovieNewsScreen/MovieSearchScreen/MovieSeacrhScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -159,6 +160,7 @@ const Navigation = () => {
                     <Stack.Screen name="Сообщество" component={UsersNewsScreen} />
                     <Stack.Screen name="MovieScreen" component={MovieScreen} />
                     <Stack.Screen name="MoviePersonScreen" component={MoviePersonScreen} />
+                    <Stack.Screen name="MovieSearchScreen" component={MovieSeacrhScreen} />
                 </Stack.Navigator>
             </NavigationContainer>
         </>
