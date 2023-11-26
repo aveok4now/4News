@@ -14,12 +14,10 @@ import { Image } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import Cast from '../../../components/MovieNewsComponents/Cast';
 import MovieList from '../../../components/MovieNewsComponents/MovieList';
-
-const topMargin = ios ? '' : 12;
+import HeaderButtons from '../../../components/MovieNewsComponents/HeaderButtons';
 
 export default function MovieScreen({ navigation }) {
     const { params: item } = useRoute();
-    const [isFavorite, setIsFavorite] = useState(false);
 
     const [cast, setCast] = useState([1, 2, 3, 4, 5]);
     const [similarMovies, setSimilarMovies] = useState([1, 2, 3, 4, 5]);
@@ -34,40 +32,7 @@ export default function MovieScreen({ navigation }) {
             contentContainerStyle={{ paddingBottom: 20 }}
             style={{ flex: 1, backgroundColor: 'rgb(23 23 23)' }}>
             <View style={{ width: '100%' }}>
-                <SafeAreaView
-                    style={{
-                        position: 'absolute',
-                        zIndex: 20,
-                        width: '100%',
-                        flexDirection: 'row',
-                        justifyContent: 'space-between',
-                        alignItems: 'center',
-                        paddingHorizontal: 16,
-                    }}>
-                    <TouchableOpacity
-                        style={[
-                            styles.background,
-                            { borderRadius: 12, padding: 4, marginTop: topMargin },
-                        ]}
-                        onPress={() => navigation.goBack()}>
-                        <Icons.Feather
-                            name="chevron-left"
-                            size={32}
-                            color="white"
-                            style={{ alignSelf: 'center' }}
-                        />
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                        style={[{ borderRadius: 12, padding: 4, marginTop: topMargin }]}
-                        onPress={() => setIsFavorite(!isFavorite)}>
-                        <Icons.FontAwesome
-                            name="heart"
-                            size={32}
-                            color={isFavorite ? theme.background : 'white'}
-                            style={{ alignSelf: 'center' }}
-                        />
-                    </TouchableOpacity>
-                </SafeAreaView>
+                <HeaderButtons navigation={navigation} />
                 <View style={{ flex: 1 }}>
                     <Image
                         source={{
@@ -140,7 +105,7 @@ export default function MovieScreen({ navigation }) {
                     style={{
                         color: 'rgb(163 163 163)',
                         letterSpacing: 1,
-                        marginHorizontal: 12
+                        marginHorizontal: 12,
                     }}>
                     Quis dolore aliqua do ut. Culpa occaecat exercitation esse mollit sunt
                     sunt nulla aute anim. Consectetur proident quis non occaecat dolor.
@@ -152,7 +117,12 @@ export default function MovieScreen({ navigation }) {
 
             <Cast cast={cast} navigation={navigation} />
 
-            <MovieList title="Похожее" data={similarMovies} hideSeeAll={true} navigation={navigation} />
+            <MovieList
+                title="Похожее"
+                data={similarMovies}
+                hideSeeAll={true}
+                navigation={navigation}
+            />
         </ScrollView>
     );
 }
