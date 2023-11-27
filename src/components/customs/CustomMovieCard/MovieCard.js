@@ -1,13 +1,16 @@
 import { View, Text, TouchableWithoutFeedback, Image } from 'react-native';
 import React from 'react';
 import { width, height } from '../../../utils/getDimensions';
+import { image500 } from '../../../api/moviedb';
 
 export default function MovieCard({ item, handleCardPress }) {
+
+    console.log("Постер", item.poster_path)
 
     return (
         <TouchableWithoutFeedback onPress={handleCardPress}>
             <Image
-                source={{ uri: 'https://avatars.mds.yandex.net/get-ott/2439731/2a0000017c2848de9b46e75b6e6d33e7be3d/375x375' }}
+                source={{ uri: image500(item.poster_path) }}
                 style=
                 {{
                     width: width * 0.6,

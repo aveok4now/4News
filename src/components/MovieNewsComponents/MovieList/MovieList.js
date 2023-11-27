@@ -10,9 +10,10 @@ import React from 'react';
 import { assets } from '../../../../react-native.config';
 import { styles } from '../../../screens/MovieNewsScreen/theme';
 import { width, height } from '../../../utils/getDimensions';
+import { fallbackMoviePoster, image185 } from '../../../api/moviedb';
 
 export default function MovieList({ title, data, navigation, hideSeeAll }) {
-    let movieName = 'Остров проклятых';
+    //let movieName = 'Остров проклятых';
     return (
         <View style={{ marginBottom: 32, marginTop: 16 }}>
             <View
@@ -72,18 +73,20 @@ export default function MovieList({ title, data, navigation, hideSeeAll }) {
                                         height: height * 0.22,
                                     }}
                                     source={{
-                                        uri: 'https://upload.wikimedia.org/wikipedia/ru/thumb/2/22/Kinopoisk.ru-Shutter-Island-1094940.jpg/203px-Kinopoisk.ru-Shutter-Island-1094940.jpg',
+                                        uri: image185(item.poster_path),
                                     }}
                                 />
                                 <Text
                                     style={{
                                         color: 'rgb(209 213 219)',
                                         marginLeft: 4,
+                                        textAlign: 'center',
                                         fontFamily: 'Inter-Black',
                                     }}>
-                                    {movieName.length > 14
-                                        ? movieName.slice(0, 14) + '...'
-                                        : movieName}
+                                    {
+                                        //item.title
+                                        item.title && item.title.length > 14 ? item.title.slice(0, 14) + '...' : item.title
+                                    }
                                 </Text>
                             </View>
                         </TouchableWithoutFeedback>
