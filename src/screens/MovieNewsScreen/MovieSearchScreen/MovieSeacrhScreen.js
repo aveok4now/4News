@@ -7,7 +7,7 @@ import {
     TouchableWithoutFeedback,
     Image,
 } from 'react-native';
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { width, height } from '../../../utils/getDimensions';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { theme } from '../theme';
@@ -17,15 +17,38 @@ import { useNavigation } from '@react-navigation/native';
 import LottieView from 'lottie-react-native';
 import newsAnimation from '../../assets/animations/nothing_found.json';
 import Loader from '../../../components/MovieNewsComponents/Loader';
+import { debounce } from 'lodash';
+import { image185, searchMovies } from '../../../api/moviedb';
 
 export default function MovieSeacrhScreen() {
     const [showSearch, setShowSearch] = useState(true);
-    const [results, setResults] = useState([1, 2, 3, 4, 5]);
-    let movieName = 'Волк с Уолл-Стрит';
+    const [results, setResults] = useState([]);
 
     const [isLoading, setIsLoading] = useState(false);
 
     const navigation = useNavigation();
+
+    const handleSearch = value => {
+        if (value && value.length > 2) {
+            setIsLoading(true);
+            searchMovies({
+                query: value,
+                include_adult: 'false',
+                language: 'ru-RU',
+                page: '1'
+            }).then(data => {
+                setIsLoading(false);
+                //console.log("фильмы: ", data)
+                if (data && data.results) setResults(data.results);
+            });;
+        } else {
+            setIsLoading(false);
+            setResults([]);
+        }
+    };
+
+    const handleTextDebounce = useCallback(debounce(handleSearch, 400), []);
+
     return (
         <SafeAreaView
             style={{ flex: 1, backgroundColor: 'rgb(49 46 129)', display: 'flex' }}>
@@ -44,6 +67,7 @@ export default function MovieSeacrhScreen() {
                     borderColor: theme.bgWhite(0.3),
                 }}>
                 <TextInput
+                    onChangeText={handleTextDebounce}
                     placeholder="Искать фильмы 🎥"
                     style={{
                         paddingLeft: 24,
@@ -105,7 +129,7 @@ export default function MovieSeacrhScreen() {
                                                 height: height * 0.3,
                                             }}
                                             source={{
-                                                uri: 'https://cv1.litres.ru/pub/c/cover_max1500/6538917.jpg',
+                                                uri: image185(item?.poster_path),
                                             }}
                                         />
                                         <Text
@@ -114,9 +138,9 @@ export default function MovieSeacrhScreen() {
                                                 marginLeft: 4,
                                                 fontFamily: 'Inter-Light',
                                             }}>
-                                            {movieName.length > 18
-                                                ? movieName.slice(0, 18) + '...'
-                                                : movieName}
+                                            {item?.title.length > 18
+                                                ? item?.title.slice(0, 18) + '...'
+                                                : item?.title}
                                         </Text>
                                     </View>
                                 </TouchableWithoutFeedback>

@@ -159,14 +159,25 @@ export default function MovieScreen({ navigation }) {
                 </Text>
             </View>
 
-            <Cast cast={cast} navigation={navigation} />
+            {cast.length > 0 && <Cast cast={cast} navigation={navigation} />}
 
-            <MovieList
-                title="Похожее"
-                data={similarMovies}
-                hideSeeAll={true}
-                navigation={navigation}
-            />
+            {similarMovies.length > 0 && (
+                <MovieList
+                    title="Похожее"
+                    data={similarMovies}
+                    hideSeeAll={true}
+                    navigation={navigation}
+                />
+            )}
+
+            {cast.length === 0 && similarMovies.length === 0 && !isLoading && (
+                <Text style={{
+                    fontFamily: 'Inter-Light',
+                    fontSize: 20,
+                    lineHeight: 28,
+                    textAlign: 'center'
+                }}>Кажется, информации пока нет 😰 </Text>
+            )}
         </ScrollView>
     );
 }
