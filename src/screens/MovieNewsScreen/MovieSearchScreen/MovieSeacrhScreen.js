@@ -16,11 +16,14 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import { useNavigation } from '@react-navigation/native';
 import LottieView from 'lottie-react-native';
 import newsAnimation from '../../assets/animations/nothing_found.json';
+import Loader from '../../../components/MovieNewsComponents/Loader';
 
 export default function MovieSeacrhScreen() {
     const [showSearch, setShowSearch] = useState(true);
     const [results, setResults] = useState([1, 2, 3, 4, 5]);
     let movieName = 'Волк с Уолл-Стрит';
+
+    const [isLoading, setIsLoading] = useState(false);
 
     const navigation = useNavigation();
     return (
@@ -67,7 +70,9 @@ export default function MovieSeacrhScreen() {
                     <Icons.Ionicons name="close-sharp" size={25} color="white" />
                 </TouchableOpacity>
             </View>
-            {results.length > 0 ? (
+            {isLoading ? (
+                <Loader />
+            ) : results.length > 0 ? (
                 <ScrollView
                     scrollEventThrottle={16}
                     showsVerticalScrollIndicator={false}

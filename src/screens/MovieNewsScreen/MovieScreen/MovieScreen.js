@@ -15,12 +15,16 @@ import LinearGradient from 'react-native-linear-gradient';
 import Cast from '../../../components/MovieNewsComponents/Cast';
 import MovieList from '../../../components/MovieNewsComponents/MovieList';
 import HeaderButtons from '../../../components/MovieNewsComponents/HeaderButtons';
+import Loader from '../../../components/MovieNewsComponents/Loader';
 
 export default function MovieScreen({ navigation }) {
     const { params: item } = useRoute();
 
     const [cast, setCast] = useState([1, 2, 3, 4, 5]);
     const [similarMovies, setSimilarMovies] = useState([1, 2, 3, 4, 5]);
+    let movieName = 'Остров проклятых';
+
+    const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
         // API CALL
@@ -33,29 +37,36 @@ export default function MovieScreen({ navigation }) {
             style={{ flex: 1, backgroundColor: 'rgb(23 23 23)' }}>
             <View style={{ width: '100%' }}>
                 <HeaderButtons navigation={navigation} />
-                <View style={{ flex: 1 }}>
-                    <Image
-                        source={{
-                            uri: 'https://avatars.mds.yandex.net/get-kinopoisk-image/4303601/617303b7-cfa7-4273-bd1d-63974bf68927/600x900',
-                        }}
-                        style={{ width: width, height: height * 0.55 }}
-                    />
-                    <LinearGradient
-                        colors={[
-                            'transparent',
-                            'rgba(23, 23, 23, 0.8)',
-                            'rgba(23, 23, 23, 1)',
-                        ]}
-                        style={{
-                            width,
-                            height: height * 0.4,
-                            position: 'absolute',
-                            bottom: 0,
-                        }}
-                        start={{ x: 0.5, y: 0 }}
-                        end={{ x: 0.5, y: 1 }}
-                    />
-                </View>
+                {
+                    isLoading ? (
+                        <Loader />
+                    ) : (
+                        <View style={{ flex: 1 }}>
+                            <Image
+                                source={{
+                                    uri: 'https://avatars.mds.yandex.net/get-kinopoisk-image/4303601/617303b7-cfa7-4273-bd1d-63974bf68927/600x900',
+                                }}
+                                style={{ width: width, height: height * 0.55 }}
+                            />
+                            <LinearGradient
+                                colors={[
+                                    'transparent',
+                                    'rgba(23, 23, 23, 0.8)',
+                                    'rgba(23, 23, 23, 1)',
+                                ]}
+                                style={{
+                                    width,
+                                    height: height * 0.4,
+                                    position: 'absolute',
+                                    bottom: 0,
+                                }}
+                                start={{ x: 0.5, y: 0 }}
+                                end={{ x: 0.5, y: 1 }}
+                            />
+                        </View>
+                    )
+                }
+
             </View>
             <View style={{ marginTop: -(height * 0.09), marginVertical: 12 }}>
                 <Text
@@ -69,7 +80,7 @@ export default function MovieScreen({ navigation }) {
                         textShadowOffset: { width: 0, height: 3 },
                         textShadowRadius: 4,
                     }}>
-                    Остров проклятых
+                    {movieName}
                 </Text>
                 <Text
                     style={{

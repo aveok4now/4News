@@ -12,11 +12,13 @@ import CustomDrawer from '../../components/customs/CustomDrawer';
 import TrendingMoves from '../../components/MovieNewsComponents/TrendingMoves';
 import MovieList from '../../components/MovieNewsComponents/MovieList';
 import { ios } from '../../utils/getDimensions';
+import Loader from '../../components/MovieNewsComponents/Loader';
 
 export default function MovieNewsScreen({ navigation }) {
     const [trending, setTrending] = useState([1, 2, 3]);
     const [upcoming, setUpcoming] = useState([1, 2, 3]);
     const [topRated, setTopRated] = useState([1, 2, 3]);
+    const [isLoading, setIsLoading] = useState(false);
 
     let mainColor = 'rgb(49 46 129)';
 
@@ -39,24 +41,31 @@ export default function MovieNewsScreen({ navigation }) {
                 {/* <SafeAreaView style={{ marginBottom: ios ? -8 : 16 }}>
                     <StatusBar style="light" />
                 </SafeAreaView> */}
-                <ScrollView
-                    showsVerticalScrollIndicator={false}
-                    contentContainerStyle={{ paddingBottom: 10 }}>
-                    {/* Сейчас в тренде */}
-                    <TrendingMoves data={trending} navigation={navigation} />
-                    {/* Будущие новинки */}
-                    <MovieList
-                        title="Будущие новинки"
-                        data={upcoming}
-                        navigation={navigation}
-                    />
-                    {/* Топ рейтинга */}
-                    <MovieList
-                        title="Топ рейтинга"
-                        data={topRated}
-                        navigation={navigation}
-                    />
-                </ScrollView>
+                {
+                    isLoading ? (
+                        <Loader />
+                    ) : (
+                        <ScrollView
+                            showsVerticalScrollIndicator={false}
+                            contentContainerStyle={{ paddingBottom: 10 }}>
+                            {/* Сейчас в тренде */}
+                            <TrendingMoves data={trending} navigation={navigation} />
+                            {/* Будущие новинки */}
+                            <MovieList
+                                title="Будущие новинки"
+                                data={upcoming}
+                                navigation={navigation}
+                            />
+                            {/* Топ рейтинга */}
+                            <MovieList
+                                title="Топ рейтинга"
+                                data={topRated}
+                                navigation={navigation}
+                            />
+                        </ScrollView>
+                    )
+                }
+
             </CustomDrawer>
         </View>
     );
