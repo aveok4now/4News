@@ -1,23 +1,57 @@
 import { View, Text, ScrollView, Image } from 'react-native';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { width, height, ios } from '../../../utils/getDimensions';
 import { theme } from '../theme';
 import HeaderButtons from '../../../components/MovieNewsComponents/HeaderButtons';
 import MovieList from '../../../components/MovieNewsComponents/MovieList';
 import Loader from '../../../components/MovieNewsComponents/Loader';
+import { useRoute } from '@react-navigation/native';
+import { fetchPersonDetails, image342 } from '../../../api/moviedb';
 
-export default function MoviePersonScreen({ person, navigation }) {
-    const [personMovies, setPersonMovies] = useState([1, 2, 3, 4, 5]);
+
+export default function MoviePersonScreen({ navigation }) {
+    const [personMovies, setPersonMovies] = useState([]);
+    const [person, setPerson] = useState({});
 
     const [isLoading, setIsLoading] = useState(true);
+    const { params: item } = useRoute();
+
+    useEffect(() => {
+        setIsLoading(true);
+        getPersonDetails(item.id);
+    }, [item]);
+
+    const getPersonDetails = async id => {
+        const data = await fetchPersonDetails(id);
+        console.log(data);
+        if (data) setPerson(data);
+        setIsLoading(false);
+    };
+
+    const formatDate = (dateString) => {
+        const date = new Date(dateString);
+        const day = date.getDate();
+        const monthIndex = date.getMonth();
+        const year = date.getFullYear();
+
+        const months = [
+            "января", "февраля", "марта", "апреля", "мая", "июня",
+            "июля", "августа", "сентября", "октября", "ноября", "декабря"
+        ];
+
+        return `${day} ${months[monthIndex]}, ${year}`;
+    };
+
     return (
         <ScrollView
+            showsVerticalScrollIndicator={false}
             contentContainerStyle={{ paddingBottom: 20 }}
             style={{ flex: 1, backgroundColor: 'rgb(17 24 39)' }}>
             <HeaderButtons navigation={navigation} />
             {isLoading ? (
-                <Loader />
-
+                <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                    <Loader />
+                </View>
             ) : (
                 <View style={{ marginTop: 64, backgroundColor: 'transparent' }}>
                     <View
@@ -44,7 +78,7 @@ export default function MoviePersonScreen({ person, navigation }) {
                             <Image
                                 style={{ height: height * 0.43, width: width * 0.74 }}
                                 source={{
-                                    uri: 'https://static.kinoafisha.info/k/persons/1080x1920/upload/persons/195010465372.jpg',
+                                    uri: image342(person?.profile_path),
                                 }}
                             />
                         </View>
@@ -61,7 +95,7 @@ export default function MoviePersonScreen({ person, navigation }) {
                                 textShadowOffset: { width: 0, height: 3 },
                                 textShadowRadius: 4,
                             }}>
-                            Леонардо ДиКаприо
+                            {person?.name}
                         </Text>
                         <Text
                             style={{
@@ -69,7 +103,7 @@ export default function MoviePersonScreen({ person, navigation }) {
                                 fontFamily: 'Inter-Light',
                                 color: 'rgb(163 163 163)',
                             }}>
-                            Лос-Анджелес, Калифорния, США
+                            {person?.place_of_birth}
                         </Text>
                     </View>
                     <ScrollView
@@ -110,7 +144,9 @@ export default function MoviePersonScreen({ person, navigation }) {
                                     fontFamily: 'Inter-Light',
                                     color: 'rgb(163 163 163)',
                                 }}>
-                                Мужской
+                                {
+                                    person?.gender === 1 ? 'Женский' : 'Мужской'
+                                }
                             </Text>
                         </View>
                         <View
@@ -136,7 +172,7 @@ export default function MoviePersonScreen({ person, navigation }) {
                                     fontFamily: 'Inter-Light',
                                     color: 'rgb(163 163 163)',
                                 }}>
-                                11 ноября, 1974
+                                {formatDate(person?.birthday)}
                             </Text>
                         </View>
                         <View
@@ -153,7 +189,7 @@ export default function MoviePersonScreen({ person, navigation }) {
                                     fontFamily: 'Inter-SemiBold',
                                     color: 'white',
                                 }}>
-                                Известен как
+                                {person?.gender === 1 ? 'Известна как' : 'Известен как'}
                             </Text>
                             <Text
                                 style={{
@@ -162,7 +198,7 @@ export default function MoviePersonScreen({ person, navigation }) {
                                     fontFamily: 'Inter-Light',
                                     color: 'rgb(163 163 163)',
                                 }}>
-                                Актёр
+                                {person?.known_for_department === 'Acting' ? person?.gender === 1 ? 'Актриса' : 'Актёр' : person?.known_for_department}
                             </Text>
                         </View>
                         <View
@@ -186,7 +222,7 @@ export default function MoviePersonScreen({ person, navigation }) {
                                     fontFamily: 'Inter-Light',
                                     color: 'rgb(163 163 163)',
                                 }}>
-                                87.5
+                                {person?.popularity ? person.popularity.toFixed(1) : ''}
                             </Text>
                         </View>
                     </ScrollView>
@@ -210,30 +246,16 @@ export default function MoviePersonScreen({ person, navigation }) {
                                 fontFamily: 'Inter-Light',
                                 letterSpacing: 0.25,
                             }}>
-                            Ex exercitation anim ipsum minim deserunt. Ipsum deserunt ad
-                            deserunt ipsum. Pariatur et enim esse cupidatat id deserunt ex do
-                            qui pariatur eu adipisicing Lorem. Fugiat esse reprehenderit eu
-                            anim excepteur et irure. Minim anim est exercitation amet. Eiusmod
-                            ex commodo tempor id nulla. Nisi voluptate est non sit deserunt
-                            anim veniam laborum nisi. Sit non Lorem anim excepteur est esse
-                            irure id commodo pariatur. Et ipsum Lorem commodo dolor elit anim
-                            voluptate dolore sint ullamco. In excepteur aute enim occaecat
-                            ipsum sunt et dolore. Voluptate fugiat aute nostrud ad occaecat
-                            veniam nulla ex culpa cillum fugiat consectetur.Ut incididunt
-                            excepteur excepteur laboris ut aliquip veniam adipisicing laborum
-                            duis consectetur esse pariatur. Irure ullamco minim cupidatat
-                            aliqua ea ad aliqua cillum esse. Quis do duis veniam ut quis est
-                            cillum magna cupidatat ad anim. Ad ullamco enim occaecat qui.
-                            Excepteur dolore quis ex irure veniam non incididunt.
+                            {person?.biography}
                         </Text>
                     </View>
 
-                    <MovieList
+                    {/* <MovieList
                         title="Фильмы"
                         data={personMovies}
                         navigation={navigation}
                         hideSeeAll={true}
-                    />
+                    /> */}
                 </View>
             )}
         </ScrollView>
