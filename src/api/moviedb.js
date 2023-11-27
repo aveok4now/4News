@@ -7,12 +7,16 @@ const trendingMoviesEndpoint = `${apiBaseUrl}/trending/movie/day?api_key=${movie
 const upComingMoviesEndpoint = `${apiBaseUrl}/movie/upcoming?api_key=${movieApiKey}&language=ru-RU&page=1`
 const topRatedMoviesEndpoint = `${apiBaseUrl}/movie/top_rated?api_key=${movieApiKey}&language=ru-RU&page=1`
 
+// dynamic endpoints
+const movieDetailsEndpoint = id => `${apiBaseUrl}/movie/${id}?api_key=${movieApiKey}&language=ru-RU`
+const movieCreditsEndpoint = id => `${apiBaseUrl}/movie/${id}/credits?api_key=${movieApiKey}&language=ru-RU`
+const similarMoviesEndpoint = id => `${apiBaseUrl}/movie/${id}/similar?api_key=${movieApiKey}&language=ru-RU`
 
 export const image500 = path => path ? `https://image.tmdb.org/t/p/w500/${path}` : fallbackMoviePoster;
 export const image342 = path => path ? `https://image.tmdb.org/t/p/w342/${path}` : fallbackMoviePoster;
-export const image185 = path => path ? `https://image.tmdb.org/t/p/w185/${path}` : fallbackMoviePoster;
+export const image185 = path => path ? `https://image.tmdb.org/t/p/w185/${path}` : fallbackPersonImage;
 export const fallbackMoviePoster = 'https://arbeitgeber.de/wp-content/uploads/2020/11/bda-news-header-1920x1280px-1536x1024.jpg';
-export const fallbackPersonImage = 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRmUiF-YGjavA63_Au8jQj7zxnFxS_Ay9xc6pxleMqCxH92SzeNSjBTwZ0l61E4B3KTS7o&usqp=CAU';
+export const fallbackPersonImage = 'https://i.pinimg.com/564x/52/e3/b1/52e3b195a572d00afac7884a733b9bc5.jpg';
 
 
 const apiCall = async (endpoint, params) => {
@@ -41,4 +45,16 @@ export const fetchUpcomingMovies = () => {
 
 export const fetchTopRatedMovies = () => {
     return apiCall(topRatedMoviesEndpoint);
+}
+
+export const fetchMovieDetails = id => {
+    return apiCall(movieDetailsEndpoint(id));
+}
+
+export const fetchMovieCredits = id => {
+    return apiCall(movieCreditsEndpoint(id));
+}
+
+export const fetchSimilarMovies = id => {
+    return apiCall(similarMoviesEndpoint(id));
 }

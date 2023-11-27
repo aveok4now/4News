@@ -16,19 +16,48 @@ import Cast from '../../../components/MovieNewsComponents/Cast';
 import MovieList from '../../../components/MovieNewsComponents/MovieList';
 import HeaderButtons from '../../../components/MovieNewsComponents/HeaderButtons';
 import Loader from '../../../components/MovieNewsComponents/Loader';
+import {
+    fetchMovieCredits,
+    fetchMovieDetails,
+    fetchSimilarMovies,
+    image500,
+} from '../../../api/moviedb';
 
 export default function MovieScreen({ navigation }) {
     const { params: item } = useRoute();
 
-    const [cast, setCast] = useState([1, 2, 3, 4, 5]);
-    const [similarMovies, setSimilarMovies] = useState([1, 2, 3, 4, 5]);
-    let movieName = 'Остров проклятых';
+    const [cast, setCast] = useState([]);
+    const [similarMovies, setSimilarMovies] = useState([]);
 
     const [isLoading, setIsLoading] = useState(false);
+    const [movie, setMovie] = useState({});
 
     useEffect(() => {
-        // API CALL
+        console.log('itemid', item.id);
+        setIsLoading(true);
+        getMovieDetails(item.id);
+        getMovieCredits(item.id);
+        getSimilarMovies(item.id);
     }, [item]);
+
+    const getMovieDetails = async id => {
+        const data = await fetchMovieDetails(id);
+        console.log('data: ', data);
+        if (data) setMovie(data);
+        setIsLoading(false);
+    };
+
+    const getMovieCredits = async id => {
+        const data = await fetchMovieCredits(id);
+        if (data && data.cast) setCast(data.cast);
+        //setIsLoading(false);
+    };
+
+    const getSimilarMovies = async id => {
+        const data = await fetchSimilarMovies(id);
+        //console.log('similar: ', data)
+        if (data && data.results) setSimilarMovies(data.results);
+    };
 
     return (
         <ScrollView
@@ -37,36 +66,33 @@ export default function MovieScreen({ navigation }) {
             style={{ flex: 1, backgroundColor: 'rgb(23 23 23)' }}>
             <View style={{ width: '100%' }}>
                 <HeaderButtons navigation={navigation} />
-                {
-                    isLoading ? (
-                        <Loader />
-                    ) : (
-                        <View style={{ flex: 1 }}>
-                            <Image
-                                source={{
-                                    uri: 'https://avatars.mds.yandex.net/get-kinopoisk-image/4303601/617303b7-cfa7-4273-bd1d-63974bf68927/600x900',
-                                }}
-                                style={{ width: width, height: height * 0.55 }}
-                            />
-                            <LinearGradient
-                                colors={[
-                                    'transparent',
-                                    'rgba(23, 23, 23, 0.8)',
-                                    'rgba(23, 23, 23, 1)',
-                                ]}
-                                style={{
-                                    width,
-                                    height: height * 0.4,
-                                    position: 'absolute',
-                                    bottom: 0,
-                                }}
-                                start={{ x: 0.5, y: 0 }}
-                                end={{ x: 0.5, y: 1 }}
-                            />
-                        </View>
-                    )
-                }
-
+                {isLoading ? (
+                    <Loader />
+                ) : (
+                    <View style={{ flex: 1 }}>
+                        <Image
+                            source={{
+                                uri: image500(movie?.poster_path),
+                            }}
+                            style={{ width: width, height: height * 0.55 }}
+                        />
+                        <LinearGradient
+                            colors={[
+                                'transparent',
+                                'rgba(23, 23, 23, 0.8)',
+                                'rgba(23, 23, 23, 1)',
+                            ]}
+                            style={{
+                                width,
+                                height: height * 0.4,
+                                position: 'absolute',
+                                bottom: 0,
+                            }}
+                            start={{ x: 0.5, y: 0 }}
+                            end={{ x: 0.5, y: 1 }}
+                        />
+                    </View>
+                )}
             </View>
             <View style={{ marginTop: -(height * 0.09), marginVertical: 12 }}>
                 <Text
@@ -80,18 +106,22 @@ export default function MovieScreen({ navigation }) {
                         textShadowOffset: { width: 0, height: 3 },
                         textShadowRadius: 4,
                     }}>
-                    {movieName}
+                    {movie?.title}
                 </Text>
-                <Text
-                    style={{
-                        color: 'rgb(212 212 212)',
-                        fontFamily: 'Inter-SemiBold',
-                        fontSize: 16,
-                        lineHeight: 24,
-                        textAlign: 'center',
-                    }}>
-                    Год производства • 2004 • 150 мин
-                </Text>
+
+                {movie?.id ? (
+                    <Text
+                        style={{
+                            color: 'rgb(212 212 212)',
+                            fontFamily: 'Inter-SemiBold',
+                            fontSize: 16,
+                            lineHeight: 24,
+                            textAlign: 'center',
+                        }}>
+                        {movie?.status === 'Released' ? 'Вышел' : movie?.status} •{' '}
+                        {movie?.release_date?.split('-')[0]} • {movie?.runtime} мин
+                    </Text>
+                ) : null}
 
                 <View
                     style={{
@@ -100,16 +130,23 @@ export default function MovieScreen({ navigation }) {
                         marginHorizontal: 16,
                         marginVertical: 16,
                     }}>
-                    <Text
-                        style={{
-                            color: 'rgb(163 163 163)',
-                            fontFamily: 'Inter-Light',
-                            fontSize: 16,
-                            lineHeight: 24,
-                            textAlign: 'center',
-                        }}>
-                        Драма • Психология • Триллер
-                    </Text>
+                    {movie?.genres?.map((genre, index) => {
+                        let showDot = index + 1 != movie.genres.length;
+                        return (
+                            <Text
+                                key={index}
+                                style={{
+                                    color: 'rgb(163 163 163)',
+                                    fontFamily: 'Inter-Light',
+                                    fontSize: 16,
+                                    lineHeight: 24,
+                                    textAlign: 'center',
+                                }}>
+                                {genre?.name.charAt(0).toUpperCase() + genre?.name.slice(1)}{' '}
+                                {showDot && ' • '}
+                            </Text>
+                        );
+                    })}
                 </View>
 
                 <Text
@@ -118,11 +155,7 @@ export default function MovieScreen({ navigation }) {
                         letterSpacing: 1,
                         marginHorizontal: 12,
                     }}>
-                    Quis dolore aliqua do ut. Culpa occaecat exercitation esse mollit sunt
-                    sunt nulla aute anim. Consectetur proident quis non occaecat dolor.
-                    Irure enim laboris laboris duis in dolor. Veniam adipisicing anim anim
-                    labore nulla officia eiusmod ea ea sit id cillum. Amet nulla aliqua
-                    incididunt culpa fugiat amet magna.
+                    {movie?.overview}
                 </Text>
             </View>
 

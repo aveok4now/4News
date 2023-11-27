@@ -1,11 +1,10 @@
 import { View, Text, ScrollView, TouchableOpacity, Image } from 'react-native';
 import React from 'react';
 import { theme } from '../../../screens/MovieNewsScreen/theme';
-
+import { fallbackPersonImage, image185 } from '../../../api/moviedb';
 
 export default function Cast({ cast, navigation }) {
-    let actorName = 'Леонардо Ди Каприо';
-    let characterName = 'Тэдди Дэниэлс';
+
     return (
         <View style={{ marginVertical: 24 }}>
             <Text
@@ -46,7 +45,7 @@ export default function Cast({ cast, navigation }) {
                                     <Image
                                         style={{ borderRadius: 16, width: 80, height: 96 }}
                                         source={{
-                                            uri: 'https://static.kinoafisha.info/k/persons/1080x1920/upload/persons/195010465372.jpg',
+                                            uri: image185(person?.profile_path),
                                         }}
                                     />
                                 </View>
@@ -62,7 +61,7 @@ export default function Cast({ cast, navigation }) {
                                     {/* {characterName.length > 10
                                         ? characterName.slice(0, 10) + '...'
                                         : characterName} */}
-                                    {characterName}
+                                    {person?.character.length > 10 ? person?.character.slice(0, 10) + '...' : person?.character}
                                 </Text>
                                 <Text
                                     style={{
@@ -72,9 +71,9 @@ export default function Cast({ cast, navigation }) {
                                         fontFamily: 'Inter-Light',
                                         marginTop: 4,
                                     }}>
-                                    {actorName.length > 10
-                                        ? actorName.slice(0, 10) + '...'
-                                        : actorName}
+                                    {person?.original_name.length > 10
+                                        ? person?.original_name.slice(0, 10) + '...'
+                                        : person?.original_name}
                                 </Text>
                             </TouchableOpacity>
                         );

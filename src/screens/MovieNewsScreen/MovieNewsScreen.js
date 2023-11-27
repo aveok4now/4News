@@ -20,9 +20,9 @@ import {
 } from '../../api/moviedb';
 
 export default function MovieNewsScreen({ navigation }) {
-    const [trending, setTrending] = useState([1, 2, 3]);
-    const [upcoming, setUpcoming] = useState([1, 2, 3]);
-    const [topRated, setTopRated] = useState([1, 2, 3]);
+    const [trending, setTrending] = useState([]);
+    const [upcoming, setUpcoming] = useState([]);
+    const [topRated, setTopRated] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
 
     let mainColor = 'rgb(49 46 129)';
