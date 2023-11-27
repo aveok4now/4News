@@ -6,7 +6,11 @@ import HeaderButtons from '../../../components/MovieNewsComponents/HeaderButtons
 import MovieList from '../../../components/MovieNewsComponents/MovieList';
 import Loader from '../../../components/MovieNewsComponents/Loader';
 import { useRoute } from '@react-navigation/native';
-import { fetchPersonDetails, image342 } from '../../../api/moviedb';
+import {
+    fetchPersonDetails,
+    fetchPersonMovies,
+    image342,
+} from '../../../api/moviedb';
 import DetailsSection from '../../../components/MovieNewsComponents/DetailsSection';
 
 export default function MoviePersonScreen({ navigation }) {
@@ -19,6 +23,7 @@ export default function MoviePersonScreen({ navigation }) {
     useEffect(() => {
         setIsLoading(true);
         getPersonDetails(item.id);
+        getPersonMovies(item.id);
     }, [item]);
 
     const getPersonDetails = async id => {
@@ -26,6 +31,13 @@ export default function MoviePersonScreen({ navigation }) {
         console.log(data);
         if (data) setPerson(data);
         setIsLoading(false);
+    };
+
+    const getPersonMovies = async id => {
+        const data = await fetchPersonMovies(id);
+        //console.log("person movies" + JSON.stringify(data));
+        if (data && data.cast) setPersonMovies(data.cast);
+        //setIsLoading(false);
     };
 
     const formatDate = dateString => {
@@ -141,36 +153,38 @@ export default function MoviePersonScreen({ navigation }) {
                         </Text>
                     </View>
                     <DetailsSection items={details} />
-                    <View
-                        style={{ marginVertical: 24, marginHorizontal: 16, marginTop: 8 }}>
-                        <Text
-                            style={{
-                                color: 'white',
-                                fontFamily: 'Inter-ExtraBold',
-                                fontSize: 20,
-                                lineHeight: 28,
-                                textShadowColor: 'rgba(226, 232, 240, 0.25)',
-                                textShadowOffset: { width: 0, height: 3 },
-                                textShadowRadius: 4,
-                            }}>
-                            Биография
-                        </Text>
-                        <Text
-                            style={{
-                                color: 'rgb(212 212 212)',
-                                fontFamily: 'Inter-Light',
-                                letterSpacing: 0.25,
-                            }}>
-                            {person?.biography}
-                        </Text>
-                    </View>
+                    {person?.biography !== '' && (
+                        <View
+                            style={{ marginVertical: 24, marginHorizontal: 16, marginTop: 8 }}>
+                            <Text
+                                style={{
+                                    color: 'white',
+                                    fontFamily: 'Inter-ExtraBold',
+                                    fontSize: 20,
+                                    lineHeight: 28,
+                                    textShadowColor: 'rgba(226, 232, 240, 0.25)',
+                                    textShadowOffset: { width: 0, height: 3 },
+                                    textShadowRadius: 4,
+                                }}>
+                                Биография
+                            </Text>
+                            <Text
+                                style={{
+                                    color: 'rgb(212 212 212)',
+                                    fontFamily: 'Inter-Light',
+                                    letterSpacing: 0.25,
+                                }}>
+                                {person?.biography}
+                            </Text>
+                        </View>
+                    )}
 
-                    {/* <MovieList
+                    <MovieList
                         title="Фильмы"
                         data={personMovies}
                         navigation={navigation}
                         hideSeeAll={true}
-                    /> */}
+                    />
                 </View>
             )}
         </ScrollView>
