@@ -7,7 +7,7 @@ import MovieList from '../../../components/MovieNewsComponents/MovieList';
 import Loader from '../../../components/MovieNewsComponents/Loader';
 import { useRoute } from '@react-navigation/native';
 import { fetchPersonDetails, image342 } from '../../../api/moviedb';
-
+import DetailsSection from '../../../components/MovieNewsComponents/DetailsSection';
 
 export default function MoviePersonScreen({ navigation }) {
     const [personMovies, setPersonMovies] = useState([]);
@@ -28,19 +28,53 @@ export default function MoviePersonScreen({ navigation }) {
         setIsLoading(false);
     };
 
-    const formatDate = (dateString) => {
+    const formatDate = dateString => {
         const date = new Date(dateString);
         const day = date.getDate();
         const monthIndex = date.getMonth();
         const year = date.getFullYear();
 
         const months = [
-            "января", "февраля", "марта", "апреля", "мая", "июня",
-            "июля", "августа", "сентября", "октября", "ноября", "декабря"
+            'января',
+            'февраля',
+            'марта',
+            'апреля',
+            'мая',
+            'июня',
+            'июля',
+            'августа',
+            'сентября',
+            'октября',
+            'ноября',
+            'декабря',
         ];
 
         return `${day} ${months[monthIndex]}, ${year}`;
     };
+
+    const details = [
+        { label: 'Пол', value: person.gender === 1 ? 'Женский' : 'Мужской' },
+        { label: 'Дата рождения', value: formatDate(person.birthday) },
+
+        {
+            label: person.gender === 1 ? 'Известна как' : 'Известен как',
+            value:
+                person.known_for_department === 'Acting'
+                    ? person.gender === 1
+                        ? 'Актриса'
+                        : 'Актёр'
+                    : person.known_for_department,
+        },
+
+        {
+            label: 'Рейтинг',
+            value: person.popularity ? person.popularity.toFixed(1) : '',
+        },
+        {
+            label: 'Дата смерти',
+            value: person.deathday === null ? '—' : 'person.deathday',
+        },
+    ];
 
     return (
         <ScrollView
@@ -106,126 +140,7 @@ export default function MoviePersonScreen({ navigation }) {
                             {person?.place_of_birth}
                         </Text>
                     </View>
-                    <ScrollView
-                        horizontal
-                        showsHorizontalScrollIndicator={false}
-                        contentContainerStyle={{
-                            justifyContent: 'space-between',
-                            alignItems: 'center',
-                            padding: 16,
-                            flexDirection: 'row',
-                        }}
-                        style={{
-                            marginTop: 24,
-                            marginHorizontal: 12,
-                            backgroundColor: theme.bgWhite(0.1),
-                            borderRadius: 16,
-                        }}>
-                        <View
-                            style={{
-                                borderRightWidth: 2,
-                                borderRightColor: 'rgb(163 163 163)',
-                                paddingHorizontal: 8,
-                                alignItems: 'center',
-                            }}>
-                            <Text
-                                style={{
-                                    fontSize: 16,
-                                    lineHeight: 24,
-                                    fontFamily: 'Inter-SemiBold',
-                                    color: 'white',
-                                }}>
-                                Пол
-                            </Text>
-                            <Text
-                                style={{
-                                    fontSize: 14,
-                                    lineHeight: 20,
-                                    fontFamily: 'Inter-Light',
-                                    color: 'rgb(163 163 163)',
-                                }}>
-                                {
-                                    person?.gender === 1 ? 'Женский' : 'Мужской'
-                                }
-                            </Text>
-                        </View>
-                        <View
-                            style={{
-                                borderRightWidth: 2,
-                                borderRightColor: 'rgb(163 163 163)',
-                                paddingHorizontal: 8,
-                                alignItems: 'center',
-                            }}>
-                            <Text
-                                style={{
-                                    fontSize: 16,
-                                    lineHeight: 24,
-                                    fontFamily: 'Inter-SemiBold',
-                                    color: 'white',
-                                }}>
-                                Дата рождения
-                            </Text>
-                            <Text
-                                style={{
-                                    fontSize: 14,
-                                    lineHeight: 20,
-                                    fontFamily: 'Inter-Light',
-                                    color: 'rgb(163 163 163)',
-                                }}>
-                                {formatDate(person?.birthday)}
-                            </Text>
-                        </View>
-                        <View
-                            style={{
-                                borderRightWidth: 2,
-                                borderRightColor: 'rgb(163 163 163)',
-                                paddingHorizontal: 8,
-                                alignItems: 'center',
-                            }}>
-                            <Text
-                                style={{
-                                    fontSize: 16,
-                                    lineHeight: 24,
-                                    fontFamily: 'Inter-SemiBold',
-                                    color: 'white',
-                                }}>
-                                {person?.gender === 1 ? 'Известна как' : 'Известен как'}
-                            </Text>
-                            <Text
-                                style={{
-                                    fontSize: 14,
-                                    lineHeight: 20,
-                                    fontFamily: 'Inter-Light',
-                                    color: 'rgb(163 163 163)',
-                                }}>
-                                {person?.known_for_department === 'Acting' ? person?.gender === 1 ? 'Актриса' : 'Актёр' : person?.known_for_department}
-                            </Text>
-                        </View>
-                        <View
-                            style={{
-                                paddingHorizontal: 8,
-                                alignItems: 'center',
-                            }}>
-                            <Text
-                                style={{
-                                    fontSize: 16,
-                                    lineHeight: 24,
-                                    fontFamily: 'Inter-SemiBold',
-                                    color: 'white',
-                                }}>
-                                Рейтинг
-                            </Text>
-                            <Text
-                                style={{
-                                    fontSize: 14,
-                                    lineHeight: 20,
-                                    fontFamily: 'Inter-Light',
-                                    color: 'rgb(163 163 163)',
-                                }}>
-                                {person?.popularity ? person.popularity.toFixed(1) : ''}
-                            </Text>
-                        </View>
-                    </ScrollView>
+                    <DetailsSection items={details} />
                     <View
                         style={{ marginVertical: 24, marginHorizontal: 16, marginTop: 8 }}>
                         <Text
