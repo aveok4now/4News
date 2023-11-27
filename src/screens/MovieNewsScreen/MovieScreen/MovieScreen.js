@@ -65,7 +65,7 @@ export default function MovieScreen({ navigation }) {
             contentContainerStyle={{ paddingBottom: 20 }}
             style={{ flex: 1, backgroundColor: 'rgb(23 23 23)' }}>
             <View style={{ width: '100%' }}>
-                <HeaderButtons navigation={navigation} />
+                <HeaderButtons navigation={navigation} movie={movie} />
                 {isLoading ? (
                     <Loader />
                 ) : (
