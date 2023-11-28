@@ -2,8 +2,8 @@ import axios from 'axios'
 
 import { apiKey } from '../constants'
 
-const forecastEndpoint = params => `https://api.weatherapi.com/v1/forecast.json?key=${apiKey}&q=${params.cityName}&days=${params.days}`;
-const locationsEndpoint = params => `https://api.weatherapi.com/v1/search.json?key=${apiKey}&q=${params.cityName}`;
+const forecastEndpoint = params => `https://api.weatherapi.com/v1/forecast.json?key=${apiKey}&q=${params.cityName}&days=${params.days}&lang=ru`;
+const locationsEndpoint = params => `https://api.weatherapi.com/v1/search.json?key=${apiKey}&q=${params.cityName}&lang=ru`;
 
 const apiCall = async (endpoint) => {
     const options = {
@@ -13,6 +13,7 @@ const apiCall = async (endpoint) => {
 
     try {
         const response = await axios.request(options);
+        console.log(response.data)
         return response.data;
     } catch (error) {
         console.log("Ошибка", error);

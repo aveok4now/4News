@@ -26,7 +26,7 @@ import { setStatusBarColor } from '../../utils/StatusBarManager';
 import { debounce } from 'lodash';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { fetchLocations, fetchWeatherForecast } from '../../api/weather';
-import { weatherImages, weatherTranslations } from '../../constants';
+import { weatherImages } from '../../constants';
 import * as Progress from 'react-native-progress';
 import { getItem, setItem } from '../../utils/asyncStorage';
 import useUserCredentials from '../../utils/hooks/useUserCredentials';
@@ -42,25 +42,10 @@ export default function WeatherScreen({ navigation }) {
     const [locations, setLocations] = useState([]);
     const [showBorder, setShowBorder] = useState(true);
 
-    const [weather, setWeather] = useState({});
     const [loading, setLoading] = useState(true);
+    const [weather, setWeather] = useState({});
 
     //const [moreInfo, setMoreInfo] = useState([moreInfo]);
-
-    const handleLocation = loc => {
-        setLocations([]);
-        setShowSearch(false);
-        setLoading(true);
-        fetchWeatherForecast({
-            cityName: loc.name,
-            days: '7',
-        }).then(data => {
-            setWeather(data);
-            setLoading(false);
-            //setItem('city', loc.name);
-            setUserCityToDB(loc.name);
-        });
-    };
 
     const handleSearch = value => {
         if (value.length > 2) {
@@ -69,6 +54,21 @@ export default function WeatherScreen({ navigation }) {
                 setLocations(data);
             });
         }
+    };
+
+    const handleLocation = loc => {
+        setShowSearch(false);
+        setLoading(true);
+        setLocations([]);
+        fetchWeatherForecast({
+            cityName: loc.name,
+            days: '7',
+        }).then(data => {
+            setLoading(false);
+            setWeather(data);
+            //setItem('city', loc.name);
+            setUserCityToDB(loc.name);
+        });
     };
 
     useEffect(() => {
@@ -154,6 +154,10 @@ export default function WeatherScreen({ navigation }) {
 
     const query = weather?.forecast?.forecastday[0]?.day;
 
+    const handleTextDebounce = useCallback(debounce(handleSearch, 1200), []);
+
+    const { current, location } = weather;
+
     const moreInfo = {
         'Минимальная температура': `${query?.mintemp_c}°`,
         'Максимальная температура': `${query?.maxtemp_c}°`,
@@ -168,6 +172,12 @@ export default function WeatherScreen({ navigation }) {
         'Уровень ультрафиолетового излучения': `${query?.uv}`,
     };
 
+    const combinedInfo = Object.entries(moreInfo).map(([key, value]) => ({
+        key,
+        value,
+        //imageSource: imageSources[key]
+    }));
+
     // const imageSources = {
     //     'Шанс дождя': weatherImages[weatherTranslations['Rain']],
     //     'Шанс снега': weatherImages[weatherTranslations['Snow']],
@@ -176,15 +186,8 @@ export default function WeatherScreen({ navigation }) {
     //     'Средняя влажность': weatherImages[weatherTranslations['Sunny']],
     // };
 
-    const combinedInfo = Object.entries(moreInfo).map(([key, value]) => ({
-        key,
-        value,
-        //imageSource: imageSources[key]
-    }));
-
-    const handleTextDebounce = useCallback(debounce(handleSearch, 1200), []);
-
-    const { current, location } = weather;
+    const checkLocation = (city, country) =>
+        city === 'Sevastopol' && country === 'Ukraine' ? 'Россия' : country;
 
     return loading ? (
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
@@ -328,18 +331,14 @@ export default function WeatherScreen({ navigation }) {
                                 fontFamily: 'Inter-Light',
                             }}>
                             {' '}
-                            {location?.country === 'Ukraine' ? 'Россия' : location?.country}
-                            {/* {location?.country} */}
+                            {checkLocation(location?.name, location?.country)}
                         </Text>
                     </Text>
 
                     <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
                         <LottieView
                             style={styles.lottie}
-                            source={
-                                weatherImages[weatherTranslations[current?.condition?.text]]
-                            }
-                            //source={require('../assets/animations/weather/partly_cloudy.json')}
+                            source={weatherImages[current?.condition?.text]}
                             autoPlay
                             loop
                         />
@@ -363,8 +362,9 @@ export default function WeatherScreen({ navigation }) {
                                 color: 'white',
                                 fontSize: 20,
                             }}>
-                            {weatherTranslations[current?.condition?.text] ||
-                                current?.condition?.text}
+                            {/* {weatherTranslations[current?.condition?.text] ||
+                                current?.condition?.text} */}
+                            {current?.condition?.text}
                         </Text>
                         <Text
                             style={{
@@ -495,9 +495,7 @@ export default function WeatherScreen({ navigation }) {
                                     <LottieView
                                         style={{ height: 44, width: 44 }}
                                         source={
-                                            weatherImages[
-                                            weatherTranslations[item?.day?.condition?.text]
-                                            ]
+                                            weatherImages[item?.day?.condition?.text || 'other']
                                         }
                                         autoPlay
                                         loop
