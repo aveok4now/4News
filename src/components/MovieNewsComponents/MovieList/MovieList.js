@@ -14,6 +14,10 @@ import { fallbackMoviePoster, image185 } from '../../../api/moviedb';
 
 export default function MovieList({ title, data, navigation, hideSeeAll }) {
     //let movieName = 'Остров проклятых';
+    console.log(data)
+
+    let upComingLink = 'https://www.imdb.com/calendar/';
+    let topMoviesLink = 'https://www.imdb.com/chart/top/';
     return (
         <View style={{ marginBottom: 32, marginTop: 16 }}>
             <View
@@ -45,7 +49,11 @@ export default function MovieList({ title, data, navigation, hideSeeAll }) {
                     )}
                 </Text>
                 {!hideSeeAll && (
-                    <TouchableOpacity>
+                    <TouchableOpacity
+                        onPress={() => navigation.navigate('NewsViewer', {
+                            url: title === 'Будущие новинки' ? upComingLink : topMoviesLink,
+                        })}
+                    >
                         <Text
                             style={[
                                 styles.text,

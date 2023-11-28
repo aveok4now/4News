@@ -4,7 +4,6 @@ import { theme } from '../../../screens/MovieNewsScreen/theme';
 import { fallbackPersonImage, image185 } from '../../../api/moviedb';
 
 export default function Cast({ cast, navigation }) {
-
     return (
         <View style={{ marginVertical: 24 }}>
             <Text
@@ -19,7 +18,7 @@ export default function Cast({ cast, navigation }) {
                     textShadowOffset: { width: 0, height: 3 },
                     textShadowRadius: 4,
                 }}>
-                В главных ролях
+                Актёры и съёмочная группа
             </Text>
             <ScrollView
                 horizontal
@@ -58,10 +57,9 @@ export default function Cast({ cast, navigation }) {
                                         fontFamily: 'Inter-Light',
                                         marginTop: 4,
                                     }}>
-                                    {/* {characterName.length > 10
-                                        ? characterName.slice(0, 10) + '...'
-                                        : characterName} */}
-                                    {person?.character.length > 10 ? person?.character.slice(0, 10) + '...' : person?.character}
+                                    {person?.character.length > 10
+                                        ? person?.character.slice(0, 10) + '...'
+                                        : person?.character}
                                 </Text>
                                 <Text
                                     style={{

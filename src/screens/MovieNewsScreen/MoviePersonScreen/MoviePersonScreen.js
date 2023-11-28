@@ -84,7 +84,7 @@ export default function MoviePersonScreen({ navigation }) {
         },
         {
             label: 'Дата смерти',
-            value: person.deathday === null ? '—' : 'person.deathday',
+            value: person.deathday === null ? '—' : formatDate(person.deathday),
         },
     ];
 
@@ -93,7 +93,7 @@ export default function MoviePersonScreen({ navigation }) {
             showsVerticalScrollIndicator={false}
             contentContainerStyle={{ paddingBottom: 20 }}
             style={{ flex: 1, backgroundColor: 'rgb(17 24 39)' }}>
-            <HeaderButtons navigation={navigation} />
+            <HeaderButtons navigation={navigation} movie={item} />
             {isLoading ? (
                 <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
                     <Loader />

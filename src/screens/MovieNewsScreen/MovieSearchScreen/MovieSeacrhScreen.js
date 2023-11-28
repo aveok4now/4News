@@ -35,12 +35,12 @@ export default function MovieSeacrhScreen() {
                 query: value,
                 include_adult: 'false',
                 language: 'ru-RU',
-                page: '1'
+                page: '1',
             }).then(data => {
                 setIsLoading(false);
                 //console.log("фильмы: ", data)
                 if (data && data.results) setResults(data.results);
-            });;
+            });
         } else {
             setIsLoading(false);
             setResults([]);
@@ -61,8 +61,7 @@ export default function MovieSeacrhScreen() {
                     alignItems: 'center',
                     borderRadius: 35,
                     backgroundColor: showSearch ? theme.bgWhite(0.2) : 'transparent',
-                    // marginTop: '2%',
-                    //height: 50,
+                    marginTop: '2%',
                     borderWidth: 1,
                     borderColor: theme.bgWhite(0.3),
                 }}>

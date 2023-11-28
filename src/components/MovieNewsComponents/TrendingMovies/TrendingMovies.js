@@ -16,11 +16,14 @@ export default function TrendingMovies({ data, navigation }) {
             <Text
                 style={{
                     color: 'white',
-                    fontFamily: 'Inter-SemiBold',
+                    fontFamily: 'Inter-Bold',
                     fontSize: 20,
                     lineHeight: 28,
                     marginHorizontal: 16,
                     marginBottom: 20,
+                    textShadowColor: 'rgba(226, 232, 240, 0.25)',
+                    textShadowOffset: { width: 0, height: 3 },
+                    textShadowRadius: 4,
                 }}>
                 Сейчас в <Text style={{ fontFamily: 'Inter-ExtraBold' }}>тренде</Text>
             </Text>
