@@ -10,6 +10,8 @@ import * as Animatable from 'react-native-animatable';
 import FavoritesScreen from '../../screens/FavoritesScreen';
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
 import UsersNewsScreen from '../../screens/UsersNewsScreen';
+import MovieNewsScreen from '../../screens/MovieNewsScreen';
+import { Icons } from '../Icons';
 
 const screens = [
     {
@@ -63,6 +65,19 @@ const screens = [
         },
         animation: 'flipInX',
         animationDuration: 1300,
+    },
+    {
+        name: 'Кино',
+        component: MovieNewsScreen,
+        icon: {
+            type: Icons.MaterialCommunityIcons,
+            focusedName: 'movie',
+            unfocusedName: 'movie-outline',
+            focusedColor: '#3a86ff',
+            unfocusedColor: '#28587B',
+        },
+        animation: 'flipInX',
+        animationDuration: 1400,
     },
 ];
 

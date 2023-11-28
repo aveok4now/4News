@@ -37,6 +37,7 @@
     "react-native-share": "^10.0.1",
     "react-native-shimmer-placeholder": "^2.0.9",
     "react-native-simple-bottom-sheet": "^1.0.4",
+    "react-native-snap-carousel": "^4.0.0-beta.6",
     "react-native-splash-screen": "^3.3.0",
     "react-native-sqlite-storage": "^6.0.1",
     "react-native-svg": "^13.14.0",
