@@ -1,11 +1,7 @@
-import { View, Text, StyleSheet } from 'react-native';
 import React from 'react';
 import HomeScreen from '../../screens/HomeScreen';
 import WeatherScreen from '../../screens/WeatherScreen';
-import Icon from 'react-native-vector-icons/FontAwesome5';
-import Icon2 from 'react-native-vector-icons/Ionicons';
-import UsersIcon from 'react-native-vector-icons/FontAwesome6';
-import { assets } from '../../../react-native.config';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import * as Animatable from 'react-native-animatable';
 import FavoritesScreen from '../../screens/FavoritesScreen';
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
@@ -18,9 +14,9 @@ const screens = [
         name: 'Новости',
         component: HomeScreen,
         icon: {
-            type: Icon2,
-            focusedName: 'newspaper',
-            unfocusedName: 'newspaper-outline',
+            type: Icon,
+            focusedName: 'newspaper-variant',
+            unfocusedName: 'newspaper-variant-outline',
             focusedColor: '#3a86ff',
             unfocusedColor: '#28587B',
         },
@@ -31,9 +27,9 @@ const screens = [
         name: 'Избранное',
         component: FavoritesScreen,
         icon: {
-            type: Icon2,
-            focusedName: 'star',
-            unfocusedName: 'star-outline',
+            type: Icon,
+            focusedName: 'star-circle',
+            unfocusedName: 'star-circle-outline',
             focusedColor: '#3a86ff',
             unfocusedColor: '#28587B',
         },
@@ -44,9 +40,9 @@ const screens = [
         name: 'Сообщество',
         component: UsersNewsScreen,
         icon: {
-            type: UsersIcon,
-            focusedName: 'users-line',
-            unfocusedName: 'users',
+            type: Icon,
+            focusedName: 'account-group',
+            unfocusedName: 'account-group-outline',
             focusedColor: '#3a86ff',
             unfocusedColor: '#28587B',
         },
@@ -58,8 +54,8 @@ const screens = [
         component: WeatherScreen,
         icon: {
             type: Icon,
-            focusedName: 'cloud-sun',
-            unfocusedName: 'cloud',
+            focusedName: 'weather-cloudy',
+            unfocusedName: 'weather-partly-cloudy',
             focusedColor: '#3a86ff',
             unfocusedColor: '#28587B',
         },
@@ -70,7 +66,7 @@ const screens = [
         name: 'Кино',
         component: MovieNewsScreen,
         icon: {
-            type: Icons.MaterialCommunityIcons,
+            type: Icon,
             focusedName: 'movie',
             unfocusedName: 'movie-outline',
             focusedColor: '#3a86ff',
@@ -92,7 +88,7 @@ export default function BottomTabBar({ showing }) {
             activeColor="rgb(14 165 233)"
             inactiveColor="rgb(87 83 78)"
             labeled={true}
-            //shifting={true}
+            shifting={true}
             initialRouteName="Новости"
             tabBarVisible={showing}
         >
@@ -113,7 +109,7 @@ export default function BottomTabBar({ showing }) {
                                             ? screen.icon.focusedName
                                             : screen.icon.unfocusedName
                                     }
-                                    size={24}
+                                    size={28}
                                     color={
                                         focused
                                             ? screen.icon.focusedColor
@@ -130,14 +126,3 @@ export default function BottomTabBar({ showing }) {
     );
 }
 
-const styles = StyleSheet.create({
-    iconText: {
-        fontSize: 12,
-        color: 'black',
-        fontFamily: 'Inter-Light',
-    },
-    selIconText: {
-        fontSize: 14,
-        color: 'white',
-    },
-});
