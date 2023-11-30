@@ -5,6 +5,7 @@ import {
     Platform,
     StatusBar,
     ScrollView,
+    Image
 } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { setStatusBarColor } from '../../utils/StatusBarManager';
@@ -61,7 +62,12 @@ export default function MovieNewsScreen({ navigation }) {
     };
 
     return (
-        <View style={{ flex: 1, backgroundColor: mainColor }}>
+        <View style={{ flex: 1 }}>
+            <Image
+                blurRadius={50}
+                style={{ position: 'absolute', width: '100%', height: '100%' }}
+                source={require('../assets/images/search-bg.jpg')}
+            />
             <CustomDrawer
                 type="Новости Кино"
                 fontFamily="Inter-ExtraBold"
@@ -69,7 +75,9 @@ export default function MovieNewsScreen({ navigation }) {
                 showBorder={true}
                 showSearch="true"
                 navigation={navigation}
-                destination="MovieSearchScreen">
+                destination="MovieSearchScreen"
+            //titleColor='rgb(34 211 238)'
+            >
                 {/* <SafeAreaView style={{ marginBottom: ios ? -8 : 16 }}>
                     <StatusBar style="light" />
                 </SafeAreaView> */}

@@ -70,9 +70,9 @@ export default function FavoritesScreen({ navigation }) {
             <StatusBar />
             <View style={{ flex: 1 }}>
                 <Image
-                    blurRadius={200}
+                    blurRadius={150}
                     style={{ position: 'absolute', width: '100%', height: '100%' }}
-                    source={require('../assets/images/backgr.jpg')}
+                    source={require('../assets/images/newsoverview.jpg')}
                 />
 
                 <CustomDrawer

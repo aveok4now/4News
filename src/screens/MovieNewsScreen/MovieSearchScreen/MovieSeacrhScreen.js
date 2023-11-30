@@ -51,7 +51,7 @@ export default function MovieSeacrhScreen() {
 
     return (
         <SafeAreaView
-            style={{ flex: 1, backgroundColor: 'rgb(49 46 129)', display: 'flex' }}>
+            style={{ flex: 1, backgroundColor: 'rgb(30 58 138)', display: 'flex' }}>
             <View
                 style={{
                     marginHorizontal: 16,

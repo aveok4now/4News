@@ -197,7 +197,7 @@ export default function UsersNewsScreen({ navigation }) {
             <StatusBar backgroundColor="transparent" />
             <View style={{ flex: 1 }}>
                 <Image
-                    blurRadius={200}
+                    blurRadius={500}
                     style={{ position: 'absolute', width: '100%', height: '100%' }}
                     source={require('../assets/images/newsoverview.jpg')}
                 />

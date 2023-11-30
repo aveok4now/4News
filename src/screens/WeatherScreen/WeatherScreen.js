@@ -192,9 +192,9 @@ export default function WeatherScreen({ navigation }) {
     return loading ? (
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
             <Image
-                blurRadius={200}
+                blurRadius={300}
                 style={{ position: 'absolute', width: '100%', height: '100%' }}
-                source={require('../assets/images/weather-bg.jpg')}
+                source={require('../assets/images/search-bg.jpg')}
             />
             <Progress.CircleSnail thickness={10} size={140} color="white" />
         </View>
@@ -203,9 +203,9 @@ export default function WeatherScreen({ navigation }) {
             style={{ flex: 1, position: 'relative' }}
             showsVerticalScrollIndicator={false}>
             <Image
-                blurRadius={200}
+                blurRadius={100}
                 style={{ position: 'absolute', width: '100%', height: '100%' }}
-                source={require('../assets/images/weather-bg.jpg')}
+                source={require('../assets/images/search-bg.jpg')}
             />
             <SafeAreaView style={{ display: 'flex', flex: 1 }}>
                 <View

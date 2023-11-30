@@ -84,7 +84,7 @@ const Tab = createMaterialBottomTabNavigator();
 export default function BottomTabBar({ showing }) {
     return (
         <Tab.Navigator
-            barStyle={{ backgroundColor: '#0f172a' }}
+            barStyle={{ backgroundColor: '#0f172a', height: 70 }}
             activeColor="rgb(14 165 233)"
             inactiveColor="rgb(87 83 78)"
             labeled={true}

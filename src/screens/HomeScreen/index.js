@@ -227,6 +227,11 @@ const HomeScreen = ({ navigation }) => {
 
             {Loading ? (
                 <View style={styles.load}>
+                    <Image
+                        blurRadius={100}
+                        style={{ position: 'absolute', width: '100%', height: '100%' }}
+                        source={require('../assets/images/newsoverview.jpg')}
+                    />
                     <Progress.CircleSnail thickness={10} size={140} color="white" />
                 </View>
             ) : (
@@ -309,7 +314,7 @@ const HomeScreen = ({ navigation }) => {
                                             ListHeaderComponent={React.memo(() => (
                                                 <View>
                                                     <Image
-                                                        blurRadius={200}
+                                                        blurRadius={70}
                                                         style={{
                                                             position: 'absolute',
                                                             width: '100%',
@@ -368,15 +373,14 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: 'transparent',
     },
 
     horList: {
         paddingHorizontal: 10,
         paddingVertical: 10,
-        backgroundColor: '#0284c7',
-        borderWidth: 0.5,
-        borderColor: 'rgb(156 163 175)',
+        backgroundColor: 'transparent',
+        //borderWidth: 0.5,
+        //borderColor: 'rgb(156 163 175)',
     },
 
     horListItem: {

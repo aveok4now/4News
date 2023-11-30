@@ -45,7 +45,8 @@ export default function CustomDrawer({
     showBorder = false,
     fontFamily = 'Inter-Light',
     letterSpacing = 1,
-    destination = "Search"
+    destination = "Search",
+    titleColor = 'white'
 }) {
     let identify = useUserCredentials();
     let userEmail = useUserEmail();
@@ -566,7 +567,7 @@ export default function CustomDrawer({
                         <Text
                             style={[
                                 styles.text,
-                                { fontFamily: fontFamily, letterSpacing: letterSpacing },
+                                { fontFamily: fontFamily, letterSpacing: letterSpacing, color: titleColor },
                             ]}>
                             {type}
                         </Text>
