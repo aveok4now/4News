@@ -45,6 +45,13 @@ const SignInScreen = ({ route }) => {
 
     const onYes = () => BackHandler.exitApp();
 
+    const [isPasswordVisible, setIsPasswordVisible] = useState(true);
+
+    const handlePasswordVisibilityChange = () => {
+        setIsPasswordVisible(!isPasswordVisible);
+    };
+
+
     useEffect(() => {
         const checkUserCredentials = async () => {
             if (route.params?.status === 'logout') {
@@ -352,6 +359,8 @@ const SignInScreen = ({ route }) => {
                             },
                         }}
                         setIsTyping={setIsTyping}
+                        isPasswordVisible={isPasswordVisible}
+                        onPasswordVisibilityChange={handlePasswordVisibilityChange}
                     />
 
                     <CustomButton text="Войти" onPress={handleSubmit(onSignInPressed)} />

@@ -21,14 +21,17 @@ const CustomInput = ({
     setIsTyping,
     selectionColor,
     isUserExist,
-    needTrim = true
+    needTrim = true,
+    isPasswordVisible,
+    onPasswordVisibilityChange,
+    showeye = true
 }) => {
     const [isFocused, setIsFocused] = useState(false);
-    const [isPasswordVisible, setIsPasswordVisible] = useState(secureTextEntry);
+    //const [isPasswordVisible, setIsPasswordVisible] = useState(secureTextEntry);
     const [iseyeFocused, setIseyeFocused] = useState(false);
 
     const handleButtonPress = () => {
-        setIsPasswordVisible(!isPasswordVisible);
+        onPasswordVisibilityChange();
         //setIsFocused(true);
         setIseyeFocused(true);
     };
@@ -81,10 +84,13 @@ const CustomInput = ({
                             <TouchableOpacity
                                 onPress={handleButtonPress}
                                 style={styles.eyeIcon}>
-                                <EyeIcon
-                                    name={isPasswordVisible ? 'eye' : 'eye-with-line'}
-                                    size={24}
-                                />
+                                {showeye && (
+                                    <EyeIcon
+                                        name={isPasswordVisible ? 'eye' : 'eye-with-line'}
+                                        size={24}
+                                    />
+                                )}
+
                             </TouchableOpacity>
                         )}
                     </View>

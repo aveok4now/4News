@@ -28,6 +28,11 @@ const NewPasswordScreen = ({ route }) => {
         navigation.navigate("Добро пожаловать !");
     }
 
+    const [isPasswordVisible, setIsPasswordVisible] = useState(true);
+
+    const handlePasswordVisibilityChange = () => {
+        setIsPasswordVisible(!isPasswordVisible);
+    };
 
 
     return (
@@ -61,6 +66,8 @@ const NewPasswordScreen = ({ route }) => {
                         }
                     }}
                     secureTextEntry
+                    isPasswordVisible={isPasswordVisible}
+                    onPasswordVisibilityChange={handlePasswordVisibilityChange}
                 />
 
                 <CustomInput
@@ -72,6 +79,9 @@ const NewPasswordScreen = ({ route }) => {
                             value === pwd || 'Пароли не совпадают',
                     }}
                     secureTextEntry
+                    showeye={false}
+                    isPasswordVisible={isPasswordVisible}
+                    onPasswordVisibilityChange={handlePasswordVisibilityChange}
                 />
 
                 <CustomButton

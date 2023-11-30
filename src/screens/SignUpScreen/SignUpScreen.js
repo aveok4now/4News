@@ -40,6 +40,12 @@ const SignUpScreen = () => {
     const [isExistByUserEmail, setIsExistByUserEmail] = useState(false);
     const [isButtonPressed, setIsButtonPressed] = useState(false);
 
+    const [isPasswordVisible, setIsPasswordVisible] = useState(true);
+
+    const handlePasswordVisibilityChange = () => {
+        setIsPasswordVisible(!isPasswordVisible);
+    };
+
     useEffect(() => {
         if (isTyping || !isButtonPressed) {
             setIsExistByUsername(false);
@@ -203,6 +209,8 @@ const SignUpScreen = () => {
                         },
                     }}
                     setIsTyping={setIsTyping}
+                    isPasswordVisible={isPasswordVisible}
+                    onPasswordVisibilityChange={handlePasswordVisibilityChange}
                 //selectionColor={'#DF57BC'}
                 />
 
@@ -211,10 +219,13 @@ const SignUpScreen = () => {
                     control={control}
                     placeholder="Повторите пароль"
                     secureTextEntry
+                    showeye={false}
                     rules={{
                         validate: value => value === pwd || 'Пароли не совпадают',
                     }}
                     setIsTyping={setIsTyping}
+                    isPasswordVisible={isPasswordVisible}
+                    onPasswordVisibilityChange={handlePasswordVisibilityChange}
                 //selectionColor={'#F6AE2D'}
                 />
 
