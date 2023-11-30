@@ -57,7 +57,11 @@ React Native News App project, bootstrapped using [`@react-native-community/cli`
   - [ ] Comments Screen
     - [x] News Data (image, title, publication date)
     - [x] Users comments UI
-    - [ ] Posting functionality (in progress)
+    - [x] Posting functionality
+      - [x] 'No comments available' by using NoNewsInfo component 
+      - [x] CustomDropDown component usage to pick options like Report, Delete, Share
+        - [x] Custom ModalPopUp usage to confirm comment deleting (also checks user's identify value. For example, Admin can't report but can delete any comment or post, User can delete only posts or comment which were posted by himself, Guest can only report or share)
+    - [ ] Storing comments in database (in progress)
   - [ ] Community Screen
     - [ ] Users News w/ comments, likes, date, etc.
       - [x] Realtime publication date changing 
@@ -120,6 +124,7 @@ React Native News App project, bootstrapped using [`@react-native-community/cli`
 - [x] Custom hooks
   - [x] useUserCredentials
   - [x] useUserEmail
+  - [x] useUserImage 
 - [x] StatusBarManager 
 - [x] SQLite Database Integration
 - [x] Async Storage configuration
