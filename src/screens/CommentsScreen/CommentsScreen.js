@@ -9,7 +9,7 @@ import {
     TouchableWithoutFeedback,
     TextInput,
 } from 'react-native';
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import * as Animatable from 'react-native-animatable';
 import { theme } from '../WeatherScreen/theme';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -21,6 +21,8 @@ import userAvatar from '../../../assets/images/user.jpg';
 import { useNavigation } from '@react-navigation/native';
 import NoNewsInfo from '../../components/NoNewsInfo';
 import CustomButton from '../../components/customs/CustomButton';
+import { formatPostTime } from '../../utils/formatPostTime';
+import ModalPopup from '../../components/customs/CustomModal/CustomModal';
 
 export default function CommentsScreen({ route }) {
     const {
@@ -31,6 +33,10 @@ export default function CommentsScreen({ route }) {
         imageLoaded,
         isImageUrl = true,
     } = route?.params;
+
+    useEffect(() => {
+        const updatedDataArray = [...dataArray, ...comments];
+    }, [comments]);
 
     const handleImagePressed = () => {
         try {
@@ -43,42 +49,70 @@ export default function CommentsScreen({ route }) {
     };
 
     let identify = useUserCredentials();
-
     const navigation = useNavigation();
 
+    const [showDeleteModal, setShowDeleteModal] = useState(false);
+    const [selectedCommentIndex, setSelectedCommentIndex] = useState(null);
+
     const dataArray = [
-        {
-            userAvatar: userAvatar,
-            identify: identify,
-            postText: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-            postImage: defaultImage,
-        },
-        {
-            userAvatar: userAvatar,
-            identify: identify,
-            postText: 'Praesent eget convallis velit, ac molestie lectus.',
-        },
-        {
-            userAvatar: userAvatar,
-            identify: identify,
-            postText: 'Praesent eget convallis velit, ac molestie lectus.',
-            postImage: defaultImage,
-        },
-        {
-            userAvatar: userAvatar,
-            identify: identify,
-            postText: 'Praesent eget convallis velit, ac molestie lectus.',
-        },
-        {
-            userAvatar: userAvatar,
-            identify: identify,
-            postText: 'Praesent eget convallis velit, ac molestie lectus.',
-            postImage: defaultImage,
-        },
+        // {
+        //     userAvatar: userAvatar,
+        //     identify: identify,
+        //     postText: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+        //     postImage: defaultImage,
+        // },
+        // {
+        //     userAvatar: userAvatar,
+        //     identify: identify,
+        //     postText: 'Praesent eget convallis velit, ac molestie lectus.',
+        // },
+        // {
+        //     userAvatar: userAvatar,
+        //     identify: identify,
+        //     postText: 'Praesent eget convallis velit, ac molestie lectus.',
+        //     postImage: defaultImage,
+        // },
+        // {
+        //     userAvatar: userAvatar,
+        //     identify: identify,
+        //     postText: 'Praesent eget convallis velit, ac molestie lectus.',
+        // },
+        // {
+        //     userAvatar: userAvatar,
+        //     identify: identify,
+        //     postText: 'Praesent eget convallis velit, ac molestie lectus.',
+        //     postImage: defaultImage,
+        // },
     ];
+
+    const [comments, setComments] = useState(dataArray);
 
     const inputRef = useRef(null);
     const [inputText, setInputText] = useState('');
+
+    const handlePublishComment = () => {
+        const newComment = {
+            userAvatar: userAvatar,
+            identify: identify,
+            postText: inputText,
+            timestamp: new Date(),
+        };
+
+        const updatedComments = [newComment, ...comments];
+        setComments(updatedComments);
+
+        setInputText('');
+    };
+
+    const handleDeleteComment = () => {
+        if (selectedCommentIndex !== null) {
+            const updatedComments = [...comments];
+            updatedComments.splice(selectedCommentIndex, 1);
+            setComments(updatedComments);
+            setSelectedCommentIndex(null);
+        }
+        setShowDeleteModal(false);
+    };
 
     return (
         <>
@@ -96,6 +130,40 @@ export default function CommentsScreen({ route }) {
                         style={{ position: 'absolute', width: '100%', height: '100%' }}
                         source={require('../assets/images/newsoverview.jpg')}
                     />
+                    {showDeleteModal && (
+                        <ModalPopup visible={showDeleteModal} backgroundColor='rgb(59 130 246)'>
+                            <View style={{ padding: 5 }}>
+                                <Text style={{ fontFamily: 'Inter-ExtraBold', fontSize: 18 }}>
+                                    Подтверждение
+                                </Text>
+                            </View>
+                            <View style={{ width: '100%', padding: 5 }}>
+                                <Text style={{ fontFamily: 'Inter-Light', fontSize: 18 }}>
+                                    Вы действительно хотите удалить этот пост?
+                                </Text>
+                            </View>
+                            <View style={styles.divider} />
+                            <View
+                                style={{
+                                    flexDirection: 'row',
+                                    width: '50%',
+                                    padding: 5,
+                                    justifyContent: 'space-between',
+                                    gap: 10,
+                                }}>
+                                <CustomButton
+                                    text="Нет"
+                                    type="Tertiary"
+                                    onPress={() => setShowDeleteModal(!showDeleteModal)}
+                                />
+                                <CustomButton
+                                    text="Да"
+                                    type="Tertiary"
+                                    onPress={handleDeleteComment}
+                                />
+                            </View>
+                        </ModalPopup>
+                    )}
                     <View
                         style={{
                             backgroundColor: theme.bgWhite(0.3),
@@ -212,29 +280,30 @@ export default function CommentsScreen({ route }) {
                                 <Animatable.View
                                     animation="flipInX"
                                     duration={1000}
-                                    style={{ position: 'absolute', top: 0, right: 5 }}
-                                >
-                                    <TouchableOpacity
-                                        onPress={() => setInputText('')}
-                                    >
-                                        <Icons.MaterialCommunityIcons name="close-circle" size={32} />
+                                    style={{ position: 'absolute', top: 0, right: 5 }}>
+                                    <TouchableOpacity onPress={() => setInputText('')}>
+                                        <Icons.MaterialCommunityIcons
+                                            name="close-circle"
+                                            size={32}
+                                        />
                                     </TouchableOpacity>
                                 </Animatable.View>
-
                             )}
                             {inputText.length > 5 && (
                                 <Animatable.View
                                     style={{ width: '80%', alignSelf: 'center' }}
                                     animation="fadeIn"
-                                    duration={500}
-                                >
-                                    <CustomButton text="Опубликовать" />
+                                    duration={500}>
+                                    <CustomButton
+                                        onPress={handlePublishComment}
+                                        text="Опубликовать"
+                                    />
                                 </Animatable.View>
                             )}
                         </View>
                     )}
 
-                    {dataArray.length > 0 ? (
+                    {comments.length > 0 ? (
                         <View
                             style={{
                                 marginTop: 15,
@@ -249,7 +318,7 @@ export default function CommentsScreen({ route }) {
                                 style={{ marginVertical: 20 }}
                                 scrollEventThrottle={16}
                                 bounces={false}>
-                                {dataArray.map((item, index) => (
+                                {comments.map((item, index) => (
                                     <View key={index} style={styles.feedItem}>
                                         <Image source={item.userAvatar} style={styles.avatar} />
                                         <View style={{ flex: 1 }}>
@@ -261,13 +330,21 @@ export default function CommentsScreen({ route }) {
                                                 }}>
                                                 <View>
                                                     <Text style={styles.name}>{item.identify}</Text>
-                                                    <Text style={styles.timestamp}>12:15</Text>
+                                                    <Text style={styles.timestamp}>
+                                                        {formatPostTime(item.timestamp, new Date())}
+                                                    </Text>
                                                 </View>
-                                                <Icons.MaterialIcons
-                                                    name="more-horiz"
-                                                    size={24}
-                                                    color="#73788B"
-                                                />
+                                                <TouchableOpacity
+                                                    onPress={() => {
+                                                        setSelectedCommentIndex(index);
+                                                        setShowDeleteModal(!showDeleteModal);
+                                                    }}>
+                                                    <Icons.MaterialIcons
+                                                        name="more-horiz"
+                                                        size={24}
+                                                        color="#73788B"
+                                                    />
+                                                </TouchableOpacity>
                                             </View>
                                             <Text style={styles.post}>{item.postText}</Text>
                                             {item.postImage && (
@@ -307,8 +384,8 @@ export default function CommentsScreen({ route }) {
                             {inputText.length <= 40 && (
                                 <NoNewsInfo
                                     primaryText="Комментариев пока нет"
-                                    secondaryText="Пусть Ваш будет первым!"
-                                    marginVertical={0}
+                                    secondaryText={identify !== 'Гость' ? "Пусть Ваш будет первым!" : 'Войдите в аккаунт или зарегестрируйтесь, чтобы добавлять комментарии!'}
+                                    marginVertical={identify !== 'Гость' ? 0 : 10}
                                 />
                             )}
                         </View>
@@ -397,5 +474,13 @@ const styles = StyleSheet.create({
         height: 48,
         borderRadius: 24,
         marginRight: 16,
+    },
+    divider: {
+        border: 1,
+        borderBottomColor: '#DDDDDD',
+        borderBottomWidth: 1,
+        width: '90%',
+        alignSelf: 'center',
+        marginTop: 15,
     },
 });
