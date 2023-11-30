@@ -7,7 +7,7 @@ import { assets } from '../../../react-native.config';
 import { theme } from '../../screens/WeatherScreen/theme';
 import * as Animatable from 'react-native-animatable';
 
-export default function NoNewsInfo({ primaryText, secondaryText }) {
+export default function NoNewsInfo({ primaryText, secondaryText, marginVertical = 100 }) {
     return (
         <KeyboardAvoidingView
             behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
@@ -15,7 +15,7 @@ export default function NoNewsInfo({ primaryText, secondaryText }) {
             <View
                 style={{
                     flex: 1,
-                    marginVertical: 100,
+                    marginVertical: marginVertical,
                 }}>
                 <View style={styles.textWrap}>
                     <Animatable.View animation="fadeIn" duration={1000}>

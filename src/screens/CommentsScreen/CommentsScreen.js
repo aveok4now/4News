@@ -7,8 +7,9 @@ import {
     TouchableOpacity,
     ScrollView,
     TouchableWithoutFeedback,
+    TextInput,
 } from 'react-native';
-import React from 'react';
+import React, { useRef, useState } from 'react';
 import * as Animatable from 'react-native-animatable';
 import { theme } from '../WeatherScreen/theme';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -18,6 +19,8 @@ import { handleShare } from '../../utils/Share';
 import useUserCredentials from '../../utils/hooks/useUserCredentials';
 import userAvatar from '../../../assets/images/user.jpg';
 import { useNavigation } from '@react-navigation/native';
+import NoNewsInfo from '../../components/NoNewsInfo';
+import CustomButton from '../../components/customs/CustomButton';
 
 export default function CommentsScreen({ route }) {
     const {
@@ -73,6 +76,9 @@ export default function CommentsScreen({ route }) {
             postImage: defaultImage,
         },
     ];
+
+    const inputRef = useRef(null);
+    const [inputText, setInputText] = useState('');
 
     return (
         <>
@@ -188,73 +194,125 @@ export default function CommentsScreen({ route }) {
                             </View>
                         </Animatable.View>
                     </View>
-                    <View
-                        style={{
-                            marginTop: 15,
-                            borderTopLeftRadius: 40,
-                            borderTopRightRadius: 40,
-                            paddingHorizontal: 20,
-                            flex: 1,
-                            backgroundColor: theme.bgWhite(0.4),
-                        }}>
-                        <ScrollView
-                            showsVerticalScrollIndicator={false}
-                            style={{ marginVertical: 20 }}
-                            scrollEventThrottle={16}
-                            bounces={false}>
-                            {dataArray.map((item, index) => (
-                                <View key={index} style={styles.feedItem}>
-                                    <Image source={item.userAvatar} style={styles.avatar} />
-                                    <View style={{ flex: 1 }}>
-                                        <View
-                                            style={{
-                                                flexDirection: 'row',
-                                                justifyContent: 'space-between',
-                                                alignItems: 'center',
-                                            }}>
-                                            <View>
-                                                <Text style={styles.name}>{item.identify}</Text>
-                                                <Text style={styles.timestamp}>12:15</Text>
-                                            </View>
-                                            <Icons.MaterialIcons
-                                                name="more-horiz"
-                                                size={24}
-                                                color="#73788B"
-                                            />
-                                        </View>
-                                        <Text style={styles.post}>{item.postText}</Text>
-                                        {item.postImage && (
-                                            <Image
-                                                src={item.postImage}
-                                                style={styles.postImage}
-                                                resizeMode="cover"
-                                            />
-                                        )}
-                                        <View style={{ flexDirection: 'row' }}>
-                                            <TouchableOpacity
-                                                style={{ marginRight: 16 }}
-                                                onPress={() => alert('pressed')}>
-                                                <Icons.FontAwesome
-                                                    name={'heart-o'}
+
+                    {identify !== 'Гость' && (
+                        <View style={styles.inputContainer}>
+                            <TextInput
+                                ref={inputRef}
+                                style={{ fontFamily: 'Inter-Light', fontSize: 20, width: '100%' }}
+                                placeholder="Что думаете?"
+                                selectionColor="white"
+                                placeholderTextColor="white"
+                                multiline={true}
+                                numberOfLines={2}
+                                value={inputText}
+                                onChangeText={text => setInputText(text)}
+                            />
+                            {inputText.length > 0 && (
+                                <Animatable.View
+                                    animation="flipInX"
+                                    duration={1000}
+                                    style={{ position: 'absolute', top: 0, right: 5 }}
+                                >
+                                    <TouchableOpacity
+                                        onPress={() => setInputText('')}
+                                    >
+                                        <Icons.MaterialCommunityIcons name="close-circle" size={32} />
+                                    </TouchableOpacity>
+                                </Animatable.View>
+
+                            )}
+                            {inputText.length > 5 && (
+                                <Animatable.View
+                                    style={{ width: '80%', alignSelf: 'center' }}
+                                    animation="fadeIn"
+                                    duration={500}
+                                >
+                                    <CustomButton text="Опубликовать" />
+                                </Animatable.View>
+                            )}
+                        </View>
+                    )}
+
+                    {dataArray.length > 0 ? (
+                        <View
+                            style={{
+                                marginTop: 15,
+                                borderTopLeftRadius: 40,
+                                borderTopRightRadius: 40,
+                                paddingHorizontal: 20,
+                                flex: 1,
+                                backgroundColor: theme.bgWhite(0.4),
+                            }}>
+                            <ScrollView
+                                showsVerticalScrollIndicator={false}
+                                style={{ marginVertical: 20 }}
+                                scrollEventThrottle={16}
+                                bounces={false}>
+                                {dataArray.map((item, index) => (
+                                    <View key={index} style={styles.feedItem}>
+                                        <Image source={item.userAvatar} style={styles.avatar} />
+                                        <View style={{ flex: 1 }}>
+                                            <View
+                                                style={{
+                                                    flexDirection: 'row',
+                                                    justifyContent: 'space-between',
+                                                    alignItems: 'center',
+                                                }}>
+                                                <View>
+                                                    <Text style={styles.name}>{item.identify}</Text>
+                                                    <Text style={styles.timestamp}>12:15</Text>
+                                                </View>
+                                                <Icons.MaterialIcons
+                                                    name="more-horiz"
                                                     size={24}
-                                                    color="#73788b"
-                                                />
-                                            </TouchableOpacity>
-                                            <TouchableOpacity
-                                                onPress={() => alert('pressed')}
-                                                style={{}}>
-                                                <Icons.Fontisto
-                                                    name={'comment'}
-                                                    size={22}
                                                     color="#73788B"
                                                 />
-                                            </TouchableOpacity>
+                                            </View>
+                                            <Text style={styles.post}>{item.postText}</Text>
+                                            {item.postImage && (
+                                                <Image
+                                                    src={item.postImage}
+                                                    style={styles.postImage}
+                                                    resizeMode="cover"
+                                                />
+                                            )}
+                                            <View style={{ flexDirection: 'row' }}>
+                                                <TouchableOpacity
+                                                    style={{ marginRight: 16 }}
+                                                    onPress={() => alert('pressed')}>
+                                                    <Icons.FontAwesome
+                                                        name={'heart-o'}
+                                                        size={24}
+                                                        color="#73788b"
+                                                    />
+                                                </TouchableOpacity>
+                                                <TouchableOpacity
+                                                    onPress={() => alert('pressed')}
+                                                    style={{}}>
+                                                    <Icons.Fontisto
+                                                        name={'comment'}
+                                                        size={22}
+                                                        color="#73788B"
+                                                    />
+                                                </TouchableOpacity>
+                                            </View>
                                         </View>
                                     </View>
-                                </View>
-                            ))}
-                        </ScrollView>
-                    </View>
+                                ))}
+                            </ScrollView>
+                        </View>
+                    ) : (
+                        <View style={{ flex: 1 }}>
+                            {inputText.length <= 40 && (
+                                <NoNewsInfo
+                                    primaryText="Комментариев пока нет"
+                                    secondaryText="Пусть Ваш будет первым!"
+                                    marginVertical={0}
+                                />
+                            )}
+                        </View>
+                    )}
                 </Animatable.View>
             </SafeAreaView>
         </>
@@ -322,5 +380,22 @@ const styles = StyleSheet.create({
         height: 150,
         borderRadius: 5,
         marginVertical: 16,
+    },
+    inputContainer: {
+        margin: 12,
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        borderRadius: 15,
+        paddingHorizontal: 32,
+        borderWidth: 0.5,
+        borderColor: theme.bgWhite(0.1),
+        backgroundColor: theme.bgWhite(0.2),
+    },
+    inputAvatar: {
+        width: 48,
+        height: 48,
+        borderRadius: 24,
+        marginRight: 16,
     },
 });

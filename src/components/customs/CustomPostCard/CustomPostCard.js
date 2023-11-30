@@ -225,7 +225,8 @@ export default function CustomPostCard({ item, onDeletePost, navigation }) {
                                 navigation.navigate('Комментарии', {
                                     isImageUrl: false,
                                     item: item,
-                                    formattedDate: formattedPostTime
+                                    formattedDate: formattedPostTime,
+
                                 })
                             }
                             style={styles.interaction}>
