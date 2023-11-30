@@ -126,7 +126,14 @@ React Native News App project, bootstrapped using [`@react-native-community/cli`
 - [x] Bottom TabBar Navigation w/ material style
 - [x] Proccessing Internet connection with YouTube alike info banners
 - [x] Getting dimensions, tim, etc/
-- [x] News Sharing functionality 
+- [x] News Sharing functionality
+- [x] MovieScreen
+  - [x] Trending Movies
+  - [x] Upcoming Movies
+  - [x] Top Rated Movies 
+  - [x] MovieScreen w/ movie info, cast, similar movies
+  - [x] MoviePersonScreen person's info
+  - [x] MovieSearchScreen
 - [ ] Admin Subsystem (in progress)
 
 
