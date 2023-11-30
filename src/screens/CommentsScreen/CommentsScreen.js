@@ -24,6 +24,7 @@ import CustomButton from '../../components/customs/CustomButton';
 import { formatPostTime } from '../../utils/formatPostTime';
 import ModalPopup from '../../components/customs/CustomModal/CustomModal';
 import CustomDropDown from '../../components/customs/CustomDropDown';
+import Toast from 'react-native-toast-message';
 
 export default function CommentsScreen({ route }) {
     const {
@@ -54,6 +55,21 @@ export default function CommentsScreen({ route }) {
 
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [selectedCommentIndex, setSelectedCommentIndex] = useState(null);
+    const [showToast, setShowToast] = useState(false);
+
+    const showToastMessage = text => {
+        Toast.show({
+            text1: text,
+            position: 'bottom',
+            visibilityTime: 4000,
+            autoHide: true,
+        });
+    };
+
+    const handleToastShow = value => {
+        setShowToast(value);
+        showToastMessage('Спасибо за помощь в улучшении сообщества!');
+    };
 
     const dataArray = [
         // {
@@ -170,9 +186,22 @@ export default function CommentsScreen({ route }) {
                             onClose={() => setShowDeleteModal(false)}
                             items={comments}
                             selectedCommentIndex={selectedCommentIndex}
-                            backgroundColor='rgb(59 130 246)'
+                            backgroundColor="rgb(59 130 246)"
+                            onToastShow={handleToastShow}
                         />
                     )}
+                    {
+                        // showToast && (
+                        //     ToastAndroid.showWithGravityAndOffset(
+                        //         'Спасибо за помощь сообществу!',
+                        //         ToastAndroid.LONG,
+                        //         ToastAndroid.BOTTOM,
+                        //         25,
+                        //         50
+                        //     )
+                        // )
+                        showToast && <Toast />
+                    }
                     <View
                         style={{
                             backgroundColor: theme.bgWhite(0.3),

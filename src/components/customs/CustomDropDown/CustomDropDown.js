@@ -7,7 +7,7 @@ import {
     StyleSheet,
     TouchableWithoutFeedback,
 } from 'react-native';
-import React from 'react';
+import React, { useState } from 'react';
 import { Icons } from '../../Icons';
 import { assets } from '../../../../react-native.config';
 import { handleUsersNewsShare } from '../../../utils/Share';
@@ -20,7 +20,8 @@ export default function CustomDropDown({
     authorName,
     items,
     selectedCommentIndex,
-    backgroundColor = 'rgb(2 132 199)'
+    backgroundColor = 'rgb(2 132 199)',
+    onToastShow,
 }) {
     const condition =
         identify === authorName || identify === 'admin' ? true : false;
@@ -40,6 +41,10 @@ export default function CustomDropDown({
         console.log('id', optionId);
         //console.log("item", items)
         switch (optionId) {
+            case 'alert-circle-outline':
+                onClose();
+                onToastShow(true);
+                break;
             case 'share':
                 shareComment();
                 break;
@@ -79,7 +84,8 @@ export default function CustomDropDown({
             onRequestClose={onClose}>
             <TouchableWithoutFeedback onPress={handleBackgroundPress}>
                 <View style={styles.modalContainer}>
-                    <View style={[styles.modalContent, { backgroundColor: backgroundColor }]}>
+                    <View
+                        style={[styles.modalContent, { backgroundColor: backgroundColor }]}>
                         <FlatList
                             data={options}
                             keyExtractor={item => item.id}
