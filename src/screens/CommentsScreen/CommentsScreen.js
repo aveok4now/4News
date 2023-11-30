@@ -25,6 +25,7 @@ import { formatPostTime } from '../../utils/formatPostTime';
 import ModalPopup from '../../components/customs/CustomModal/CustomModal';
 import CustomDropDown from '../../components/customs/CustomDropDown';
 import Toast from 'react-native-toast-message';
+import useUserImage from '../../utils/hooks/useUserImage';
 
 export default function CommentsScreen({ route }) {
     const {
@@ -51,6 +52,7 @@ export default function CommentsScreen({ route }) {
     };
 
     let identify = useUserCredentials();
+    const userImage = useUserImage();
     const navigation = useNavigation();
 
     const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -110,7 +112,7 @@ export default function CommentsScreen({ route }) {
 
     const handlePublishComment = () => {
         const newComment = {
-            userAvatar: userAvatar,
+            userAvatar: userImage,
             authorName: identify,
             identify: identify,
             postText: inputText,
@@ -244,7 +246,7 @@ export default function CommentsScreen({ route }) {
                                     ) : (
                                         <TouchableWithoutFeedback>
                                             <Image
-                                                source={item.userImage}
+                                                source={comments.userAvatar || userAvatar}
                                                 style={{
                                                     width: '100%',
                                                     height: '100%',
