@@ -6,6 +6,7 @@ import {
     StatusBar,
     TouchableOpacity,
     ScrollView,
+    TouchableWithoutFeedback,
 } from 'react-native';
 import React from 'react';
 import * as Animatable from 'react-native-animatable';
@@ -16,6 +17,7 @@ import { Icons } from '../../components/Icons';
 import { handleShare } from '../../utils/Share';
 import useUserCredentials from '../../utils/hooks/useUserCredentials';
 import userAvatar from '../../../assets/images/user.jpg';
+import { useNavigation } from '@react-navigation/native';
 
 export default function CommentsScreen({ route }) {
     const {
@@ -24,6 +26,7 @@ export default function CommentsScreen({ route }) {
         includesG,
         formattedDate,
         imageLoaded,
+        isImageUrl = true,
     } = route?.params;
 
     const handleImagePressed = () => {
@@ -37,6 +40,8 @@ export default function CommentsScreen({ route }) {
     };
 
     let identify = useUserCredentials();
+
+    const navigation = useNavigation();
 
     const dataArray = [
         {
@@ -81,7 +86,7 @@ export default function CommentsScreen({ route }) {
                         flex: 1,
                     }}>
                     <Image
-                        blurRadius={200}
+                        blurRadius={100}
                         style={{ position: 'absolute', width: '100%', height: '100%' }}
                         source={require('../assets/images/newsoverview.jpg')}
                     />
@@ -107,18 +112,36 @@ export default function CommentsScreen({ route }) {
                                     animation="slideInLeft"
                                     duration={1000}
                                     style={styles.imageContainer}>
-                                    <Image
-                                        source={{
-                                            uri: imageLoaded
-                                                ? item.urlToImage || defaultImage
-                                                : defaultImage,
-                                        }}
-                                        style={{
-                                            width: '100%',
-                                            height: '100%',
-                                            resizeMode: 'cover',
-                                        }}
-                                    />
+                                    {isImageUrl ? (
+                                        <TouchableWithoutFeedback
+                                            onPress={() =>
+                                                navigation.navigate('NewsViewer', { url: item.url })
+                                            }>
+                                            <Image
+                                                source={{
+                                                    uri: imageLoaded
+                                                        ? item.urlToImage || defaultImage
+                                                        : defaultImage,
+                                                }}
+                                                style={{
+                                                    width: '100%',
+                                                    height: '100%',
+                                                    resizeMode: 'cover',
+                                                }}
+                                            />
+                                        </TouchableWithoutFeedback>
+                                    ) : (
+                                        <TouchableWithoutFeedback>
+                                            <Image
+                                                source={item.userImage}
+                                                style={{
+                                                    width: '100%',
+                                                    height: '100%',
+                                                    resizeMode: 'cover',
+                                                }}
+                                            />
+                                        </TouchableWithoutFeedback>
+                                    )}
                                 </Animatable.View>
                             </View>
                         </Pressable>
@@ -127,12 +150,12 @@ export default function CommentsScreen({ route }) {
                                 style={{
                                     color: 'white',
                                     fontFamily: 'Inter-ExtraBold',
-                                    textAlign: 'justify',
+                                    textAlign: 'auto',
                                     paddingHorizontal: 15,
                                     fontSize: 18,
                                     letterSpacing: -1,
                                 }}>
-                                {item.title}
+                                {item.title || item.post}
                             </Text>
                             {/* <View style={styles.seperator} /> */}
                             <View
@@ -157,7 +180,7 @@ export default function CommentsScreen({ route }) {
                                     onPress={() =>
                                         handleShare({
                                             url: item.url,
-                                            newsTitle: item.title,
+                                            newsTitle: item.title || item.post,
                                         })
                                     }>
                                     <Icons.FontAwesome name={'send-o'} size={24} color="white" />

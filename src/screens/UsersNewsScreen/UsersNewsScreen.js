@@ -139,6 +139,8 @@ export default function UsersNewsScreen({ navigation }) {
 
             setIsTextValid(false);
             setPostText(null);
+            inputRef.current.blur();
+
             if (
                 !(
                     newPost.postTime instanceof Date && !isNaN(newPost.postTime.getTime())
@@ -315,6 +317,7 @@ export default function UsersNewsScreen({ navigation }) {
                                 data={UsersPosts.filter(post => !post.deleted)}
                                 renderItem={({ item }) => (
                                     <CustomPostCard
+                                        navigation={navigation}
                                         key={item.id}
                                         localTime={localTime}
                                         item={{
@@ -330,7 +333,10 @@ export default function UsersNewsScreen({ navigation }) {
                                 )}
                             />
                         ) : (
-                            <NoNewsInfo primaryText="Постов пока нет 🥲" secondaryText="Пускай Ваш будет первым!" />
+                            <NoNewsInfo
+                                primaryText="Постов пока нет 🥲"
+                                secondaryText="Пускай Ваш будет первым!"
+                            />
                         )}
                     </View>
                 </CustomDrawer>

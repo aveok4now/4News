@@ -156,7 +156,7 @@ export default function WeatherScreen({ navigation }) {
 
     const handleTextDebounce = useCallback(debounce(handleSearch, 1200), []);
 
-    const { current, location } = weather;
+    const { current, location } = weather || {};
 
     const moreInfo = {
         'Минимальная температура': `${query?.mintemp_c}°`,

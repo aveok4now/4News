@@ -9,6 +9,7 @@ import {
     Dimensions,
     Vibration,
     BackHandler,
+    TouchableWithoutFeedback,
 } from 'react-native';
 import Logo from '../../../assets/images/seved.png';
 import CustomInput from '../../components/customs/CustomInput/CustomInput';
@@ -29,6 +30,7 @@ import {
     resetStatusBarColor,
 } from '../../utils/StatusBarManager';
 import Toast from 'react-native-toast-message';
+import { theme } from '../WeatherScreen/theme';
 
 SQLite.enablePromise(true);
 
@@ -50,7 +52,6 @@ const SignInScreen = ({ route }) => {
     const handlePasswordVisibilityChange = () => {
         setIsPasswordVisible(!isPasswordVisible);
     };
-
 
     useEffect(() => {
         const checkUserCredentials = async () => {
@@ -156,7 +157,6 @@ const SignInScreen = ({ route }) => {
                 setUserExist(false);
                 console.log('User does not exist');
                 showToast(invalidCredentialsText);
-
             }
         } catch (error) {
             console.error(error);
@@ -260,13 +260,25 @@ const SignInScreen = ({ route }) => {
                         </Animatable.View>
                     </TouchableOpacity>
 
-                    <Animatable.Image
-                        animation="bounceIn"
-                        duration={1500}
-                        source={Logo}
-                        style={[styles.logo, { height: height * 0.17 }]}
-                        resizeMode="contain"
-                    />
+                    <TouchableWithoutFeedback
+                        onPress={() =>
+                            navigation.navigate('NewsViewer', {
+                                url: 'www.sevsu.ru',
+                            })
+                        }>
+                        <Animatable.Image
+                            animation="bounceIn"
+                            duration={1500}
+                            source={Logo}
+                            style={[
+                                styles.logo,
+                                {
+                                    height: height * 0.17,
+                                },
+                            ]}
+                            resizeMode="contain"
+                        />
+                    </TouchableWithoutFeedback>
 
                     <TouchableOpacity onPress={openModal} style={styles.exitIcon}>
                         <Animatable.View animation="bounceIn" duration={1500}>
@@ -449,7 +461,7 @@ const styles = StyleSheet.create({
         textShadowColor: 'rgba(226, 232, 240, 0.15)',
         textShadowOffset: { width: -2, height: 1 },
         textShadowRadius: 4,
-        fontFamily: 'Inter-Bold'
+        fontFamily: 'Inter-Bold',
     },
 });
 

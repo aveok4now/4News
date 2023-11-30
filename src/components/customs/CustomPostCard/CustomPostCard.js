@@ -20,7 +20,7 @@ import CustomButton from '../CustomButton';
 import { formatPostTime } from '../../../utils/formatPostTime';
 import { width } from '../../../utils/getDimensions';
 
-export default function CustomPostCard({ item, onDeletePost }) {
+export default function CustomPostCard({ item, onDeletePost, navigation }) {
     let identify = useUserCredentials();
     const [isLiked, setIsLiked] = useState(false);
     const [likesCount, setLikesCount] = useState(item.likes);
@@ -220,7 +220,15 @@ export default function CustomPostCard({ item, onDeletePost }) {
                                 </Text>
                             </TouchableOpacity>
                         </Animatable.View>
-                        <TouchableOpacity style={styles.interaction}>
+                        <TouchableOpacity
+                            onPress={() =>
+                                navigation.navigate('Комментарии', {
+                                    isImageUrl: false,
+                                    item: item,
+                                    formattedDate: formattedPostTime
+                                })
+                            }
+                            style={styles.interaction}>
                             <Icons.FontAwesome
                                 name="comments-o"
                                 size={25}
