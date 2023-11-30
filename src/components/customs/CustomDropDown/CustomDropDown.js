@@ -7,7 +7,7 @@ import {
     StyleSheet,
     TouchableWithoutFeedback,
 } from 'react-native';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Icons } from '../../Icons';
 import { assets } from '../../../../react-native.config';
 import { handleUsersNewsShare } from '../../../utils/Share';
@@ -22,10 +22,10 @@ export default function CustomDropDown({
     selectedCommentIndex,
     backgroundColor = 'rgb(2 132 199)',
     onToastShow,
+    onConfirmDelete,
 }) {
     const condition =
-        identify === authorName || identify === 'admin' ? true : false;
-
+        identify === authorName || identify.includes('admin') ? true : false;
     const options = [
         {
             id: condition ? 'delete' : 'alert-circle-outline',
@@ -41,6 +41,10 @@ export default function CustomDropDown({
         console.log('id', optionId);
         //console.log("item", items)
         switch (optionId) {
+            case 'delete':
+                onClose();
+                onConfirmDelete();
+                break;
             case 'alert-circle-outline':
                 onClose();
                 onToastShow(true);
@@ -68,6 +72,7 @@ export default function CustomDropDown({
             handleUsersNewsShare({
                 author: commentToShare.identify,
                 newsTitle: commentToShare.postText,
+                titleType: 'комментарием',
                 messageType: 'Комментарий',
                 postTime: formattedTime,
             });
@@ -75,6 +80,14 @@ export default function CustomDropDown({
     };
 
     const handleOptionSelect = onOptionSelect || defaultOptionSelect;
+
+    useEffect(() => {
+        if (!onOptionSelect) {
+            const authorName = items[selectedCommentIndex]?.authorName;
+            const condition =
+                identify === authorName || identify.includes('admin') ? true : false;
+        }
+    }, [onOptionSelect]);
 
     return (
         <Modal

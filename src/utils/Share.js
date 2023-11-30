@@ -17,9 +17,9 @@ export const handleShare = async ({
         .catch(err => console.log(err));
 };
 
-export const handleUsersNewsShare = async ({ newsTitle, author, postTime, messageType = 'Новость' }) => {
+export const handleUsersNewsShare = async ({ newsTitle, author, postTime, messageType = 'Новость', titleType = 'новостью' }) => {
     const options = {
-        title: 'Поделиться новостью',
+        title: `Поделиться ${titleType}`,
         message: `📰 ${messageType} с приложения 4News 📰\n👨‍💻 Автор: ${author} 👨‍💻\n\n${newsTitle}\n\nПост был выложен ${postTime} 🕒`,
     };
     Share.open(options)

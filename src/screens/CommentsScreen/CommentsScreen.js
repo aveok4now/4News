@@ -54,6 +54,7 @@ export default function CommentsScreen({ route }) {
     const navigation = useNavigation();
 
     const [showDeleteModal, setShowDeleteModal] = useState(false);
+    const [showConfirmDeleteModal, setShowConfirmDeleteModal] = useState(false);
     const [selectedCommentIndex, setSelectedCommentIndex] = useState(null);
     const [showToast, setShowToast] = useState(false);
 
@@ -110,6 +111,7 @@ export default function CommentsScreen({ route }) {
     const handlePublishComment = () => {
         const newComment = {
             userAvatar: userAvatar,
+            authorName: identify,
             identify: identify,
             postText: inputText,
             timestamp: new Date(),
@@ -127,8 +129,9 @@ export default function CommentsScreen({ route }) {
             updatedComments.splice(selectedCommentIndex, 1);
             setComments(updatedComments);
             setSelectedCommentIndex(null);
+            setShowConfirmDeleteModal(true);
         }
-        setShowDeleteModal(false);
+        setShowConfirmDeleteModal(false);
     };
 
     return (
@@ -147,61 +150,57 @@ export default function CommentsScreen({ route }) {
                         style={{ position: 'absolute', width: '100%', height: '100%' }}
                         source={require('../assets/images/newsoverview.jpg')}
                     />
-                    {showDeleteModal && (
-                        // <ModalPopup visible={showDeleteModal} backgroundColor='rgb(59 130 246)'>
-                        //     <View style={{ padding: 5 }}>
-                        //         <Text style={{ fontFamily: 'Inter-ExtraBold', fontSize: 18 }}>
-                        //             Подтверждение
-                        //         </Text>
-                        //     </View>
-                        //     <View style={{ width: '100%', padding: 5 }}>
-                        //         <Text style={{ fontFamily: 'Inter-Light', fontSize: 18 }}>
-                        //             Вы действительно хотите удалить этот пост?
-                        //         </Text>
-                        //     </View>
-                        //     <View style={styles.divider} />
-                        //     <View
-                        //         style={{
-                        //             flexDirection: 'row',
-                        //             width: '50%',
-                        //             padding: 5,
-                        //             justifyContent: 'space-between',
-                        //             gap: 10,
-                        //         }}>
-                        //         <CustomButton
-                        //             text="Нет"
-                        //             type="Tertiary"
-                        //             onPress={() => setShowDeleteModal(!showDeleteModal)}
-                        //         />
-                        //         <CustomButton
-                        //             text="Да"
-                        //             type="Tertiary"
-                        //             onPress={handleDeleteComment}
-                        //         />
-                        //     </View>
-                        // </ModalPopup>
-                        <CustomDropDown
-                            visible={showDeleteModal}
-                            identify={identify}
-                            onClose={() => setShowDeleteModal(false)}
-                            items={comments}
-                            selectedCommentIndex={selectedCommentIndex}
-                            backgroundColor="rgb(59 130 246)"
-                            onToastShow={handleToastShow}
-                        />
+                    {showConfirmDeleteModal && (
+                        <ModalPopup
+                            visible={showConfirmDeleteModal}
+                            backgroundColor="rgb(59 130 246)">
+                            <View style={{ padding: 5 }}>
+                                <Text style={{ fontFamily: 'Inter-ExtraBold', fontSize: 18 }}>
+                                    Подтверждение
+                                </Text>
+                            </View>
+                            <View style={{ width: '100%', padding: 5 }}>
+                                <Text style={{ fontFamily: 'Inter-Light', fontSize: 18 }}>
+                                    Вы действительно хотите удалить этот пост?
+                                </Text>
+                            </View>
+                            <View style={styles.divider} />
+                            <View
+                                style={{
+                                    flexDirection: 'row',
+                                    width: '50%',
+                                    padding: 5,
+                                    justifyContent: 'space-between',
+                                    gap: 10,
+                                }}>
+                                <CustomButton
+                                    text="Нет"
+                                    type="Tertiary"
+                                    onPress={() =>
+                                        setShowConfirmDeleteModal(!showConfirmDeleteModal)
+                                    }
+                                />
+                                <CustomButton
+                                    text="Да"
+                                    type="Tertiary"
+                                    onPress={handleDeleteComment}
+                                />
+                            </View>
+                        </ModalPopup>
                     )}
-                    {
-                        // showToast && (
-                        //     ToastAndroid.showWithGravityAndOffset(
-                        //         'Спасибо за помощь сообществу!',
-                        //         ToastAndroid.LONG,
-                        //         ToastAndroid.BOTTOM,
-                        //         25,
-                        //         50
-                        //     )
-                        // )
-                        showToast && <Toast />
-                    }
+                    <CustomDropDown
+                        visible={showDeleteModal}
+                        identify={identify}
+                        onClose={() => setShowDeleteModal(false)}
+                        items={comments}
+                        selectedCommentIndex={selectedCommentIndex}
+                        backgroundColor="rgb(59 130 246)"
+                        onToastShow={handleToastShow}
+                        onConfirmDelete={() => setShowConfirmDeleteModal(true)}
+                        authorName={comments[selectedCommentIndex]?.authorName}
+                    />
+
+                    {showToast && <Toast />}
                     <View
                         style={{
                             backgroundColor: theme.bgWhite(0.3),
