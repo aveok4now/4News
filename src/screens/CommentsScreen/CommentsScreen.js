@@ -23,6 +23,7 @@ import NoNewsInfo from '../../components/NoNewsInfo';
 import CustomButton from '../../components/customs/CustomButton';
 import { formatPostTime } from '../../utils/formatPostTime';
 import ModalPopup from '../../components/customs/CustomModal/CustomModal';
+import CustomDropDown from '../../components/customs/CustomDropDown';
 
 export default function CommentsScreen({ route }) {
     const {
@@ -131,38 +132,46 @@ export default function CommentsScreen({ route }) {
                         source={require('../assets/images/newsoverview.jpg')}
                     />
                     {showDeleteModal && (
-                        <ModalPopup visible={showDeleteModal} backgroundColor='rgb(59 130 246)'>
-                            <View style={{ padding: 5 }}>
-                                <Text style={{ fontFamily: 'Inter-ExtraBold', fontSize: 18 }}>
-                                    Подтверждение
-                                </Text>
-                            </View>
-                            <View style={{ width: '100%', padding: 5 }}>
-                                <Text style={{ fontFamily: 'Inter-Light', fontSize: 18 }}>
-                                    Вы действительно хотите удалить этот пост?
-                                </Text>
-                            </View>
-                            <View style={styles.divider} />
-                            <View
-                                style={{
-                                    flexDirection: 'row',
-                                    width: '50%',
-                                    padding: 5,
-                                    justifyContent: 'space-between',
-                                    gap: 10,
-                                }}>
-                                <CustomButton
-                                    text="Нет"
-                                    type="Tertiary"
-                                    onPress={() => setShowDeleteModal(!showDeleteModal)}
-                                />
-                                <CustomButton
-                                    text="Да"
-                                    type="Tertiary"
-                                    onPress={handleDeleteComment}
-                                />
-                            </View>
-                        </ModalPopup>
+                        // <ModalPopup visible={showDeleteModal} backgroundColor='rgb(59 130 246)'>
+                        //     <View style={{ padding: 5 }}>
+                        //         <Text style={{ fontFamily: 'Inter-ExtraBold', fontSize: 18 }}>
+                        //             Подтверждение
+                        //         </Text>
+                        //     </View>
+                        //     <View style={{ width: '100%', padding: 5 }}>
+                        //         <Text style={{ fontFamily: 'Inter-Light', fontSize: 18 }}>
+                        //             Вы действительно хотите удалить этот пост?
+                        //         </Text>
+                        //     </View>
+                        //     <View style={styles.divider} />
+                        //     <View
+                        //         style={{
+                        //             flexDirection: 'row',
+                        //             width: '50%',
+                        //             padding: 5,
+                        //             justifyContent: 'space-between',
+                        //             gap: 10,
+                        //         }}>
+                        //         <CustomButton
+                        //             text="Нет"
+                        //             type="Tertiary"
+                        //             onPress={() => setShowDeleteModal(!showDeleteModal)}
+                        //         />
+                        //         <CustomButton
+                        //             text="Да"
+                        //             type="Tertiary"
+                        //             onPress={handleDeleteComment}
+                        //         />
+                        //     </View>
+                        // </ModalPopup>
+                        <CustomDropDown
+                            visible={showDeleteModal}
+                            identify={identify}
+                            onClose={() => setShowDeleteModal(false)}
+                            items={comments}
+                            selectedCommentIndex={selectedCommentIndex}
+                            backgroundColor='rgb(59 130 246)'
+                        />
                     )}
                     <View
                         style={{
@@ -335,14 +344,19 @@ export default function CommentsScreen({ route }) {
                                                     </Text>
                                                 </View>
                                                 <TouchableOpacity
+                                                    style={{
+                                                        backgroundColor: theme.bgWhite(0.3),
+                                                        borderRadius: 25,
+                                                        padding: 4,
+                                                    }}
                                                     onPress={() => {
                                                         setSelectedCommentIndex(index);
                                                         setShowDeleteModal(!showDeleteModal);
                                                     }}>
                                                     <Icons.MaterialIcons
                                                         name="more-horiz"
-                                                        size={24}
-                                                        color="#73788B"
+                                                        size={28}
+                                                        color="rgb(96 165 250)"
                                                     />
                                                 </TouchableOpacity>
                                             </View>
@@ -384,7 +398,11 @@ export default function CommentsScreen({ route }) {
                             {inputText.length <= 40 && (
                                 <NoNewsInfo
                                     primaryText="Комментариев пока нет"
-                                    secondaryText={identify !== 'Гость' ? "Пусть Ваш будет первым!" : 'Войдите в аккаунт или зарегестрируйтесь, чтобы добавлять комментарии!'}
+                                    secondaryText={
+                                        identify !== 'Гость'
+                                            ? 'Пусть Ваш будет первым!'
+                                            : 'Войдите в аккаунт или зарегестрируйтесь, чтобы добавлять комментарии!'
+                                    }
                                     marginVertical={identify !== 'Гость' ? 0 : 10}
                                 />
                             )}
@@ -426,7 +444,7 @@ const styles = StyleSheet.create({
     },
     feedItem: {
         backgroundColor: theme.bgWhite(0.7),
-        borderRadius: 5,
+        borderRadius: 15,
         padding: 8,
         flexDirection: 'row',
         marginVertical: 8,
@@ -438,19 +456,27 @@ const styles = StyleSheet.create({
         marginRight: 16,
     },
     name: {
-        fontSize: 16,
-        fontFamily: 'Inter-Light',
-        color: '#454D65',
+        fontSize: 18,
+        fontFamily: 'Inter-Bold',
+        color: 'rgb(96 165 250)',
+        textShadowColor: 'rgba(8, 51, 68, 0.1)',
+        textShadowOffset: { width: 0, height: 2 },
+        textShadowRadius: 4,
     },
     timestamp: {
-        fontSize: 11,
-        color: '#A4AAC0',
-        marginTop: 4,
+        fontSize: 12,
+        fontFamily: 'Inter-Light',
+        color: 'rgb(163 163 163)',
+        marginTop: 2,
+        textShadowColor: 'rgba(226, 232, 240, 0.25)',
+        textShadowOffset: { width: 0, height: 2 },
+        textShadowRadius: 4,
     },
     post: {
         marginTop: 16,
-        fontSize: 14,
-        color: '#838899',
+        fontSize: 16,
+        fontFamily: 'Inter-Light',
+        color: 'rgb(22 78 99)',
     },
     postImage: {
         width: undefined,
