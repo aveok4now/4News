@@ -74,36 +74,9 @@ export default function CommentsScreen({ route }) {
         showToastMessage('Спасибо за помощь в улучшении сообщества!');
     };
 
-    const dataArray = [
-        // {
-        //     userAvatar: userAvatar,
-        //     identify: identify,
-        //     postText: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-        //     postImage: defaultImage,
-        // },
-        // {
-        //     userAvatar: userAvatar,
-        //     identify: identify,
-        //     postText: 'Praesent eget convallis velit, ac molestie lectus.',
-        // },
-        // {
-        //     userAvatar: userAvatar,
-        //     identify: identify,
-        //     postText: 'Praesent eget convallis velit, ac molestie lectus.',
-        //     postImage: defaultImage,
-        // },
-        // {
-        //     userAvatar: userAvatar,
-        //     identify: identify,
-        //     postText: 'Praesent eget convallis velit, ac molestie lectus.',
-        // },
-        // {
-        //     userAvatar: userAvatar,
-        //     identify: identify,
-        //     postText: 'Praesent eget convallis velit, ac molestie lectus.',
-        //     postImage: defaultImage,
-        // },
-    ];
+    const dataArray = [];
+
+    let postText = item.title || item.post;
 
     const [comments, setComments] = useState(dataArray);
 
@@ -135,6 +108,7 @@ export default function CommentsScreen({ route }) {
         }
         setShowConfirmDeleteModal(false);
     };
+
 
     return (
         <>
@@ -268,7 +242,7 @@ export default function CommentsScreen({ route }) {
                                     fontSize: 18,
                                     letterSpacing: -1,
                                 }}>
-                                {item.title || item.post}
+                                {postText && postText.length > 150 ? postText.slice(0, 150) + ' ...' : postText}
                             </Text>
                             {/* <View style={styles.seperator} /> */}
                             <View

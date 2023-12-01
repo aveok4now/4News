@@ -29,6 +29,7 @@ import { formatPostTime } from '../../utils/formatPostTime';
 import NoNewsInfo from '../../components/NoNewsInfo';
 import SQLite from 'react-native-sqlite-storage';
 import { height } from '../../utils/getDimensions';
+import * as Animatable from 'react-native-animatable';
 
 SQLite.enablePromise(true);
 
@@ -349,17 +350,20 @@ export default function UsersNewsScreen({ navigation }) {
                             <TextInput
                                 ref={inputRef}
                                 autoFocus={false}
-                                selectionColor="white"
+                                selectionColor="rgb(14 165 233)"
                                 multiline={true}
                                 numberOfLines={3}
-                                maxLength={350}
+                                maxLength={500}
                                 style={{
                                     flex: 1,
                                     fontFamily: 'Inter-Light',
-                                    overflow: 'hidden',
                                     maxHeight: height * 0.4,
+                                    borderLeftWidth: 1,
+                                    borderLeftColor: theme.bgWhite(0.2),
+                                    paddingLeft: 10
                                 }}
                                 placeholder="Что у Вас нового?"
+                                placeholderStyle={{ textAlign: 'center' }}
                                 value={postText}
                                 onFocus={checkPerson}
                                 onChangeText={text => {
@@ -368,17 +372,21 @@ export default function UsersNewsScreen({ navigation }) {
                             //contextMenuHidden={true}
                             />
 
-                            <TouchableOpacity
-                                onPress={handleSendPost}
-                                disabled={!isTextValid}>
-                                <Icons.Ionicons
-                                    name="send"
-                                    size={32}
-                                    color={!isTextValid ? 'lightgray' : 'rgb(56 189 248)'}
-                                />
-                            </TouchableOpacity>
+                            {isTextValid && (
+                                <Animatable.View animation="flipInY" duration={1000}>
+                                    <TouchableOpacity onPress={handleSendPost}>
+                                        <Icons.Ionicons
+                                            name="send"
+                                            size={32}
+                                            //opacity={isTextValid ? 1 : 0}
+                                            color={'rgb(125 211 252)'}
+                                        />
+                                    </TouchableOpacity>
+                                </Animatable.View>
+                            )}
                         </Animated.View>
                     </Animated.View>
+
                     <View style={[styles.cardContainer]}>
                         {UsersPosts.some(post => !post.deleted) ? (
                             <FlatList
