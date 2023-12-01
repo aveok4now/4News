@@ -28,6 +28,7 @@ import CustomButton from '../../components/customs/CustomButton';
 import { formatPostTime } from '../../utils/formatPostTime';
 import NoNewsInfo from '../../components/NoNewsInfo';
 import SQLite from 'react-native-sqlite-storage';
+import { height } from '../../utils/getDimensions';
 
 SQLite.enablePromise(true);
 
@@ -104,7 +105,7 @@ export default function UsersNewsScreen({ navigation }) {
     const handleSendPost = useCallback(async () => {
         if (postText && postText.length > 3) {
             const newPost = {
-                newsId: UsersPosts.length + 1,
+                newsId: new Date().getTime(),
                 id: String(UsersPosts.length + 1),
                 userName: identify,
                 postTime: new Date(),
@@ -118,6 +119,7 @@ export default function UsersNewsScreen({ navigation }) {
             };
 
             setIsTextValid(false);
+            checkIsTextValid(postText);
             setPostText(null);
             inputRef.current.blur();
 
@@ -193,10 +195,26 @@ export default function UsersNewsScreen({ navigation }) {
         }
     };
 
+    const [isLongText, setIsLongText] = useState(false);
+    const [textLength, setTextLength] = useState(0);
+
     const handleTextChange = useCallback(text => {
         setPostText(text);
+        setTextLength(text.length);
         setIsTextValid(text.length > 3);
+        checkIsTextValid(text);
     }, []);
+
+    const checkIsTextValid = text => {
+        const enterCount = text.match(/\n/g)?.length || 0;
+        if (text.length > 150 || enterCount > 2) {
+            //marginTop.setValue(50);
+            setIsLongText(true);
+        } else {
+            //marginTop.setValue(25);
+            setIsLongText(false);
+        }
+    };
 
     const handleDeletePost = async postId => {
         try {
@@ -236,6 +254,19 @@ export default function UsersNewsScreen({ navigation }) {
         outputRange: [1, 0],
         extrapolate: 'clamp',
     });
+
+    const marginTop = new Animated.Value(150);
+
+    //marginTop.setValue(150);
+    //marginTop.setValue(textLength > 150 ? 130 : 125);
+
+    const marginStyle = {
+        marginTop: marginTop.interpolate({
+            inputRange: [0, textLength + 50],
+            outputRange: [200, 90],
+            extrapolate: 'clamp',
+        }),
+    };
 
     return (
         <>
@@ -303,9 +334,10 @@ export default function UsersNewsScreen({ navigation }) {
                             style={[
                                 styles.inputContainer,
                                 {
-                                    backgroundColor: isScrolledToTop
-                                        ? theme.bgWhite(0.1)
-                                        : 'rgb(30 64 175)',
+                                    backgroundColor:
+                                        isScrolledToTop && !isLongText
+                                            ? theme.bgWhite(0.1)
+                                            : 'rgb(30 64 175)',
                                     borderColor: isScrolledToTop
                                         ? 'rgb(186 230 253)'
                                         : 'rgb(94 234 212)',
@@ -320,13 +352,20 @@ export default function UsersNewsScreen({ navigation }) {
                                 selectionColor="white"
                                 multiline={true}
                                 numberOfLines={3}
-                                style={{ flex: 1, fontFamily: 'Inter-Light' }}
+                                maxLength={350}
+                                style={{
+                                    flex: 1,
+                                    fontFamily: 'Inter-Light',
+                                    overflow: 'hidden',
+                                    maxHeight: height * 0.4,
+                                }}
                                 placeholder="Что у Вас нового?"
                                 value={postText}
                                 onFocus={checkPerson}
                                 onChangeText={text => {
                                     handleTextChange(text);
                                 }}
+                            //contextMenuHidden={true}
                             />
 
                             <TouchableOpacity
@@ -352,6 +391,7 @@ export default function UsersNewsScreen({ navigation }) {
                                     scrollY.setValue(e.nativeEvent.contentOffset.y);
                                     const currentScrollPosition = e.nativeEvent.contentOffset.y;
                                     setIsScrolling(true);
+                                    inputRef.current.blur();
                                     setIsScrolledToTop(prevState => {
                                         const scrolledToTop = currentScrollPosition === 0;
                                         return scrolledToTop;
@@ -372,7 +412,7 @@ export default function UsersNewsScreen({ navigation }) {
                                 )}
                                 keyExtractor={item => item.id}
                                 ListHeaderComponent={() => (
-                                    <View style={{ marginTop: '25%' }}></View>
+                                    <Animated.View style={marginStyle}></Animated.View>
                                 )}
                             />
                         ) : (
