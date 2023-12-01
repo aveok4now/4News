@@ -27,8 +27,15 @@ import TypeWriter from 'react-native-typewriter';
 import CustomButton from '../../components/customs/CustomButton';
 import { formatPostTime } from '../../utils/formatPostTime';
 import NoNewsInfo from '../../components/NoNewsInfo';
+import SQLite from 'react-native-sqlite-storage';
+
+SQLite.enablePromise(true);
 
 export default function UsersNewsScreen({ navigation }) {
+    useEffect(() => {
+        getPosts();
+    }, []);
+
     let identify = useUserCredentials();
 
     condition =
@@ -45,74 +52,46 @@ export default function UsersNewsScreen({ navigation }) {
     const [showGuestModal, setShowGuestModal] = useState(false);
     const [isTextValid, setIsTextValid] = useState(false);
 
-    const Posts = [
-        {
-            id: '1',
-            userName: 'Иван Иванов',
-            postTime: new Date(),
-            post: 'Sint nulla commodo cupidatat aliqua et dolor id minim non fugiat.',
-            postImage: 'none',
-            liked: true,
-            likes: 6,
-            comments: 5,
-            userImage: userImage,
-            deleted: false,
-        },
-        {
-            id: '2',
-            userName: 'Роберт Сидоров',
-            postTime: new Date(),
-            post: 'Lorem est nostrud dolore deserunt. Ullamco velit elit ullamco consequat voluptate.',
-            postImage: defaultImage,
-            liked: false,
-            likes: 4,
-            comments: 0,
-            userImage: userImage,
-            deleted: false,
-        },
-        {
-            id: '3',
-            userName: 'Пётр Азимов',
-            postTime: new Date(),
-            post: 'Cillum nisi do tempor tempor voluptate duis dolore velit id sit. Aute mollit sunt excepteur non.',
-            postImage: 'none',
-            liked: false,
-            likes: 7,
-            comments: 1,
-            userImage: userImage,
-            deleted: false,
-        },
-        {
-            id: '4',
-            userName: 'Варвара Иванова',
-            postTime: new Date(),
-            post: 'Sint nulla commodo cupidatat aliqua et dolor id minim non fugiat.',
-            postImage: 'none',
-            liked: true,
-            likes: 16,
-            comments: 7,
-            userImage: userImage,
-            deleted: false,
-        },
-        {
-            id: '5',
-            userName: 'Стас Иванов',
-            postTime: new Date(),
-            post: 'Voluptate consequat duis tempor excepteur ea ad reprehenderit.',
-            postImage: defaultImage,
-            liked: false,
-            likes: 6,
-            comments: 3,
-            userImage: userImage,
-            deleted: false,
-        },
-    ];
+    const Posts = [];
 
     const [UsersPosts, setUsersPosts] = useState(Posts);
 
     //TODO
     const getPosts = async () => {
-        setIsRefreshing(false);
+        try {
+            const db = await SQLite.openDatabase({ name: 'news.db', location: 1 });
+
+            let query = `SELECT * FROM News WHERE categoryType = ? ORDER BY publishDate DESC`;
+            let queryArgs = ['UsersNews'];
+
+            const [result] = await db.executeSql(query, queryArgs);
+
+            if (result.rows.length > 0) {
+                const fetchedPosts = [];
+
+                for (let i = 0; i < result.rows.length; i++) {
+                    const post = result.rows.item(i);
+                    fetchedPosts.push({
+                        id: post.newsId.toString(),
+                        userName: post.AuthorName || 'Автор',
+                        postTime: new Date(post.publishDate),
+                        post: post.newsTitle,
+                        postImage: 'none',
+                        liked: false,
+                        likes: 0,
+                        comments: 0,
+                        userImage: condition,
+                        deleted: false,
+                    });
+                }
+
+                setUsersPosts(fetchedPosts);
+            }
+        } catch (err) {
+            console.log(err);
+        } finally {
+            setIsRefreshing(false);
+        }
     };
 
     const onRefresh = () => {
@@ -122,9 +101,10 @@ export default function UsersNewsScreen({ navigation }) {
 
     const [localTime, setLocalTime] = useState(new Date());
 
-    const handleSendPost = useCallback(() => {
+    const handleSendPost = useCallback(async () => {
         if (postText && postText.length > 3) {
             const newPost = {
+                newsId: UsersPosts.length + 1,
                 id: String(UsersPosts.length + 1),
                 userName: identify,
                 postTime: new Date(),
@@ -141,32 +121,95 @@ export default function UsersNewsScreen({ navigation }) {
             setPostText(null);
             inputRef.current.blur();
 
-            if (
-                !(
-                    newPost.postTime instanceof Date && !isNaN(newPost.postTime.getTime())
-                )
-            ) {
-                console.log('Invalid date in handleSendPost');
-                return;
+            try {
+                await insertPost(newPost);
+
+                if (
+                    !(
+                        newPost.postTime instanceof Date &&
+                        !isNaN(newPost.postTime.getTime())
+                    )
+                ) {
+                    console.log('Invalid date in handleSendPost');
+                    return;
+                }
+
+                const updatedPosts = [newPost, ...UsersPosts];
+                setUsersPosts(updatedPosts);
+            } catch (err) {
+                console.log('Error handling post:', err);
             }
-
-            const updatedPosts = [newPost, ...UsersPosts];
-
-            setUsersPosts(updatedPosts);
         }
     }, [UsersPosts, postText, identify, userImage]);
+
+    const insertPost = async data => {
+        try {
+            console.log(data);
+            const db = await SQLite.openDatabase({ name: 'news.db', location: 1 });
+
+            let query = `INSERT INTO News (newsId, AuthorName, newsTitle, publishDate, AuthorAdminId, AuthorUserId, categoryType)
+                        VALUES (?, ?, ?, ?, COALESCE(?, 0), COALESCE(?, 0), ?)`;
+
+            let queryArgs = [
+                data.newsId,
+                data.userName,
+                data.post,
+                data.postTime.toISOString(),
+                !identify.includes('admin') ? null : data.id,
+                !identify.includes('admin') ? data.id : null,
+                'UsersNews',
+            ];
+
+            const [result] = await db.executeSql(query, queryArgs);
+
+            if (result.rowsAffected > 0) {
+                console.log('Post has been inserted into the database');
+            } else {
+                console.log('Post has not been inserted into the database');
+            }
+        } catch (err) {
+            console.log(err);
+        }
+    };
+
+    const deletePost = async postId => {
+        try {
+            const db = await SQLite.openDatabase({ name: 'news.db', location: 1 });
+
+            let query = 'DELETE FROM News WHERE newsId = ?';
+            let queryArgs = [postId];
+
+            const [result] = await db.executeSql(query, queryArgs);
+
+            if (result.rowsAffected > 0) {
+                console.log(
+                    `Post with ID ${postId} has been deleted from the database`,
+                );
+            } else {
+                console.log(`Post with ID ${postId} not found in the database`);
+            }
+        } catch (err) {
+            console.log('Error deleting post:', err);
+        }
+    };
 
     const handleTextChange = useCallback(text => {
         setPostText(text);
         setIsTextValid(text.length > 3);
     }, []);
 
-    const handleDeletePost = postId => {
-        setUsersPosts(prevPosts =>
-            prevPosts.map(post =>
-                post.id === postId ? { ...post, deleted: true } : post,
-            ),
-        );
+    const handleDeletePost = async postId => {
+        try {
+            await deletePost(postId);
+
+            setUsersPosts(prevPosts =>
+                prevPosts.map(post =>
+                    post.id === postId ? { ...post, deleted: true } : post,
+                ),
+            );
+        } catch (err) {
+            console.log('Error handling delete post:', err);
+        }
     };
 
     let inputRef = useRef(null);
@@ -199,7 +242,7 @@ export default function UsersNewsScreen({ navigation }) {
             <StatusBar backgroundColor="transparent" />
             <View style={{ flex: 1 }}>
                 <Image
-                    blurRadius={500}
+                    blurRadius={250}
                     style={{ position: 'absolute', width: '100%', height: '100%' }}
                     source={require('../assets/images/newsoverview.jpg')}
                 />
