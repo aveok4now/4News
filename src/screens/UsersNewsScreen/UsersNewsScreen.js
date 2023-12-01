@@ -73,6 +73,16 @@ export default function UsersNewsScreen({ navigation }) {
 
                 for (let i = 0; i < result.rows.length; i++) {
                     const post = result.rows.item(i);
+                    let getLikesQuery = `
+                    SELECT likesCount FROM Likes WHERE postId = ?
+                `;
+                    let getLikesQueryArgs = [post.newsId];
+                    const [likesResult] = await db.executeSql(
+                        getLikesQuery,
+                        getLikesQueryArgs,
+                    );
+                    const likesCount = likesResult.rows.item(0)?.likesCount || 0;
+
                     fetchedPosts.push({
                         id: post.newsId.toString(),
                         userName: post.AuthorName || 'Автор',
@@ -80,7 +90,7 @@ export default function UsersNewsScreen({ navigation }) {
                         post: post.newsTitle,
                         postImage: 'none',
                         liked: false,
-                        likes: 0,
+                        likes: likesCount,
                         comments: 0,
                         userImage: condition,
                         deleted: false,
@@ -113,7 +123,7 @@ export default function UsersNewsScreen({ navigation }) {
                 post: postText,
                 postImage: 'none',
                 liked: false,
-                likes: 0,
+                likes: await isPostLiked(post.newsId),
                 comments: 0,
                 userImage: condition,
                 deleted: false,
@@ -145,6 +155,8 @@ export default function UsersNewsScreen({ navigation }) {
         }
     }, [UsersPosts, postText, identify, userImage]);
 
+
+
     const insertPost = async data => {
         try {
             console.log(data);
@@ -170,6 +182,39 @@ export default function UsersNewsScreen({ navigation }) {
             } else {
                 console.log('Post has not been inserted into the database');
             }
+
+            await insertLikesCount(data, db);
+        } catch (err) {
+            console.log(err);
+        }
+    };
+
+    const insertLikesCount = async (data, db) => {
+        try {
+            let createLikesTableQuery = `
+            ALTER TABLE Likes (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                postId INTEGER,
+                userId INTEGER,
+                FOREIGN KEY (postId) REFERENCES News (newsId) ON DELETE CASCADE,
+                FOREIGN KEY (userId) REFERENCES Users (userId) ON DELETE CASCADE
+              ) `;
+
+            await db.executeSql(createLikesTableQuery);
+
+            let insertLikesCountQuery = `INSERT INTO Likes (postId, likesCount) VALUES (?, ?)`;
+            let insertLikesCountQueryArgs = [data.newsId, 0];
+
+            const [result] = await db.executeSql(
+                insertLikesCountQuery,
+                insertLikesCountQueryArgs,
+            );
+
+            if (result.rowsAffected > 0) {
+                console.log('Post likes has been inserted into the database');
+            } else {
+                console.log('Post like has not been inserted into the database');
+            }
         } catch (err) {
             console.log(err);
         }
@@ -193,6 +238,28 @@ export default function UsersNewsScreen({ navigation }) {
             }
         } catch (err) {
             console.log('Error deleting post:', err);
+        }
+    };
+
+    const toggleLike = async (postId, liked) => {
+        try {
+            const db = await SQLite.openDatabase({ name: 'news.db', location: 1 });
+
+            if (liked) {
+                let incrementLikesQuery = `
+                UPDATE Likes SET likesCount = likesCount + 1 WHERE postId = ?
+            `;
+                let incrementLikesQueryArgs = [postId];
+                await db.executeSql(incrementLikesQuery, incrementLikesQueryArgs);
+            } else {
+                let decrementLikesQuery = `
+                UPDATE Likes SET likesCount = likesCount - 1 WHERE postId = ?
+            `;
+                let decrementLikesQueryArgs = [postId];
+                await db.executeSql(decrementLikesQuery, decrementLikesQueryArgs);
+            }
+        } catch (err) {
+            console.log(err);
         }
     };
 
@@ -350,7 +417,7 @@ export default function UsersNewsScreen({ navigation }) {
                             <TextInput
                                 ref={inputRef}
                                 autoFocus={false}
-                                selectionColor="rgb(14 165 233)"
+                                selectionColor="white"
                                 multiline={true}
                                 numberOfLines={3}
                                 maxLength={500}
@@ -360,7 +427,7 @@ export default function UsersNewsScreen({ navigation }) {
                                     maxHeight: height * 0.4,
                                     borderLeftWidth: 1,
                                     borderLeftColor: theme.bgWhite(0.2),
-                                    paddingLeft: 10
+                                    paddingLeft: 10,
                                 }}
                                 placeholder="Что у Вас нового?"
                                 placeholderStyle={{ textAlign: 'center' }}
@@ -416,6 +483,7 @@ export default function UsersNewsScreen({ navigation }) {
                                             postTime: formatPostTime(item.postTime, new Date()),
                                         }}
                                         onDeletePost={handleDeletePost}
+                                    //toggleLike={toggleLike}
                                     />
                                 )}
                                 keyExtractor={item => item.id}

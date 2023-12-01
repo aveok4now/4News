@@ -19,6 +19,7 @@ import ModalPopup from '../CustomModal/CustomModal';
 import CustomButton from '../CustomButton';
 import { formatPostTime } from '../../../utils/formatPostTime';
 import { width } from '../../../utils/getDimensions';
+import SQLite from 'react-native-sqlite-storage';
 
 export default function CustomPostCard({ item, onDeletePost, navigation, condition }) {
     let identify = useUserCredentials();
@@ -115,6 +116,34 @@ export default function CustomPostCard({ item, onDeletePost, navigation, conditi
         setIsDropdownVisible(false);
     };
 
+
+    const toggleLike = async (postId, liked) => {
+        try {
+            const db = await SQLite.openDatabase({ name: 'news.db', location: 1 });
+
+            if (liked) {
+                let incrementLikesQuery = `
+                UPDATE Likes SET likesCount = likesCount + 1 WHERE postId = ?
+            `;
+                let incrementLikesQueryArgs = [postId];
+                await db.executeSql(incrementLikesQuery, incrementLikesQueryArgs);
+            } else {
+                let decrementLikesQuery = `
+                UPDATE Likes SET likesCount = likesCount - 1 WHERE postId = ?
+            `;
+                let decrementLikesQueryArgs = [postId];
+                await db.executeSql(decrementLikesQuery, decrementLikesQueryArgs);
+            }
+
+            // Обновление состояния лайков
+            setLikesCount(prevLikesCount => liked ? prevLikesCount + 1 : prevLikesCount - 1);
+            setIsLiked(liked);
+        } catch (err) {
+            console.log(err);
+        }
+    };
+
+
     return (
         <>
             {!item.deleted && (
@@ -189,18 +218,22 @@ export default function CustomPostCard({ item, onDeletePost, navigation, conditi
                     <View style={styles.interactionWrapper}>
                         <Animatable.View animation="pulse">
                             <TouchableOpacity
-                                onPress={() => {
+                                onPress={async () => {
+                                    if (identify === 'Гость') return; //TODO Modal PopUp
                                     if (isLiked) {
                                         setLikesCount(likesCount - 1);
                                         setIsLiked(false);
                                         setLikeIcon('heart-outline');
                                         setLikeIconColor('#2E64E5');
+                                        await toggleLike(item.id, false);
                                     } else {
                                         setLikesCount(likesCount + 1);
                                         setIsLiked(true);
                                         setLikeIcon('heart');
                                         setLikeIconColor('blue');
+                                        await toggleLike(item.id, true);
                                     }
+
                                 }}
                                 style={[
                                     styles.interaction,
