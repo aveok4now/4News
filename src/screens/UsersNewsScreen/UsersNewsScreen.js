@@ -9,6 +9,7 @@ import {
     Platform,
     Text,
     Animated,
+    ScrollView,
 } from 'react-native';
 import React, { useCallback, useState, useEffect, useRef } from 'react';
 import userImage from '../../../assets/images/user.jpg';
@@ -28,8 +29,13 @@ import CustomButton from '../../components/customs/CustomButton';
 import { formatPostTime } from '../../utils/formatPostTime';
 import NoNewsInfo from '../../components/NoNewsInfo';
 import SQLite from 'react-native-sqlite-storage';
-import { height } from '../../utils/getDimensions';
+import { height, width } from '../../utils/getDimensions';
 import * as Animatable from 'react-native-animatable';
+
+import Carousel from 'react-native-snap-carousel';
+import GroupsList from '../../components/UsersNewsComponents/GroupsList';
+import { groupsData, setGroupsData } from './groupsData';
+import NewsFooter from '../../components/UsersNewsComponents/NewsFooter';
 
 SQLite.enablePromise(true);
 
@@ -57,6 +63,7 @@ export default function UsersNewsScreen({ navigation }) {
     const Posts = [];
 
     const [UsersPosts, setUsersPosts] = useState(Posts);
+    const [isPostSent, setIsPostSent] = useState(false);
 
     //TODO
     const getPosts = async () => {
@@ -130,6 +137,8 @@ export default function UsersNewsScreen({ navigation }) {
 
     const handleSendPost = useCallback(async () => {
         if (postText && postText.length > 3) {
+            setIsPostSent(true);
+            setIsLongText(false);
             const newPost = {
                 newsId: new Date().getTime(),
                 id: String(UsersPosts.length + 1),
@@ -352,7 +361,7 @@ export default function UsersNewsScreen({ navigation }) {
     const marginStyle = {
         marginTop: marginTop.interpolate({
             inputRange: [0, textLength + 50],
-            outputRange: [200, 90],
+            outputRange: [isPostSent ? 80 : 150, 80],
             extrapolate: 'clamp',
         }),
     };
@@ -412,6 +421,7 @@ export default function UsersNewsScreen({ navigation }) {
                             </View>
                         </ModalPopup>
                     )}
+
                     <Animated.View
                         style={{
                             transform: [{ translateY: translateY }],
@@ -457,7 +467,6 @@ export default function UsersNewsScreen({ navigation }) {
                                 onChangeText={text => {
                                     handleTextChange(text);
                                 }}
-                            //contextMenuHidden={true}
                             />
 
                             {isTextValid && (
@@ -478,6 +487,7 @@ export default function UsersNewsScreen({ navigation }) {
                     <View style={[styles.cardContainer]}>
                         {UsersPosts.some(post => !post.deleted) ? (
                             <FlatList
+                                removeClippedSubviews={true}
                                 onRefresh={onRefresh}
                                 refreshing={isRefreshing}
                                 showsVerticalScrollIndicator={false}
@@ -509,7 +519,12 @@ export default function UsersNewsScreen({ navigation }) {
                                 )}
                                 keyExtractor={item => item.id}
                                 ListHeaderComponent={() => (
-                                    <Animated.View style={marginStyle}></Animated.View>
+                                    <>
+                                        <Animated.View style={marginStyle}></Animated.View>
+                                    </>
+                                )}
+                                ListFooterComponent={() => (
+                                    <NewsFooter navigation={navigation} />
                                 )}
                             />
                         ) : (
