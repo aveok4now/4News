@@ -63,6 +63,9 @@ export default function UsersNewsScreen({ navigation }) {
         try {
             const db = await SQLite.openDatabase({ name: 'news.db', location: 1 });
 
+            // let inQuery = `ALTER TABLE Likes ADD COLUMN isLiked INTEGER DEFAULT 0`;
+            // await db.executeSql(inQuery)
+
             let query = `SELECT * FROM News WHERE categoryType = ? ORDER BY publishDate DESC`;
             let queryArgs = ['UsersNews'];
 
@@ -84,13 +87,24 @@ export default function UsersNewsScreen({ navigation }) {
                     const likesCount = likesResult.rows.item(0)?.likesCount || 0;
                     console.log('likesCount ' + likesCount);
 
+                    let getIsLikedQuery = `
+                        SELECT isLiked FROM Likes WHERE postId = ?
+                    `;
+
+                    let getIsLikedQueryArgs = [post.newsId];
+                    const [isLikedResult] = await db.executeSql(
+                        getIsLikedQuery,
+                        getIsLikedQueryArgs,
+                    );
+                    const isLiked = isLikedResult.rows.item(0)?.isLiked || false;
+
                     fetchedPosts.push({
                         id: post.newsId.toString(),
                         userName: post.AuthorName || 'Автор',
                         postTime: new Date(post.publishDate),
                         post: post.newsTitle,
                         postImage: 'none',
-                        liked: false,
+                        liked: isLiked,
                         likes: likesCount,
                         comments: 0,
                         userImage: condition,
@@ -259,6 +273,12 @@ export default function UsersNewsScreen({ navigation }) {
                 console.log('deupdated');
                 await db.executeSql(decrementLikesQuery, decrementLikesQueryArgs);
             }
+
+            let updateIsLikedQuery = `
+            UPDATE Likes SET isLiked = ? WHERE postId = ?
+        `;
+            let updateIsLikedQueryArgs = [liked ? 1 : 0, postId];
+            await db.executeSql(updateIsLikedQuery, updateIsLikedQueryArgs);
         } catch (err) {
             console.log(err);
         }

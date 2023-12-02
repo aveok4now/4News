@@ -122,6 +122,28 @@ export default function CustomPostCard({
         setIsDropdownVisible(false);
     };
 
+    const handleLikePress = async () => {
+        if (identify === 'Гость') return; //TODO Modal PopUp
+
+        try {
+            if (isLiked) {
+                setLikesCount(likesCount - 1);
+                setIsLiked(false);
+                setLikeIcon('heart-outline');
+                setLikeIconColor('#2E64E5');
+                await toggleLike(item.id, false);
+            } else {
+                setLikesCount(likesCount + 1);
+                setIsLiked(true);
+                setLikeIcon('heart');
+                setLikeIconColor('blue');
+                await toggleLike(item.id, true);
+            }
+        } catch (error) {
+            console.log('Error toggling like:', error);
+        }
+    };
+
     return (
         <>
             {!item.deleted && (
@@ -196,22 +218,7 @@ export default function CustomPostCard({
                     <View style={styles.interactionWrapper}>
                         <Animatable.View animation="pulse">
                             <TouchableOpacity
-                                onPress={async () => {
-                                    if (identify === 'Гость') return; //TODO Modal PopUp
-                                    if (isLiked) {
-                                        setLikesCount(likesCount - 1);
-                                        setIsLiked(false);
-                                        setLikeIcon('heart-outline');
-                                        setLikeIconColor('#2E64E5');
-                                        await toggleLike(item.id, false);
-                                    } else {
-                                        setLikesCount(likesCount + 1);
-                                        setIsLiked(true);
-                                        setLikeIcon('heart');
-                                        setLikeIconColor('blue');
-                                        await toggleLike(item.id, true);
-                                    }
-                                }}
+                                onPress={handleLikePress}
                                 style={[
                                     styles.interaction,
                                     { backgroundColor: isLiked ? '#2e64e515' : 'transparent' },
