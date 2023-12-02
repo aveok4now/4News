@@ -9,9 +9,7 @@ import {
 import { width } from '../../../utils/getDimensions';
 
 export default function NewsFooter({ navigation }) {
-
     const [activeSlide, setActiveSlide] = useState(0);
-
 
     const pagination = () => {
         return (
@@ -26,11 +24,9 @@ export default function NewsFooter({ navigation }) {
                     marginHorizontal: 8,
                     backgroundColor: 'rgba(255, 255, 255, 0.92)',
                 }}
-                inactiveDotStyle={
-                    {
-                        backgroundColor: 'blue'
-                    }
-                }
+                inactiveDotStyle={{
+                    backgroundColor: 'blue',
+                }}
                 inactiveDotOpacity={0.4}
                 inactiveDotScale={0.6}
             />
@@ -64,7 +60,12 @@ export default function NewsFooter({ navigation }) {
                 autoplayInterval={3000}
                 data={groupsData}
                 renderItem={({ item, index }) => (
-                    <GroupsList item={item} navigation={navigation} activeSlide={activeSlide} title={item.title} />
+                    <GroupsList
+                        item={item}
+                        navigation={navigation}
+                        activeSlide={activeSlide}
+                        title={item.title}
+                    />
                 )}
                 firstItem={0}
                 inactiveSlideOpacity={0.5}
@@ -77,6 +78,17 @@ export default function NewsFooter({ navigation }) {
                 onSnapToItem={index => setActiveSlide(index)}
             />
             {pagination()}
+            <Text
+                style={{
+                    position: 'absolute',
+                    bottom: 0,
+                    opacity: 0.5,
+                    fontFamily: 'Inter-Light',
+                    textAlign: 'center',
+                    alignSelf: 'center',
+                }}>
+                dtb4life, 2023
+            </Text>
         </View>
     );
 }

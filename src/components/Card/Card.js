@@ -23,7 +23,7 @@ import { Icons } from '../Icons';
 import { theme } from '../../screens/WeatherScreen/theme';
 import { handleShare } from '../../utils/Share';
 
-const Card = ({ item, navigation, data }) => {
+const Card = ({ item, navigation, data, needMargin = true }) => {
     const defaultImage =
         'https://arbeitgeber.de/wp-content/uploads/2020/11/bda-news-header-1920x1280px-1536x1024.jpg';
 
@@ -147,7 +147,7 @@ const Card = ({ item, navigation, data }) => {
             <Animatable.View
                 style={[
                     styles.card,
-                    item === data[data.length - 1] && data.length !== 1 ? { marginBottom: '13%' } : null,
+                    item === data[data.length - 1] && data.length !== 1 && needMargin ? { marginBottom: '13%' } : null,
 
                 ]}
                 animation="fadeIn"

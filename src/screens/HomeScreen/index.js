@@ -18,6 +18,7 @@ import * as Progress from 'react-native-progress';
 import FloatingButton from '../../components/customs/FloatingButton';
 import CustomCarousel from '../../components/customs/CustomCarousel';
 import { apiKeyList } from '../../utils/apiKeys/newsApiKeys';
+import NewsFooter from '../../components/UsersNewsComponents/NewsFooter';
 
 const HomeScreen = ({ navigation }) => {
     // setTimeout(() => {
@@ -336,9 +337,16 @@ const HomeScreen = ({ navigation }) => {
                                                         item={item}
                                                         navigation={navigation}
                                                         data={Data}
+                                                        needMargin={false}
                                                     />
                                                 );
                                             }}
+                                            ListFooterComponent={() => (
+                                                <View style={{ padding: 8 }}>
+                                                    <NewsFooter navigation={navigation} />
+                                                </View>
+
+                                            )}
                                         />
                                     </View>
                                 </View>

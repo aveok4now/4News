@@ -147,7 +147,7 @@ const NewsOverviewScreen = ({ route, navigation }) => {
                             showsVerticalScrollIndicator={false}
                             data={Data}
                             renderItem={({ item, index }) => {
-                                return <Card item={item} navigation={navigation} data={Data} />;
+                                return <Card item={item} navigation={navigation} data={Data} needMargin={false} />;
                             }}
                         />
                     </View>
