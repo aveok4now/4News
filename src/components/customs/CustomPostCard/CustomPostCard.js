@@ -20,6 +20,7 @@ import CustomButton from '../CustomButton';
 import { formatPostTime } from '../../../utils/formatPostTime';
 import { width } from '../../../utils/getDimensions';
 import SQLite from 'react-native-sqlite-storage';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function CustomPostCard({
     item,
@@ -34,11 +35,9 @@ export default function CustomPostCard({
 
     const [isDropdownVisible, setIsDropdownVisible] = useState(false);
 
-    const [likeIcon, setLikeIcon] = useState(
-        item.liked ? 'heart' : 'heart-outline',
-    );
+    const [likeIcon, setLikeIcon] = useState(isLiked ? 'heart' : 'heart-outline');
     const [likeIconColor, setLikeIconColor] = useState(
-        item.liked ? 'blue' : '#2E64E5',
+        isLiked ? 'blue' : '#2E64E5',
     );
 
     const [toastMessage, setToastMessage] = useState('');
@@ -82,6 +81,30 @@ export default function CustomPostCard({
         };
     }, [item.id, startInterval, postTime, item.postTime]);
 
+    useEffect(() => {
+        console.log(item.userName, identify);
+        if (item.liked && identify === item.userName) {
+            setIsLiked(true);
+        }
+    }, [item.liked, identify, item.userName]);
+
+    useEffect(() => {
+        const checkLikeStatus = async () => {
+            const likeKey = `liked_${item.id}_${identify}`;
+
+            try {
+                const likedStatus = await AsyncStorage.getItem(likeKey);
+                if (likedStatus !== null && likedStatus === 'true') {
+                    setIsLiked(true);
+                }
+            } catch (error) {
+                console.log('Error retrieving like status:', error);
+            }
+        };
+
+        checkLikeStatus();
+    }, [item.id, identify]);
+
     const deletePost = postId => {
         onDeletePost(postId);
         item.deleted = true;
@@ -123,21 +146,27 @@ export default function CustomPostCard({
     };
 
     const handleLikePress = async () => {
-        if (identify === 'Гость') return; //TODO Modal PopUp
+        if (identify === 'Гость') return; // TODO: Modal PopUp
+
+        const likeKey = `liked_${item.id}_${identify}`;
 
         try {
             if (isLiked) {
+                await toggleLike(item.id, false);
                 setLikesCount(likesCount - 1);
                 setIsLiked(false);
                 setLikeIcon('heart-outline');
                 setLikeIconColor('#2E64E5');
-                await toggleLike(item.id, false);
+
+                await AsyncStorage.setItem(likeKey, 'false');
             } else {
                 setLikesCount(likesCount + 1);
                 setIsLiked(true);
                 setLikeIcon('heart');
                 setLikeIconColor('blue');
                 await toggleLike(item.id, true);
+
+                await AsyncStorage.setItem(likeKey, 'true');
             }
         } catch (error) {
             console.log('Error toggling like:', error);
@@ -224,7 +253,7 @@ export default function CustomPostCard({
                                     { backgroundColor: isLiked ? '#2e64e515' : 'transparent' },
                                 ]}>
                                 <Icons.Ionicons
-                                    name={likeIcon}
+                                    name={isLiked ? 'heart' : 'heart-outline'}
                                     size={25}
                                     style={{ color: likeIconColor }}
                                 />
