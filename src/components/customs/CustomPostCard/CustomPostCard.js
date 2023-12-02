@@ -21,7 +21,13 @@ import { formatPostTime } from '../../../utils/formatPostTime';
 import { width } from '../../../utils/getDimensions';
 import SQLite from 'react-native-sqlite-storage';
 
-export default function CustomPostCard({ item, onDeletePost, navigation, condition }) {
+export default function CustomPostCard({
+    item,
+    onDeletePost,
+    navigation,
+    condition,
+    toggleLike,
+}) {
     let identify = useUserCredentials();
     const [isLiked, setIsLiked] = useState(false);
     const [likesCount, setLikesCount] = useState(item.likes);
@@ -116,34 +122,6 @@ export default function CustomPostCard({ item, onDeletePost, navigation, conditi
         setIsDropdownVisible(false);
     };
 
-
-    const toggleLike = async (postId, liked) => {
-        try {
-            const db = await SQLite.openDatabase({ name: 'news.db', location: 1 });
-
-            if (liked) {
-                let incrementLikesQuery = `
-                UPDATE Likes SET likesCount = likesCount + 1 WHERE postId = ?
-            `;
-                let incrementLikesQueryArgs = [postId];
-                await db.executeSql(incrementLikesQuery, incrementLikesQueryArgs);
-            } else {
-                let decrementLikesQuery = `
-                UPDATE Likes SET likesCount = likesCount - 1 WHERE postId = ?
-            `;
-                let decrementLikesQueryArgs = [postId];
-                await db.executeSql(decrementLikesQuery, decrementLikesQueryArgs);
-            }
-
-            // Обновление состояния лайков
-            setLikesCount(prevLikesCount => liked ? prevLikesCount + 1 : prevLikesCount - 1);
-            setIsLiked(liked);
-        } catch (err) {
-            console.log(err);
-        }
-    };
-
-
     return (
         <>
             {!item.deleted && (
@@ -233,7 +211,6 @@ export default function CustomPostCard({ item, onDeletePost, navigation, conditi
                                         setLikeIconColor('blue');
                                         await toggleLike(item.id, true);
                                     }
-
                                 }}
                                 style={[
                                     styles.interaction,

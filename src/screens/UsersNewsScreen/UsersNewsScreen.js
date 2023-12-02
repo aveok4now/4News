@@ -82,6 +82,7 @@ export default function UsersNewsScreen({ navigation }) {
                         getLikesQueryArgs,
                     );
                     const likesCount = likesResult.rows.item(0)?.likesCount || 0;
+                    console.log('likesCount ' + likesCount);
 
                     fetchedPosts.push({
                         id: post.newsId.toString(),
@@ -123,7 +124,7 @@ export default function UsersNewsScreen({ navigation }) {
                 post: postText,
                 postImage: 'none',
                 liked: false,
-                likes: await isPostLiked(post.newsId),
+                likes: 0,
                 comments: 0,
                 userImage: condition,
                 deleted: false,
@@ -154,8 +155,6 @@ export default function UsersNewsScreen({ navigation }) {
             }
         }
     }, [UsersPosts, postText, identify, userImage]);
-
-
 
     const insertPost = async data => {
         try {
@@ -191,16 +190,16 @@ export default function UsersNewsScreen({ navigation }) {
 
     const insertLikesCount = async (data, db) => {
         try {
-            let createLikesTableQuery = `
-            ALTER TABLE Likes (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                postId INTEGER,
-                userId INTEGER,
-                FOREIGN KEY (postId) REFERENCES News (newsId) ON DELETE CASCADE,
-                FOREIGN KEY (userId) REFERENCES Users (userId) ON DELETE CASCADE
-              ) `;
+            // let createLikesTableQuery = `
+            // ALTER TABLE Likes (
+            //     id INTEGER PRIMARY KEY AUTOINCREMENT,
+            //     postId INTEGER,
+            //     userId INTEGER,
+            //     FOREIGN KEY (postId) REFERENCES News (newsId) ON DELETE CASCADE,
+            //     FOREIGN KEY (userId) REFERENCES Users (userId) ON DELETE CASCADE
+            //   ) `;
 
-            await db.executeSql(createLikesTableQuery);
+            // await db.executeSql(createLikesTableQuery);
 
             let insertLikesCountQuery = `INSERT INTO Likes (postId, likesCount) VALUES (?, ?)`;
             let insertLikesCountQueryArgs = [data.newsId, 0];
@@ -250,12 +249,14 @@ export default function UsersNewsScreen({ navigation }) {
                 UPDATE Likes SET likesCount = likesCount + 1 WHERE postId = ?
             `;
                 let incrementLikesQueryArgs = [postId];
+                console.log('updated');
                 await db.executeSql(incrementLikesQuery, incrementLikesQueryArgs);
             } else {
                 let decrementLikesQuery = `
                 UPDATE Likes SET likesCount = likesCount - 1 WHERE postId = ?
             `;
                 let decrementLikesQueryArgs = [postId];
+                console.log('deupdated');
                 await db.executeSql(decrementLikesQuery, decrementLikesQueryArgs);
             }
         } catch (err) {
@@ -483,7 +484,7 @@ export default function UsersNewsScreen({ navigation }) {
                                             postTime: formatPostTime(item.postTime, new Date()),
                                         }}
                                         onDeletePost={handleDeletePost}
-                                    //toggleLike={toggleLike}
+                                        toggleLike={toggleLike}
                                     />
                                 )}
                                 keyExtractor={item => item.id}
