@@ -36,18 +36,11 @@ export const formatPostTime = (postTime, localTime) => {
         }
     }
 
-    const options = {
-        day: '2-digit',
-        month: '2-digit',
-        year: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit',
-    };
-    //console.log('posttime', postTimeObject.toLocaleDateString('ru-RU', options));
-
     const currentTime = localTime || new Date();
     const timeDiffInSeconds = Math.floor((currentTime - postTimeObject) / 1000);
-    //console.log('timediff', timeDiffInSeconds);
+
+    const hours = Math.floor(timeDiffInSeconds / 3600);
+    const minutes = Math.floor((timeDiffInSeconds % 3600) / 60);
 
     if (timeDiffInSeconds < 5) {
         return 'Только что';
@@ -56,18 +49,53 @@ export const formatPostTime = (postTime, localTime) => {
     } else if (timeDiffInSeconds < 120) {
         return '1 минуту назад';
     } else if (timeDiffInSeconds < 3600) {
-        const minutes = Math.floor(timeDiffInSeconds / 60);
-        return `${minutes} минуты назад`;
+        return `${minutes} ${getMinutes(minutes)} назад`;
     } else if (timeDiffInSeconds < 7200) {
         return '1 час назад';
     } else if (timeDiffInSeconds < 86400) {
-        const hours = Math.floor(timeDiffInSeconds / 3600);
-        return `${hours} часа назад`;
+        return `${hours} ${getHours(hours)} назад`;
     } else if (timeDiffInSeconds < 172800) {
         return 'Вчера';
     } else if (timeDiffInSeconds < 259200) {
         return 'Позавчера';
     }
 
+    const options = {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+    };
+
     return postTimeObject.toLocaleDateString('ru-RU', options);
+};
+
+const getHours = (hours) => {
+    if (hours >= 11 && hours <= 19) {
+        return 'часов';
+    } else {
+        const lastDigit = hours % 10;
+        switch (lastDigit) {
+            case 1:
+                return 'час';
+            case 2:
+            case 3:
+            case 4:
+                return 'часа';
+            default:
+                return 'часов';
+        }
+    }
+};
+
+const getMinutes = (minutes) => {
+    const lastDigit = minutes % 10;
+    if (lastDigit === 1 && minutes !== 11) {
+        return 'минута';
+    } else if (lastDigit >= 2 && lastDigit <= 4 && (minutes < 10 || minutes > 20)) {
+        return 'минуты';
+    } else {
+        return 'минут';
+    }
 };
