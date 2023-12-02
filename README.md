@@ -64,6 +64,10 @@ React Native News App project, bootstrapped using [`@react-native-community/cli`
     - [ ] Storing comments in database (in progress)
   - [ ] Community Screen
     - [ ] Users News w/ comments, likes, date, etc.
+      - [x] Storing posts w/ author's info in a database
+        - [x] Storing users likes
+        - [ ] Storing comments
+      - [x] NewsFooter carousel component with pressable images of the university VK groups 
       - [x] Realtime publication date changing 
       - [x] UI
       - [x] Floating input container w/ opacity and etc. animations
