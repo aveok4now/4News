@@ -17,7 +17,9 @@ import { Pressable } from 'react-native';
 import { Icons } from '../../components/Icons';
 import { handleShare } from '../../utils/Share';
 import useUserCredentials from '../../utils/hooks/useUserCredentials';
-import userAvatar from '../../../assets/images/user.jpg';
+import userImage from '../../../assets/images/user.jpg';
+import guestImage from '../../../assets/images/guest.jpg';
+import adminImage from '../../../assets/images/admin.jpg';
 import { useNavigation } from '@react-navigation/native';
 import NoNewsInfo from '../../components/NoNewsInfo';
 import CustomButton from '../../components/customs/CustomButton';
@@ -26,6 +28,9 @@ import ModalPopup from '../../components/customs/CustomModal/CustomModal';
 import CustomDropDown from '../../components/customs/CustomDropDown';
 import Toast from 'react-native-toast-message';
 import useUserImage from '../../utils/hooks/useUserImage';
+import SQLite from 'react-native-sqlite-storage';
+
+import { condition, getUserImage } from '../../utils/getUserImage';
 
 export default function CommentsScreen({ route }) {
     const {
@@ -37,9 +42,75 @@ export default function CommentsScreen({ route }) {
         isImageUrl = true,
     } = route?.params;
 
+    const dataArray = [];
+
+
+
+    let postText = item.title || item.post;
+    let postAuhor = item.userName || item.source.name;
+
+    const [comments, setComments] = useState(dataArray);
+
+    const inputRef = useRef(null);
+    const [inputText, setInputText] = useState('');
+
+    let identify = useUserCredentials();
+
+
+
+    const userImage = useUserImage();
+    const navigation = useNavigation();
+
+    const [showDeleteModal, setShowDeleteModal] = useState(false);
+    const [showConfirmDeleteModal, setShowConfirmDeleteModal] = useState(false);
+    const [selectedCommentIndex, setSelectedCommentIndex] = useState(null);
+    const [showToast, setShowToast] = useState(false);
+
     useEffect(() => {
-        const updatedDataArray = [...dataArray, ...comments];
-    }, [comments]);
+        const fetchComments = async () => {
+            try {
+                const db = await SQLite.openDatabase({ name: 'news.db', location: 1 });
+
+                const postId = item.id || new Date(item.publishedAt).toString();
+
+                let query =
+                    'SELECT * FROM Comments WHERE postId = ? ORDER BY timestamp DESC';
+                let queryArgs = [postId];
+
+                const [result] = await db.executeSql(query, queryArgs);
+
+                if (result.rows.length > 0) {
+                    const fetchedComments = [];
+
+                    for (let i = 0; i < result.rows.length; i++) {
+                        const comment = result.rows.item(i);
+
+                        console.log('id', comment.id.toString());
+                        console.log('postId', comment.postId);
+                        console.log('authorName', comment.authorName);
+                        console.log('commentText', comment.commentText);
+                        console.log('timeStamp', new Date(comment.timestamp));
+
+                        fetchedComments.push({
+                            id: comment.id.toString(),
+                            postId: comment.postId,
+                            authorName: comment.authorName,
+                            postText: comment.commentText,
+                            timestamp: new Date(comment.timestamp),
+                            userAvatar: getUserImage(comment.authorName, identify),
+                        });
+                    }
+
+
+                    setComments(fetchedComments);
+                }
+            } catch (err) {
+                console.log(err);
+            }
+        };
+
+        fetchComments();
+    }, [item.id, item.publishedAt]);
 
     const handleImagePressed = () => {
         try {
@@ -50,15 +121,6 @@ export default function CommentsScreen({ route }) {
             return;
         }
     };
-
-    let identify = useUserCredentials();
-    const userImage = useUserImage();
-    const navigation = useNavigation();
-
-    const [showDeleteModal, setShowDeleteModal] = useState(false);
-    const [showConfirmDeleteModal, setShowConfirmDeleteModal] = useState(false);
-    const [selectedCommentIndex, setSelectedCommentIndex] = useState(null);
-    const [showToast, setShowToast] = useState(false);
 
     const showToastMessage = text => {
         Toast.show({
@@ -74,41 +136,95 @@ export default function CommentsScreen({ route }) {
         showToastMessage('Спасибо за помощь в улучшении сообщества!');
     };
 
-    const dataArray = [];
+    const handlePublishComment = async () => {
+        const postId = item.id || new Date(item.publishedAt).toString();
+        console.log(new Date(item.publishedAt));
 
-    let postText = item.title || item.post;
-
-    const [comments, setComments] = useState(dataArray);
-
-    const inputRef = useRef(null);
-    const [inputText, setInputText] = useState('');
-
-    const handlePublishComment = () => {
         const newComment = {
-            userAvatar: userImage,
+            postId: postId,
+            userAvatar: condition,
             authorName: identify,
             identify: identify,
-            postText: inputText,
-            timestamp: new Date(),
+            commentText: inputText,
+            timestamp: new Date().toISOString(),
         };
 
-        const updatedComments = [newComment, ...comments];
-        setComments(updatedComments);
+        console.log(postText);
 
-        setInputText('');
-    };
+        try {
+            const db = await SQLite.openDatabase({ name: 'news.db', location: 1 });
 
-    const handleDeleteComment = () => {
-        if (selectedCommentIndex !== null) {
-            const updatedComments = [...comments];
-            updatedComments.splice(selectedCommentIndex, 1);
+            let query = `
+              INSERT INTO Comments (postId, authorName, commentText, timestamp)
+              VALUES (?, ?, ?, ?)
+            `;
+            let queryArgs = [
+                newComment.postId,
+                newComment.authorName,
+                newComment.commentText,
+                newComment.timestamp,
+            ];
+
+            const [result] = await db.executeSql(query, queryArgs);
+
+            if (result.rowsAffected > 0) {
+                console.log('Comment has been inserted into the database');
+            } else {
+                console.log('Comment has not been inserted into the database');
+            }
+            const updatedComments = [newComment, ...comments];
             setComments(updatedComments);
-            setSelectedCommentIndex(null);
-            setShowConfirmDeleteModal(true);
+
+            setInputText('');
+        } catch (err) {
+            console.log(err);
         }
-        setShowConfirmDeleteModal(false);
     };
 
+    const handleDeleteComment = async () => {
+        if (selectedCommentIndex !== null) {
+            const comment = comments[selectedCommentIndex];
+
+            try {
+                const db = await SQLite.openDatabase({ name: 'news.db', location: 1 });
+
+                let query = 'DELETE FROM Comments WHERE id = ?';
+                let queryArgs = [comment.id];
+
+                const [result] = await db.executeSql(query, queryArgs);
+
+                if (result.rowsAffected > 0) {
+                    console.log('Comment has been deleted from the database');
+                } else {
+                    console.log('Comment not found in the database');
+                }
+
+                const updatedComments = [...comments];
+                updatedComments.splice(selectedCommentIndex, 1);
+                setComments(updatedComments);
+
+                setSelectedCommentIndex(null);
+                setShowConfirmDeleteModal(false);
+            } catch (err) {
+                console.log('Error deleting comment:', err);
+            }
+        }
+    };
+
+    // const createCommentsTable = async () => {
+    //     const db = await SQLite.openDatabase({ name: 'news.db', location: 1 });
+    //     let query = `
+    //       CREATE TABLE IF NOT EXISTS Comments (
+    //         id INTEGER PRIMARY KEY AUTOINCREMENT,
+    //         postId INTEGER,
+    //         authorName TEXT,
+    //         commentText TEXT,
+    //         timestamp TEXT,
+    //         FOREIGN KEY (postId) REFERENCES News (newsId) ON DELETE CASCADE
+    //       )
+    //     `;
+    //     await db.executeSql(query);
+    // };
 
     return (
         <>
@@ -202,6 +318,7 @@ export default function CommentsScreen({ route }) {
                                     {isImageUrl ? (
                                         <TouchableWithoutFeedback
                                             onPress={() =>
+                                                !includesG &&
                                                 navigation.navigate('NewsViewer', { url: item.url })
                                             }>
                                             <Image
@@ -220,7 +337,7 @@ export default function CommentsScreen({ route }) {
                                     ) : (
                                         <TouchableWithoutFeedback>
                                             <Image
-                                                source={comments.userAvatar || userAvatar}
+                                                source={item.userImage}
                                                 style={{
                                                     width: '100%',
                                                     height: '100%',
@@ -242,7 +359,9 @@ export default function CommentsScreen({ route }) {
                                     fontSize: 18,
                                     letterSpacing: -1,
                                 }}>
-                                {postText && postText.length > 150 ? postText.slice(0, 150) + ' ...' : postText}
+                                {postAuhor && postText && postText.length > 150
+                                    ? postText.slice(0, 150) + ' ...'
+                                    : postText}
                             </Text>
                             {/* <View style={styles.seperator} /> */}
                             <View
@@ -260,6 +379,8 @@ export default function CommentsScreen({ route }) {
                                         paddingHorizontal: 15,
                                         fontSize: 14,
                                     }}>
+                                    {postAuhor}
+                                    {', '}
                                     {formattedDate}
                                 </Text>
                                 <TouchableOpacity
@@ -333,7 +454,7 @@ export default function CommentsScreen({ route }) {
                                 bounces={false}>
                                 {comments.map((item, index) => (
                                     <View key={index} style={styles.feedItem}>
-                                        <Image source={item.userAvatar} style={styles.avatar} />
+                                        <Image source={item.userAvatar || userImage} style={styles.avatar} />
                                         <View style={{ flex: 1 }}>
                                             <View
                                                 style={{
@@ -342,7 +463,7 @@ export default function CommentsScreen({ route }) {
                                                     alignItems: 'center',
                                                 }}>
                                                 <View>
-                                                    <Text style={styles.name}>{item.identify}</Text>
+                                                    <Text style={styles.name}>{item.authorName}</Text>
                                                     <Text style={styles.timestamp}>
                                                         {formatPostTime(item.timestamp, new Date())}
                                                     </Text>
@@ -364,7 +485,9 @@ export default function CommentsScreen({ route }) {
                                                     />
                                                 </TouchableOpacity>
                                             </View>
-                                            <Text style={styles.post}>{item.postText}</Text>
+                                            <Text style={styles.post}>
+                                                {item.postText || item.commentText}
+                                            </Text>
                                             {item.postImage && (
                                                 <Image
                                                     src={item.postImage}

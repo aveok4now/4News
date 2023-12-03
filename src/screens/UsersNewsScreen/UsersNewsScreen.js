@@ -34,6 +34,7 @@ import { height, width } from '../../utils/getDimensions';
 import * as Animatable from 'react-native-animatable';
 import * as Progress from 'react-native-progress';
 import NewsFooter from '../../components/UsersNewsComponents/NewsFooter';
+import { getUserImage } from '../../utils/getUserImage';
 
 SQLite.enablePromise(true);
 
@@ -137,13 +138,6 @@ export default function UsersNewsScreen({ navigation }) {
         }
     };
 
-    const getUserImage = (authorName, identify) => {
-        console.log(authorName, identify);
-        if (authorName.includes('admin')) {
-            return adminImage;
-        }
-        return userImage;
-    };
 
     const onRefresh = () => {
         setIsRefreshing(true);
@@ -539,6 +533,7 @@ export default function UsersNewsScreen({ navigation }) {
                                             }}
                                             onDeletePost={handleDeletePost}
                                             toggleLike={toggleLike}
+
                                         />
                                     )}
                                     keyExtractor={item => item.id}
@@ -548,7 +543,10 @@ export default function UsersNewsScreen({ navigation }) {
                                         </>
                                     )}
                                     ListFooterComponent={() => (
-                                        <NewsFooter navigation={navigation} />
+                                        <View>
+                                            <NewsFooter navigation={navigation} />
+                                        </View>
+
                                     )}
                                 />
                             ) : (
