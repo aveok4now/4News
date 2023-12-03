@@ -18,7 +18,6 @@ import * as Progress from 'react-native-progress';
 import FloatingButton from '../../components/customs/FloatingButton';
 import CustomCarousel from '../../components/customs/CustomCarousel';
 import { apiKeyList } from '../../utils/apiKeys/newsApiKeys';
-import NewsFooter from '../../components/UsersNewsComponents/NewsFooter';
 
 const HomeScreen = ({ navigation }) => {
     // setTimeout(() => {
@@ -80,24 +79,23 @@ const HomeScreen = ({ navigation }) => {
     const [isConnected, setIsConnected] = useState(false);
     const [showConnectionStatus, setShowConnectionStatus] = useState(false);
 
+    const fetchDataByCountry = async (country, category) => {
+        const response = await fetch(
+            `https://newsapi.org/v2/top-headlines?country=${country}&apiKey=${apiKeyList[apiKeyIndex]}&category=${category}`,
+        );
+        if (response.status === 429) {
+            apiKeyIndex = (apiKeyIndex + 1) % apiKeyList.length;
+            return fetchDataByCountry(country, category);
+        }
+        return response.json();
+    };
+
     const getData = async () => {
         try {
             setIsLoading(true);
-            const ruResponse = await fetch(
-                `https://newsapi.org/v2/top-headlines?country=ru&apiKey=${apiKeyList[apiKeyIndex]}&category=${Category[Select].category}`,
-            );
-            const usResponse = await fetch(
-                `https://newsapi.org/v2/top-headlines?country=us&apiKey=${apiKeyList[apiKeyIndex]}&category=${Category[Select].category}`,
-            );
 
-            if (ruResponse.status === 429 || usResponse.status === 429) {
-                apiKeyIndex = (apiKeyIndex + 1) % apiKeyList.length;
-                return await getData();
-                //throw new Error(`RuResponse Error: ${ruResponse.status}`);
-            }
-
-            const ruData = await ruResponse.json();
-            const usData = await usResponse.json();
+            const ruData = await fetchDataByCountry('ru', Category[Select].category);
+            const usData = await fetchDataByCountry('us', Category[Select].category);
 
             const combinedData = [...ruData.articles, ...usData.articles];
 
@@ -114,36 +112,21 @@ const HomeScreen = ({ navigation }) => {
 
     const getData2 = async category => {
         try {
-            //setIsLoading(true)
-            const ruResponse = await fetch(
-                `https://newsapi.org/v2/top-headlines?country=ru&apiKey=${apiKeyList[apiKeyIndex]}&category=${category}`,
-            );
+            //setIsLoading(true);
 
-            const usResponse = await fetch(
-                `https://newsapi.org/v2/top-headlines?country=us&apiKey=${apiKeyList[apiKeyIndex]}&category=${category}`,
-            );
-
-            if (ruResponse.status === 429 || usResponse.status === 429) {
-                apiKeyIndex = (apiKeyIndex + 1) % apiKeyList.length;
-                return await getData2(category);
-            }
-
-            const ruData = await ruResponse.json();
-            const usData = await usResponse.json();
+            const ruData = await fetchDataByCountry('ru', category);
+            const usData = await fetchDataByCountry('us', category);
 
             const combinedData = [...ruData.articles, ...usData.articles];
 
             combinedData.sort(() => Math.random() - 0.5);
-
             setData(combinedData);
             setIsRefreshing(false);
-            //apiKeyIndex = (apiKeyIndex + 1) % apiKeyList.length;
             setIsLoading(false);
         } catch (error) {
             console.error('Error in getData2:', error);
             setIsFetchingError(true);
             setIsRefreshing(false);
-            setIsLoading(false);
         }
     };
 
@@ -341,12 +324,6 @@ const HomeScreen = ({ navigation }) => {
                                                     />
                                                 );
                                             }}
-                                            ListFooterComponent={() => (
-                                                <View style={{ padding: 8 }}>
-                                                    <NewsFooter navigation={navigation} />
-                                                </View>
-
-                                            )}
                                         />
                                     </View>
                                 </View>
@@ -387,12 +364,9 @@ const styles = StyleSheet.create({
         paddingHorizontal: 10,
         paddingVertical: 10,
         backgroundColor: 'transparent',
-        //borderWidth: 0.5,
-        //borderColor: 'rgb(156 163 175)',
     },
 
     horListItem: {
-        //backgroundColor: '#8EBBF3',
         paddingHorizontal: 15,
         paddingVertical: 5,
         marginRight: 12,
@@ -420,7 +394,6 @@ const styles = StyleSheet.create({
     },
 
     horListText: {
-        //fontWeight: '500',
         color: 'rgb(203 213 225)',
         fontFamily: 'Inter-Bold',
         textShadowColor: 'rgba(0, 0, 0, 0.25)',
@@ -429,7 +402,6 @@ const styles = StyleSheet.create({
     },
 
     selListText: {
-        //fontWeight: 'bold',
         fontFamily: 'Inter-ExtraBold',
         textShadowColor: 'rgba(0, 0, 0, 0.45)',
         textShadowOffset: { width: 0, height: 2 },
