@@ -9,7 +9,7 @@ import {
 import { width } from '../../../utils/getDimensions';
 
 export default function NewsFooter({ navigation }) {
-    const [activeSlide, setActiveSlide] = useState(0);
+    const [activeSlide, setActiveSlide] = useState(2);
 
     return (
         <View
@@ -45,7 +45,7 @@ export default function NewsFooter({ navigation }) {
                         title={item.title}
                     />
                 )}
-                firstItem={0}
+                firstItem={2}
                 inactiveSlideOpacity={0.5}
                 sliderWidth={width}
                 sliderHeight={width}

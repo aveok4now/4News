@@ -21,6 +21,7 @@ import { formatPostTime } from '../../../utils/formatPostTime';
 import { width } from '../../../utils/getDimensions';
 import SQLite from 'react-native-sqlite-storage';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import GuestModal from '../CustomModal/GuestModal';
 
 export default function CustomPostCard({
     item,
@@ -43,6 +44,7 @@ export default function CustomPostCard({
     );
 
     const [showDeleteModal, setShowDeleteModal] = useState(false);
+    const [showGuestModal, setShowGuestModal] = useState(false);
 
     const [localTime, setLocalTime] = useState(new Date());
     const [formattedPostTime, setFormattedPostTime] = useState(
@@ -134,7 +136,10 @@ export default function CustomPostCard({
     };
 
     const handleLikePress = async () => {
-        if (identify === 'Гость') return; // TODO: Modal PopUp
+        if (identify === 'Гость') {
+            setShowGuestModal(!showGuestModal)
+            return; // TODO: Modal PopUp
+        }
 
         const likeKey = `liked_${item.id}_${identify}`;
 
@@ -159,6 +164,11 @@ export default function CustomPostCard({
         } catch (error) {
             console.log('Error toggling like:', error);
         }
+    };
+
+    const onOk = () => {
+        setShowGuestModal(false);
+        navigation.navigate('Добро пожаловать !', { status: 'logout' });
     };
 
     return (
@@ -276,6 +286,15 @@ export default function CustomPostCard({
                     {/* {isShowToast && (
                         <CustomToast message={toastMessage} onClose={onShowToastClose} />
                     )} */}
+                    {showGuestModal && (
+                        <GuestModal
+                            navigation={navigation}
+                            showModal={showGuestModal}
+                            onOk={onOk}
+                            setShowModal={setShowGuestModal}
+                            modalText='Зарегестрируйтесь или войдите в аккаунт, чтобы лайкать посты! 🥰'
+                        />
+                    )}
                 </Animatable.View>
             )}
         </>

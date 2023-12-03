@@ -3,14 +3,19 @@ import React, { useState } from 'react'
 import ModalPopup from '../CustomModal'
 import CustomButton from '../../CustomButton'
 
-const GuestModal = ({ navigation, showModal, onOk, setShowModal }) => {
+const GuestModal = ({
+    navigation,
+    showModal,
+    onOk,
+    setShowModal,
+    modalText = 'Чтобы добавлять новости в избранное, пожалуйста, войдите или зарегистрируйтесь 🥰'
+}) => {
     return (
         <View>
             <ModalPopup navigation={navigation} visible={showModal} route="popup">
                 <View>
                     <Text style={styles.popUpText}>
-                        Чтобы добавлять новости в избранное, пожалуйста, войдите или
-                        зарегистрируйтесь 🥰
+                        {modalText}
                     </Text>
                     <View
                         style={{
