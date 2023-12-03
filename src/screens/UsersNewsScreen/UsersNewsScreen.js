@@ -35,6 +35,7 @@ import * as Animatable from 'react-native-animatable';
 import * as Progress from 'react-native-progress';
 import NewsFooter from '../../components/UsersNewsComponents/NewsFooter';
 import { getUserImage } from '../../utils/getUserImage';
+import Toast from 'react-native-toast-message';
 
 SQLite.enablePromise(true);
 
@@ -73,6 +74,10 @@ export default function UsersNewsScreen({ navigation }) {
     let inputRef = useRef(null);
     const [isScrolling, setIsScrolling] = useState(false);
     const [isScrolledToTop, setIsScrolledToTop] = useState(true);
+
+    const [toastMessage, setToastMessage] = useState('');
+
+    const [isShowToast, setShowToast] = useState(false);
 
     //TODO
     const getPosts = async () => {
@@ -137,7 +142,6 @@ export default function UsersNewsScreen({ navigation }) {
             setIsRefreshing(false);
         }
     };
-
 
     const onRefresh = () => {
         setIsRefreshing(true);
@@ -367,6 +371,20 @@ export default function UsersNewsScreen({ navigation }) {
         }),
     };
 
+    const showToast = text => {
+        Toast.show({
+            text1: text,
+            position: 'bottom',
+            visibilityTime: 4000,
+            autoHide: true,
+        });
+    };
+
+    const onShowToastClose = () => {
+        setToastMessage('');
+        setShowToast(false);
+    };
+
     return (
         <>
             <StatusBar backgroundColor="transparent" />
@@ -533,7 +551,8 @@ export default function UsersNewsScreen({ navigation }) {
                                             }}
                                             onDeletePost={handleDeletePost}
                                             toggleLike={toggleLike}
-
+                                            showToast={showToast}
+                                            onShowToastClose={onShowToastClose}
                                         />
                                     )}
                                     keyExtractor={item => item.id}
@@ -546,7 +565,6 @@ export default function UsersNewsScreen({ navigation }) {
                                         <View>
                                             <NewsFooter navigation={navigation} />
                                         </View>
-
                                     )}
                                 />
                             ) : (
@@ -556,6 +574,7 @@ export default function UsersNewsScreen({ navigation }) {
                                 />
                             )}
                         </View>
+                        {showToast && <Toast />}
                     </CustomDrawer>
                 )}
             </View>

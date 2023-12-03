@@ -44,8 +44,6 @@ export default function CommentsScreen({ route }) {
 
     const dataArray = [];
 
-
-
     let postText = item.title || item.post;
     let postAuhor = item.userName || item.source.name;
 
@@ -55,8 +53,6 @@ export default function CommentsScreen({ route }) {
     const [inputText, setInputText] = useState('');
 
     let identify = useUserCredentials();
-
-
 
     const userImage = useUserImage();
     const navigation = useNavigation();
@@ -100,7 +96,6 @@ export default function CommentsScreen({ route }) {
                             userAvatar: getUserImage(comment.authorName, identify),
                         });
                     }
-
 
                     setComments(fetchedComments);
                 }
@@ -292,7 +287,6 @@ export default function CommentsScreen({ route }) {
                         authorName={comments[selectedCommentIndex]?.authorName}
                     />
 
-                    {showToast && <Toast />}
                     <View
                         style={{
                             backgroundColor: theme.bgWhite(0.3),
@@ -402,9 +396,9 @@ export default function CommentsScreen({ route }) {
                             <TextInput
                                 ref={inputRef}
                                 style={{ fontFamily: 'Inter-Light', fontSize: 20, width: '100%' }}
-                                placeholder="Что думаете?"
+                                placeholder={`Что думаете, ${identify}?`}
                                 selectionColor="white"
-                                placeholderTextColor="white"
+                                placeholderTextColor="whitesmoke"
                                 multiline={true}
                                 numberOfLines={2}
                                 value={inputText}
@@ -454,7 +448,10 @@ export default function CommentsScreen({ route }) {
                                 bounces={false}>
                                 {comments.map((item, index) => (
                                     <View key={index} style={styles.feedItem}>
-                                        <Image source={item.userAvatar || userImage} style={styles.avatar} />
+                                        <Image
+                                            source={item.userAvatar || userImage}
+                                            style={styles.avatar}
+                                        />
                                         <View style={{ flex: 1 }}>
                                             <View
                                                 style={{
@@ -495,7 +492,7 @@ export default function CommentsScreen({ route }) {
                                                     resizeMode="cover"
                                                 />
                                             )}
-                                            <View style={{ flexDirection: 'row' }}>
+                                            {/* <View style={{ flexDirection: 'row' }}>
                                                 <TouchableOpacity
                                                     style={{ marginRight: 16 }}
                                                     onPress={() => alert('pressed')}>
@@ -514,7 +511,7 @@ export default function CommentsScreen({ route }) {
                                                         color="#73788B"
                                                     />
                                                 </TouchableOpacity>
-                                            </View>
+                                            </View> */}
                                         </View>
                                     </View>
                                 ))}
@@ -535,6 +532,7 @@ export default function CommentsScreen({ route }) {
                             )}
                         </View>
                     )}
+                    {showToast && <Toast />}
                 </Animatable.View>
             </SafeAreaView>
         </>

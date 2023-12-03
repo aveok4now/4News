@@ -28,6 +28,8 @@ export default function CustomPostCard({
     navigation,
     condition,
     toggleLike,
+    showToast,
+    onShowToastClose,
 }) {
     let identify = useUserCredentials();
     const [isLiked, setIsLiked] = useState(false);
@@ -40,9 +42,6 @@ export default function CustomPostCard({
         isLiked ? 'blue' : '#2E64E5',
     );
 
-    const [toastMessage, setToastMessage] = useState('');
-
-    const [isShowToast, setShowToast] = useState(false);
     const [showDeleteModal, setShowDeleteModal] = useState(false);
 
     const [localTime, setLocalTime] = useState(new Date());
@@ -51,17 +50,6 @@ export default function CustomPostCard({
     );
 
     const [postTime, setPostTime] = useState(item.postTime);
-
-    const showToast = message => {
-        setToastMessage(message);
-        setShowToast(true);
-    };
-
-    const onShowToastClose = () => {
-        console.log('onClose function called');
-        setToastMessage('');
-        setShowToast(false);
-    };
 
     const startInterval = () => {
         const intervalId = setInterval(() => {
@@ -135,7 +123,7 @@ export default function CustomPostCard({
                 sharePost(postText);
                 break;
             case 'alert-circle-outline':
-                showToast('Спасибо, что помогаете в улучшении сообщества!');
+                showToast('Спасибо, за помощь в улучшении сообщества!');
                 break;
 
             default:
@@ -285,9 +273,9 @@ export default function CustomPostCard({
                             </Text>
                         </TouchableOpacity>
                     </View>
-                    {isShowToast && (
+                    {/* {isShowToast && (
                         <CustomToast message={toastMessage} onClose={onShowToastClose} />
-                    )}
+                    )} */}
                 </Animatable.View>
             )}
         </>
