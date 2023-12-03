@@ -22,6 +22,7 @@ import useUserCredentials from '../../utils/hooks/useUserCredentials';
 import { Icons } from '../Icons';
 import { theme } from '../../screens/WeatherScreen/theme';
 import { handleShare } from '../../utils/Share';
+import GuestModal from '../customs/CustomModal/GuestModal';
 
 const Card = ({ item, navigation, data, needMargin = true }) => {
     const defaultImage =
@@ -53,6 +54,7 @@ const Card = ({ item, navigation, data, needMargin = true }) => {
                 setIsLiked(false);
                 return;
             }
+
             const savedNewsItems = await AsyncStorage.getItem('savedNewsItems');
             const parsedSavedNewsItems = JSON.parse(savedNewsItems) || [];
 
@@ -96,6 +98,7 @@ const Card = ({ item, navigation, data, needMargin = true }) => {
     }, [isLiked]);
 
     const onOk = () => {
+        setShowModal(false);
         navigation.navigate('Добро пожаловать !', { status: 'logout' });
     };
 
@@ -247,37 +250,15 @@ const Card = ({ item, navigation, data, needMargin = true }) => {
                 <View style={styles.source}>
                     <Text style={styles.sourceText}>Источник: {item.source.name}</Text>
                 </View>
-                {showModal ? (
-                    <View style={{ flex: 1 }}>
-                        {/* {Alert.alert()} */}
-                        <ModalPopup
-                            navigation={navigation}
-                            visible={showModal}
-                            route="popup">
-                            <View>
-                                <Text style={styles.popUpText}>
-                                    Чтобы добавлять новости в избранное, пожалуйста, войдите или
-                                    зарегестрируйтесь 🥰
-                                </Text>
-                                <View
-                                    style={{
-                                        flexDirection: 'column',
-                                        justifyContent: 'center',
-                                        marginTop: 15,
-                                    }}>
-                                    <CustomButton text="ОК" onPress={() => onOk()} />
-                                    <CustomButton
-                                        type="Tertiary"
-                                        text="Отмена"
-                                        onPress={() => setShowModal(false)}
-                                    />
+                {showModal && (
+                    <GuestModal
+                        navigation={navigation}
+                        showModal={showModal}
+                        onOk={onOk}
+                        setShowModal={setShowModal}
+                    />
+                )}
 
-                                    {/* <Text style={{ fontFamily: "Inter-ExtraBold" }}>ОК</Text> */}
-                                </View>
-                            </View>
-                        </ModalPopup>
-                    </View>
-                ) : null}
             </Animatable.View>
         </LinearGradient>
     );

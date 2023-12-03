@@ -11,28 +11,6 @@ import { width } from '../../../utils/getDimensions';
 export default function NewsFooter({ navigation }) {
     const [activeSlide, setActiveSlide] = useState(0);
 
-    const pagination = () => {
-        return (
-            <Pagination
-                dotsLength={groupsData.length}
-                activeDotIndex={activeSlide}
-                containerStyle={{ alignSelf: 'center' }}
-                dotStyle={{
-                    width: 10,
-                    height: 10,
-                    borderRadius: 5,
-                    marginHorizontal: 8,
-                    backgroundColor: 'rgba(255, 255, 255, 0.92)',
-                }}
-                inactiveDotStyle={{
-                    backgroundColor: 'blue',
-                }}
-                inactiveDotOpacity={0.4}
-                inactiveDotScale={0.6}
-            />
-        );
-    };
-
     return (
         <View
             style={{
@@ -77,7 +55,23 @@ export default function NewsFooter({ navigation }) {
                 layoutCardOffset={`24`}
                 onSnapToItem={index => setActiveSlide(index)}
             />
-            {pagination()}
+            <Pagination
+                dotsLength={groupsData.length}
+                activeDotIndex={activeSlide}
+                containerStyle={{ alignSelf: 'center' }}
+                dotStyle={{
+                    width: 10,
+                    height: 10,
+                    borderRadius: 5,
+                    marginHorizontal: 8,
+                    backgroundColor: 'rgba(255, 255, 255, 0.92)',
+                }}
+                inactiveDotStyle={{
+                    backgroundColor: 'blue',
+                }}
+                inactiveDotOpacity={0.4}
+                inactiveDotScale={0.6}
+            />
             <Text
                 style={{
                     position: 'absolute',

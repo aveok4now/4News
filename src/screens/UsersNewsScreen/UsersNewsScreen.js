@@ -31,10 +31,7 @@ import NoNewsInfo from '../../components/NoNewsInfo';
 import SQLite from 'react-native-sqlite-storage';
 import { height, width } from '../../utils/getDimensions';
 import * as Animatable from 'react-native-animatable';
-
-import Carousel from 'react-native-snap-carousel';
-import GroupsList from '../../components/UsersNewsComponents/GroupsList';
-import { groupsData, setGroupsData } from './groupsData';
+import * as Progress from 'react-native-progress';
 import NewsFooter from '../../components/UsersNewsComponents/NewsFooter';
 
 SQLite.enablePromise(true);
@@ -45,6 +42,7 @@ export default function UsersNewsScreen({ navigation }) {
     }, []);
 
     let identify = useUserCredentials();
+    const [isLoading, SetIsLoading] = useState(true);
 
     condition =
         identify === 'Гость'
@@ -64,6 +62,15 @@ export default function UsersNewsScreen({ navigation }) {
 
     const [UsersPosts, setUsersPosts] = useState(Posts);
     const [isPostSent, setIsPostSent] = useState(false);
+
+    const [localTime, setLocalTime] = useState(new Date());
+
+    const [isLongText, setIsLongText] = useState(false);
+    const [textLength, setTextLength] = useState(0);
+
+    let inputRef = useRef(null);
+    const [isScrolling, setIsScrolling] = useState(false);
+    const [isScrolledToTop, setIsScrolledToTop] = useState(true);
 
     //TODO
     const getPosts = async () => {
@@ -120,6 +127,7 @@ export default function UsersNewsScreen({ navigation }) {
                 }
 
                 setUsersPosts(fetchedPosts);
+                SetIsLoading(false);
             }
         } catch (err) {
             console.log(err);
@@ -132,8 +140,6 @@ export default function UsersNewsScreen({ navigation }) {
         setIsRefreshing(true);
         getPosts();
     };
-
-    const [localTime, setLocalTime] = useState(new Date());
 
     const handleSendPost = useCallback(async () => {
         if (postText && postText.length > 3) {
@@ -293,9 +299,6 @@ export default function UsersNewsScreen({ navigation }) {
         }
     };
 
-    const [isLongText, setIsLongText] = useState(false);
-    const [textLength, setTextLength] = useState(0);
-
     const handleTextChange = useCallback(text => {
         setPostText(text);
         setTextLength(text.length);
@@ -328,8 +331,6 @@ export default function UsersNewsScreen({ navigation }) {
         }
     };
 
-    let inputRef = useRef(null);
-
     const checkPerson = () => {
         if (identify === 'Гость') {
             setShowGuestModal(!showGuestModal);
@@ -343,9 +344,6 @@ export default function UsersNewsScreen({ navigation }) {
         inputRange: [0, 150],
         outputRange: [0, -150],
     });
-
-    const [isScrolling, setIsScrolling] = useState(false);
-    const [isScrolledToTop, setIsScrolledToTop] = useState(true);
 
     const inputContainerOpacity = diffClamp.interpolate({
         inputRange: [0, 150],
@@ -375,166 +373,178 @@ export default function UsersNewsScreen({ navigation }) {
                     style={{ position: 'absolute', width: '100%', height: '100%' }}
                     source={require('../assets/images/newsoverview.jpg')}
                 />
-                <CustomDrawer
-                    navigation={navigation}
-                    showBorder={true}
-                    type="Сообщество"
-                    fontFamily="Inter-ExtraBold"
-                    letterSpacing={1}>
-                    {showGuestModal && (
-                        <ModalPopup visible={showGuestModal}>
-                            <View style={{ alignItems: 'center' }}>
-                                <TypeWriter
-                                    style={{ fontFamily: 'Inter-ExtraBold', fontSize: 20 }}
-                                    minDelay={2}
-                                    typing={1}>
-                                    Упс...
-                                </TypeWriter>
-                                <Text
-                                    style={{
-                                        fontFamily: 'Inter-SemiBold',
-                                        marginTop: 5,
-                                        color: 'white',
-                                        opacity: 0.85,
-                                    }}>
-                                    Чтобы делиться своими новостями, зарегестрируйтесь или войдите
-                                    в аккаунт!
-                                </Text>
-                            </View>
-                            <View
-                                style={{
-                                    flexDirection: 'row',
-                                    width: '50%',
-                                    padding: 5,
-                                    justifyContent: 'space-between',
-                                    gap: 10,
-                                }}>
-                                <CustomButton
-                                    text="Назад"
-                                    type="Tertiary"
-                                    onPress={() => setShowGuestModal(!showGuestModal)}
-                                />
-                                <CustomButton
-                                    text="Войти"
-                                    onPress={() => navigation.navigate('Регистрация')}
-                                />
-                            </View>
-                        </ModalPopup>
-                    )}
-
-                    <Animated.View
-                        style={{
-                            transform: [{ translateY: translateY }],
-                            //zIndex: 2,
-                            elevation: 4,
-                            zIndex: 100,
-                        }}>
-                        <Animated.View
-                            style={[
-                                styles.inputContainer,
-                                {
-                                    backgroundColor:
-                                        isScrolledToTop && !isLongText
-                                            ? theme.bgWhite(0.1)
-                                            : 'rgb(30 64 175)',
-                                    borderColor: isScrolledToTop
-                                        ? 'rgb(186 230 253)'
-                                        : 'rgb(94 234 212)',
-                                    opacity: inputContainerOpacity,
-                                    transform: [{ translateY }],
-                                },
-                            ]}>
-                            <Image source={condition} style={styles.avatar} />
-                            <TextInput
-                                ref={inputRef}
-                                autoFocus={false}
-                                selectionColor="white"
-                                multiline={true}
-                                numberOfLines={3}
-                                maxLength={500}
-                                style={{
-                                    flex: 1,
-                                    fontFamily: 'Inter-Light',
-                                    maxHeight: height * 0.4,
-                                    borderLeftWidth: 1,
-                                    borderLeftColor: theme.bgWhite(0.2),
-                                    paddingLeft: 10,
-                                }}
-                                placeholder="Что у Вас нового?"
-                                placeholderStyle={{ textAlign: 'center' }}
-                                value={postText}
-                                onFocus={checkPerson}
-                                onChangeText={text => {
-                                    handleTextChange(text);
-                                }}
-                            />
-
-                            {isTextValid && (
-                                <Animatable.View animation="flipInY" duration={1000}>
-                                    <TouchableOpacity onPress={handleSendPost}>
-                                        <Icons.Ionicons
-                                            name="send"
-                                            size={32}
-                                            //opacity={isTextValid ? 1 : 0}
-                                            color={'rgb(125 211 252)'}
-                                        />
-                                    </TouchableOpacity>
-                                </Animatable.View>
-                            )}
-                        </Animated.View>
-                    </Animated.View>
-
-                    <View style={[styles.cardContainer]}>
-                        {UsersPosts.some(post => !post.deleted) ? (
-                            <FlatList
-                                removeClippedSubviews={true}
-                                onRefresh={onRefresh}
-                                refreshing={isRefreshing}
-                                showsVerticalScrollIndicator={false}
-                                scrollEventThrottle={16}
-                                bounces={false}
-                                onScroll={e => {
-                                    scrollY.setValue(e.nativeEvent.contentOffset.y);
-                                    const currentScrollPosition = e.nativeEvent.contentOffset.y;
-                                    setIsScrolling(true);
-                                    inputRef.current.blur();
-                                    setIsScrolledToTop(prevState => {
-                                        const scrolledToTop = currentScrollPosition === 0;
-                                        return scrolledToTop;
-                                    });
-                                }}
-                                data={UsersPosts.filter(post => !post.deleted)}
-                                renderItem={({ item }) => (
-                                    <CustomPostCard
-                                        navigation={navigation}
-                                        key={item.id}
-                                        localTime={localTime}
-                                        item={{
-                                            ...item,
-                                            postTime: formatPostTime(item.postTime, new Date()),
-                                        }}
-                                        onDeletePost={handleDeletePost}
-                                        toggleLike={toggleLike}
-                                    />
-                                )}
-                                keyExtractor={item => item.id}
-                                ListHeaderComponent={() => (
-                                    <>
-                                        <Animated.View style={marginStyle}></Animated.View>
-                                    </>
-                                )}
-                                ListFooterComponent={() => (
-                                    <NewsFooter navigation={navigation} />
-                                )}
-                            />
-                        ) : (
-                            <NoNewsInfo
-                                primaryText="Постов пока нет 🥲"
-                                secondaryText="Пускай Ваш будет первым!"
-                            />
-                        )}
+                {isLoading ? (
+                    <View
+                        style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                        <Image
+                            blurRadius={100}
+                            style={{ position: 'absolute', width: '100%', height: '100%' }}
+                            source={require('../assets/images/newsoverview.jpg')}
+                        />
+                        <Progress.CircleSnail thickness={10} size={140} color="white" />
                     </View>
-                </CustomDrawer>
+                ) : (
+                    <CustomDrawer
+                        navigation={navigation}
+                        showBorder={true}
+                        type="Сообщество"
+                        fontFamily="Inter-ExtraBold"
+                        letterSpacing={1}>
+                        {showGuestModal && (
+                            <ModalPopup visible={showGuestModal}>
+                                <View style={{ alignItems: 'center' }}>
+                                    <TypeWriter
+                                        style={{ fontFamily: 'Inter-ExtraBold', fontSize: 20 }}
+                                        minDelay={2}
+                                        typing={1}>
+                                        Упс...
+                                    </TypeWriter>
+                                    <Text
+                                        style={{
+                                            fontFamily: 'Inter-SemiBold',
+                                            marginTop: 5,
+                                            color: 'white',
+                                            opacity: 0.85,
+                                        }}>
+                                        Чтобы делиться своими новостями, зарегестрируйтесь или
+                                        войдите в аккаунт!
+                                    </Text>
+                                </View>
+                                <View
+                                    style={{
+                                        flexDirection: 'row',
+                                        width: '50%',
+                                        padding: 5,
+                                        justifyContent: 'space-between',
+                                        gap: 10,
+                                    }}>
+                                    <CustomButton
+                                        text="Назад"
+                                        type="Tertiary"
+                                        onPress={() => setShowGuestModal(!showGuestModal)}
+                                    />
+                                    <CustomButton
+                                        text="Войти"
+                                        onPress={() => navigation.navigate('Регистрация')}
+                                    />
+                                </View>
+                            </ModalPopup>
+                        )}
+
+                        <Animated.View
+                            style={{
+                                transform: [{ translateY: translateY }],
+                                //zIndex: 2,
+                                elevation: 4,
+                                zIndex: 100,
+                            }}>
+                            <Animated.View
+                                style={[
+                                    styles.inputContainer,
+                                    {
+                                        backgroundColor:
+                                            isScrolledToTop && !isLongText
+                                                ? theme.bgWhite(0.1)
+                                                : 'rgb(30 64 175)',
+                                        borderColor: isScrolledToTop
+                                            ? 'rgb(186 230 253)'
+                                            : 'rgb(94 234 212)',
+                                        opacity: inputContainerOpacity,
+                                        transform: [{ translateY }],
+                                    },
+                                ]}>
+                                <Image source={condition} style={styles.avatar} />
+                                <TextInput
+                                    ref={inputRef}
+                                    autoFocus={false}
+                                    selectionColor="white"
+                                    multiline={true}
+                                    numberOfLines={3}
+                                    maxLength={500}
+                                    style={{
+                                        flex: 1,
+                                        fontFamily: 'Inter-Light',
+                                        maxHeight: height * 0.4,
+                                        borderLeftWidth: 1,
+                                        borderLeftColor: theme.bgWhite(0.2),
+                                        paddingLeft: 10,
+                                    }}
+                                    placeholder="Что у Вас нового?"
+                                    placeholderStyle={{ textAlign: 'center' }}
+                                    value={postText}
+                                    onFocus={checkPerson}
+                                    onChangeText={text => {
+                                        handleTextChange(text);
+                                    }}
+                                />
+
+                                {isTextValid && (
+                                    <Animatable.View animation="flipInY" duration={1000}>
+                                        <TouchableOpacity onPress={handleSendPost}>
+                                            <Icons.Ionicons
+                                                name="send"
+                                                size={32}
+                                                //opacity={isTextValid ? 1 : 0}
+                                                color={'rgb(125 211 252)'}
+                                            />
+                                        </TouchableOpacity>
+                                    </Animatable.View>
+                                )}
+                            </Animated.View>
+                        </Animated.View>
+
+                        <View style={[styles.cardContainer]}>
+                            {UsersPosts.some(post => !post.deleted) ? (
+                                <FlatList
+                                    removeClippedSubviews={true}
+                                    onRefresh={onRefresh}
+                                    refreshing={isRefreshing}
+                                    showsVerticalScrollIndicator={false}
+                                    scrollEventThrottle={16}
+                                    bounces={false}
+                                    onScroll={e => {
+                                        scrollY.setValue(e.nativeEvent.contentOffset.y);
+                                        const currentScrollPosition = e.nativeEvent.contentOffset.y;
+                                        setIsScrolling(true);
+                                        inputRef.current.blur();
+                                        setIsScrolledToTop(prevState => {
+                                            const scrolledToTop = currentScrollPosition === 0;
+                                            return scrolledToTop;
+                                        });
+                                    }}
+                                    data={UsersPosts.filter(post => !post.deleted)}
+                                    renderItem={({ item }) => (
+                                        <CustomPostCard
+                                            navigation={navigation}
+                                            key={item.id}
+                                            localTime={localTime}
+                                            item={{
+                                                ...item,
+                                                postTime: formatPostTime(item.postTime, new Date()),
+                                            }}
+                                            onDeletePost={handleDeletePost}
+                                            toggleLike={toggleLike}
+                                        />
+                                    )}
+                                    keyExtractor={item => item.id}
+                                    ListHeaderComponent={() => (
+                                        <>
+                                            <Animated.View style={marginStyle}></Animated.View>
+                                        </>
+                                    )}
+                                    ListFooterComponent={() => (
+                                        <NewsFooter navigation={navigation} />
+                                    )}
+                                />
+                            ) : (
+                                <NoNewsInfo
+                                    primaryText="Постов пока нет 🥲"
+                                    secondaryText="Пускай Ваш будет первым!"
+                                />
+                            )}
+                        </View>
+                    </CustomDrawer>
+                )}
             </View>
         </>
     );
