@@ -5,14 +5,13 @@ import {
     FlatList,
     StyleSheet,
     Dimensions,
-    Button,
     Image,
     StatusBar,
+    RefreshControl
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Card from '../../components/Card';
 import * as Animatable from 'react-native-animatable';
-import { assets } from '../../../react-native.config';
 import TypeWriter from 'react-native-typewriter';
 import CustomButton from '../../components/customs/CustomButton';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -86,8 +85,14 @@ export default function FavoritesScreen({ navigation }) {
                     <Animatable.View animation="fadeIn" duration={500}>
                         <FlatList
                             showsVerticalScrollIndicator={false}
-                            onRefresh={onRefresh}
-                            refreshing={isRefreshing}
+                            refreshControl={
+                                <RefreshControl
+                                    colors={['white']}
+                                    refreshing={isRefreshing}
+                                    progressBackgroundColor={'rgb(99 102 241)'}
+                                    onRefresh={onRefresh}
+                                />
+                            }
                             data={favorites}
                             keyExtractor={item => item.url}
                             renderItem={({ item }) => {

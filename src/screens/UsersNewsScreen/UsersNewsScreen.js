@@ -10,6 +10,7 @@ import {
     Text,
     Animated,
     ScrollView,
+    RefreshControl,
 } from 'react-native';
 import React, { useCallback, useState, useEffect, useRef } from 'react';
 import userImage from '../../../assets/images/user.jpg';
@@ -121,7 +122,7 @@ export default function UsersNewsScreen({ navigation }) {
                         liked: isLiked,
                         likes: likesCount,
                         comments: 0,
-                        userImage: condition,
+                        userImage: getUserImage(post.AuthorName, identify),
                         deleted: false,
                     });
                 }
@@ -134,6 +135,14 @@ export default function UsersNewsScreen({ navigation }) {
         } finally {
             setIsRefreshing(false);
         }
+    };
+
+    const getUserImage = (authorName, identify) => {
+        console.log(authorName, identify);
+        if (authorName.includes('admin')) {
+            return adminImage;
+        }
+        return userImage;
     };
 
     const onRefresh = () => {
@@ -496,9 +505,15 @@ export default function UsersNewsScreen({ navigation }) {
                         <View style={[styles.cardContainer]}>
                             {UsersPosts.some(post => !post.deleted) ? (
                                 <FlatList
+                                    refreshControl={
+                                        <RefreshControl
+                                            colors={['white']}
+                                            refreshing={isRefreshing}
+                                            progressBackgroundColor={'#0ea5e9'}
+                                            onRefresh={onRefresh}
+                                        />
+                                    }
                                     removeClippedSubviews={true}
-                                    onRefresh={onRefresh}
-                                    refreshing={isRefreshing}
                                     showsVerticalScrollIndicator={false}
                                     scrollEventThrottle={16}
                                     bounces={false}

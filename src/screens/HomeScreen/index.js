@@ -8,6 +8,7 @@ import {
     Dimensions,
     Image,
     StatusBar,
+    RefreshControl
 } from 'react-native';
 import Card from '../../components/Card';
 import NetInfo from '@react-native-community/netinfo';
@@ -283,8 +284,14 @@ const HomeScreen = ({ navigation }) => {
                                             style={{ flex: 1, zIndex: 100, position: 'relative' }}
                                             showsVerticalScrollIndicator={false}
                                             scrollEventThrottle={16}
-                                            onRefresh={onRefresh}
-                                            refreshing={isRefreshing}
+                                            refreshControl={
+                                                <RefreshControl
+                                                    colors={['white']}
+                                                    refreshing={isRefreshing}
+                                                    progressBackgroundColor={'rgb(2 132 199)'}
+                                                    onRefresh={onRefresh}
+                                                />
+                                            }
                                             data={Data}
                                             onScroll={event => {
                                                 const currentScrollPosition =
