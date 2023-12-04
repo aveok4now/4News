@@ -44,6 +44,7 @@ const Card = ({ item, navigation, data, needMargin = true }) => {
     let includesG = item.url.includes('https://news.google.com/');
 
     const handleImageLoad = () => {
+        setIsImageLoading(false);
         setImageLoaded(true);
     };
 
@@ -108,7 +109,7 @@ const Card = ({ item, navigation, data, needMargin = true }) => {
     //     }, 8000);
 
     //     return () => clearTimeout(timer);
-    // }, [imageLoaded]);
+    // }, []);
 
     const onOk = () => {
         setShowModal(false);
@@ -173,6 +174,7 @@ const Card = ({ item, navigation, data, needMargin = true }) => {
                         animation="fadeIn"
                         duration={1000}
                         source={{ uri: imageUrl }}
+                        defaultSource={{ uri: defaultImage }}
                         style={[
                             styles.image,
                             {
