@@ -76,6 +76,8 @@ export default function CustomPostCard({
         if (item.liked && identify === item.userName) {
             setIsLiked(true);
         }
+        console.log('item.id', item.id);
+        //getCommentsCount(item.id)
     }, [item.liked, identify, item.userName]);
 
     useEffect(() => {
@@ -137,7 +139,7 @@ export default function CustomPostCard({
 
     const handleLikePress = async () => {
         if (identify === 'Гость') {
-            setShowGuestModal(!showGuestModal)
+            setShowGuestModal(!showGuestModal);
             return; // TODO: Modal PopUp
         }
 
@@ -170,6 +172,26 @@ export default function CustomPostCard({
         setShowGuestModal(false);
         navigation.navigate('Добро пожаловать !', { status: 'logout' });
     };
+
+    // const getCommentsCount = async (postId) => {
+    //     try {
+    //         console.log('post.id', postId)
+    //         const db = await SQLite.openDatabase({ name: 'news.db', location: 1 });
+
+    //         let query = 'SELECT COUNT(*) as commentsCount FROM Comments WHERE postId = ?';
+    //         let queryArgs = [postId];
+
+    //         const [result] = await db.executeSql(query, queryArgs);
+    //         const commentsCount = result.rows.item(0).commentsCount;
+    //         console.log('Number of comments:', commentsCount);
+
+    //         setCommentsCount(commentsCount);
+    //     }
+    //     catch (err) {
+    //         console.log(err);
+    //         setCommentsCount(0);
+    //     }
+    // };
 
     return (
         <>
@@ -278,9 +300,7 @@ export default function CustomPostCard({
                                 size={25}
                                 style={{ color: 'blue' }}
                             />
-                            <Text style={styles.interactionText}>
-                                {item.comments !== 0 && item.comments}
-                            </Text>
+                            <Text style={styles.interactionText}>{item.comments}</Text>
                         </TouchableOpacity>
                     </View>
                     {/* {isShowToast && (
@@ -292,7 +312,7 @@ export default function CustomPostCard({
                             showModal={showGuestModal}
                             onOk={onOk}
                             setShowModal={setShowGuestModal}
-                            modalText='Зарегестрируйтесь или войдите в аккаунт, чтобы лайкать посты! 🥰'
+                            modalText="Зарегестрируйтесь или войдите в аккаунт, чтобы лайкать посты! 🥰"
                         />
                     )}
                 </Animatable.View>

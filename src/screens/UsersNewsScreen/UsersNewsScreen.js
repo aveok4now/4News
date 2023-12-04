@@ -33,9 +33,9 @@ import SQLite from 'react-native-sqlite-storage';
 import { height, width } from '../../utils/getDimensions';
 import * as Animatable from 'react-native-animatable';
 import * as Progress from 'react-native-progress';
-import NewsFooter from '../../components/UsersNewsComponents/NewsFooter';
 import { getUserImage } from '../../utils/getUserImage';
 import Toast from 'react-native-toast-message';
+import NewsFooterContainer from '../../components/UsersNewsComponents/NewsFooter/NewsFooter';
 
 SQLite.enablePromise(true);
 
@@ -79,6 +79,8 @@ export default function UsersNewsScreen({ navigation }) {
 
     const [isShowToast, setShowToast] = useState(false);
 
+    const [commentsCount, setCommentsCount] = useState(0);
+
     //TODO
     const getPosts = async () => {
         try {
@@ -119,6 +121,8 @@ export default function UsersNewsScreen({ navigation }) {
                     );
                     const isLiked = isLikedResult.rows.item(0)?.isLiked || false;
 
+                    const commentsCount = await getCommentsCount(post.newsId);
+
                     fetchedPosts.push({
                         id: post.newsId.toString(),
                         userName: post.AuthorName || 'Автор',
@@ -127,7 +131,7 @@ export default function UsersNewsScreen({ navigation }) {
                         postImage: 'none',
                         liked: isLiked,
                         likes: likesCount,
-                        comments: 0,
+                        comments: commentsCount,
                         userImage: getUserImage(post.AuthorName, identify),
                         deleted: false,
                     });
@@ -191,6 +195,28 @@ export default function UsersNewsScreen({ navigation }) {
             }
         }
     }, [UsersPosts, postText, identify, userImage]);
+
+    const getCommentsCount = async postId => {
+        try {
+            console.log('post.id', postId);
+            const db = await SQLite.openDatabase({ name: 'news.db', location: 1 });
+
+            let query =
+                'SELECT COUNT(*) as commentsCount FROM Comments WHERE postId = ?';
+            let queryArgs = [postId];
+
+            const [result] = await db.executeSql(query, queryArgs);
+            const commentsCount = result.rows.item(0).commentsCount;
+            console.log('Number of comments:', commentsCount);
+
+            setCommentsCount(commentsCount);
+            return commentsCount;
+        } catch (err) {
+            console.log(err);
+            setCommentsCount(0);
+            return 0;
+        }
+    };
 
     const insertPost = async data => {
         try {
@@ -562,7 +588,7 @@ export default function UsersNewsScreen({ navigation }) {
                                         </>
                                     )}
                                     ListFooterComponent={() => (
-                                        <NewsFooter navigation={navigation} />
+                                        <NewsFooterContainer navigation={navigation} />
                                     )}
                                 />
                             ) : (

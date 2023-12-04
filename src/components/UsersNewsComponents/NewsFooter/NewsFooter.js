@@ -8,9 +8,24 @@ import {
 } from '../../../screens/UsersNewsScreen/groupsData';
 import { width } from '../../../utils/getDimensions';
 
-export default function NewsFooter({ navigation }) {
+export default function NewsFooterContainer({ navigation }) {
     const [activeSlide, setActiveSlide] = useState(2);
 
+    return (
+        <NewsFooter
+            activeSlide={activeSlide}
+            setActiveSlide={setActiveSlide}
+            navigation={navigation}
+        />
+    );
+}
+
+const NewsFooter = ({ activeSlide, setActiveSlide, navigation }) => {
+    const handleCardPress = link => {
+        navigation.navigate('NewsViewer', {
+            url: link,
+        });
+    };
     return (
         <View
             style={{
@@ -43,6 +58,7 @@ export default function NewsFooter({ navigation }) {
                         navigation={navigation}
                         activeSlide={activeSlide}
                         title={item.title}
+                        handleCardPress={handleCardPress}
                     />
                 )}
                 firstItem={2}
@@ -85,4 +101,4 @@ export default function NewsFooter({ navigation }) {
             </Text>
         </View>
     );
-}
+};

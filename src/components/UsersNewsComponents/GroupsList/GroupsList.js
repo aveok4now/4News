@@ -4,16 +4,19 @@ import { width, height } from '../../../utils/getDimensions';
 import * as Animatable from 'react-native-animatable';
 import AnimatedText from '../AnimatedText';
 
-export default function GroupsList({ item, navigation, activeSlide, title }) {
-    const handleCardPress = () => {
-        navigation.navigate('NewsViewer', {
-            url: item.link,
-        });
-    };
-
+export default function GroupsList({
+    item,
+    navigation,
+    activeSlide,
+    title,
+    handleCardPress,
+}) {
     return (
         <View>
-            <TouchableWithoutFeedback onPress={handleCardPress}>
+            <TouchableWithoutFeedback
+                onPress={() => {
+                    handleCardPress(item.link);
+                }}>
                 <Image
                     source={{ uri: item.image }}
                     style={{

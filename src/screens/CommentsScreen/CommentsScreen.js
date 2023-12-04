@@ -374,7 +374,7 @@ export default function CommentsScreen({ route }) {
                                         fontSize: 14,
                                     }}>
                                     {postAuhor}
-                                    {', '}
+                                    {' • '}
                                     {formattedDate}
                                 </Text>
                                 <TouchableOpacity
