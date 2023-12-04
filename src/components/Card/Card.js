@@ -98,16 +98,17 @@ const Card = ({ item, navigation, data, needMargin = true }) => {
         checkLiked();
     }, [isLiked]);
 
-    useEffect(() => {
-        const timer = setTimeout(() => {
-            if (!imageLoaded) {
-                setIsImageLoading(false);
-                setImageUrl(defaultImage);
-            }
-        }, 8000);
+    // useEffect(() => {
+    //     const timer = setTimeout(() => {
+    //         if (!imageLoaded) {
+    //             setIsImageLoading(false);
+    //             setImageUrl(defaultImage);
+    //             setImageLoaded(true)
+    //         }
+    //     }, 8000);
 
-        return () => clearTimeout(timer);
-    }, [imageLoaded]);
+    //     return () => clearTimeout(timer);
+    // }, [imageLoaded]);
 
     const onOk = () => {
         setShowModal(false);

@@ -7,7 +7,7 @@ import { theme } from '../../../screens/MovieNewsScreen/theme'
 export default function Loader() {
     return (
         <View style={{ height: height * 0.9, width, flexDirection: 'row', justifyContent: 'center', alignItems: 'center', flex: 1 }}>
-            <Progress.CircleSnail thickness={8} size={160} color={theme.background} />
+            <Progress.CircleSnail thickness={10} size={140} color={"white"} />
         </View>
     )
 }
