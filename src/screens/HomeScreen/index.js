@@ -8,7 +8,7 @@ import {
     Dimensions,
     Image,
     StatusBar,
-    RefreshControl
+    RefreshControl,
 } from 'react-native';
 import Card from '../../components/Card';
 import NetInfo from '@react-native-community/netinfo';
@@ -29,6 +29,21 @@ const HomeScreen = ({ navigation }) => {
     const [Data, setData] = useState([]);
     const [Select, setSelect] = useState(0);
     const [isRefreshing, setIsRefreshing] = useState(false);
+
+    const flatListRef = useRef(null);
+
+    const [showFloatingButton, setShowFloatingButton] = useState(false);
+    const [scrollPosition, setScrollPosition] = useState(0);
+    const [prevScrollPosition, setPrevScrollPosition] = useState(0);
+    const [isScrolledToTop, setIsScrolledToTop] = useState(true);
+
+    const [showTabBar, setShowTabBar] = useState(true);
+
+    const [isConnected, setIsConnected] = useState(false);
+    const [showConnectionStatus, setShowConnectionStatus] = useState(false);
+
+    const [wasProblem, setWasProblem] = useState(false);
+    const [canBeShowed, setCanBeShowed] = useState(false);
 
     const [Category, SetCategory] = useState([
         {
@@ -77,9 +92,6 @@ const HomeScreen = ({ navigation }) => {
 
     let apiKeyIndex = 0;
 
-    const [isConnected, setIsConnected] = useState(false);
-    const [showConnectionStatus, setShowConnectionStatus] = useState(false);
-
     const fetchDataByCountry = async (country, category) => {
         const response = await fetch(
             `https://newsapi.org/v2/top-headlines?country=${country}&apiKey=${apiKeyList[apiKeyIndex]}&category=${category}`,
@@ -105,7 +117,7 @@ const HomeScreen = ({ navigation }) => {
             setIsRefreshing(false);
             setIsLoading(false);
         } catch (error) {
-            console.error('Error in getData:', error);
+            console.log('Error in getData:', error);
             setIsFetchingError(true);
             setIsRefreshing(false);
         }
@@ -125,7 +137,7 @@ const HomeScreen = ({ navigation }) => {
             setIsRefreshing(false);
             setIsLoading(false);
         } catch (error) {
-            console.error('Error in getData2:', error);
+            console.log('Error in getData2:', error);
             setIsFetchingError(true);
             setIsRefreshing(false);
         }
@@ -140,6 +152,8 @@ const HomeScreen = ({ navigation }) => {
                 setTimeout(() => {
                     setShowConnectionStatus(false);
                 }, 2000);
+            } else {
+                setWasProblem(true);
             }
         });
         getData();
@@ -154,21 +168,11 @@ const HomeScreen = ({ navigation }) => {
         getData();
     };
 
-    const [canBeShowed, setCanBeShowed] = useState(false);
     const handleAnimEnd = () => {
         setTimeout(() => {
             setCanBeShowed(true);
         }, 1500);
     };
-
-    const flatListRef = useRef(null);
-
-    const [showFloatingButton, setShowFloatingButton] = useState(false);
-    const [scrollPosition, setScrollPosition] = useState(0);
-    const [prevScrollPosition, setPrevScrollPosition] = useState(0);
-    const [isScrolledToTop, setIsScrolledToTop] = useState(true);
-
-    const [showTabBar, setShowTabBar] = useState(true);
 
     return (
         <>
@@ -177,32 +181,19 @@ const HomeScreen = ({ navigation }) => {
                 <Animatable.View
                     animation="fadeInDown"
                     duration={1000}
-                    style={{
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        backgroundColor: 'red',
-                    }}>
+                    style={[styles.infoToast, { backgroundColor: 'red' }]}>
                     <Text style={{ fontFamily: 'Inter-Light' }}>
                         Отсутствует интернет-соединение
                     </Text>
                 </Animatable.View>
             ) : (
-                showConnectionStatus && (
+                showConnectionStatus &&
+                wasProblem && (
                     <Animatable.View
                         animation="fadeInDown"
                         onAnimationEnd={handleAnimEnd}
                         duration={1000}
-                        style={{
-                            position: 'absolute',
-                            top: 0,
-                            left: 0,
-                            right: 0,
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                            backgroundColor: 'green',
-                            flex: 2,
-                            zIndex: 1,
-                        }}>
+                        style={[styles.infoToast, { backgroundColor: 'green' }]}>
                         <Text style={{ fontFamily: 'Inter-Light' }}>
                             Подключение установлено!
                         </Text>
@@ -220,134 +211,131 @@ const HomeScreen = ({ navigation }) => {
                     <Progress.CircleSnail thickness={10} size={140} color="white" />
                 </View>
             ) : (
-                canBeShowed && (
-                    <View style={{ flex: 1 }}>
-                        <Image
-                            blurRadius={200}
-                            style={{ position: 'absolute', width: '100%', height: '100%' }}
-                            source={require('../assets/images/newsoverview.jpg')}
-                        />
-                        <CustomDrawer
-                            type="Новости"
-                            showSearch="true"
-                            showBorder={true}
-                            fontFamily="Inter-ExtraBold"
-                            letterSpacing={1}
-                            navigation={navigation}>
-                            <View style={{ flex: 1 }}>
-                                <Animatable.View
-                                    animation="fadeIn"
-                                    duration={1500}
-                                    style={styles.horList}>
-                                    <FlatList
-                                        horizontal
-                                        showsHorizontalScrollIndicator={false}
-                                        scrollEventThrottle={16}
-                                        data={Category}
-                                        bounces={false}
-                                        initialScrollIndex={0}
-                                        renderItem={({ item, index }) => {
-                                            return (
-                                                <TouchableOpacity
+                <View style={{ flex: 1 }}>
+                    <Image
+                        blurRadius={200}
+                        style={{ position: 'absolute', width: '100%', height: '100%' }}
+                        source={require('../assets/images/newsoverview.jpg')}
+                    />
+                    <CustomDrawer
+                        type="Новости"
+                        showSearch="true"
+                        showBorder={true}
+                        fontFamily="Inter-ExtraBold"
+                        letterSpacing={1}
+                        navigation={navigation}>
+                        <View style={{ flex: 1 }}>
+                            <Animatable.View
+                                animation="fadeIn"
+                                duration={1500}
+                                style={styles.horList}>
+                                <FlatList
+                                    horizontal
+                                    showsHorizontalScrollIndicator={false}
+                                    scrollEventThrottle={16}
+                                    data={Category}
+                                    bounces={false}
+                                    initialScrollIndex={0}
+                                    renderItem={({ item, index }) => {
+                                        return (
+                                            <TouchableOpacity
+                                                style={
+                                                    index == Select
+                                                        ? styles.selListItem
+                                                        : styles.horListItem
+                                                }
+                                                onPress={() => {
+                                                    setSelect(index);
+                                                    getData2(Category[index].category);
+                                                    flatListRef.current.scrollToIndex({
+                                                        index: 0,
+                                                        animated: true,
+                                                    });
+                                                }}>
+                                                <Text
                                                     style={
                                                         index == Select
-                                                            ? styles.selListItem
-                                                            : styles.horListItem
-                                                    }
-                                                    onPress={() => {
-                                                        setSelect(index);
-                                                        getData2(Category[index].category);
-                                                        flatListRef.current.scrollToIndex({
-                                                            index: 0,
-                                                            animated: true,
-                                                        });
-                                                    }}>
-                                                    <Text
-                                                        style={
-                                                            index == Select
-                                                                ? styles.selListText
-                                                                : styles.horListText
-                                                        }>
-                                                        {item.nameRU}
-                                                    </Text>
-                                                </TouchableOpacity>
+                                                            ? styles.selListText
+                                                            : styles.horListText
+                                                    }>
+                                                    {item.nameRU}
+                                                </Text>
+                                            </TouchableOpacity>
+                                        );
+                                    }}
+                                />
+                            </Animatable.View>
+
+                            <View style={{ flex: 1 }}>
+                                <View style={{ height: Dimensions.get('window').height * 0.78 }}>
+                                    <FlatList
+                                        ref={flatListRef}
+                                        style={{ flex: 1, zIndex: 100, position: 'relative' }}
+                                        showsVerticalScrollIndicator={false}
+                                        scrollEventThrottle={16}
+                                        refreshControl={
+                                            <RefreshControl
+                                                colors={['white']}
+                                                refreshing={isRefreshing}
+                                                progressBackgroundColor={'rgb(2 132 199)'}
+                                                onRefresh={onRefresh}
+                                            />
+                                        }
+                                        data={Data}
+                                        onScroll={event => {
+                                            const currentScrollPosition =
+                                                event.nativeEvent.contentOffset.y;
+                                            setShowFloatingButton(
+                                                currentScrollPosition < prevScrollPosition,
+                                            );
+                                            setPrevScrollPosition(currentScrollPosition);
+                                            setIsScrolledToTop(currentScrollPosition === 0);
+                                        }}
+                                        ListHeaderComponent={React.memo(() => (
+                                            <View>
+                                                <Image
+                                                    blurRadius={70}
+                                                    style={{
+                                                        position: 'absolute',
+                                                        width: '100%',
+                                                        height: '100%',
+                                                    }}
+                                                    source={require('../assets/images/newsoverview.jpg')}
+                                                />
+
+                                                <CustomCarousel
+                                                    apiKeyList={apiKeyList}
+                                                    apiKeyIndex={apiKeyIndex}
+                                                    navigation={navigation}
+                                                />
+                                            </View>
+                                        ))}
+                                        renderItem={({ item, index }) => {
+                                            return (
+                                                <Card
+                                                    item={item}
+                                                    navigation={navigation}
+                                                    data={Data}
+                                                    needMargin={false}
+                                                />
                                             );
                                         }}
                                     />
-                                </Animatable.View>
-
-                                <View style={{ flex: 1 }}>
-                                    <View
-                                        style={{ height: Dimensions.get('window').height * 0.78 }}>
-                                        <FlatList
-                                            ref={flatListRef}
-                                            style={{ flex: 1, zIndex: 100, position: 'relative' }}
-                                            showsVerticalScrollIndicator={false}
-                                            scrollEventThrottle={16}
-                                            refreshControl={
-                                                <RefreshControl
-                                                    colors={['white']}
-                                                    refreshing={isRefreshing}
-                                                    progressBackgroundColor={'rgb(2 132 199)'}
-                                                    onRefresh={onRefresh}
-                                                />
-                                            }
-                                            data={Data}
-                                            onScroll={event => {
-                                                const currentScrollPosition =
-                                                    event.nativeEvent.contentOffset.y;
-                                                setShowFloatingButton(
-                                                    currentScrollPosition < prevScrollPosition,
-                                                );
-                                                setPrevScrollPosition(currentScrollPosition);
-                                                setIsScrolledToTop(currentScrollPosition === 0);
-                                            }}
-                                            ListHeaderComponent={React.memo(() => (
-                                                <View>
-                                                    <Image
-                                                        blurRadius={70}
-                                                        style={{
-                                                            position: 'absolute',
-                                                            width: '100%',
-                                                            height: '100%',
-                                                        }}
-                                                        source={require('../assets/images/newsoverview.jpg')}
-                                                    />
-
-                                                    <CustomCarousel
-                                                        apiKeyList={apiKeyList}
-                                                        apiKeyIndex={apiKeyIndex}
-                                                        navigation={navigation}
-                                                    />
-                                                </View>
-                                            ))}
-                                            renderItem={({ item, index }) => {
-                                                return (
-                                                    <Card
-                                                        item={item}
-                                                        navigation={navigation}
-                                                        data={Data}
-                                                        needMargin={false}
-                                                    />
-                                                );
-                                            }}
-                                        />
-                                    </View>
                                 </View>
-                                {showFloatingButton && !isScrolledToTop && Data.length > 0 && (
-                                    <FloatingButton
-                                        onPress={() =>
-                                            flatListRef.current.scrollToOffset({
-                                                offset: 0,
-                                                animated: true,
-                                            })
-                                        }
-                                    />
-                                )}
                             </View>
-                        </CustomDrawer>
-                    </View>
-                )
+                            {showFloatingButton && !isScrolledToTop && Data.length > 0 && (
+                                <FloatingButton
+                                    onPress={() =>
+                                        flatListRef.current.scrollToOffset({
+                                            offset: 0,
+                                            animated: true,
+                                        })
+                                    }
+                                />
+                            )}
+                        </View>
+                    </CustomDrawer>
+                </View>
             )}
         </>
     );
@@ -414,4 +402,15 @@ const styles = StyleSheet.create({
         textShadowOffset: { width: 0, height: 2 },
         textShadowRadius: 4,
     },
+
+    infoToast: {
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        justifyContent: 'center',
+        alignItems: 'center',
+        zIndex: 100,
+        elevation: 5
+    }
 });
