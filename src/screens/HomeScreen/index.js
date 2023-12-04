@@ -19,6 +19,7 @@ import * as Progress from 'react-native-progress';
 import FloatingButton from '../../components/customs/FloatingButton';
 import CustomCarousel from '../../components/customs/CustomCarousel';
 import { apiKeyList } from '../../utils/apiKeys/newsApiKeys';
+import { height } from '../../utils/getDimensions';
 
 const HomeScreen = ({ navigation }) => {
     // setTimeout(() => {
@@ -36,6 +37,7 @@ const HomeScreen = ({ navigation }) => {
     const [scrollPosition, setScrollPosition] = useState(0);
     const [prevScrollPosition, setPrevScrollPosition] = useState(0);
     const [isScrolledToTop, setIsScrolledToTop] = useState(true);
+    const [isScrolledToBottom, setIsScrolledToBottom] = useState(false);
 
     const [showTabBar, setShowTabBar] = useState(true);
 
@@ -283,14 +285,20 @@ const HomeScreen = ({ navigation }) => {
                                         }
                                         data={Data}
                                         onScroll={event => {
-                                            const currentScrollPosition =
-                                                event.nativeEvent.contentOffset.y;
+                                            const currentScrollPosition = event.nativeEvent.contentOffset.y;
                                             setShowFloatingButton(
-                                                currentScrollPosition < prevScrollPosition,
+                                                currentScrollPosition < prevScrollPosition ||
+                                                (isScrolledToBottom && currentScrollPosition > prevScrollPosition)
                                             );
                                             setPrevScrollPosition(currentScrollPosition);
                                             setIsScrolledToTop(currentScrollPosition === 0);
+
+                                            const windowHeight = Dimensions.get('window').height;
+                                            const contentHeight = event.nativeEvent.contentSize.height;
+                                            const isBottomReached = currentScrollPosition + windowHeight >= contentHeight;
+                                            setIsScrolledToBottom(isBottomReached);
                                         }}
+                                        onEndReached={() => setIsScrolledToBottom(true)}
                                         ListHeaderComponent={React.memo(() => (
                                             <View>
                                                 <Image
@@ -323,13 +331,15 @@ const HomeScreen = ({ navigation }) => {
                                     />
                                 </View>
                             </View>
-                            {showFloatingButton && !isScrolledToTop && Data.length > 0 && (
+                            {(showFloatingButton && !isScrolledToTop && Data.length > 0) && (
                                 <FloatingButton
-                                    onPress={() =>
+                                    onPress={() => {
                                         flatListRef.current.scrollToOffset({
                                             offset: 0,
                                             animated: true,
-                                        })
+                                        });
+                                    }
+
                                     }
                                 />
                             )}

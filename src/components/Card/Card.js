@@ -30,7 +30,8 @@ const Card = ({ item, navigation, data, needMargin = true }) => {
 
     //console.log(item);
     const [imageLoaded, setImageLoaded] = useState(false);
-    const imageUrl = item.urlToImage || defaultImage;
+    const [isImageLoading, setIsImageLoading] = useState(true);
+    const [imageUrl, setImageUrl] = useState(item.urlToImage || defaultImage);
 
     const [isLiked, setIsLiked] = useState(false);
     const [isShared, setIsShared] = useState(false);
@@ -96,6 +97,17 @@ const Card = ({ item, navigation, data, needMargin = true }) => {
 
         checkLiked();
     }, [isLiked]);
+
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            if (!imageLoaded) {
+                setIsImageLoading(false);
+                setImageUrl(defaultImage);
+            }
+        }, 8000);
+
+        return () => clearTimeout(timer);
+    }, [imageLoaded]);
 
     const onOk = () => {
         setShowModal(false);
@@ -163,12 +175,13 @@ const Card = ({ item, navigation, data, needMargin = true }) => {
                         style={[
                             styles.image,
                             {
-                                opacity: imageLoaded ? 1 : 0,
+                                //opacity: imageLoaded ? 1 : 0,
                             },
                             styles.shadowProp,
                             { shadowOpacity: 0.8 },
                         ]}
                         onLoad={handleImageLoad}
+                        onError={() => setIsImageLoading(false)}
                         resizeMethod="resize"
                     />
                 </Pressable>
