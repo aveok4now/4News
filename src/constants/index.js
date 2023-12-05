@@ -1,4 +1,4 @@
-export const apiKey = 'a4a101291a4740fe993102601230411';
+export const apiKey = 'be2148fd49414ef9877172951230512';
 
 export const weatherImages = {
     'Переменная облачность': require('../screens/assets/animations/weather/partly_cloudy.json'),
@@ -58,27 +58,3 @@ export const weatherImages = {
     'other': require('../screens/assets/animations/weather/partly_cloudy.json'),
 };
 
-// export const weatherTranslations = {
-//     'Light rain': 'Небольшой дождь',
-//     'Light snow': 'Небольшой снег',
-//     'Partly cloudy': 'Местами облачно',
-//     'Moderate rain': 'Местами дождь',
-//     'Patchy rain possible': 'Возможен кратковременный дождь',
-//     'Moderate rain': 'Возможен кратковременный дождь',
-//     Sunny: 'Солнечно',
-//     Clear: 'Ясно',
-//     Overcast: 'Пасмурно',
-//     Cloudy: 'Облачно',
-//     'Light rain': 'Небольшой дождь',
-//     'Light drizzle': 'Небольшой дождь',
-//     'Moderate rain at times': 'Местами небольшой дождь',
-//     'Heavy rain': 'Дождь',
-//     'Heavy rain at times': 'Местами ливни',
-//     'Moderate or heavy freezing rain': 'Дождь со снегом',
-//     'Moderate or heavy rain shower': 'Дождь со снегом',
-//     'Moderate or heavy rain with thunder': 'Дождь с грозой',
-//     'Patchy light rain': 'Кратковременный мелкий дождь',
-//     'Light rain shower': 'Небольшой ливень',
-//     Fog: 'Туманно',
-//     Mist: 'Туманно',
-// };
