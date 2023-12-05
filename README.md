@@ -64,10 +64,12 @@ React Native News App project, bootstrapped using [`@react-native-community/cli`
     - [ ] Storing comments in database (in progress)
   - [ ] Community Screen
     - [ ] Users News w/ comments, likes, date, etc.
+      - [x] Refreshing functionality which gets all the data from database 
       - [x] Storing posts w/ author's info in a database
-        - [x] Storing users likes
-        - [ ] Storing comments
-      - [x] NewsFooter carousel component with pressable images of the university VK groups 
+        - [x] Storing users likes, isLiked state & likes count
+        - [x] Storing comments & comments count
+      - [x] NewsFooter carousel component with pressable images of the university VK groups
+        - [x] Causing huge error 'rendered fewer hooks than expected'. Possibly fixed it by refactoring NewsFooter component.
       - [x] Realtime publication date changing 
       - [x] UI
       - [x] Floating input container w/ opacity and etc. animations
