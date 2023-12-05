@@ -24,11 +24,13 @@ export const formatPostTime = (postTime, localTime) => {
             } else if (postTime.toLowerCase().includes('позавчера')) {
                 postTimeObject = new Date(new Date().getTime() - 172800000);
             } else {
-                postTimeObject = new Date(postTime);
-                if (isNaN(postTimeObject.getTime())) {
-                    console.error('Некорректная дата после преобразования:', postTime);
-                    return 'Некорректная дата';
-                }
+                // postTimeObject = new Date(postTime);
+                // console.warn(postTimeObject)
+                // if (isNaN(postTimeObject.getTime())) {
+                //     console.error('Некорректная дата после преобразования:', postTime);
+                //     return 'Некорректная дата';
+                // }
+                return postTime;
             }
         } catch (error) {
             console.error('Ошибка при преобразовании даты:', error);
@@ -36,8 +38,11 @@ export const formatPostTime = (postTime, localTime) => {
         }
     }
 
-    const currentTime = localTime || new Date();
-    const timeDiffInSeconds = Math.floor((currentTime - postTimeObject) / 1000);
+    const currentTime = localTime ? new Date(localTime) : new Date();
+
+    const timeDiffInSeconds = Math.floor(
+        (currentTime.getTime() - postTimeObject.getTime()) / 1000,
+    );
 
     const hours = Math.floor(timeDiffInSeconds / 3600);
     const minutes = Math.floor((timeDiffInSeconds % 3600) / 60);
@@ -60,18 +65,23 @@ export const formatPostTime = (postTime, localTime) => {
         return 'Позавчера';
     }
 
-    const options = {
-        day: '2-digit',
-        month: '2-digit',
-        year: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit',
+    const dateOptions = {
+        day: 'numeric',
+        month: 'long',
     };
 
-    return postTimeObject.toLocaleDateString('ru-RU', options);
+    const timeOptions = {
+        hour: 'numeric',
+        minute: 'numeric',
+    };
+
+    const dateString = postTimeObject.toLocaleDateString('ru-RU', dateOptions);
+    const timeString = postTimeObject.toLocaleTimeString('ru-RU', timeOptions);
+
+    return `${dateString} в ${timeString}`;
 };
 
-const getHours = (hours) => {
+const getHours = hours => {
     if (hours >= 11 && hours <= 19) {
         return 'часов';
     } else {
@@ -89,11 +99,15 @@ const getHours = (hours) => {
     }
 };
 
-const getMinutes = (minutes) => {
+const getMinutes = minutes => {
     const lastDigit = minutes % 10;
     if (lastDigit === 1 && minutes !== 11) {
         return 'минута';
-    } else if (lastDigit >= 2 && lastDigit <= 4 && (minutes < 10 || minutes > 20)) {
+    } else if (
+        lastDigit >= 2 &&
+        lastDigit <= 4 &&
+        (minutes < 10 || minutes > 20)
+    ) {
         return 'минуты';
     } else {
         return 'минут';

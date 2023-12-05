@@ -300,7 +300,7 @@ export default function CustomPostCard({
                                 size={25}
                                 style={{ color: 'blue' }}
                             />
-                            <Text style={styles.interactionText}>{item.comments}</Text>
+                            <Text style={styles.interactionText}>{item.comments !== 0 && item.comments}</Text>
                         </TouchableOpacity>
                     </View>
                     {/* {isShowToast && (
