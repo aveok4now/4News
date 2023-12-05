@@ -5,6 +5,7 @@ import {
     StyleSheet,
     Dimensions,
     TouchableOpacity,
+    StatusBar,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 // import { Container } from './styles';
@@ -12,7 +13,7 @@ import Onboarding from 'react-native-onboarding-swiper';
 import LottieView from 'lottie-react-native';
 import * as Animatable from 'react-native-animatable';
 import { setItem } from '../../utils/asyncStorage';
-const { width, height } = Dimensions.get('window');
+import { width, height } from '../../utils/getDimensions';
 
 const OnBoardingScreen = () => {
     const navigation = useNavigation();
@@ -63,20 +64,27 @@ const OnBoardingScreen = () => {
         );
     };
 
+    const [pageIndex, setPageIndex] = useState(0);
+
+    const changePageHandler = index => setPageIndex(index);
+
     const screens = [
         {
+            statusBarColor: '#40BBC4',
             backgroundColor: '#40BBC4',
             animationSource: require('../assets/animations/first.json'),
             title: 'Узнавайте всё первыми',
             subtitle: 'Новостная лента с регулярными обновлениями',
         },
         {
+            statusBarColor: '#7da9f2',
             backgroundColor: '#7da9f2',
             animationSource: require('../assets/animations/infinity.json'),
             title: 'Лента не имеет конца!',
             subtitle: 'Читайте, сколько угодно',
         },
         {
+            statusBarColor: '#5a88e4',
             backgroundColor: '#5a88e4',
             animationSource: require('../assets/animations/interests.json'),
             title: 'Находите Ваши интересы',
@@ -85,7 +93,8 @@ const OnBoardingScreen = () => {
     ];
 
     return (
-        <View style={styles.container}>
+        <View style={{ flex: 1 }}>
+            <StatusBar backgroundColor={screens[pageIndex].statusBarColor} />
             <Onboarding
                 bottomBarHighlight={false}
                 onDone={handleDone}
@@ -93,6 +102,7 @@ const OnBoardingScreen = () => {
                 DoneButtonComponent={doneButton}
                 NextButtonComponent={nextButton}
                 SkipButtonComponent={skipButton}
+                pageIndexCallback={changePageHandler}
                 containerStyles={{ paddingHorizontal: 15 }}
                 pages={screens.map((screen, index) => ({
                     backgroundColor: screen.backgroundColor,
@@ -122,11 +132,6 @@ const styles = StyleSheet.create({
         textShadowOffset: { width: 0, height: 2 },
         textShadowRadius: 4,
     },
-    container: {
-        flex: 1,
-
-        //backgroundColor: 'white'
-    },
 
     lottie: {
         justifyContent: 'center',
@@ -137,7 +142,6 @@ const styles = StyleSheet.create({
 
     done: {
         padding: 20,
-        // color: 'white',
         backgroundColor: '#DF02D4',
         borderTopLeftRadius: 100,
         borderBottomLeftRadius: 100,
@@ -151,7 +155,6 @@ const styles = StyleSheet.create({
 
     skip: {
         padding: 20,
-        // color: 'white',
     },
 });
 

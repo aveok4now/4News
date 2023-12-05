@@ -3,47 +3,39 @@ import {
     View,
     Text,
     StyleSheet,
-    useWindowDimensions,
     ScrollView,
     TouchableOpacity,
-    Dimensions,
     Vibration,
     BackHandler,
     TouchableWithoutFeedback,
+    StatusBar,
 } from 'react-native';
 import Logo from '../../../assets/images/seved.png';
 import CustomInput from '../../components/customs/CustomInput/CustomInput';
 import CustomButton from '../../components/customs/CustomButton/CustomButton';
 import { useNavigation } from '@react-navigation/native';
-// import { Container } from './styles';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { removeItem } from '../../utils/asyncStorage';
 import { useForm } from 'react-hook-form';
-import ModalPopup from '../../components/customs/CustomModal/CustomModal';
-import LottieView from 'lottie-react-native';
-const { width, height } = Dimensions.get('window');
 import * as Animatable from 'react-native-animatable';
 import SQLite from 'react-native-sqlite-storage';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {
-    setStatusBarColor,
-    resetStatusBarColor,
-} from '../../utils/StatusBarManager';
 import Toast from 'react-native-toast-message';
 import { theme } from '../WeatherScreen/theme';
+import ExitModal from '../../components/customs/CustomModal/ExitModal';
+import GradientBackground from '../../components/GradientBackground';
+import { width, height } from '../../utils/getDimensions';
+import { setStatusBarColor } from '../../utils/StatusBarManager';
 
 SQLite.enablePromise(true);
 
 const SignInScreen = ({ route }) => {
-    resetStatusBarColor();
     const [userExist, setUserExist] = useState(true);
-    const { width, height } = useWindowDimensions();
     const navigation = useNavigation();
     const invalidCredentialsText = '❌ Неверный логин или пароль';
     const [isTyping, setIsTyping] = useState(false);
 
     const [inputFocus, setIsInputFocus] = useState(false);
-    //const [isLoggedOut, setIsLoggedOut] = useState(false);
 
     const onYes = () => BackHandler.exitApp();
 
@@ -249,160 +241,115 @@ const SignInScreen = ({ route }) => {
 
     return (
         <>
+            <StatusBar backgroundColor="#57e0f3" />
             <Toast />
-            <ScrollView showsVerticalScrollIndicator={false}>
-                {/* <ImageBackground source={image} resizeMode="cover" style={styles.image}> */}
+            <GradientBackground>
+                <ScrollView showsVerticalScrollIndicator={false}>
+                    <View style={styles.root}>
+                        <TouchableOpacity onPress={handleReset} style={styles.questionIcon}>
+                            <Animatable.View animation="bounceIn" duration={1500}>
+                                <Icon name="question-circle" size={30} color="white" />
+                            </Animatable.View>
+                        </TouchableOpacity>
 
-                <View style={styles.root}>
-                    <TouchableOpacity onPress={handleReset} style={styles.questionIcon}>
-                        <Animatable.View animation="bounceIn" duration={1500}>
-                            <Icon name="question-circle" size={30} color="white" />
-                        </Animatable.View>
-                    </TouchableOpacity>
-
-                    <TouchableWithoutFeedback
-                        onPress={() =>
-                            navigation.navigate('NewsViewer', {
-                                url: 'www.sevsu.ru',
-                            })
-                        }>
-                        <Animatable.Image
-                            animation="bounceIn"
-                            duration={1500}
-                            source={Logo}
-                            style={[
-                                styles.logo,
-                                {
-                                    height: height * 0.17,
-                                },
-                            ]}
-                            resizeMode="contain"
-                        />
-                    </TouchableWithoutFeedback>
-
-                    <TouchableOpacity onPress={openModal} style={styles.exitIcon}>
-                        <Animatable.View animation="bounceIn" duration={1500}>
-                            <Icon name="sign-out" size={30} color="white" />
-                        </Animatable.View>
-                    </TouchableOpacity>
-
-                    <ModalPopup visible={modalVisible}>
-                        <View style={{ alignItems: 'center' }}>
-                            <View style={styles.header}>
-                                <TouchableOpacity onPress={() => setModalVisible(false)}>
-                                    <LottieView
-                                        style={styles.lottieClose}
-                                        source={require('../assets/animations/close.json')}
-                                        autoPlay={true}
-                                        loop={false}
-                                    />
-                                </TouchableOpacity>
-                            </View>
-                        </View>
-                        <LottieView
-                            style={styles.lottie}
-                            source={require('../assets/animations/exit.json')}
-                            autoPlay={true}
-                            loop={false}
-                        />
-                        <Text
-                            style={{
-                                marginBottom: 20,
-                                fontSize: 20,
-                                textAlign: 'center',
-                                textDecorationColor: 'white',
-                                fontFamily: 'Inter-Bold',
-                            }}>
-                            Уже уходите ? 🥺
-                        </Text>
-                        <Text
-                            style={{
-                                marginBottom: 20,
-                                fontSize: 16,
-                                textAlign: 'center',
-                                textDecorationColor: 'white',
-                                fontFamily: 'Inter-Light',
-                            }}>
-                            Будем рады увидеть Вас снова!
-                        </Text>
-                        <View style={{ flexDirection: 'column', justifyContent: 'center' }}>
-                            <CustomButton text="Да" onPress={() => onYes()} />
-                            <CustomButton
-                                type="Tertiary"
-                                text="Отмена"
-                                onPress={() => setModalVisible(false)}
+                        <TouchableWithoutFeedback
+                            onPress={() =>
+                                navigation.navigate('NewsViewer', {
+                                    url: 'www.sevsu.ru',
+                                })
+                            }>
+                            <Animatable.Image
+                                animation="bounceIn"
+                                duration={1500}
+                                source={Logo}
+                                style={[
+                                    styles.logo,
+                                    {
+                                        height: height * 0.17,
+                                    },
+                                ]}
+                                resizeMode="contain"
                             />
-                        </View>
-                    </ModalPopup>
+                        </TouchableWithoutFeedback>
 
-                    <CustomInput
-                        name="username"
-                        placeholder="Имя пользователя или эл. почта"
-                        control={control}
-                        rules={{
-                            required: 'Ввведите имя или эл. почту 🤖',
-                            minLength: {
-                                value: 4,
-                                message: 'Имя пользователя должно быть не менее 4 символов',
-                            },
-                            maxLength: {
-                                value: 20,
-                                message:
-                                    'Имя пользователя или эл.почта должны быть не больше 20 символов',
-                            },
-                        }}
-                        setIsTyping={setIsTyping}
-                    />
+                        <TouchableOpacity onPress={openModal} style={styles.exitIcon}>
+                            <Animatable.View animation="bounceIn" duration={1500}>
+                                <Icon name="sign-out" size={30} color="white" />
+                            </Animatable.View>
+                        </TouchableOpacity>
 
-                    <CustomInput
-                        name="password"
-                        placeholder="Пароль"
-                        secureTextEntry
-                        control={control}
-                        rules={{
-                            required: 'Введите пароль 👺',
-                            minLength: {
-                                value: 4,
-                                message: 'Длина пароля должна быть не менее 5 символов',
-                            },
-                            maxLength: {
-                                value: 15,
-                                message: 'Длина пароля должна быть не больше 15 символов',
-                            },
-                        }}
-                        setIsTyping={setIsTyping}
-                        isPasswordVisible={isPasswordVisible}
-                        onPasswordVisibilityChange={handlePasswordVisibilityChange}
-                    />
+                        <ExitModal
+                            visible={modalVisible}
+                            onYes={onYes}
+                            setVisible={setModalVisible}
+                        />
 
-                    <CustomButton text="Войти" onPress={handleSubmit(onSignInPressed)} />
+                        <CustomInput
+                            name="username"
+                            placeholder="Имя пользователя или эл. почта"
+                            control={control}
+                            rules={{
+                                required: 'Ввведите имя или эл. почту 🤖',
+                                minLength: {
+                                    value: 4,
+                                    message: 'Имя пользователя должно быть не менее 4 символов',
+                                },
+                                maxLength: {
+                                    value: 20,
+                                    message:
+                                        'Имя пользователя или эл.почта должны быть не больше 20 символов',
+                                },
+                            }}
+                            setIsTyping={setIsTyping}
+                        />
 
-                    {/* {!userExist && !isTyping && (
-                    <Text style={styles.noUser}>{invalidCredentialsText}</Text>
-                )} */}
+                        <CustomInput
+                            name="password"
+                            placeholder="Пароль"
+                            secureTextEntry
+                            control={control}
+                            rules={{
+                                required: 'Введите пароль 👺',
+                                minLength: {
+                                    value: 4,
+                                    message: 'Длина пароля должна быть не менее 5 символов',
+                                },
+                                maxLength: {
+                                    value: 15,
+                                    message: 'Длина пароля должна быть не больше 15 символов',
+                                },
+                            }}
+                            setIsTyping={setIsTyping}
+                            isPasswordVisible={isPasswordVisible}
+                            onPasswordVisibilityChange={handlePasswordVisibilityChange}
+                        />
 
-                    <CustomButton
-                        text="Забыли пароль?"
-                        onPress={onForgotPassword}
-                        type="Tertiary"
-                    />
+                        <CustomButton
+                            text="Войти"
+                            onPress={handleSubmit(onSignInPressed)}
+                        />
 
-                    <CustomButton
-                        text="Войти как Гость"
-                        onPress={onSignInAsGuestPressed}
-                        bgColor="#CFD8F7"
-                        fgColor="#154ED3"
-                    />
+                        <CustomButton
+                            text="Забыли пароль?"
+                            onPress={onForgotPassword}
+                            type="Tertiary"
+                        />
 
-                    <CustomButton
-                        text="Нет аккаунта? Создать сейчас"
-                        onPress={onSignUpPress}
-                        type="Tertiary"
-                    />
-                </View>
+                        <CustomButton
+                            text="Войти как Гость"
+                            onPress={onSignInAsGuestPressed}
+                            bgColor="#CFD8F7"
+                            fgColor="#154ED3"
+                        />
 
-                {/* </ImageBackground> */}
-            </ScrollView>
+                        <CustomButton
+                            text="Нет аккаунта? Создать сейчас"
+                            onPress={onSignUpPress}
+                            type="Tertiary"
+                        />
+                    </View>
+                </ScrollView>
+            </GradientBackground>
         </>
     );
 };

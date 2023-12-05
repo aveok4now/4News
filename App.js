@@ -1,40 +1,17 @@
-import React, { useEffect, useState, useRef } from 'react';
-import {
-  SafeAreaView,
-  StyleSheet,
-  Text,
-  StatusBar,
-  BackHandler,
-  Modal,
-  ListItem,
-  View,
-  Dimensions,
-  TouchableOpacity,
-  Animated,
-} from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { SafeAreaView, BackHandler, Dimensions } from 'react-native';
 import Navigation from './src/navigation';
 import SplashScreen from 'react-native-splash-screen';
-import LottieView from 'lottie-react-native';
-import ModalPopup from './src/components/customs/CustomModal/CustomModal';
 import LinearGradient from 'react-native-linear-gradient';
-import RadialGradient from 'react-native-radial-gradient';
-const { width, height } = Dimensions.get('window');
 import SQLite from 'react-native-sqlite-storage';
-import { assets } from './react-native.config';
-import CustomButton from './src/components/customs/CustomButton';
-import {
-  setStatusBarColor,
-  resetStatusBarColor,
-} from './src/utils/StatusBarManager';
 
-// SQLite.enablePromise(true);
+import ExitModal from './src/components/customs/CustomModal/ExitModal';
+
 const App = () => {
   const [visible, setVisible] = useState(false);
 
-  SplashScreen.hide();
-
   useEffect(() => {
-    //setStatusBarColor('#ffff');
+    SplashScreen.hide();
 
     db = SQLite.openDatabase(
       {
@@ -56,7 +33,6 @@ const App = () => {
     );
 
     return () => {
-      resetStatusBarColor();
       backHandler.remove();
     };
   }, []);
@@ -65,90 +41,20 @@ const App = () => {
     //alert("База данных подключена!");
   };
 
-  const failToOpenDB = err => {
-    alert(err);
-  };
+  const failToOpenDB = err => alert(err);
 
   const onYes = () => BackHandler.exitApp();
 
   return (
     <>
-      {/* <LinearGradient colors={['#42275a', '#734b6d']} style={styles.gradient}> */}
-
-      <LinearGradient colors={['#57e0f3', '#357ae0']} style={styles.gradient}>
-        <SafeAreaView style={styles.root}>
-          <ModalPopup visible={visible}>
-            <View style={{ alignItems: 'center' }}>
-              <View style={styles.header}>
-                <TouchableOpacity onPress={() => setVisible(false)}>
-                  <LottieView
-                    style={styles.lottieClose}
-                    source={require('./src/screens/assets/animations/close.json')}
-                    autoPlay={true}
-                    loop={false}
-                  />
-                </TouchableOpacity>
-              </View>
-            </View>
-            <LottieView
-              style={styles.lottie}
-              source={require('./src/screens/assets/animations/exit.json')}
-              autoPlay={true}
-              loop={false}
-            />
-            <Text
-              style={{
-                marginBottom: 20,
-                fontSize: 20,
-                textAlign: 'center',
-                textDecorationColor: 'white',
-                fontFamily: 'Inter-Bold',
-              }}>
-              Вы уверены, что хотите выйти?
-            </Text>
-            <View style={{ flexDirection: 'column', justifyContent: 'center' }}>
-              <CustomButton text="Да" onPress={() => onYes()} />
-              <CustomButton
-                type="Tertiary"
-                text="Отмена"
-                onPress={() => setVisible(false)}
-              />
-            </View>
-          </ModalPopup>
-          <Navigation />
-        </SafeAreaView>
-      </LinearGradient>
+      {/* <LinearGradient colors={['#57e0f3', '#357ae0']} style={{ flex: 1 }}> */}
+      <SafeAreaView style={{ flex: 1 }}>
+        <ExitModal visible={visible} onYes={onYes} setVisible={setVisible} />
+        <Navigation />
+      </SafeAreaView>
+      {/* </LinearGradient> */}
     </>
   );
 };
-
-const styles = StyleSheet.create({
-  root: {
-    //backgroundColor: '#B0ABD9',
-    flex: 1,
-  },
-  gradient: {
-    flex: 1,
-  },
-  lottie: {
-    justifyContent: 'center',
-    alignSelf: 'center',
-    width: width * 0.9,
-    height: width,
-  },
-  lottieClose: {
-    width: 90,
-    height: 90,
-    marginLeft: 55,
-  },
-
-  header: {
-    width: '120%',
-    height: 40,
-    alignItems: 'flex-end',
-    // paddingHorizontal: -15,
-    justifyContent: 'center',
-  },
-});
 
 export default App;

@@ -1,30 +1,25 @@
 import React, { useState, useRef, useEffect } from 'react';
-import {
-    View,
-    Text,
-    StyleSheet,
-    ScrollView,
-    useWindowDimensions,
-} from 'react-native';
+import { View, Text, StyleSheet, ScrollView, StatusBar } from 'react-native';
 import CustomInput from '../../components/customs/CustomInput/CustomInput';
 import CustomButton from '../../components/customs/CustomButton/CustomButton';
 import SocialSignInButtons from '../../components/customs/SocialSignInButtons';
 import { useNavigation } from '@react-navigation/native';
 import { useForm } from 'react-hook-form';
 import BottomSheet from 'react-native-simple-bottom-sheet';
-import { Dimensions } from 'react-native';
 import * as Animatable from 'react-native-animatable';
 import SQLite from 'react-native-sqlite-storage';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { assets } from '../../../react-native.config';
 import Toast from 'react-native-toast-message';
+import { width, height } from '../../utils/getDimensions';
+import GradientBackground from '../../components/GradientBackground';
+import { setStatusBarColor } from '../../utils/StatusBarManager';
 
 SQLite.enablePromise(true);
 
 const email_regex =
     /^[a-zA-Z0-9.!#$%&'+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)+$/;
 const name_regex = /^[a-zA-Z]+$/;
-const { width, height } = Dimensions.get('window');
 
 const SignUpScreen = () => {
     const { control, handleSubmit, watch } = useForm();
@@ -153,177 +148,186 @@ const SignUpScreen = () => {
     };
 
     return (
-        <ScrollView
-            showsVerticalScrollIndicator={false}
-            contentContainerStyle={{ flexGrow: 1 }}>
-            <View style={styles.root}>
-                <CustomInput
-                    name="username"
-                    control={control}
-                    placeholder="Имя пользователя"
-                    rules={{
-                        required: 'Необходимо ввести имя пользователя',
-                        minLength: {
-                            value: 5,
-                            message: 'Имя пользователя должно быть не менее 5 символов',
-                        },
-                        maxLength: {
-                            value: 15,
-                            message: 'Имя пользователя должно быть не более 15 символов',
-                        },
-                        pattern: [{ value: name_regex, message: 'Некорректный ввод имени' }],
-                    }}
-                    setIsTyping={setIsTyping}
-                //selectionColor={'#C2F970'}
-                />
+        <>
+            <StatusBar backgroundColor="#357ae0" />
+            <GradientBackground colors={['#357ae0', '#48AFBD']}>
+                <ScrollView
+                    showsVerticalScrollIndicator={false}
+                    contentContainerStyle={{ flexGrow: 1 }}>
+                    <View style={styles.root}>
+                        <CustomInput
+                            name="username"
+                            control={control}
+                            placeholder="Имя пользователя"
+                            rules={{
+                                required: 'Необходимо ввести имя пользователя',
+                                minLength: {
+                                    value: 5,
+                                    message: 'Имя пользователя должно быть не менее 5 символов',
+                                },
+                                maxLength: {
+                                    value: 15,
+                                    message: 'Имя пользователя должно быть не более 15 символов',
+                                },
+                                pattern: [
+                                    { value: name_regex, message: 'Некорректный ввод имени' },
+                                ],
+                            }}
+                            setIsTyping={setIsTyping}
+                        //selectionColor={'#C2F970'}
+                        />
 
-                <CustomInput
-                    name="email"
-                    control={control}
-                    placeholder="Эл. почта"
-                    rules={{
-                        required: 'Необходимо ввести адрес эл.почты',
-                        pattern: {
-                            value: email_regex,
-                            message: 'Неправильный ввод электронной почты',
-                        },
-                    }}
-                    setIsTyping={setIsTyping}
-                //selectionColor={'#00EEFB'}
-                />
+                        <CustomInput
+                            name="email"
+                            control={control}
+                            placeholder="Эл. почта"
+                            rules={{
+                                required: 'Необходимо ввести адрес эл.почты',
+                                pattern: {
+                                    value: email_regex,
+                                    message: 'Неправильный ввод электронной почты',
+                                },
+                            }}
+                            setIsTyping={setIsTyping}
+                        //selectionColor={'#00EEFB'}
+                        />
 
-                <CustomInput
-                    name="password"
-                    control={control}
-                    placeholder="Пароль"
-                    secureTextEntry
-                    rules={{
-                        required: 'Необходимо ввести пароль',
-                        minLength: {
-                            value: 5,
-                            message: 'Длина пароля должна быть не менее 5 символов',
-                        },
-                        maxLength: {
-                            value: 15,
-                            message: 'Длина пароля должна быть не больше 15 символов',
-                        },
-                    }}
-                    setIsTyping={setIsTyping}
-                    isPasswordVisible={isPasswordVisible}
-                    onPasswordVisibilityChange={handlePasswordVisibilityChange}
-                //selectionColor={'#DF57BC'}
-                />
+                        <CustomInput
+                            name="password"
+                            control={control}
+                            placeholder="Пароль"
+                            secureTextEntry
+                            rules={{
+                                required: 'Необходимо ввести пароль',
+                                minLength: {
+                                    value: 5,
+                                    message: 'Длина пароля должна быть не менее 5 символов',
+                                },
+                                maxLength: {
+                                    value: 15,
+                                    message: 'Длина пароля должна быть не больше 15 символов',
+                                },
+                            }}
+                            setIsTyping={setIsTyping}
+                            isPasswordVisible={isPasswordVisible}
+                            onPasswordVisibilityChange={handlePasswordVisibilityChange}
+                        //selectionColor={'#DF57BC'}
+                        />
 
-                <CustomInput
-                    name="password-repeat"
-                    control={control}
-                    placeholder="Повторите пароль"
-                    secureTextEntry
-                    showeye={false}
-                    rules={{
-                        validate: value => value === pwd || 'Пароли не совпадают',
-                    }}
-                    setIsTyping={setIsTyping}
-                    isPasswordVisible={isPasswordVisible}
-                    onPasswordVisibilityChange={handlePasswordVisibilityChange}
-                //selectionColor={'#F6AE2D'}
-                />
+                        <CustomInput
+                            name="password-repeat"
+                            control={control}
+                            placeholder="Повторите пароль"
+                            secureTextEntry
+                            showeye={false}
+                            rules={{
+                                validate: value => value === pwd || 'Пароли не совпадают',
+                            }}
+                            setIsTyping={setIsTyping}
+                            isPasswordVisible={isPasswordVisible}
+                            onPasswordVisibilityChange={handlePasswordVisibilityChange}
+                        //selectionColor={'#F6AE2D'}
+                        />
 
-                <CustomButton
-                    text="Зарегестрироваться"
-                    onPress={handleSubmit(onRegisterPressed)}
-                />
+                        <CustomButton
+                            text="Зарегестрироваться"
+                            onPress={handleSubmit(onRegisterPressed)}
+                        />
 
-                <Text style={styles.text}>
-                    Регистрируясь, Вы подтверждаете, что принимаете наши {''}
-                    <Text style={styles.link} onPress={onTermsOfUsePressed}>
-                        Условия использования
-                    </Text>{' '}
-                    и{' '}
-                    <Text style={styles.link} onPress={onPrivacyPolicyPressed}>
-                        Политику конфиденциальности
-                    </Text>
-                </Text>
-
-                <SocialSignInButtons />
-
-                <CustomButton
-                    text="Есть аккаунт? Войти."
-                    onPress={onSignInPress}
-                    type="Tertiary"
-                />
-
-                <Toast />
-            </View>
-
-            {showTermsSheet && (
-                <BottomSheet
-                    ref={panelRef}
-                    onClose={() => setShowTermsSheet(false)}
-                    sliderMaxHeight={height}
-                    wrapperStyle={styles.bottomSheet}>
-                    <View style={{ height: 500 }}>
-                        <Text style={styles.terms}>Условия использования</Text>
-                        <Text
-                            style={{
-                                paddingVertical: 20,
-                                textAlign: 'justify',
-                                fontFamily: 'Inter-Light',
-                            }}>
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-                            eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                            Commodo elit at imperdiet dui accumsan sit amet nulla facilisi.
-                            Auctor neque vitae tempus quam pellentesque nec. Massa enim nec
-                            dui nunc mattis enim ut. Diam vulputate ut pharetra sit amet.
-                            Convallis aenean et tortor at risus viverra adipiscing. Dis
-                            parturient montes nascetur ridiculus mus mauris vitae ultricies
-                            leo. Volutpat lacus laoreet non curabitur gravida arcu. Nunc eget
-                            lorem dolor sed. Nullam ac tortor vitae purus faucibus ornare.
-                            Massa ultricies mi quis hendrerit. Neque sodales ut etiam sit amet
-                            nisl. Sed libero enim sed faucibus turpis in. Nulla facilisi morbi
-                            tempus iaculis urna id volutpat lacus. Ac ut consequat semper
-                            viverra nam. Sodales ut etiam sit amet nisl purus. Vitae semper
-                            quis lectus nulla at volutpat diam ut venenatis. Vitae aliquet nec
-                            ullamcorper sit amet risus nullam.
+                        <Text style={styles.text}>
+                            Регистрируясь, Вы подтверждаете, что принимаете наши {''}
+                            <Text style={styles.link} onPress={onTermsOfUsePressed}>
+                                Условия использования
+                            </Text>{' '}
+                            и{' '}
+                            <Text style={styles.link} onPress={onPrivacyPolicyPressed}>
+                                Политику конфиденциальности
+                            </Text>
                         </Text>
-                    </View>
-                </BottomSheet>
-            )}
 
-            {showPrivacySheet && (
-                <BottomSheet
-                    ref={panelRef}
-                    onClose={() => setShowPrivacySheet(false)}
-                    sliderMaxHeight={height}
-                    wrapperStyle={styles.bottomSheet}>
-                    <View style={{ height: 500 }}>
-                        <Text style={styles.terms}>Политика конфиденциальности</Text>
-                        <Text
-                            style={{
-                                paddingVertical: 20,
-                                textAlign: 'justify',
-                                fontFamily: 'Inter-Light',
-                            }}>
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-                            eiusmod tempor incididunt ut labore et dolore magna aliqua. Quis
-                            viverra nibh cras pulvinar mattis nunc sed blandit. Nec tincidunt
-                            praesent semper feugiat nibh sed pulvinar proin gravida. In est
-                            ante in nibh mauris cursus. Urna neque viverra justo nec ultrices
-                            dui sapien. Quam vulputate dignissim suspendisse in est ante in
-                            nibh mauris. Vel fringilla est ullamcorper eget nulla facilisi
-                            etiam dignissim. In arcu cursus euismod quis viverra nibh cras.
-                            Adipiscing elit ut aliquam purus sit amet luctus. Sagittis purus
-                            sit amet volutpat consequat. Cras ornare arcu dui vivamus arcu
-                            felis. Nunc id cursus metus aliquam eleifend mi in nulla. Nunc
-                            lobortis mattis aliquam faucibus purus in massa tempor nec.
-                            Aliquet sagittis id consectetur purus ut faucibus. Risus viverra
-                            adipiscing at in. Leo vel orci porta non pulvinar neque laoreet
-                            suspendisse.
-                        </Text>
+                        <SocialSignInButtons />
+
+                        <CustomButton
+                            text="Есть аккаунт? Войти."
+                            onPress={onSignInPress}
+                            type="Tertiary"
+                        />
+
+                        <Toast />
                     </View>
-                </BottomSheet>
-            )}
-        </ScrollView>
+
+                    {showTermsSheet && (
+                        <BottomSheet
+                            ref={panelRef}
+                            onClose={() => setShowTermsSheet(false)}
+                            sliderMaxHeight={height}
+                            wrapperStyle={styles.bottomSheet}>
+                            <View style={{ height: 500 }}>
+                                <Text style={styles.terms}>Условия использования</Text>
+                                <Text
+                                    style={{
+                                        paddingVertical: 20,
+                                        textAlign: 'justify',
+                                        fontFamily: 'Inter-Light',
+                                    }}>
+                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed
+                                    do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                                    Commodo elit at imperdiet dui accumsan sit amet nulla
+                                    facilisi. Auctor neque vitae tempus quam pellentesque nec.
+                                    Massa enim nec dui nunc mattis enim ut. Diam vulputate ut
+                                    pharetra sit amet. Convallis aenean et tortor at risus viverra
+                                    adipiscing. Dis parturient montes nascetur ridiculus mus
+                                    mauris vitae ultricies leo. Volutpat lacus laoreet non
+                                    curabitur gravida arcu. Nunc eget lorem dolor sed. Nullam ac
+                                    tortor vitae purus faucibus ornare. Massa ultricies mi quis
+                                    hendrerit. Neque sodales ut etiam sit amet nisl. Sed libero
+                                    enim sed faucibus turpis in. Nulla facilisi morbi tempus
+                                    iaculis urna id volutpat lacus. Ac ut consequat semper viverra
+                                    nam. Sodales ut etiam sit amet nisl purus. Vitae semper quis
+                                    lectus nulla at volutpat diam ut venenatis. Vitae aliquet nec
+                                    ullamcorper sit amet risus nullam.
+                                </Text>
+                            </View>
+                        </BottomSheet>
+                    )}
+
+                    {showPrivacySheet && (
+                        <BottomSheet
+                            ref={panelRef}
+                            onClose={() => setShowPrivacySheet(false)}
+                            sliderMaxHeight={height}
+                            wrapperStyle={styles.bottomSheet}>
+                            <View style={{ height: 500 }}>
+                                <Text style={styles.terms}>Политика конфиденциальности</Text>
+                                <Text
+                                    style={{
+                                        paddingVertical: 20,
+                                        textAlign: 'justify',
+                                        fontFamily: 'Inter-Light',
+                                    }}>
+                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed
+                                    do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                                    Quis viverra nibh cras pulvinar mattis nunc sed blandit. Nec
+                                    tincidunt praesent semper feugiat nibh sed pulvinar proin
+                                    gravida. In est ante in nibh mauris cursus. Urna neque viverra
+                                    justo nec ultrices dui sapien. Quam vulputate dignissim
+                                    suspendisse in est ante in nibh mauris. Vel fringilla est
+                                    ullamcorper eget nulla facilisi etiam dignissim. In arcu
+                                    cursus euismod quis viverra nibh cras. Adipiscing elit ut
+                                    aliquam purus sit amet luctus. Sagittis purus sit amet
+                                    volutpat consequat. Cras ornare arcu dui vivamus arcu felis.
+                                    Nunc id cursus metus aliquam eleifend mi in nulla. Nunc
+                                    lobortis mattis aliquam faucibus purus in massa tempor nec.
+                                    Aliquet sagittis id consectetur purus ut faucibus. Risus
+                                    viverra adipiscing at in. Leo vel orci porta non pulvinar
+                                    neque laoreet suspendisse.
+                                </Text>
+                            </View>
+                        </BottomSheet>
+                    )}
+                </ScrollView>
+            </GradientBackground>
+        </>
     );
 };
 
