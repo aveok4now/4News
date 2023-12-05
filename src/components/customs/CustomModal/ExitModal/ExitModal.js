@@ -1,9 +1,9 @@
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native'
-import React from 'react'
-import CustomButton from '../../CustomButton'
-import LottieView from 'lottie-react-native'
-import { width } from '../../../../utils/getDimensions'
-import ModalPopup from '../CustomModal'
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import React from 'react';
+import CustomButton from '../../CustomButton';
+import LottieView from 'lottie-react-native';
+import { width } from '../../../../utils/getDimensions';
+import ModalPopup from '../CustomModal';
 
 export default function ExitModal({ visible, onYes, setVisible }) {
     return (
@@ -29,10 +29,13 @@ export default function ExitModal({ visible, onYes, setVisible }) {
             <Text
                 style={{
                     marginBottom: 20,
-                    fontSize: 20,
+                    fontSize: 22,
                     textAlign: 'center',
                     textDecorationColor: 'white',
-                    fontFamily: 'Inter-Bold',
+                    fontFamily: 'Inter-Black',
+                    textShadowColor: 'rgba(226, 232, 240, 0.25)',
+                    textShadowOffset: { width: 0, height: 3 },
+                    textShadowRadius: 4,
                 }}>
                 Уже уходите ? 🥺
             </Text>
@@ -43,6 +46,9 @@ export default function ExitModal({ visible, onYes, setVisible }) {
                     textAlign: 'center',
                     textDecorationColor: 'white',
                     fontFamily: 'Inter-Light',
+                    textShadowColor: 'rgba(226, 232, 240, 0.25)',
+                    textShadowOffset: { width: 0, height: 3 },
+                    textShadowRadius: 4,
                 }}>
                 Будем рады увидеть Вас снова!
             </Text>
@@ -55,7 +61,7 @@ export default function ExitModal({ visible, onYes, setVisible }) {
                 />
             </View>
         </ModalPopup>
-    )
+    );
 }
 
 const styles = StyleSheet.create({
@@ -78,4 +84,4 @@ const styles = StyleSheet.create({
         // paddingHorizontal: -15,
         justifyContent: 'center',
     },
-})
+});

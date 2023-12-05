@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, StatusBar } from 'react-native';
 import CustomInput from '../../components/customs/CustomInput/CustomInput';
 import CustomButton from '../../components/customs/CustomButton/CustomButton';
 import { useNavigation } from '@react-navigation/native';
@@ -9,6 +9,7 @@ import { width, height } from '../../utils/getDimensions';
 import forgotPassword from '../assets/animations/forgot_password';
 import SQLite from 'react-native-sqlite-storage';
 import Toast from 'react-native-toast-message';
+import GradientBackground from '../../components/GradientBackground';
 
 const ForgotPasswordScreen = () => {
     const email_regex =
@@ -106,49 +107,52 @@ const ForgotPasswordScreen = () => {
 
     return (
         <>
-            <ScrollView showsVerticalScrollIndicator={false}>
-                <View style={styles.root}>
-                    <CustomInput
-                        name="username"
-                        control={control}
-                        placeholder="Имя пользователя"
-                        rules={{
-                            required: 'Пожалуйста, введите имя пользователя',
-                            minLength: {
-                                value: 5,
-                                message: 'Имя пользователя должно быть не менее 5 символов',
-                            },
-                            maxLength: {
-                                value: 20,
-                                message: 'Имя пользователя должно быть не больее 20 символов',
-                            },
-                        }}
-                        error={error}
-                        setIsTyping={setIsTyping}
-                    />
-
-                    <CustomButton
-                        text="Отправить"
-                        onPress={handleSubmit(onSendPressed)}
-                    />
-
-                    <CustomButton
-                        text="Вернуться к входу в аккаунт"
-                        onPress={onSignInPress}
-                        type="Tertiary"
-                    />
-
-                    <View>
-                        <LottieView
-                            style={styles.lottie}
-                            source={forgotPassword}
-                            autoPlay
-                            loop
+            <StatusBar backgroundColor='#4D8DEC' />
+            <GradientBackground colors={['#4D8DEC', '#357ae0']}>
+                <ScrollView showsVerticalScrollIndicator={false}>
+                    <View style={styles.root}>
+                        <CustomInput
+                            name="username"
+                            control={control}
+                            placeholder="Имя пользователя"
+                            rules={{
+                                required: 'Пожалуйста, введите имя пользователя',
+                                minLength: {
+                                    value: 5,
+                                    message: 'Имя пользователя должно быть не менее 5 символов',
+                                },
+                                maxLength: {
+                                    value: 20,
+                                    message: 'Имя пользователя должно быть не больее 20 символов',
+                                },
+                            }}
+                            error={error}
+                            setIsTyping={setIsTyping}
                         />
+
+                        <CustomButton
+                            text="Отправить"
+                            onPress={handleSubmit(onSendPressed)}
+                        />
+
+                        <CustomButton
+                            text="Вернуться к входу в аккаунт"
+                            onPress={onSignInPress}
+                            type="Tertiary"
+                        />
+
+                        <View>
+                            <LottieView
+                                style={styles.lottie}
+                                source={forgotPassword}
+                                autoPlay
+                                loop
+                            />
+                        </View>
                     </View>
-                </View>
-            </ScrollView>
-            <Toast />
+                </ScrollView>
+                <Toast />
+            </GradientBackground>
         </>
     );
 };
