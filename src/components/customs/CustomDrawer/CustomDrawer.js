@@ -9,30 +9,18 @@ import {
     FlatList,
     PanResponder,
     Linking,
-    KeyboardAvoidingView,
-    ScrollView,
-    Easing,
 } from 'react-native';
-import Icon2 from 'react-native-vector-icons/SimpleLineIcons';
-import Icon from 'react-native-vector-icons/FontAwesome5';
-import Icon3 from 'react-native-vector-icons/FontAwesome6';
-import Icon4 from 'react-native-vector-icons/MaterialCommunityIcons';
-import Icon5 from 'react-native-vector-icons/FontAwesome';
-import Icon6 from 'react-native-vector-icons/MaterialIcons';
-import IconEvil from 'react-native-vector-icons/EvilIcons';
 import * as Animatable from 'react-native-animatable';
 import useUserCredentials from '../../../utils/hooks/useUserCredentials';
 import useUserEmail from '../../../utils/hooks/useUserEmail';
-import { assets } from '../../../../react-native.config';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import LinearGradient from 'react-native-linear-gradient';
 
 import ModalPopup from '../../customs/CustomModal';
 import CustomButton from '../../customs/CustomButton';
-import CustomInput from '../../customs/CustomInput';
 import RateUs from '../../RateUs';
 import SQLite from 'react-native-sqlite-storage';
-import { theme } from '../../../screens/WeatherScreen/theme';
+import { Icons } from '../../Icons';
 
 export default function CustomDrawer({
     children,
@@ -45,8 +33,8 @@ export default function CustomDrawer({
     showBorder = false,
     fontFamily = 'Inter-Light',
     letterSpacing = 1,
-    destination = "Search",
-    titleColor = 'white'
+    destination = 'Search',
+    titleColor = 'white',
 }) {
     let identify = useUserCredentials();
     let userEmail = useUserEmail();
@@ -67,8 +55,6 @@ export default function CustomDrawer({
     const animatedValue = useRef(new Animated.Value(1)).current;
 
     const rate = async star => {
-        //
-
         try {
             const db = await SQLite.openDatabase({ name: 'news.db', location: 1 });
             let userId = null;
@@ -207,12 +193,16 @@ export default function CustomDrawer({
     }
 
     const iconMap = {
-        Университет: { icon: <Icon size={24} />, color: 'white' },
-        Выход: { icon: <Icon6 size={24} />, color: 'white' },
-        'Оставить отзыв': { icon: <Icon4 size={24} />, color: 'white' },
-        Коммит: { icon: <Icon size={24} />, color: 'white' },
-        'Оценить нас': { icon: <Icon5 size={24} />, color: 'white' },
-        default: { icon: <Icon size={24} />, color: 'white' },
+        Университет: { icon: <Icons.FontAwesome5 size={24} />, color: 'white' },
+        Выход: { icon: <Icons.MaterialIcons size={24} />, color: 'white' },
+        'Оставить отзыв': {
+            icon: <Icons.MaterialCommunityIcons size={24} />,
+            color: 'white',
+        },
+        Коммит: { icon: <Icons.FontAwesome5 size={24} />, color: 'white' },
+        'Оценить нас': { icon: <Icons.FontAwesome size={24} />, color: 'white' },
+        Подсистема: { icon: <Icons.FontAwesome size={24} />, color: 'white' },
+        default: { icon: <Icons.FontAwesome5 size={24} />, color: 'white' },
     };
 
     const getIconInfo = (title, item) => {
@@ -361,7 +351,9 @@ export default function CustomDrawer({
                                     source={
                                         identify === 'Гость'
                                             ? require('../../../../assets/images/guest.jpg')
-                                            : identify.includes('admin') ? require('../../../../assets/images/admin.jpg') : require('../../../../assets/images/user.jpg')
+                                            : identify.includes('admin')
+                                                ? require('../../../../assets/images/admin.jpg')
+                                                : require('../../../../assets/images/user.jpg')
                                     }
                                     style={{ width: '100%', height: '100%', resizeMode: 'cover' }}
                                 />
@@ -387,7 +379,7 @@ export default function CustomDrawer({
                                     onPress={() => {
                                         setShowRateUSModal(!showRateUSModal);
                                     }}>
-                                    <IconEvil name="close" color="white" size={24} />
+                                    <Icons.EvilIcons name="close" color="white" size={24} />
                                 </TouchableOpacity>
                                 <View
                                     style={[
@@ -404,7 +396,6 @@ export default function CustomDrawer({
                                                 rating={rating}
                                                 onPress={() => {
                                                     rate(index);
-                                                    //checkAndSetRating()
                                                 }}
                                             />
                                         </Animated.View>
@@ -445,8 +436,6 @@ export default function CustomDrawer({
                                                     handleOnExitYesPressed();
                                                 }}
                                             />
-
-                                            {/* <Text style={{ fontFamily: "Inter-ExtraBold" }}>ОК</Text> */}
                                         </Animatable.View>
                                     </View>
                                     <Animatable.View
@@ -458,8 +447,6 @@ export default function CustomDrawer({
                                             bgColor="transparent"
                                             onPress={() => {
                                                 setShowExitModal(!showExitModal);
-                                                //navigation.navigate("Домашняя страница")
-                                                //setStatusBarColor('#36d1dc')
                                             }}
                                         />
                                     </Animatable.View>
@@ -532,8 +519,6 @@ export default function CustomDrawer({
                     bottom: 0,
                     transform: [{ scale: scale }, { translateX: moveToRight }],
                     borderRadius: showMenu ? 15 : 0,
-                    // elevation: showMenu ? 35 : 0,
-                    // shadowOpacity: showMenu ? 1 : 0,
                     elevation: showMenu ? elevation : 0,
                     borderWidth: showBorder && showMenu ? 0.25 : 0,
                     borderColor: showBorder && showMenu ? 'black' : 'null',
@@ -548,14 +533,14 @@ export default function CustomDrawer({
                     ]}>
                     <TouchableOpacity onPress={toggleMenu}>
                         {showMenu ? (
-                            <Icon4
+                            <Icons.MaterialCommunityIcons
                                 name={'close'}
                                 size={32}
                                 color="#21FA90"
                                 style={{ transform: showMenu ? [{ rotate: '90deg' }] : [] }}
                             />
                         ) : (
-                            <Icon2
+                            <Icons.SimpleLineIcons
                                 name={'menu'}
                                 size={24}
                                 color="white"
@@ -567,14 +552,18 @@ export default function CustomDrawer({
                         <Text
                             style={[
                                 styles.text,
-                                { fontFamily: fontFamily, letterSpacing: letterSpacing, color: titleColor },
+                                {
+                                    fontFamily: fontFamily,
+                                    letterSpacing: letterSpacing,
+                                    color: titleColor,
+                                },
                             ]}>
                             {type}
                         </Text>
                     </View>
                     {showSearch == 'true' ? (
                         <TouchableOpacity onPress={() => navigation.navigate(destination)}>
-                            <Icon name="search" size={24} color="white" />
+                            <Icons.FontAwesome5 name="search" size={24} color="white" />
                         </TouchableOpacity>
                     ) : (
                         <View style={{ width: 24, height: 24 }}></View>
@@ -596,13 +585,10 @@ const styles = StyleSheet.create({
         paddingVertical: 15,
         flexDirection: 'row',
         justifyContent: 'space-between',
-        // borderWidth: 0.25,
-        // borderColor: '#F3FAE1',
         alignItems: 'center',
     },
     headerTextContainer: {
         flex: 1,
-        //flexDirection: 'row',
         justifyContent: 'center',
         alignItems: 'center',
         alignSelf: 'center',
