@@ -21,6 +21,7 @@ import CustomButton from '../../customs/CustomButton';
 import RateUs from '../../RateUs';
 import SQLite from 'react-native-sqlite-storage';
 import { Icons } from '../../Icons';
+import { webPages } from './webPages';
 
 export default function CustomDrawer({
     children,
@@ -38,20 +39,21 @@ export default function CustomDrawer({
 }) {
     let identify = useUserCredentials();
     let userEmail = useUserEmail();
+    const isGuest = identify === 'Гость';
+    const isAdmin = identify.includes('admin');
 
     const [showMenu, setShowMenu] = useState(false);
     const moveToRight = useRef(new Animated.Value(0)).current;
     const scale = useRef(new Animated.Value(1)).current;
 
     const [selectedMenuItem, setSelectedMenuItem] = useState(null);
-
     const [showExitModal, setShowExitModal] = useState(false);
 
     const [showRateUSModal, setShowRateUSModal] = useState(false);
+    const [rating, setRating] = useState(1);
 
     const [isOnYesPressed, setIsOnYesPressed] = useState(false);
 
-    const [rating, setRating] = useState(1);
     const animatedValue = useRef(new Animated.Value(1)).current;
 
     const rate = async star => {
@@ -183,14 +185,15 @@ export default function CustomDrawer({
         { icon: 'github', title: 'Коммит' },
         { icon: 'email', title: 'Оставить отзыв' },
         { icon: 'star-half-o', title: 'Оценить нас' },
-    ];
 
-    if (identify === 'Гость') {
-        menu.push({ icon: 'user-circle', title: 'Регистрация' });
-        menu.push({ icon: 'home', title: 'Домой' });
-    } else {
-        menu.push({ icon: 'logout', title: 'Выход' });
-    }
+        ...(isAdmin ? [{ icon: 'admin-panel-settings', title: 'Подсистема' }] : []),
+        ...(isGuest
+            ? [
+                { icon: 'user-circle', title: 'Регистрация' },
+                { icon: 'home', title: 'Домой' },
+            ]
+            : [{ icon: 'logout', title: 'Выход' }]),
+    ];
 
     const iconMap = {
         Университет: { icon: <Icons.FontAwesome5 size={24} />, color: 'white' },
@@ -201,7 +204,7 @@ export default function CustomDrawer({
         },
         Коммит: { icon: <Icons.FontAwesome5 size={24} />, color: 'white' },
         'Оценить нас': { icon: <Icons.FontAwesome size={24} />, color: 'white' },
-        Подсистема: { icon: <Icons.FontAwesome size={24} />, color: 'white' },
+        Подсистема: { icon: <Icons.MaterialIcons size={24} />, color: 'white' },
         default: { icon: <Icons.FontAwesome5 size={24} />, color: 'white' },
     };
 
@@ -212,11 +215,6 @@ export default function CustomDrawer({
             color: iconInfo.color,
         };
     };
-
-    const webPages = [
-        'https://www.sevsu.ru/',
-        'https://www.github.com/dtb4life/4News/commits/',
-    ];
 
     const openLinkInBrowserHandler = index => {
         Linking.canOpenURL(webPages[index]).then(supported => {
@@ -231,32 +229,27 @@ export default function CustomDrawer({
     };
 
     const handleMenuItemPress = async (index, title) => {
-        if (title === 'Домой') {
-            navigation.navigate('Добро пожаловать !', { status: 'logout' });
-        }
-
-        switch (index) {
-            case 0:
+        switch (title) {
+            case 'Домой':
+                navigation.navigate('Добро пожаловать !', { status: 'logout' });
+                break;
+            case 'Коммит':
+            case 'Университет':
                 openLinkInBrowserHandler(index);
                 break;
-            case 1:
-                openLinkInBrowserHandler(index);
-                break;
-            case 2:
+            case 'Оставить отзыв':
                 navigation.navigate('FeedBack Screen');
                 break;
-            case 3:
+            case 'Оценить нас':
                 setShowRateUSModal(true);
                 break;
-            case 4:
+
+            default:
                 if (title === 'Выход') {
                     setShowExitModal(!showExitModal);
                 } else {
                     navigation.navigate('Регистрация');
                 }
-                break;
-
-            default:
                 break;
         }
     };
