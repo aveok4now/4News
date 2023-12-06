@@ -243,6 +243,9 @@ export default function CustomDrawer({
             case 'Оценить нас':
                 setShowRateUSModal(true);
                 break;
+            case 'Подсистема':
+                navigation.navigate('AdminScreen')
+                break;
 
             default:
                 if (title === 'Выход') {

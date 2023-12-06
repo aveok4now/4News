@@ -32,6 +32,7 @@ import MovieScreen from '../screens/MovieNewsScreen/MovieScreen';
 import MoviePersonScreen from '../screens/MovieNewsScreen/MoviePersonScreen';
 import MovieSeacrhScreen from '../screens/MovieNewsScreen/MovieSearchScreen/MovieSeacrhScreen';
 import MovieNewsScreen from '../screens/MovieNewsScreen';
+import AdminScreen from '../screens/AdminScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -163,6 +164,7 @@ const Navigation = () => {
                     <Stack.Screen name="MovieScreen" component={MovieScreen} />
                     <Stack.Screen name="MoviePersonScreen" component={MoviePersonScreen} />
                     <Stack.Screen name="MovieSearchScreen" component={MovieSeacrhScreen} />
+                    <Stack.Screen name="AdminScreen" component={AdminScreen} />
                 </Stack.Navigator>
             </NavigationContainer>
         </>
