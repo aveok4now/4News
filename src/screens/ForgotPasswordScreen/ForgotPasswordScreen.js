@@ -107,8 +107,8 @@ const ForgotPasswordScreen = () => {
 
     return (
         <>
-            <StatusBar backgroundColor='#4D8DEC' />
-            <GradientBackground colors={['#4D8DEC', '#357ae0']}>
+            <StatusBar backgroundColor='#357ae0' />
+            <GradientBackground colors={['#357ae0', '#4D8DEC']}>
                 <ScrollView showsVerticalScrollIndicator={false}>
                     <View style={styles.root}>
                         <CustomInput

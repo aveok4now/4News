@@ -178,7 +178,7 @@ const HomeScreen = ({ navigation }) => {
 
     return (
         <>
-            <StatusBar backgroundColor="transparent" />
+            <StatusBar backgroundColor="#092439" />
             {!isConnected ? (
                 <Animatable.View
                     animation="fadeInDown"

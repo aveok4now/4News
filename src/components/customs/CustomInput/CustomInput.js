@@ -10,6 +10,8 @@ import { Controller } from 'react-hook-form';
 // import { Container } from './styles';
 import { assets } from '../../../react-native.config';
 import EyeIcon from 'react-native-vector-icons/Entypo';
+import { theme } from '../../../screens/MovieNewsScreen/theme';
+
 
 const defaultColor1 = 'white';
 const CustomInput = ({
@@ -129,7 +131,7 @@ const styles = StyleSheet.create({
     },
 
     errorText: {
-        fontFamily: 'Inter-Regular',
+        fontFamily: 'Inter-Bold',
         color: 'red',
         alignSelf: 'stretch',
     },

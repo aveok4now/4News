@@ -413,7 +413,7 @@ export default function UsersNewsScreen({ navigation }) {
 
     return (
         <>
-            <StatusBar backgroundColor="transparent" />
+            <StatusBar backgroundColor='#092439' />
             <View style={{ flex: 1 }}>
                 <Image
                     blurRadius={150}

@@ -425,6 +425,7 @@ export default function CommentsScreen({ route }) {
                                     <CustomButton
                                         onPress={handlePublishComment}
                                         text="Опубликовать"
+                                        showBorder
                                     />
                                 </Animatable.View>
                             )}

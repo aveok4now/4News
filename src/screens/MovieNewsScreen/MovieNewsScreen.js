@@ -32,9 +32,6 @@ export default function MovieNewsScreen({ navigation }) {
         getTrendingMovies();
         getUpcomingMovies();
         getTopRatedMovies();
-        return () => {
-            setStatusBarColor(mainColor);
-        };
     }, []);
 
     const getTrendingMovies = async () => {
@@ -62,51 +59,54 @@ export default function MovieNewsScreen({ navigation }) {
     };
 
     return (
-        <View style={{ flex: 1 }}>
-            <Image
-                blurRadius={50}
-                style={{ position: 'absolute', width: '100%', height: '100%' }}
-                source={require('../assets/images/search-bg.jpg')}
-            />
-            <CustomDrawer
-                type="Новости Кино"
-                fontFamily="Inter-ExtraBold"
-                letterSpacing={1}
-                showBorder={true}
-                showSearch="true"
-                navigation={navigation}
-                destination="MovieSearchScreen"
-            //titleColor='rgb(34 211 238)'
-            >
-                {/* <SafeAreaView style={{ marginBottom: ios ? -8 : 16 }}>
+        <>
+            <StatusBar backgroundColor='#092439' />
+            <View style={{ flex: 1 }}>
+                <Image
+                    blurRadius={50}
+                    style={{ position: 'absolute', width: '100%', height: '100%' }}
+                    source={require('../assets/images/search-bg.jpg')}
+                />
+                <CustomDrawer
+                    type="Новости Кино"
+                    fontFamily="Inter-ExtraBold"
+                    letterSpacing={1}
+                    showBorder={true}
+                    showSearch="true"
+                    navigation={navigation}
+                    destination="MovieSearchScreen"
+                //titleColor='rgb(34 211 238)'
+                >
+                    {/* <SafeAreaView style={{ marginBottom: ios ? -8 : 16 }}>
                     <StatusBar style="light" />
                 </SafeAreaView> */}
-                {isLoading ? (
-                    <Loader />
-                ) : (
-                    <ScrollView
-                        showsVerticalScrollIndicator={false}
-                        contentContainerStyle={{ paddingBottom: 10 }}>
-                        {/* Сейчас в тренде */}
-                        {trending.length > 0 && (
-                            <TrendingMovies data={trending} navigation={navigation} />
-                        )}
+                    {isLoading ? (
+                        <Loader />
+                    ) : (
+                        <ScrollView
+                            showsVerticalScrollIndicator={false}
+                            contentContainerStyle={{ paddingBottom: 10 }}>
+                            {/* Сейчас в тренде */}
+                            {trending.length > 0 && (
+                                <TrendingMovies data={trending} navigation={navigation} />
+                            )}
 
-                        {/* Будущие новинки */}
-                        <MovieList
-                            title="Будущие новинки"
-                            data={upcoming}
-                            navigation={navigation}
-                        />
-                        {/* Топ рейтинга */}
-                        <MovieList
-                            title="Топ рейтинга"
-                            data={topRated}
-                            navigation={navigation}
-                        />
-                    </ScrollView>
-                )}
-            </CustomDrawer>
-        </View>
+                            {/* Будущие новинки */}
+                            <MovieList
+                                title="Будущие новинки"
+                                data={upcoming}
+                                navigation={navigation}
+                            />
+                            {/* Топ рейтинга */}
+                            <MovieList
+                                title="Топ рейтинга"
+                                data={topRated}
+                                navigation={navigation}
+                            />
+                        </ScrollView>
+                    )}
+                </CustomDrawer>
+            </View>
+        </>
     );
 }

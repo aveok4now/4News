@@ -99,6 +99,7 @@ export default function FeedBackScreen({ navigation }) {
                                         <CustomButton
                                             text="Отправить"
                                             onPress={handleSubmit(sendMessage)}
+                                            showBorder
                                         />
                                     </View>
                                 </View>

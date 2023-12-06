@@ -8,6 +8,7 @@ import {
     Vibration,
 } from 'react-native';
 import { assets } from '../../../../react-native.config';
+import { theme } from '../../../screens/WeatherScreen/theme';
 // import { Container } from './styles';
 
 const DURATION = 10;
@@ -15,7 +16,7 @@ const StartVibration = () => {
     Vibration.vibrate(DURATION);
 };
 
-const CustomButton = ({ onPress, text, type = 'Primary', bgColor, fgColor }) => {
+const CustomButton = ({ onPress, text, type = 'Primary', bgColor, fgColor, showBorder = false }) => {
     return (
         <TouchableOpacity
             onPress={onPress}
@@ -24,6 +25,7 @@ const CustomButton = ({ onPress, text, type = 'Primary', bgColor, fgColor }) => 
                 styles.container,
                 styles[`container_${type}`],
                 bgColor ? { backgroundColor: bgColor } : {},
+                showBorder ? { borderWidth: 1, borderColor: theme.bgWhite(0.2) } : {},
             ]}>
             <Text
                 style={[

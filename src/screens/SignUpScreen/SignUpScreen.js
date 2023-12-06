@@ -232,6 +232,7 @@ const SignUpScreen = () => {
                         <CustomButton
                             text="Зарегестрироваться"
                             onPress={handleSubmit(onRegisterPressed)}
+                            showBorder
                         />
 
                         <Text style={styles.text}>

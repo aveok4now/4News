@@ -18,6 +18,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import LottieView from 'lottie-react-native';
 import useUserCredentials from '../../utils/hooks/useUserCredentials';
 import CustomDrawer from '../../components/customs/CustomDrawer';
+import Colors from '../../constants/Colors';
 
 const { width, height } = Dimensions.get('window');
 export default function FavoritesScreen({ navigation }) {
@@ -66,7 +67,7 @@ export default function FavoritesScreen({ navigation }) {
 
     return identify !== 'Гость' ? (
         <>
-            <StatusBar />
+            <StatusBar backgroundColor='#092439' />
             <View style={{ flex: 1 }}>
                 <Image
                     blurRadius={150}
@@ -129,29 +130,38 @@ export default function FavoritesScreen({ navigation }) {
         </>
     ) : (
         <>
-            <CustomDrawer fgColor="#5b86e5" navigation={navigation} elevation={35}>
-                <View
-                    style={{
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        flex: 2,
-                        zIndex: 100,
-                    }}>
-                    <Text style={styles.guestInfo}>Упс...</Text>
-                    <Text style={styles.guestSubInfo}>
-                        Чтобы просматривать сохранённые новости, необходимо войти в аккаунт
-                    </Text>
+            <View style={{ flex: 1 }}>
+                <Image
+                    blurRadius={150}
+                    style={{ position: 'absolute', width: '100%', height: '100%' }}
+                    source={require('../assets/images/newsoverview.jpg')}
+                />
+                <CustomDrawer navigation={navigation} showBorder={true}>
+                    <View
+                        style={{
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            flex: 2,
+                            zIndex: 100,
+                        }}>
+                        <Text style={styles.guestInfo}>Упс...</Text>
+                        <Text style={styles.guestSubInfo}>
+                            Чтобы просматривать сохранённые новости, необходимо войти в аккаунт
+                        </Text>
 
-                    <View style={{ width: '60%', marginVertical: 15 }}>
-                        <CustomButton
-                            text="Войти"
-                            onPress={() =>
-                                navigation.navigate('Добро пожаловать !', { status: 'logout' })
-                            }
-                        />
+                        <View style={{ width: '60%', marginVertical: 15 }}>
+                            <CustomButton
+                                bgColor='white'
+                                fgColor='blue'
+                                text="Войти"
+                                onPress={() =>
+                                    navigation.navigate('Добро пожаловать !', { status: 'logout' })
+                                }
+                            />
+                        </View>
                     </View>
-                </View>
-            </CustomDrawer>
+                </CustomDrawer>
+            </View>
         </>
     );
 }
