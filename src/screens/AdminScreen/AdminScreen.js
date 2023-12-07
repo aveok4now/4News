@@ -120,10 +120,12 @@ export default function AdminScreen({ navigation }) {
             GROUP BY userCity
             ORDER BY cityCount DESC, userCity DESC;
             `;
+            const feedBacksQuery =
+                'SELECT COUNT(*) as feedBacksCount FROM UsersFeedbacks';
 
             const ratesResult = await fetchData(ratesQuery);
             const cityResult = await fetchData(mostPopularCityQuery);
-            console.log(cityResult);
+            const feedBacksResult = await fetchData(feedBacksQuery);
 
             const averageRating =
                 ratesResult && ratesResult.averageRating
@@ -131,6 +133,7 @@ export default function AdminScreen({ navigation }) {
                     : 'N/A';
 
             const mostPopularCity = cityResult.userCity;
+            const feedBacksCount = feedBacksResult.feedBacksCount;
 
             const newAppData = [
                 {
@@ -140,7 +143,7 @@ export default function AdminScreen({ navigation }) {
                     icon: <Icons.FontAwesome name="star" color="white" size={75} />,
                     color1: '#40c9ff',
                     color2: '#e81cff',
-                    description: `Средний рейтинг приложения на основе оценок пользователей в секции «Оцените нас» `
+                    description: `Средний рейтинг приложения на основе оценок пользователей в секции «Оцените нас» `,
                 },
                 {
                     id: 2,
@@ -149,7 +152,24 @@ export default function AdminScreen({ navigation }) {
                     icon: <Icons.FontAwesome name="building" color="white" size={75} />,
                     color1: '#ff1b6b',
                     color2: '#45caff',
-                    description: 'Самый популярный город на основе выбора в секции прогноза погоды.'
+                    description:
+                        'Самый популярный город на основе выбора в секции прогноза погоды.',
+                },
+                {
+                    id: 3,
+                    title: 'Всего отзывов',
+                    count: feedBacksCount,
+                    icon: (
+                        <Icons.MaterialCommunityIcons
+                            name="message-reply-text"
+                            color="white"
+                            size={75}
+                        />
+                    ),
+                    color1: '#696eff',
+                    color2: '#f8acff',
+                    description:
+                        'Количество отзывов, отправленных пользователями в секции «Оставить отзыв»',
                 },
             ];
 
@@ -197,7 +217,11 @@ export default function AdminScreen({ navigation }) {
                                 onPress={downloadFile}
                             />
                         </View>
-                        <AppInfoCarousel activeSlide={activeSlide} data={appData} setActiveSlide={setActiveSlide} />
+                        <AppInfoCarousel
+                            activeSlide={activeSlide}
+                            data={appData}
+                            setActiveSlide={setActiveSlide}
+                        />
                     </View>
                 </CustomDrawer>
             </Animatable.View>
