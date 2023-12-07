@@ -122,10 +122,13 @@ export default function AdminScreen({ navigation }) {
             `;
             const feedBacksQuery =
                 'SELECT COUNT(*) as feedBacksCount FROM UsersFeedbacks';
+            const likedMoviesQuery = 'SELECT COUNT(*) as likedMoviesCount FROM likedMovies';
 
             const ratesResult = await fetchData(ratesQuery);
             const cityResult = await fetchData(mostPopularCityQuery);
             const feedBacksResult = await fetchData(feedBacksQuery);
+            const likedMoviesResult = await fetchData(likedMoviesQuery);
+
 
             const averageRating =
                 ratesResult && ratesResult.averageRating
@@ -134,6 +137,7 @@ export default function AdminScreen({ navigation }) {
 
             const mostPopularCity = cityResult.userCity;
             const feedBacksCount = feedBacksResult.feedBacksCount;
+            const likedMoviesCount = likedMoviesResult.likedMoviesCount;
 
             const newAppData = [
                 {
@@ -170,6 +174,22 @@ export default function AdminScreen({ navigation }) {
                     color2: '#f8acff',
                     description:
                         'Количество отзывов, отправленных пользователями в секции «Оставить отзыв»',
+                },
+                {
+                    id: 4,
+                    title: <Text style={{ fontSize: 22 }}>Избранных фильмов</Text>,
+                    count: likedMoviesCount,
+                    icon: (
+                        <Icons.MaterialCommunityIcons
+                            name="movie"
+                            color="white"
+                            size={75}
+                        />
+                    ),
+                    color1: '#7ef29d',
+                    color2: '#0f68a9',
+                    description:
+                        'Число фильмов, добавленных пользователями в избранное',
                 },
             ];
 

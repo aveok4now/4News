@@ -22,6 +22,7 @@ import {
     fetchSimilarMovies,
     image500,
 } from '../../../api/moviedb';
+import GuestModal from '../../../components/customs/CustomModal/GuestModal';
 
 export default function MovieScreen({ navigation }) {
     const { params: item } = useRoute();

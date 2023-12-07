@@ -64,14 +64,14 @@ export default function AppInfoCarousel({ activeSlide, data, setActiveSlide }) {
                 </>
             )}
             firstItem={0}
-            inactiveSlideOpacity={0.1}
+            inactiveSlideOpacity={0.6}
             sliderWidth={width}
             sliderHeight={width}
             itemWidth={width * 0.62}
             slideStyle={{ display: 'flex', alignItems: 'center' }}
             onSnapToItem={index => setActiveSlide(index)}
             layout={'stack'}
-            layoutCardOffset={`3`}
+            layoutCardOffset={`18`}
         />
     );
 }

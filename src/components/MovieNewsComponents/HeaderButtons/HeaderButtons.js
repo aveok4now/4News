@@ -6,24 +6,42 @@ import { ios } from '../../../utils/getDimensions';
 import { theme } from '../../../screens/MovieNewsScreen/theme';
 import { getItem, setItem } from '../../../utils/asyncStorage';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import SQLite from 'react-native-sqlite-storage';
+import useUserCredentials from '../../../utils/hooks/useUserCredentials';
 
-export default function HeaderButtons({ navigation, movie }) {
+export default function HeaderButtons({
+    navigation,
+    movie,
+    showModal,
+    setShowModal,
+}) {
+    let identify = useUserCredentials();
+
     const [isFavorite, setIsFavorite] = useState(false);
     const topMargin = ios ? '' : 12;
 
     const [favorites, setFavorites] = useState([]);
 
     useEffect(() => {
-        loadLikes();
+        loadLikes(movie.id);
     }, [movie.id]);
 
     const handleLike = async movieId => {
         try {
-            // if (identify == 'Гость') {
-            //     setShowModal(!showModal);
-            //     setIsLiked(false);
-            //     return;
-            // }
+            const db = await SQLite.openDatabase({ name: 'news.db', location: 1 });
+
+            await db.executeSql(`
+                    CREATE TABLE IF NOT EXISTS likedMovies (
+                    id INTEGER PRIMARY KEY,
+                    title TEXT
+        );
+    `);
+
+            if (identify == 'Гость') {
+                setShowModal(true);
+                setIsLiked(false);
+                throw 'Guest tried to save movie';
+            }
 
             const likedMovies = await AsyncStorage.getItem('likedMovies');
             const parsedLikedMovies = JSON.parse(likedMovies) || [];
@@ -38,6 +56,12 @@ export default function HeaderButtons({ navigation, movie }) {
                     'likedMovies',
                     JSON.stringify(parsedLikedMovies),
                 );
+
+                await db.executeSql(
+                    'INSERT INTO likedMovies (id, title) VALUES (?, ?)',
+                    [movie.id, movie.title],
+                );
+
                 setIsFavorite(true);
                 console.log('saved');
             } else {
@@ -48,6 +72,8 @@ export default function HeaderButtons({ navigation, movie }) {
                     'likedMovies',
                     JSON.stringify(updatedSavedMovies),
                 );
+                await db.executeSql('DELETE FROM likedMovies WHERE id = ?', [movieId]);
+
                 setIsFavorite(false);
                 console.log('removed');
             }
@@ -56,9 +82,12 @@ export default function HeaderButtons({ navigation, movie }) {
         }
     };
 
-    const loadLikes = async () => {
+    const loadLikes = async (movieId) => {
         try {
+
             const likedMovies = await AsyncStorage.getItem('likedMovies');
+            const db = await SQLite.openDatabase({ name: 'news.db', location: 1 });
+
             const parsedLikedMovies = JSON.parse(likedMovies) || [];
             setFavorites(parsedLikedMovies);
 
@@ -66,6 +95,19 @@ export default function HeaderButtons({ navigation, movie }) {
                 savedItem => savedItem.id === movie.id,
             );
             setIsFavorite(isLiked);
+
+            const result = await db.executeSql('SELECT * FROM likedMovies WHERE id = ?', [movieId]);
+
+            if (result[0].rows.length > 0) {
+                const movieDataFromDB = result[0].rows.item(0);
+                const updatedMovie = { ...movieDataFromDB, title: movie.title };
+                await db.executeSql('UPDATE likedMovies SET title = ? WHERE id = ?', [updatedMovie.title, movieId]);
+
+                console.log('Данные из базы данных:', updatedMovie);
+            } else {
+                console.log('Фильм не найден в базе данных');
+            }
+
         } catch (error) {
             console.log('Ошибка загрузки сохраненных лайков: ', error);
         }
