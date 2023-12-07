@@ -1,4 +1,4 @@
-import { View, Text, Image, StatusBar } from 'react-native';
+import { View, Text, Image, StatusBar, ScrollView } from 'react-native';
 import React, { useState, useEffect } from 'react';
 import * as Animatable from 'react-native-animatable';
 import CustomDrawer from '../../components/customs/CustomDrawer';
@@ -6,8 +6,9 @@ import { Icons } from '../../components/Icons';
 import TypeWriter from 'react-native-typewriter';
 import CustomButton from '../../components/customs/CustomButton';
 import InfoCarousel from './components/InfoCarousel';
-import RNFS from 'react-native-fs';
 import SQLite from 'react-native-sqlite-storage';
+import { fetchData, downloadFile } from './db/databaseUtils';
+import AppInfoCarousel from './components/appInfoCarousel';
 
 export default function AdminScreen({ navigation }) {
     useEffect(() => {
@@ -18,22 +19,10 @@ export default function AdminScreen({ navigation }) {
 
     const [canBeShowed, setCanBeShowed] = useState(false);
 
-    const [usersCount, setUsersCount] = useState(0);
-
     const [data, setData] = useState([]);
+    const [appData, setAppData] = useState([]);
 
     const handleCardPress = () => { };
-
-    const fetchData = async query => {
-        try {
-            const db = await SQLite.openDatabase({ name: 'news.db', location: 1 });
-            const result = await db.executeSql(query);
-            return result[0].rows.item(0);
-        } catch (err) {
-            console.log(err);
-            return null;
-        }
-    };
 
     const getData = async () => {
         try {
@@ -47,6 +36,7 @@ export default function AdminScreen({ navigation }) {
             const favoritesQuery =
                 'SELECT COUNT(*) as favoritesCount from UserFavorites';
             const guestsQuery = 'SELECT COUNT(*) as guestsCount from Guests';
+            const ratesQuery = 'SELECT id, AVG(rating) as ratesCount from Rates';
 
             const [
                 usersResult,
@@ -55,6 +45,7 @@ export default function AdminScreen({ navigation }) {
                 likesResult,
                 favoritesResult,
                 guestsResult,
+                ratesResult,
             ] = await Promise.all([
                 fetchData(usersQuery),
                 fetchData(adminsQuery),
@@ -62,10 +53,16 @@ export default function AdminScreen({ navigation }) {
                 fetchData(likesQuery),
                 fetchData(favoritesQuery),
                 fetchData(guestsQuery),
+                fetchData(ratesQuery),
             ]);
 
             const getCount = (result, key) =>
                 result && result[key] ? result[key] : 0;
+
+            const ratesCount = getCount(ratesResult, 'ratesCount');
+            const formattedRatesCount = ratesCount
+                ? parseFloat(ratesCount).toFixed(2)
+                : 'N/A';
 
             const newData = [
                 {
@@ -109,34 +106,57 @@ export default function AdminScreen({ navigation }) {
             ];
 
             setData(newData);
+            getAppData();
         } catch (err) {
             console.log(err);
         }
     };
 
-    const downloadFile = () => {
-        const url =
-            'https://drive.google.com/file/d/1BI5ZG27azsyxB6q7X3-ONQC2_tR10GKq/view?usp=sharing';
-        const filePath = RNFS.DocumentDirectoryPath + '/news.db';
+    const getAppData = async () => {
+        try {
+            const ratesQuery = 'SELECT AVG(rating) as averageRating FROM Rates';
+            const mostPopularCityQuery = `SELECT userCity, COUNT(userCity) as cityCount
+            FROM Users
+            GROUP BY userCity
+            ORDER BY cityCount DESC, userCity DESC;
+            `;
 
-        RNFS.downloadFile({
-            fromUrl: url,
-            toFile: filePath,
-            //background: true,
-            //discretionary: true,
-            progress: res => {
-                const progress = (res.bytesWritten / res.contentLength) * 100;
-                console.log(`Progress: ${progress.toFixed(2)}%`);
-                console.log('bites written', res.bytesWritten);
-            },
-        })
-            .promise.then(response => {
-                console.log('File downloaded!', response);
-                console.log('file saved at: ', filePath);
-            })
-            .catch(err => {
-                console.log('Download error:', err);
-            });
+            const ratesResult = await fetchData(ratesQuery);
+            const cityResult = await fetchData(mostPopularCityQuery);
+            console.log(cityResult);
+
+            const averageRating =
+                ratesResult && ratesResult.averageRating
+                    ? parseFloat(ratesResult.averageRating).toFixed(2)
+                    : 'N/A';
+
+            const mostPopularCity = cityResult.userCity;
+
+            const newAppData = [
+                {
+                    id: 1,
+                    title: 'Cредний рейтинг',
+                    count: averageRating,
+                    icon: <Icons.FontAwesome name="star" color="white" size={75} />,
+                    color1: '#40c9ff',
+                    color2: '#e81cff',
+                    description: `Средний рейтинг приложения на основе оценок пользователей в секции «Оцените нас» `
+                },
+                {
+                    id: 2,
+                    title: 'Популярный город',
+                    count: mostPopularCity,
+                    icon: <Icons.FontAwesome name="building" color="white" size={75} />,
+                    color1: '#ff1b6b',
+                    color2: '#45caff',
+                    description: 'Самый популярный город на основе выбора в секции прогноза погоды.'
+                },
+            ];
+
+            setAppData(newAppData);
+        } catch (err) {
+            console.log(err);
+        }
     };
 
     return (
@@ -177,6 +197,7 @@ export default function AdminScreen({ navigation }) {
                                 onPress={downloadFile}
                             />
                         </View>
+                        <AppInfoCarousel activeSlide={activeSlide} data={appData} setActiveSlide={setActiveSlide} />
                     </View>
                 </CustomDrawer>
             </Animatable.View>
