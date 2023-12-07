@@ -7,11 +7,12 @@ import TypeWriter from 'react-native-typewriter';
 import CustomButton from '../../components/customs/CustomButton';
 import InfoCarousel from './components/InfoCarousel';
 import SQLite from 'react-native-sqlite-storage';
-import { fetchData, downloadFile } from './db/databaseUtils';
+import { fetchData, downloadFile, fetchAllUsers } from './db/databaseUtils';
 import AppInfoCarousel from './components/appInfoCarousel';
 import { formatDate } from './utils/formateDate';
 import Loader from '../../components/MovieNewsComponents/Loader';
 import AboutApp from './components/AboutApp';
+import UserTable from './components/UserTable';
 
 export default function AdminScreen({ navigation }) {
     useEffect(() => {
@@ -36,6 +37,7 @@ export default function AdminScreen({ navigation }) {
 
     const [data, setData] = useState([]);
     const [appData, setAppData] = useState([]);
+    const [usersData, setUsersData] = useState([]);
 
     const [currentTime, setCurrentTime] = useState(new Date());
 
@@ -150,6 +152,8 @@ export default function AdminScreen({ navigation }) {
             const likedMoviesResult = await fetchData(likedMoviesQuery);
             const lastRegisteredUserResult = await fetchData(lastRegisteredUserQuery);
 
+            const getAllUsersInfo = await fetchAllUsers();
+
             const averageRating =
                 ratesResult && ratesResult.averageRating
                     ? parseFloat(ratesResult.averageRating).toFixed(2)
@@ -159,6 +163,24 @@ export default function AdminScreen({ navigation }) {
             const feedBacksCount = feedBacksResult.feedBacksCount;
             const likedMoviesCount = likedMoviesResult.likedMoviesCount;
             const lastRegisteredUser = lastRegisteredUserResult.userLogin;
+
+            console.log('Number of users:', getAllUsersInfo.length);
+
+            console.log('getAllUsersInfo', getAllUsersInfo);
+
+            if (getAllUsersInfo && getAllUsersInfo.length > 0) {
+
+                const users = getAllUsersInfo;
+                setUsersData(users);
+
+                for (const user of users) {
+                    const userId = user.userId;
+                    const userLogin = user.userLogin;
+                    const userPassword = user.userPassword;
+                    const userEmail = user.userEmail;
+                    const userCity = user.userCity;
+                }
+            }
 
             const newAppData = [
                 {
@@ -263,8 +285,9 @@ export default function AdminScreen({ navigation }) {
                         backgroundColor="transparent"
                         showBorder
                         type="Подсистема">
-
-                        <ScrollView style={{ paddingVertical: 8 }} showsVerticalScrollIndicator={false}>
+                        <ScrollView
+                            style={{ paddingVertical: 8 }}
+                            showsVerticalScrollIndicator={false}>
                             <TypeWriter
                                 style={{
                                     fontFamily: 'Inter-ExtraBold',
@@ -301,12 +324,15 @@ export default function AdminScreen({ navigation }) {
                                 data={appData}
                                 setActiveSlide={SetAppInfoCarouselActiveSlide}
                             />
+
+                            {usersData.length > 0 && (
+                                <UserTable users={usersData} />
+                            )}
+
                             <AboutApp />
                         </ScrollView>
                     </CustomDrawer>
                 </Animatable.View>
-
-
             )}
         </>
     );
