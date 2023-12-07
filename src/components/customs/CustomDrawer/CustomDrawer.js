@@ -21,7 +21,7 @@ import CustomButton from '../../customs/CustomButton';
 import RateUs from '../../RateUs';
 import SQLite from 'react-native-sqlite-storage';
 import { Icons } from '../../Icons';
-import { webPages } from './webPages';
+import { openLinkInBrowserHandler, webPages } from './utils/openLink';
 
 export default function CustomDrawer({
     children,
@@ -214,18 +214,6 @@ export default function CustomDrawer({
             icon: React.cloneElement(iconInfo.icon, { name: item.icon }),
             color: iconInfo.color,
         };
-    };
-
-    const openLinkInBrowserHandler = index => {
-        Linking.canOpenURL(webPages[index]).then(supported => {
-            if (supported) {
-                Linking.openURL(webPages[index]).catch(err => {
-                    console.error('Ошибка при открытии URL: ' + err);
-                });
-            } else {
-                console.error('Ссылка не поддерживается');
-            }
-        });
     };
 
     const handleMenuItemPress = async (index, title) => {
