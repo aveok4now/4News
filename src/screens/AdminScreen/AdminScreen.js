@@ -9,20 +9,35 @@ import InfoCarousel from './components/InfoCarousel';
 import SQLite from 'react-native-sqlite-storage';
 import { fetchData, downloadFile } from './db/databaseUtils';
 import AppInfoCarousel from './components/appInfoCarousel';
+import { formatDate } from './utils/formateDate';
+import Loader from '../../components/MovieNewsComponents/Loader';
+import AboutApp from './components/AboutApp';
 
 export default function AdminScreen({ navigation }) {
     useEffect(() => {
         getData();
     }, []);
 
-    const [InfoCarouselActiveSlide, SetInfoCarouselActiveSlide] = useState(0);
-    const [AppInfoCarouselActiveSlide, SetAppInfoCarouselActiveSlide] = useState(2);
+    useEffect(() => {
+        const intervalId = setInterval(() => {
+            setCurrentTime(new Date());
+        }, 1000);
 
+        return () => clearInterval(intervalId);
+    }, []);
+
+    const [isLoading, setIsLoading] = useState(true);
+
+    const [InfoCarouselActiveSlide, SetInfoCarouselActiveSlide] = useState(0);
+    const [AppInfoCarouselActiveSlide, SetAppInfoCarouselActiveSlide] =
+        useState(2);
 
     const [canBeShowed, setCanBeShowed] = useState(false);
 
     const [data, setData] = useState([]);
     const [appData, setAppData] = useState([]);
+
+    const [currentTime, setCurrentTime] = useState(new Date());
 
     const handleCardPress = () => { };
 
@@ -124,15 +139,16 @@ export default function AdminScreen({ navigation }) {
             `;
             const feedBacksQuery =
                 'SELECT COUNT(*) as feedBacksCount FROM UsersFeedbacks';
-            const likedMoviesQuery = 'SELECT COUNT(*) as likedMoviesCount FROM likedMovies';
-            const lastRegisteredUserQuery = 'SELECT userLogin FROM Users ORDER BY userId DESC LIMIT 1'
+            const likedMoviesQuery =
+                'SELECT COUNT(*) as likedMoviesCount FROM likedMovies';
+            const lastRegisteredUserQuery =
+                'SELECT userLogin FROM Users ORDER BY userId DESC LIMIT 1';
 
             const ratesResult = await fetchData(ratesQuery);
             const cityResult = await fetchData(mostPopularCityQuery);
             const feedBacksResult = await fetchData(feedBacksQuery);
             const likedMoviesResult = await fetchData(likedMoviesQuery);
             const lastRegisteredUserResult = await fetchData(lastRegisteredUserQuery);
-
 
             const averageRating =
                 ratesResult && ratesResult.averageRating
@@ -193,20 +209,21 @@ export default function AdminScreen({ navigation }) {
                     ),
                     color1: '#7ef29d',
                     color2: '#0f68a9',
-                    description:
-                        'Число фильмов, добавленных пользователями в избранное',
+                    description: 'Число фильмов, добавленных пользователями в избранное',
                 },
                 {
                     id: 5,
-                    title: <Text style={{ fontSize: 18 }}>Последний{'\n'}зарегестрировавшийся{'\n'}пользователь</Text>,
-                    count: <Text style={{ fontSize: 32, fontFamily: 'Inter-ExtraBold' }}>{lastRegisteredUser}</Text>,
-                    icon: (
-                        <Icons.FontAwesome5
-                            name="user-plus"
-                            color="white"
-                            size={70}
-                        />
+                    title: (
+                        <Text style={{ fontSize: 18 }}>
+                            Последний{'\n'}зарегестрировавшийся{'\n'}пользователь
+                        </Text>
                     ),
+                    count: (
+                        <Text style={{ fontSize: 32, fontFamily: 'Inter-ExtraBold' }}>
+                            {lastRegisteredUser}
+                        </Text>
+                    ),
+                    icon: <Icons.FontAwesome5 name="user-plus" color="white" size={70} />,
                     color1: '#30c5d2',
                     color2: '#471069',
                     description:
@@ -215,6 +232,7 @@ export default function AdminScreen({ navigation }) {
             ];
 
             setAppData(newAppData);
+            setIsLoading(false);
         } catch (err) {
             console.log(err);
         }
@@ -224,51 +242,72 @@ export default function AdminScreen({ navigation }) {
         <>
             <StatusBar backgroundColor="#092439" />
 
-            <Animatable.View animation="fadeIn" style={{ flex: 1 }}>
-                <Image
-                    blurRadius={50}
-                    style={{ position: 'absolute', width: '100%', height: '100%' }}
-                    source={require('../assets/images/search-bg.jpg')}
-                />
-                <CustomDrawer
-                    navigation={navigation}
-                    backgroundColor="transparent"
-                    showBorder
-                    type="Подсистема">
-                    <View style={{ paddingVertical: 8 }}>
-                        <TypeWriter
-                            style={{
-                                fontFamily: 'Inter-ExtraBold',
-                                fontSize: 32,
-                                textAlign: 'center',
-                                textShadowColor: 'rgba(226, 232, 240, 0.25)',
-                                textShadowOffset: { width: 0, height: 3 },
-                                textShadowRadius: 4,
-                            }}
-                            minDelay={0.2}
-                            typing={1}
-                            onTypingStart={() => setCanBeShowed(false)}
-                            onTypingEnd={() => setCanBeShowed(true)}>
-                            Добро пожаловать!
-                        </TypeWriter>
+            {isLoading ? (
+                <>
+                    <Image
+                        blurRadius={30}
+                        style={{ position: 'absolute', width: '100%', height: '100%' }}
+                        source={require('../assets/images/search-bg.jpg')}
+                    />
+                    <Loader />
+                </>
+            ) : (
+                <Animatable.View animation="fadeIn" style={{ flex: 1 }}>
+                    <Image
+                        blurRadius={50}
+                        style={{ position: 'absolute', width: '100%', height: '100%' }}
+                        source={require('../assets/images/search-bg.jpg')}
+                    />
+                    <CustomDrawer
+                        navigation={navigation}
+                        backgroundColor="transparent"
+                        showBorder
+                        type="Подсистема">
 
-                        <InfoCarousel data={data} setActiveSlide={SetInfoCarouselActiveSlide} />
+                        <ScrollView style={{ paddingVertical: 8 }} showsVerticalScrollIndicator={false}>
+                            <TypeWriter
+                                style={{
+                                    fontFamily: 'Inter-ExtraBold',
+                                    fontSize: 32,
+                                    textAlign: 'center',
+                                    textShadowColor: 'rgba(226, 232, 240, 0.25)',
+                                    textShadowOffset: { width: 0, height: 3 },
+                                    textShadowRadius: 4,
+                                }}
+                                minDelay={0.2}
+                                typing={1}
+                                onTypingStart={() => setCanBeShowed(false)}
+                                onTypingEnd={() => setCanBeShowed(true)}>
+                                Добро пожаловать!
+                            </TypeWriter>
+                            <Text style={{ textAlign: 'center', fontFamily: 'Inter-Light' }}>
+                                {formatDate(currentTime)}
+                            </Text>
 
-                        <View style={{}}>
-                            <CustomButton
-                                text="Скачать базу данных"
-                                type="Tertiary"
-                                onPress={downloadFile}
+                            <InfoCarousel
+                                data={data}
+                                setActiveSlide={SetInfoCarouselActiveSlide}
                             />
-                        </View>
-                        <AppInfoCarousel
-                            activeSlide={AppInfoCarouselActiveSlide}
-                            data={appData}
-                            setActiveSlide={SetAppInfoCarouselActiveSlide}
-                        />
-                    </View>
-                </CustomDrawer>
-            </Animatable.View>
+
+                            <View style={{}}>
+                                <CustomButton
+                                    text="Скачать базу данных"
+                                    type="Tertiary"
+                                    onPress={downloadFile}
+                                />
+                            </View>
+                            <AppInfoCarousel
+                                activeSlide={AppInfoCarouselActiveSlide}
+                                data={appData}
+                                setActiveSlide={SetAppInfoCarouselActiveSlide}
+                            />
+                            <AboutApp />
+                        </ScrollView>
+                    </CustomDrawer>
+                </Animatable.View>
+
+
+            )}
         </>
     );
 }

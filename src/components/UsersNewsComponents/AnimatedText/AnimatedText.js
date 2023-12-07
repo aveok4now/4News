@@ -10,7 +10,7 @@ export default function AnimatedText({ activeSlide, title }) {
         if (textRef.current) {
             textRef.current.pulse();
         }
-    }, [activeSlide, title]);
+    }, []);
 
     return (
         <Animatable.Text
