@@ -10,11 +10,9 @@ import RNFS from 'react-native-fs';
 import SQLite from 'react-native-sqlite-storage';
 
 export default function AdminScreen({ navigation }) {
-
-
     useEffect(() => {
         getData();
-    }, [])
+    }, []);
 
     const [activeSlide, setActiveSlide] = useState(0);
 
@@ -26,8 +24,7 @@ export default function AdminScreen({ navigation }) {
 
     const handleCardPress = () => { };
 
-
-    const fetchData = async (query) => {
+    const fetchData = async query => {
         try {
             const db = await SQLite.openDatabase({ name: 'news.db', location: 1 });
             const result = await db.executeSql(query);
@@ -38,67 +35,88 @@ export default function AdminScreen({ navigation }) {
         }
     };
 
-
     const getData = async () => {
         try {
             const db = await SQLite.openDatabase({ name: 'news.db', location: 1 });
 
-            const usersQuery = 'SELECT COUNT(*) as usersCount from Users where userLogin NOT LIKE "admin%"';
-            //const adminsQuery = 'SELECT COUNT(*) as adminsCount from Users where userLogin LIKE "admin%" ';
+            const usersQuery =
+                'SELECT COUNT(*) as usersCount from Users where userLogin NOT LIKE "admin%"';
             const adminsQuery = 'SELECT COUNT(*) as adminsCount from Administrators';
+            const postsQuery = 'SELECT COUNT(*) as postsCount from News';
+            const likesQuery = 'SELECT postId, SUM(isLiked) as likesCount FROM Likes';
+            const favoritesQuery =
+                'SELECT COUNT(*) as favoritesCount from UserFavorites';
+            const guestsQuery = 'SELECT COUNT(*) as guestsCount from Guests';
 
-            const [usersResult, adminsResult, postsResult] = await Promise.all([
+            const [
+                usersResult,
+                adminsResult,
+                postsResult,
+                likesResult,
+                favoritesResult,
+                guestsResult,
+            ] = await Promise.all([
                 fetchData(usersQuery),
                 fetchData(adminsQuery),
-                //fetchData(postsQuery),
+                fetchData(postsQuery),
+                fetchData(likesQuery),
+                fetchData(favoritesQuery),
+                fetchData(guestsQuery),
             ]);
 
-            const usersCount = usersResult ? usersResult.usersCount : 0;
-            const adminsCount = adminsResult ? adminsResult.adminsCount : 0;
+            const getCount = (result, key) =>
+                result && result[key] ? result[key] : 0;
 
             const newData = [
                 {
                     id: 1,
                     title: 'Пользователей',
-                    count: usersCount,
+                    count: getCount(usersResult, 'usersCount'),
                     icon: <Icons.Feather name="users" color="white" size={90} />,
                 },
                 {
                     id: 2,
                     title: 'Админов',
-                    count: adminsCount,
+                    count: getCount(adminsResult, 'adminsCount'),
                     icon: <Icons.FontAwesome5 name="users-cog" color="white" size={90} />,
                 },
                 {
                     id: 3,
                     title: 'Постов',
-                    count: 12,
+                    count: getCount(postsResult, 'postsCount'),
                     icon: <Icons.FontAwesome6 name="newspaper" color="white" size={90} />,
                 },
                 {
                     id: 4,
                     title: 'Лайков',
-                    count: 12,
+                    count: getCount(likesResult, 'likesCount'),
                     icon: <Icons.FontAwesome name="heart-o" color="white" size={90} />,
                 },
                 {
                     id: 5,
                     title: 'Сохранённых новостей',
-                    count: 12,
+                    count: getCount(favoritesResult, 'favoritesCount'),
                     icon: <Icons.FontAwesome name="star-o" color="white" size={90} />,
+                },
+                {
+                    id: 6,
+                    title: 'Гостей',
+                    count: getCount(guestsResult, 'guestsCount'),
+                    icon: (
+                        <Icons.FontAwesome5 name="user-secret" color="white" size={90} />
+                    ),
                 },
             ];
 
-            setData(newData)
-
+            setData(newData);
         } catch (err) {
             console.log(err);
         }
     };
 
-
     const downloadFile = () => {
-        const url = 'https://drive.google.com/file/d/1BI5ZG27azsyxB6q7X3-ONQC2_tR10GKq/view?usp=sharing';
+        const url =
+            'https://drive.google.com/file/d/1BI5ZG27azsyxB6q7X3-ONQC2_tR10GKq/view?usp=sharing';
         const filePath = RNFS.DocumentDirectoryPath + '/news.db';
 
         RNFS.downloadFile({
@@ -106,17 +124,17 @@ export default function AdminScreen({ navigation }) {
             toFile: filePath,
             //background: true,
             //discretionary: true,
-            progress: (res) => {
+            progress: res => {
                 const progress = (res.bytesWritten / res.contentLength) * 100;
                 console.log(`Progress: ${progress.toFixed(2)}%`);
-                console.log('bites written', res.bytesWritten)
+                console.log('bites written', res.bytesWritten);
             },
         })
-            .promise.then((response) => {
+            .promise.then(response => {
                 console.log('File downloaded!', response);
-                console.log('file saved at: ', filePath)
+                console.log('file saved at: ', filePath);
             })
-            .catch((err) => {
+            .catch(err => {
                 console.log('Download error:', err);
             });
     };
@@ -153,7 +171,11 @@ export default function AdminScreen({ navigation }) {
                         <InfoCarousel data={data} setActiveSlide={setActiveSlide} />
 
                         <View style={{}}>
-                            <CustomButton text="Скачать базу данных" type="Tertiary" onPress={downloadFile} />
+                            <CustomButton
+                                text="Скачать базу данных"
+                                type="Tertiary"
+                                onPress={downloadFile}
+                            />
                         </View>
                     </View>
                 </CustomDrawer>

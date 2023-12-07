@@ -13,6 +13,7 @@ import Octicons from 'react-native-vector-icons/Octicons';
 import Foundation from 'react-native-vector-icons/Foundation';
 import EvilIcons from 'react-native-vector-icons/EvilIcons';
 import Fontisto from 'react-native-vector-icons/Fontisto';
+import Zocial from 'react-native-vector-icons/Zocial'
 
 export const Icons = {
     MaterialCommunityIcons,
@@ -28,7 +29,8 @@ export const Icons = {
     Octicons,
     Foundation,
     EvilIcons,
-    Fontisto
+    Fontisto,
+    Zocial
 }
 
 const Icon = ({ type, name, color, size = 24, style }) => {
