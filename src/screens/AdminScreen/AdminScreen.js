@@ -15,7 +15,9 @@ export default function AdminScreen({ navigation }) {
         getData();
     }, []);
 
-    const [activeSlide, setActiveSlide] = useState(0);
+    const [InfoCarouselActiveSlide, SetInfoCarouselActiveSlide] = useState(0);
+    const [AppInfoCarouselActiveSlide, SetAppInfoCarouselActiveSlide] = useState(2);
+
 
     const [canBeShowed, setCanBeShowed] = useState(false);
 
@@ -123,11 +125,13 @@ export default function AdminScreen({ navigation }) {
             const feedBacksQuery =
                 'SELECT COUNT(*) as feedBacksCount FROM UsersFeedbacks';
             const likedMoviesQuery = 'SELECT COUNT(*) as likedMoviesCount FROM likedMovies';
+            const lastRegisteredUserQuery = 'SELECT userLogin FROM Users ORDER BY userId DESC LIMIT 1'
 
             const ratesResult = await fetchData(ratesQuery);
             const cityResult = await fetchData(mostPopularCityQuery);
             const feedBacksResult = await fetchData(feedBacksQuery);
             const likedMoviesResult = await fetchData(likedMoviesQuery);
+            const lastRegisteredUserResult = await fetchData(lastRegisteredUserQuery);
 
 
             const averageRating =
@@ -138,6 +142,7 @@ export default function AdminScreen({ navigation }) {
             const mostPopularCity = cityResult.userCity;
             const feedBacksCount = feedBacksResult.feedBacksCount;
             const likedMoviesCount = likedMoviesResult.likedMoviesCount;
+            const lastRegisteredUser = lastRegisteredUserResult.userLogin;
 
             const newAppData = [
                 {
@@ -191,6 +196,22 @@ export default function AdminScreen({ navigation }) {
                     description:
                         'Число фильмов, добавленных пользователями в избранное',
                 },
+                {
+                    id: 5,
+                    title: <Text style={{ fontSize: 18 }}>Последний{'\n'}зарегестрировавшийся{'\n'}пользователь</Text>,
+                    count: <Text style={{ fontSize: 32, fontFamily: 'Inter-ExtraBold' }}>{lastRegisteredUser}</Text>,
+                    icon: (
+                        <Icons.FontAwesome5
+                            name="user-plus"
+                            color="white"
+                            size={70}
+                        />
+                    ),
+                    color1: '#30c5d2',
+                    color2: '#471069',
+                    description:
+                        'Последний пользователь, зарегестрировавшийся в приложении.',
+                },
             ];
 
             setAppData(newAppData);
@@ -220,6 +241,9 @@ export default function AdminScreen({ navigation }) {
                                 fontFamily: 'Inter-ExtraBold',
                                 fontSize: 32,
                                 textAlign: 'center',
+                                textShadowColor: 'rgba(226, 232, 240, 0.25)',
+                                textShadowOffset: { width: 0, height: 3 },
+                                textShadowRadius: 4,
                             }}
                             minDelay={0.2}
                             typing={1}
@@ -228,7 +252,7 @@ export default function AdminScreen({ navigation }) {
                             Добро пожаловать!
                         </TypeWriter>
 
-                        <InfoCarousel data={data} setActiveSlide={setActiveSlide} />
+                        <InfoCarousel data={data} setActiveSlide={SetInfoCarouselActiveSlide} />
 
                         <View style={{}}>
                             <CustomButton
@@ -238,9 +262,9 @@ export default function AdminScreen({ navigation }) {
                             />
                         </View>
                         <AppInfoCarousel
-                            activeSlide={activeSlide}
+                            activeSlide={AppInfoCarouselActiveSlide}
                             data={appData}
-                            setActiveSlide={setActiveSlide}
+                            setActiveSlide={SetAppInfoCarouselActiveSlide}
                         />
                     </View>
                 </CustomDrawer>

@@ -12,9 +12,9 @@ export default function AppInfoCarousel({ activeSlide, data, setActiveSlide }) {
 
     return (
         <Carousel
-            //autoplay={true}
-            //autoplayDelay={2000}
-            //autoplayInterval={6000}
+            autoplay={true}
+            autoplayDelay={2000}
+            autoplayInterval={3000}
             data={data}
             renderItem={({ item, index }) => (
                 <>
@@ -59,11 +59,11 @@ export default function AppInfoCarousel({ activeSlide, data, setActiveSlide }) {
 
                     </GradientBackground>
                     {activeSlide === item.id - 1 && (
-                        <AnimatedText activeSlide={activeSlide} title={item.description} />
+                        <AnimatedText activeSlide={activeSlide} title={<Text style={{ fontFamily: 'Inter-Light' }}>{item.description}</Text>} />
                     )}
                 </>
             )}
-            firstItem={0}
+            firstItem={2}
             inactiveSlideOpacity={0.6}
             sliderWidth={width}
             sliderHeight={width}
