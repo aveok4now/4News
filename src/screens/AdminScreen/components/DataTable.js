@@ -5,8 +5,7 @@ import { width } from '../../../utils/getDimensions';
 
 export default function DataTable({ data }) {
     if (!data || data.length === 0) {
-        // Если data не существует или пустой массив, можно вернуть сообщение об отсутствии данных
-        return <Text style={styles.noDataText}>No data available</Text>;
+        return <Text style={styles.noDataText}>Данных пока нет.</Text>;
     }
 
     return (
@@ -25,7 +24,6 @@ export default function DataTable({ data }) {
                             {Object.values(row).map((value, columnIndex) => (
                                 <Text style={styles.cell} key={columnIndex}>
                                     {value && value.length > 20 ? value.slice(0, 20) + '...' : value}
-
                                 </Text>
                             ))}
                         </View>

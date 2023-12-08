@@ -13,6 +13,7 @@ import { formatDate } from './utils/formateDate';
 import Loader from '../../components/MovieNewsComponents/Loader';
 import AboutApp from './components/AboutApp';
 import TablesCarousel from './components/TablesCarousel';
+import Title from './components/Title';
 
 export default function AdminScreen({ navigation }) {
     useEffect(() => {
@@ -209,7 +210,6 @@ export default function AdminScreen({ navigation }) {
             const likedMoviesResult = await fetchData(likedMoviesQuery);
             const lastRegisteredUserResult = await fetchData(lastRegisteredUserQuery);
 
-
             const averageRating =
                 ratesResult && ratesResult.averageRating
                     ? parseFloat(ratesResult.averageRating).toFixed(2)
@@ -341,6 +341,7 @@ export default function AdminScreen({ navigation }) {
                                 onTypingEnd={() => setCanBeShowed(true)}>
                                 Добро пожаловать!
                             </TypeWriter>
+
                             <Text style={{ textAlign: 'center', fontFamily: 'Inter-Light' }}>
                                 {formatDate(currentTime)}
                             </Text>
@@ -358,42 +359,23 @@ export default function AdminScreen({ navigation }) {
                                 />
                             </View>
 
-                            <View style={{ padding: 8 }}>
-                                <Text
-                                    style={{
-                                        fontFamily: 'Inter-Black',
-                                        fontSize: 32,
-                                        textShadowColor: 'rgba(226, 232, 240, 0.25)',
-                                        textShadowOffset: { width: 0, height: 3 },
-                                        textShadowRadius: 4,
-                                    }}>
-                                    Статистика
-                                </Text>
-                            </View>
+                            <Title title={'Статистика'} />
+
                             <AppInfoCarousel
                                 activeSlide={AppInfoCarouselActiveSlide}
                                 data={appData}
                                 setActiveSlide={SetAppInfoCarouselActiveSlide}
                             />
 
-                            <View style={{ padding: 8 }}>
-                                <Text
-                                    style={{
-                                        fontFamily: 'Inter-Black',
-                                        fontSize: 32,
-                                        textShadowColor: 'rgba(226, 232, 240, 0.25)',
-                                        textShadowOffset: { width: 0, height: 3 },
-                                        textShadowRadius: 4,
-                                    }}>
-                                    Таблицы
-                                </Text>
-                            </View>
+                            <Title title="Таблицы" />
 
                             <TablesCarousel
                                 navigation={navigation}
                                 data={tablesData}
                                 setActiveSlide={SetTablesCarouselActiveSlide}
                             />
+
+                            <Title title="О приложении" />
 
                             <AboutApp />
                             {/* {usersData.length > 0 && <UserTable table={usersData} />} */}

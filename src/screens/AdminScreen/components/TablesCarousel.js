@@ -1,10 +1,40 @@
 import { View, Text, TouchableOpacity } from 'react-native';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import Carousel from 'react-native-snap-carousel';
 import { width, height } from '../../../utils/getDimensions';
 import { theme } from '../../MovieNewsScreen/theme';
 import DataTable from './DataTable';
 import SQLite from 'react-native-sqlite-storage';
+import Loader from '../../../components/MovieNewsComponents/Loader';
+import { ActivityIndicator } from 'react-native-paper';
+
+
+class TableItem extends React.PureComponent {
+    render() {
+        const { icon, onPress } = this.props;
+
+        return (
+            <View
+                style={{
+                    borderWidth: 1,
+                    borderColor: theme.bgWhite(0.1),
+                    width: width * 0.55,
+                    height: height * 0.25,
+                    backgroundColor: theme.bgWhite(0.2),
+                    borderRadius: width * 0.3,
+                    marginTop: 16,
+                }}>
+                <TouchableOpacity
+                    onPress={onPress}
+                    style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                    {icon}
+                </TouchableOpacity>
+            </View>
+        );
+    }
+
+}
+
 
 export default function TablesCarousel({ data, setActiveSlide, navigation }) {
     const [showTable, setShowTable] = useState(false);
@@ -12,8 +42,11 @@ export default function TablesCarousel({ data, setActiveSlide, navigation }) {
     const [selectedTable, setSelectedTable] = useState(null);
     const [tableData, setTableData] = useState([]);
 
+    const [isLoading, setIsLoading] = useState(false);
+
     const fetchDataForTable = async tableName => {
         try {
+            setIsLoading(true);
             const query = `SELECT * FROM ${tableName}`;
             const db = await SQLite.openDatabase({ name: 'news.db', location: 1 });
             const result = await db.executeSql(query);
@@ -25,6 +58,7 @@ export default function TablesCarousel({ data, setActiveSlide, navigation }) {
             }
 
             setTableData(tableRows);
+            setIsLoading(false);
         } catch (err) {
             console.log(err);
             setTableData([]);
@@ -42,31 +76,17 @@ export default function TablesCarousel({ data, setActiveSlide, navigation }) {
         }
     }, [selectedTable]);
 
+    const tableItems = useMemo(() => {
+        return data.map((item, index) => (
+            <TableItem key={index} icon={item.icon} onPress={() => handleIconPress(item.name)} />
+        ));
+    }, [data, handleIconPress]);
+
     return (
         <>
             <Carousel
-                //autoplay={true}
-                // autoplayDelay={2000}
-                //autoplayInterval={3000}
                 data={data}
-                renderItem={({ item, index }) => (
-                    <View
-                        style={{
-                            borderWidth: 1,
-                            borderColor: theme.bgWhite(0.1),
-                            width: width * 0.55,
-                            height: height * 0.25,
-                            backgroundColor: theme.bgWhite(0.2),
-                            borderRadius: width * 0.3,
-                            marginTop: 16,
-                        }}>
-                        <TouchableOpacity
-                            onPress={() => handleIconPress(item.name)}
-                            style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                            {item.icon}
-                        </TouchableOpacity>
-                    </View>
-                )}
+                renderItem={({ item, index }) => tableItems[index]}
                 firstItem={0}
                 inactiveSlideOpacity={0.5}
                 sliderWidth={width}
@@ -75,10 +95,13 @@ export default function TablesCarousel({ data, setActiveSlide, navigation }) {
                 slideStyle={{ display: 'flex', alignItems: 'center' }}
                 onSnapToItem={index => {
                     setActiveSlide(index);
-                    //handleIconPress(data[index].name);
+                    handleIconPress(data[index].name);
                 }}
             />
-            {showTable && <DataTable data={tableData} />}
+            {isLoading && (
+                <ActivityIndicator style={{ marginTop: 20 }} size={30} color='white' />
+            )}
+            {showTable && !isLoading && <DataTable data={tableData} />}
         </>
     );
 }
