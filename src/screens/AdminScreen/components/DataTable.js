@@ -1,26 +1,33 @@
 import React from 'react';
 import { View, Text, StyleSheet, ScrollView } from 'react-native';
 import { theme } from '../../MovieNewsScreen/theme';
+import { width } from '../../../utils/getDimensions';
 
-export default function UserTable({ users }) {
+export default function DataTable({ data }) {
+    if (!data || data.length === 0) {
+        // Если data не существует или пустой массив, можно вернуть сообщение об отсутствии данных
+        return <Text style={styles.noDataText}>No data available</Text>;
+    }
+
     return (
         <View style={styles.container}>
             <ScrollView horizontal={true}>
                 <View style={styles.table}>
                     <View style={styles.headerRow}>
-                        <Text style={styles.headerText}>User ID</Text>
-                        <Text style={styles.headerText}>User Login</Text>
-                        <Text style={styles.headerText}>User Password</Text>
-                        <Text style={styles.headerText}>User Email</Text>
-                        <Text style={styles.headerText}>User City</Text>
+                        {Object.keys(data[0]).map((key) => (
+                            <Text style={styles.headerText} key={key}>
+                                {key}
+                            </Text>
+                        ))}
                     </View>
-                    {users.map((user) => (
-                        <View style={styles.row} key={user.userId}>
-                            <Text style={styles.cell}>{user.userId}</Text>
-                            <Text style={styles.cell}>{user.userLogin}</Text>
-                            <Text style={styles.cell}>{user.userPassword}</Text>
-                            <Text style={styles.cell}>{user.userEmail}</Text>
-                            <Text style={styles.cell}>{user.userCity}</Text>
+                    {data.map((row, rowIndex) => (
+                        <View style={styles.row} key={rowIndex}>
+                            {Object.values(row).map((value, columnIndex) => (
+                                <Text style={styles.cell} key={columnIndex}>
+                                    {value && value.length > 20 ? value.slice(0, 20) + '...' : value}
+
+                                </Text>
+                            ))}
                         </View>
                     ))}
                 </View>
@@ -29,13 +36,16 @@ export default function UserTable({ users }) {
     );
 }
 
+
 const styles = StyleSheet.create({
     container: {
         flex: 1,
         padding: 8,
+
     },
     table: {
         backgroundColor: theme.bgWhite(0.1),
+        //width: width
     },
     headerRow: {
         flexDirection: 'row',

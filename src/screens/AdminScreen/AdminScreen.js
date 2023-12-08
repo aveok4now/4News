@@ -12,7 +12,6 @@ import AppInfoCarousel from './components/appInfoCarousel';
 import { formatDate } from './utils/formateDate';
 import Loader from '../../components/MovieNewsComponents/Loader';
 import AboutApp from './components/AboutApp';
-import UserTable from './components/UserTable';
 import TablesCarousel from './components/TablesCarousel';
 
 export default function AdminScreen({ navigation }) {
@@ -40,54 +39,53 @@ export default function AdminScreen({ navigation }) {
     const [data, setData] = useState([]);
     const [appData, setAppData] = useState([]);
 
-    const [usersData, setUsersData] = useState([]);
-
     const [tablesData, setTablesData] = useState([
         {
             id: 1,
             icon: <Icons.FontAwesome5 name="users" size={90} />,
-            name: 'Таблица Пользователей',
+            name: 'Users',
         },
         {
             id: 2,
             icon: <Icons.Entypo name="mask" size={90} />,
-            name: 'Таблица Гостей'
+            name: 'Guests',
         },
         {
             id: 3,
             icon: <Icons.FontAwesome6 name="users-gear" size={90} />,
-            name: 'Таблица Администраторов'
+            name: 'Administrators',
         },
         {
             id: 4,
-            icon: <Icons.MaterialCommunityIcons name="newspaper-variant-multiple" size={90} />,
-            name: 'Таблица Новостей'
+            icon: (
+                <Icons.MaterialCommunityIcons
+                    name="newspaper-variant-multiple"
+                    size={90}
+                />
+            ),
+            name: 'News',
         },
         {
             id: 5,
             icon: <Icons.MaterialIcons name="category" size={90} />,
-            name: 'Таблица Категорий'
+            name: 'Categories',
         },
         {
             id: 6,
             icon: <Icons.FontAwesome name="heartbeat" size={90} />,
-            name: 'Таблица Лайков'
+            name: 'Likes',
         },
         {
             id: 7,
             icon: <Icons.FontAwesome name="comments-o" size={90} />,
-            name: 'Таблица Комментариев'
+            name: 'Comments',
         },
         {
             id: 8,
-            icon: <Icons.FontAwesome name="comments-o" size={90} />,
-            name: 'Таблица Оценок'
-        }
-
-
-    ])
-
-
+            icon: <Icons.FontAwesome name="star" size={90} />,
+            name: 'Rates',
+        },
+    ]);
 
     const [currentTime, setCurrentTime] = useState(new Date());
 
@@ -116,7 +114,7 @@ export default function AdminScreen({ navigation }) {
                 favoritesResult,
                 guestsResult,
                 ratesResult,
-                commentsResult
+                commentsResult,
             ] = await Promise.all([
                 fetchData(usersQuery),
                 fetchData(adminsQuery),
@@ -125,7 +123,7 @@ export default function AdminScreen({ navigation }) {
                 fetchData(favoritesQuery),
                 fetchData(guestsQuery),
                 fetchData(ratesQuery),
-                fetchData(commentsQuery)
+                fetchData(commentsQuery),
             ]);
 
             const getCount = (result, key) =>
@@ -179,9 +177,7 @@ export default function AdminScreen({ navigation }) {
                     id: 7,
                     title: 'Комментариев',
                     count: getCount(commentsResult, 'commentsCount'),
-                    icon: (
-                        <Icons.FontAwesome5 name="comments" color="white" size={90} />
-                    ),
+                    icon: <Icons.FontAwesome5 name="comments" color="white" size={90} />,
                 },
             ];
 
@@ -213,7 +209,6 @@ export default function AdminScreen({ navigation }) {
             const likedMoviesResult = await fetchData(likedMoviesQuery);
             const lastRegisteredUserResult = await fetchData(lastRegisteredUserQuery);
 
-            const getAllUsersInfo = await fetchAllUsers();
 
             const averageRating =
                 ratesResult && ratesResult.averageRating
@@ -224,23 +219,6 @@ export default function AdminScreen({ navigation }) {
             const feedBacksCount = feedBacksResult.feedBacksCount;
             const likedMoviesCount = likedMoviesResult.likedMoviesCount;
             const lastRegisteredUser = lastRegisteredUserResult.userLogin;
-
-            console.log('Number of users:', getAllUsersInfo.length);
-
-            console.log('getAllUsersInfo', getAllUsersInfo);
-
-            if (getAllUsersInfo && getAllUsersInfo.length > 0) {
-                const users = getAllUsersInfo;
-                setUsersData(users);
-
-                for (const user of users) {
-                    const userId = user.userId;
-                    const userLogin = user.userLogin;
-                    const userPassword = user.userPassword;
-                    const userEmail = user.userEmail;
-                    const userCity = user.userCity;
-                }
-            }
 
             const newAppData = [
                 {
@@ -381,11 +359,14 @@ export default function AdminScreen({ navigation }) {
                             </View>
 
                             <View style={{ padding: 8 }}>
-                                <Text style={{
-                                    fontFamily: 'Inter-Black', fontSize: 32, textShadowColor: 'rgba(226, 232, 240, 0.25)',
-                                    textShadowOffset: { width: 0, height: 3 },
-                                    textShadowRadius: 4,
-                                }}>
+                                <Text
+                                    style={{
+                                        fontFamily: 'Inter-Black',
+                                        fontSize: 32,
+                                        textShadowColor: 'rgba(226, 232, 240, 0.25)',
+                                        textShadowOffset: { width: 0, height: 3 },
+                                        textShadowRadius: 4,
+                                    }}>
                                     Статистика
                                 </Text>
                             </View>
@@ -396,11 +377,14 @@ export default function AdminScreen({ navigation }) {
                             />
 
                             <View style={{ padding: 8 }}>
-                                <Text style={{
-                                    fontFamily: 'Inter-Black', fontSize: 32, textShadowColor: 'rgba(226, 232, 240, 0.25)',
-                                    textShadowOffset: { width: 0, height: 3 },
-                                    textShadowRadius: 4,
-                                }}>
+                                <Text
+                                    style={{
+                                        fontFamily: 'Inter-Black',
+                                        fontSize: 32,
+                                        textShadowColor: 'rgba(226, 232, 240, 0.25)',
+                                        textShadowOffset: { width: 0, height: 3 },
+                                        textShadowRadius: 4,
+                                    }}>
                                     Таблицы
                                 </Text>
                             </View>
@@ -409,7 +393,6 @@ export default function AdminScreen({ navigation }) {
                                 navigation={navigation}
                                 data={tablesData}
                                 setActiveSlide={SetTablesCarouselActiveSlide}
-                                usersData={usersData}
                             />
 
                             <AboutApp />

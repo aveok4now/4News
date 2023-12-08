@@ -1,12 +1,47 @@
 import { View, Text, TouchableOpacity } from 'react-native';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Carousel from 'react-native-snap-carousel';
 import { width, height } from '../../../utils/getDimensions';
 import { theme } from '../../MovieNewsScreen/theme';
-import UserTable from './UserTable';
+import DataTable from './DataTable';
+import SQLite from 'react-native-sqlite-storage';
 
-export default function TablesCarousel({ data, setActiveSlide, navigation, usersData }) {
+export default function TablesCarousel({ data, setActiveSlide, navigation }) {
     const [showTable, setShowTable] = useState(false);
+
+    const [selectedTable, setSelectedTable] = useState(null);
+    const [tableData, setTableData] = useState([]);
+
+    const fetchDataForTable = async tableName => {
+        try {
+            const query = `SELECT * FROM ${tableName}`;
+            const db = await SQLite.openDatabase({ name: 'news.db', location: 1 });
+            const result = await db.executeSql(query);
+            const rows = result[0].rows;
+            const tableRows = [];
+
+            for (let i = 0; i < rows.length; i++) {
+                tableRows.push(rows.item(i));
+            }
+
+            setTableData(tableRows);
+        } catch (err) {
+            console.log(err);
+            setTableData([]);
+        }
+    };
+
+    const handleIconPress = tableName => {
+        setSelectedTable(tableName === selectedTable ? null : tableName);
+    };
+
+    useEffect(() => {
+        if (selectedTable) {
+            fetchDataForTable(selectedTable);
+            setShowTable(true);
+        }
+    }, [selectedTable]);
+
     return (
         <>
             <Carousel
@@ -15,7 +50,6 @@ export default function TablesCarousel({ data, setActiveSlide, navigation, users
                 //autoplayInterval={3000}
                 data={data}
                 renderItem={({ item, index }) => (
-
                     <View
                         style={{
                             borderWidth: 1,
@@ -26,13 +60,12 @@ export default function TablesCarousel({ data, setActiveSlide, navigation, users
                             borderRadius: width * 0.3,
                             marginTop: 16,
                         }}>
-                        <View
+                        <TouchableOpacity
+                            onPress={() => handleIconPress(item.name)}
                             style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                            <TouchableOpacity onPress={() => setShowTable(!showTable)}>{item.icon}</TouchableOpacity>
-                        </View>
-
+                            {item.icon}
+                        </TouchableOpacity>
                     </View>
-
                 )}
                 firstItem={0}
                 inactiveSlideOpacity={0.5}
@@ -40,12 +73,12 @@ export default function TablesCarousel({ data, setActiveSlide, navigation, users
                 sliderHeight={width}
                 itemWidth={width * 0.62}
                 slideStyle={{ display: 'flex', alignItems: 'center' }}
-                onSnapToItem={index => setActiveSlide(index)}
+                onSnapToItem={index => {
+                    setActiveSlide(index);
+                    //handleIconPress(data[index].name);
+                }}
             />
-            {showTable && (
-                <UserTable users={usersData} />
-            )}
+            {showTable && <DataTable data={tableData} />}
         </>
-
     );
 }
