@@ -29,7 +29,8 @@ const Card = ({ item, navigation, data, needMargin = true }) => {
     //console.log(item);
     const [imageLoaded, setImageLoaded] = useState(false);
     const [isImageLoading, setIsImageLoading] = useState(true);
-    const [imageUrl, setImageUrl] = useState(item.urlToImage || defaultImage);
+
+    let imageUrl = item.urlToImage || defaultImage;
 
     const [isLiked, setIsLiked] = useState(false);
     const [isShared, setIsShared] = useState(false);
@@ -191,17 +192,16 @@ const Card = ({ item, navigation, data, needMargin = true }) => {
                         animation="fadeIn"
                         duration={1000}
                         source={{ uri: imageUrl }}
-                        defaultSource={{ uri: defaultImage }}
                         style={[
                             styles.image,
                             {
-                                //opacity: imageLoaded ? 1 : 0,
+                                opacity: imageLoaded ? 1 : 0,
                             },
                             styles.shadowProp,
                             { shadowOpacity: 0.8 },
                         ]}
                         onLoad={handleImageLoad}
-                        onError={() => setIsImageLoading(false)}
+                        //onError={() => setIsImageLoading(false)}
                         resizeMethod="resize"
                     />
                 </Pressable>

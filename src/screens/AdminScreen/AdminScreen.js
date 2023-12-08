@@ -13,6 +13,7 @@ import { formatDate } from './utils/formateDate';
 import Loader from '../../components/MovieNewsComponents/Loader';
 import AboutApp from './components/AboutApp';
 import UserTable from './components/UserTable';
+import TablesCarousel from './components/TablesCarousel';
 
 export default function AdminScreen({ navigation }) {
     useEffect(() => {
@@ -32,12 +33,61 @@ export default function AdminScreen({ navigation }) {
     const [InfoCarouselActiveSlide, SetInfoCarouselActiveSlide] = useState(0);
     const [AppInfoCarouselActiveSlide, SetAppInfoCarouselActiveSlide] =
         useState(2);
+    const [TablesCarouselActiveSlide, SetTablesCarouselActiveSlide] = useState(0);
 
     const [canBeShowed, setCanBeShowed] = useState(false);
 
     const [data, setData] = useState([]);
     const [appData, setAppData] = useState([]);
+
     const [usersData, setUsersData] = useState([]);
+
+    const [tablesData, setTablesData] = useState([
+        {
+            id: 1,
+            icon: <Icons.FontAwesome5 name="users" size={90} />,
+            name: 'Таблица Пользователей',
+        },
+        {
+            id: 2,
+            icon: <Icons.Entypo name="mask" size={90} />,
+            name: 'Таблица Гостей'
+        },
+        {
+            id: 3,
+            icon: <Icons.FontAwesome6 name="users-gear" size={90} />,
+            name: 'Таблица Администраторов'
+        },
+        {
+            id: 4,
+            icon: <Icons.MaterialCommunityIcons name="newspaper-variant-multiple" size={90} />,
+            name: 'Таблица Новостей'
+        },
+        {
+            id: 5,
+            icon: <Icons.MaterialIcons name="category" size={90} />,
+            name: 'Таблица Категорий'
+        },
+        {
+            id: 6,
+            icon: <Icons.FontAwesome name="heartbeat" size={90} />,
+            name: 'Таблица Лайков'
+        },
+        {
+            id: 7,
+            icon: <Icons.FontAwesome name="comments-o" size={90} />,
+            name: 'Таблица Комментариев'
+        },
+        {
+            id: 8,
+            icon: <Icons.FontAwesome name="comments-o" size={90} />,
+            name: 'Таблица Оценок'
+        }
+
+
+    ])
+
+
 
     const [currentTime, setCurrentTime] = useState(new Date());
 
@@ -56,6 +106,7 @@ export default function AdminScreen({ navigation }) {
                 'SELECT COUNT(*) as favoritesCount from UserFavorites';
             const guestsQuery = 'SELECT COUNT(*) as guestsCount from Guests';
             const ratesQuery = 'SELECT id, AVG(rating) as ratesCount from Rates';
+            const commentsQuery = 'SELECT COUNT(*) as commentsCount from Comments';
 
             const [
                 usersResult,
@@ -65,6 +116,7 @@ export default function AdminScreen({ navigation }) {
                 favoritesResult,
                 guestsResult,
                 ratesResult,
+                commentsResult
             ] = await Promise.all([
                 fetchData(usersQuery),
                 fetchData(adminsQuery),
@@ -73,6 +125,7 @@ export default function AdminScreen({ navigation }) {
                 fetchData(favoritesQuery),
                 fetchData(guestsQuery),
                 fetchData(ratesQuery),
+                fetchData(commentsQuery)
             ]);
 
             const getCount = (result, key) =>
@@ -122,6 +175,14 @@ export default function AdminScreen({ navigation }) {
                         <Icons.FontAwesome5 name="user-secret" color="white" size={90} />
                     ),
                 },
+                {
+                    id: 7,
+                    title: 'Комментариев',
+                    count: getCount(commentsResult, 'commentsCount'),
+                    icon: (
+                        <Icons.FontAwesome5 name="comments" color="white" size={90} />
+                    ),
+                },
             ];
 
             setData(newData);
@@ -169,7 +230,6 @@ export default function AdminScreen({ navigation }) {
             console.log('getAllUsersInfo', getAllUsersInfo);
 
             if (getAllUsersInfo && getAllUsersInfo.length > 0) {
-
                 const users = getAllUsersInfo;
                 setUsersData(users);
 
@@ -319,17 +379,41 @@ export default function AdminScreen({ navigation }) {
                                     onPress={downloadFile}
                                 />
                             </View>
+
+                            <View style={{ padding: 8 }}>
+                                <Text style={{
+                                    fontFamily: 'Inter-Black', fontSize: 32, textShadowColor: 'rgba(226, 232, 240, 0.25)',
+                                    textShadowOffset: { width: 0, height: 3 },
+                                    textShadowRadius: 4,
+                                }}>
+                                    Статистика
+                                </Text>
+                            </View>
                             <AppInfoCarousel
                                 activeSlide={AppInfoCarouselActiveSlide}
                                 data={appData}
                                 setActiveSlide={SetAppInfoCarouselActiveSlide}
                             />
 
-                            {usersData.length > 0 && (
-                                <UserTable users={usersData} />
-                            )}
+                            <View style={{ padding: 8 }}>
+                                <Text style={{
+                                    fontFamily: 'Inter-Black', fontSize: 32, textShadowColor: 'rgba(226, 232, 240, 0.25)',
+                                    textShadowOffset: { width: 0, height: 3 },
+                                    textShadowRadius: 4,
+                                }}>
+                                    Таблицы
+                                </Text>
+                            </View>
+
+                            <TablesCarousel
+                                navigation={navigation}
+                                data={tablesData}
+                                setActiveSlide={SetTablesCarouselActiveSlide}
+                                usersData={usersData}
+                            />
 
                             <AboutApp />
+                            {/* {usersData.length > 0 && <UserTable table={usersData} />} */}
                         </ScrollView>
                     </CustomDrawer>
                 </Animatable.View>

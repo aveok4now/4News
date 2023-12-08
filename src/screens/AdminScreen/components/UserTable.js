@@ -1,40 +1,62 @@
-import { View, Text, FlatList, StyleSheet } from 'react-native';
+import React from 'react';
+import { View, Text, StyleSheet, ScrollView } from 'react-native';
+import { theme } from '../../MovieNewsScreen/theme';
 
 export default function UserTable({ users }) {
-    const renderItem = ({ item }) => (
-        <View style={styles.row}>
-            <Text>{item.userId}</Text>
-            <Text>{item.userLogin}</Text>
-            <Text>{item.userPassword}</Text>
-            <Text>{item.userEmail}</Text>
-            <Text>{item.userCity}</Text>
-        </View>
-    );
-
     return (
         <View style={styles.container}>
-            <View style={styles.headerRow}>
-                <Text>User ID</Text>
-                <Text>User Login</Text>
-                <Text>User Password</Text>
-                <Text>User Email</Text>
-                <Text>User City</Text>
-            </View>
-            <FlatList
-                data={users}
-                renderItem={renderItem}
-                keyExtractor={(item) => item.userId.toString()}
-            />
+            <ScrollView horizontal={true}>
+                <View style={styles.table}>
+                    <View style={styles.headerRow}>
+                        <Text style={styles.headerText}>User ID</Text>
+                        <Text style={styles.headerText}>User Login</Text>
+                        <Text style={styles.headerText}>User Password</Text>
+                        <Text style={styles.headerText}>User Email</Text>
+                        <Text style={styles.headerText}>User City</Text>
+                    </View>
+                    {users.map((user) => (
+                        <View style={styles.row} key={user.userId}>
+                            <Text style={styles.cell}>{user.userId}</Text>
+                            <Text style={styles.cell}>{user.userLogin}</Text>
+                            <Text style={styles.cell}>{user.userPassword}</Text>
+                            <Text style={styles.cell}>{user.userEmail}</Text>
+                            <Text style={styles.cell}>{user.userCity}</Text>
+                        </View>
+                    ))}
+                </View>
+            </ScrollView>
         </View>
     );
-};
+}
 
 const styles = StyleSheet.create({
     container: {
-        // flexDirection: 'row'
+        flex: 1,
+        padding: 8,
+    },
+    table: {
+        backgroundColor: theme.bgWhite(0.1),
     },
     headerRow: {
         flexDirection: 'row',
-        marginHorizontal: 8
-    }
-})
+        backgroundColor: theme.bgWhite(0.2),
+        paddingVertical: 8,
+        paddingHorizontal: 16,
+    },
+    headerText: {
+        fontWeight: 'bold',
+        flex: 1,
+        marginRight: 16,
+    },
+    row: {
+        flexDirection: 'row',
+        paddingVertical: 8,
+        paddingHorizontal: 16,
+        borderBottomWidth: 1,
+        borderBottomColor: '#ccc',
+    },
+    cell: {
+        flex: 1,
+        marginRight: 16,
+    },
+});
