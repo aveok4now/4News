@@ -32,6 +32,7 @@ export default function AdminScreen({ navigation }) {
     }, []);
 
     const [isLoading, setIsLoading] = useState(true);
+    const [isRefreshing, setIsRefreshing] = useState(false);
 
     const [InfoCarouselActiveSlide, SetInfoCarouselActiveSlide] = useState(0);
     const [AppInfoCarouselActiveSlide, SetAppInfoCarouselActiveSlide] =
@@ -365,11 +366,18 @@ export default function AdminScreen({ navigation }) {
             ];
 
             setAppData(newAppData);
+            setIsRefreshing(false);
             setIsLoading(false);
         } catch (err) {
             console.log(err);
         }
     };
+
+    const onRefresh = async () => {
+        setIsRefreshing(true);
+        setIsLoading(true);
+        await getData();
+    }
 
     return (
         <>
@@ -398,6 +406,8 @@ export default function AdminScreen({ navigation }) {
                         type="Подсистема">
                         {/* Main pure component */}
                         <MemoizedScrollView
+                            onRefresh={onRefresh}
+                            isRefreshing={isRefreshing}
                             style={{ paddingVertical: 8 }}
                             showsVerticalScrollIndicator={false}>
                             {/* Title */}
