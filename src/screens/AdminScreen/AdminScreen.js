@@ -86,6 +86,16 @@ export default function AdminScreen({ navigation }) {
             icon: <Icons.FontAwesome name="star" size={90} />,
             name: 'Rates',
         },
+        {
+            id: 9,
+            icon: <Icons.Fontisto name="favorite" size={90} />,
+            name: 'UserFavorites',
+        },
+        {
+            id: 10,
+            icon: <Icons.MaterialCommunityIcons name="movie" size={90} />,
+            name: 'likedMovies',
+        },
     ]);
 
     const [currentTime, setCurrentTime] = useState(new Date());
@@ -95,6 +105,36 @@ export default function AdminScreen({ navigation }) {
     const getData = async () => {
         try {
             const db = await SQLite.openDatabase({ name: 'news.db', location: 1 });
+
+            // let query = 'UPDATE Administrators SET adminPosts = ? WHERE adminId = ?';
+            // let queryArgs = [1, 46];
+
+            // await db.executeSql(query, queryArgs);
+
+            // let query = 'ALTER TABLE News ADD COLUMN Likes'
+
+            // await db.executeSql(query);
+
+            //     let query = `CREATE TABLE News_temp
+            //     (newsId INTEGER PRIMARY KEY AUTOINCREMENT, AuthorName VARCHAR NOT NULL,
+            //          newsTitle TEXT NOT NULL, publishDate DATE NOT NULL,
+            //          AuthorAdminId INTEGER, AuthorUserId INTEGER, categoryType VARCHAR NOT NULL);
+            //  INSERT INTO News_temp(newsId, AuthorName, newsTitle, publishDate,
+            //      AuthorAdminId, AuthorUserId, categoryType) SELECT newsId,
+            //      AuthorName, newsTitle, publishDate, AuthorAdminId,
+            //      AuthorUserId, categoryType FROM News;
+            //  DROP TABLE News;
+            //  ALTER TABLE News_temp RENAME TO News; `
+
+            //     await db.executeSql(query)
+
+            // let query = `INSERT INTO Categories VALUES (?, ?)`
+            // let queryArgs = [8, 'Технологии'];
+
+            // await db.executeSql(query, queryArgs);
+
+            let query = `DELETE FROM Comments WHERE id >= 7 AND id <= 19`;
+            await db.executeSql(query);
 
             const usersQuery =
                 'SELECT COUNT(*) as usersCount from Users where userLogin NOT LIKE "admin%"';
@@ -203,12 +243,15 @@ export default function AdminScreen({ navigation }) {
                 'SELECT COUNT(*) as likedMoviesCount FROM likedMovies';
             const lastRegisteredUserQuery =
                 'SELECT userLogin FROM Users ORDER BY userId DESC LIMIT 1';
+            const lastSavedMovieQuery =
+                'SELECT title FROM likedMovies WHERE ROWID = last_insert_rowid()';
 
             const ratesResult = await fetchData(ratesQuery);
             const cityResult = await fetchData(mostPopularCityQuery);
             const feedBacksResult = await fetchData(feedBacksQuery);
             const likedMoviesResult = await fetchData(likedMoviesQuery);
             const lastRegisteredUserResult = await fetchData(lastRegisteredUserQuery);
+            const lastSavedMovieResult = await fetchData(lastSavedMovieQuery);
 
             const averageRating =
                 ratesResult && ratesResult.averageRating
@@ -219,6 +262,11 @@ export default function AdminScreen({ navigation }) {
             const feedBacksCount = feedBacksResult.feedBacksCount;
             const likedMoviesCount = likedMoviesResult.likedMoviesCount;
             const lastRegisteredUser = lastRegisteredUserResult.userLogin;
+
+            const lastSavedMovie =
+                lastSavedMovieResult && lastSavedMovieResult.title
+                    ? lastSavedMovieResult.title
+                    : 'N/A';
 
             const newAppData = [
                 {
@@ -288,6 +336,24 @@ export default function AdminScreen({ navigation }) {
                     color2: '#471069',
                     description:
                         'Последний пользователь, зарегестрировавшийся в приложении.',
+                },
+                {
+                    id: 6,
+                    title: (
+                        <Text style={{ fontSize: 22 }}>
+                            Последний{'\n'}лайкнутый фильм
+                        </Text>
+                    ),
+                    count: (
+                        <Text style={{ fontSize: 24, fontFamily: 'Inter-ExtraBold' }}>
+                            {lastSavedMovie}
+                        </Text>
+                    ),
+                    icon: <Icons.MaterialCommunityIcons name="movie-open-star-outline" color="white" size={70} />,
+                    color1: '#b429f9',
+                    color2: '#26c5f3',
+                    description:
+                        'Последний, лайкнутый пользователями, фильм в секции «Новости кино»',
                 },
             ];
 

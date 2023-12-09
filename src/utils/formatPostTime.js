@@ -10,6 +10,7 @@ export const formatPostTime = (postTime, localTime) => {
         try {
             if (postTime.toLowerCase().includes('только что')) {
                 postTimeObject = new Date();
+                return postTime;
             } else if (postTime.toLowerCase().includes('секунд')) {
                 const secondsAgo = parseInt(postTime);
                 postTimeObject = new Date(new Date().getTime() - secondsAgo * 1000);
@@ -24,13 +25,9 @@ export const formatPostTime = (postTime, localTime) => {
             } else if (postTime.toLowerCase().includes('позавчера')) {
                 postTimeObject = new Date(new Date().getTime() - 172800000);
             } else {
-                // postTimeObject = new Date(postTime);
-                // console.warn(postTimeObject)
-                // if (isNaN(postTimeObject.getTime())) {
-                //     console.error('Некорректная дата после преобразования:', postTime);
-                //     return 'Некорректная дата';
-                // }
-                return postTime;
+                postTimeObject = new Date(postTime);
+                if (!postTime.includes('-')) return postTime;
+
             }
         } catch (error) {
             console.error('Ошибка при преобразовании даты:', error);

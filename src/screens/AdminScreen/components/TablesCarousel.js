@@ -22,7 +22,7 @@ class TableItem extends React.PureComponent {
                     height: height * 0.25,
                     backgroundColor: theme.bgWhite(0.2),
                     borderRadius: width * 0.3,
-                    marginTop: 16,
+                    //marginTop: 8,
                 }}>
                 <TouchableOpacity
                     onPress={onPress}
