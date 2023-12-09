@@ -1,13 +1,13 @@
 import { View, Text, TouchableOpacity } from 'react-native';
 import React, { useState, useEffect, useMemo } from 'react';
 import Carousel from 'react-native-snap-carousel';
-import { width, height } from '../../../utils/getDimensions';
-import { theme } from '../../MovieNewsScreen/theme';
+import { width, height } from '../../../../../utils/getDimensions';
+import { theme } from '../../../../MovieNewsScreen/theme';
 import DataTable from './DataTable';
 import SQLite from 'react-native-sqlite-storage';
 import { ActivityIndicator } from 'react-native-paper';
 import * as Animatable from 'react-native-animatable';
-import AnimatedText from '../../../components/UsersNewsComponents/AnimatedText';
+import AnimatedText from '../../../../../components/UsersNewsComponents/AnimatedText';
 
 class TableItem extends React.PureComponent {
     render() {
@@ -32,9 +32,7 @@ class TableItem extends React.PureComponent {
             </View>
         );
     }
-
 }
-
 
 export default function TablesCarousel({ data, setActiveSlide, navigation }) {
     const [showTable, setShowTable] = useState(false);
@@ -65,9 +63,15 @@ export default function TablesCarousel({ data, setActiveSlide, navigation }) {
         }
     };
 
-    const handleIconPress = tableName => {
-        setSelectedTable(tableName === selectedTable ? null : tableName);
+    const handleIconPress = (tableName) => {
+        if (tableName === selectedTable) {
+            setShowTable(!showTable);
+        } else {
+            setSelectedTable(tableName);
+            setShowTable(true);
+        }
     };
+
 
     useEffect(() => {
         if (selectedTable) {
@@ -78,7 +82,11 @@ export default function TablesCarousel({ data, setActiveSlide, navigation }) {
 
     const tableItems = useMemo(() => {
         return data.map((item, index) => (
-            <TableItem key={index} icon={item.icon} onPress={() => handleIconPress(item.name)} />
+            <TableItem
+                key={index}
+                icon={item.icon}
+                onPress={() => handleIconPress(item.name)}
+            />
         ));
     }, [data, handleIconPress]);
 
@@ -100,7 +108,7 @@ export default function TablesCarousel({ data, setActiveSlide, navigation }) {
                 }}
             />
             {isLoading && (
-                <ActivityIndicator style={{ marginTop: 20 }} size={30} color='white' />
+                <ActivityIndicator style={{ marginTop: 20 }} size={30} color="white" />
             )}
             {showTable && !isLoading && <DataTable data={tableData} />}
         </>

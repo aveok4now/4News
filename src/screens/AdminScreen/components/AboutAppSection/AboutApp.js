@@ -1,11 +1,11 @@
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import React from 'react';
 import LottieView from 'lottie-react-native';
-import { width } from '../../../utils/getDimensions';
-import meditatingAnimation from '../../assets/animations/meditating.json';
-import { theme } from '../../MovieNewsScreen/theme';
-import { Icons } from '../../../components/Icons';
-import { openLinkInBrowserHandler } from '../../../components/customs/CustomDrawer/utils/openLink';
+import { width } from '../../../../utils/getDimensions';
+import meditatingAnimation from '../../../assets/animations/meditating.json';
+import { theme } from '../../../MovieNewsScreen/theme';
+import { Icons } from '../../../../components/Icons';
+import { openLinkInBrowserHandler } from '../../../../components/customs/CustomDrawer/utils/openLink';
 
 export default function AboutApp() {
     return (

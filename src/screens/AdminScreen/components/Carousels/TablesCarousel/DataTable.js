@@ -6,8 +6,8 @@ import {
     ScrollView,
     TouchableOpacity,
 } from 'react-native';
-import { theme } from '../../MovieNewsScreen/theme';
-import { width } from '../../../utils/getDimensions';
+import { theme } from '../../../../MovieNewsScreen/theme';
+import { width } from '../../../../../utils/getDimensions';
 
 export default function DataTable({ data }) {
     const [tableData, setTableData] = useState(data);
@@ -109,7 +109,7 @@ const styles = StyleSheet.create({
         padding: 8,
         justifyContent: 'center',
         alignItems: 'center',
-        marginVertical: 16,
+        marginVertical: 8,
     },
     table: {
         backgroundColor: theme.bgWhite(0.1),

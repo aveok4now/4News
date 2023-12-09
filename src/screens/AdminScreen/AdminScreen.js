@@ -3,17 +3,20 @@ import React, { useState, useEffect } from 'react';
 import * as Animatable from 'react-native-animatable';
 import CustomDrawer from '../../components/customs/CustomDrawer';
 import { Icons } from '../../components/Icons';
-import TypeWriter from 'react-native-typewriter';
+
 import CustomButton from '../../components/customs/CustomButton';
-import InfoCarousel from './components/InfoCarousel';
+import InfoCarousel from './components/Carousels/InfoCarousel/InfoCarousel';
 import SQLite from 'react-native-sqlite-storage';
 import { fetchData, downloadFile, fetchAllUsers } from './db/databaseUtils';
-import AppInfoCarousel from './components/appInfoCarousel';
+import AppInfoCarousel from './components/Carousels/AppInfoCarousel/appInfoCarousel';
 import { formatDate } from './utils/formateDate';
 import Loader from '../../components/MovieNewsComponents/Loader';
-import AboutApp from './components/AboutApp';
-import TablesCarousel from './components/TablesCarousel';
+import AboutApp from './components/AboutAppSection/AboutApp';
+import TablesCarousel from './components/Carousels/TablesCarousel/TablesCarousel';
 import Title from './components/Title';
+import { MemoizedTypeWriter } from './components/MemoizedComponents/MemoizedTypeWriter';
+import { MemoizedScrollView } from './components/MemoizedComponents/MemoizedScrollView';
+import { MemoizedClocks } from './components/MemoizedComponents/MemoizedClocks';
 
 export default function AdminScreen({ navigation }) {
     useEffect(() => {
@@ -340,16 +343,20 @@ export default function AdminScreen({ navigation }) {
                 {
                     id: 6,
                     title: (
-                        <Text style={{ fontSize: 22 }}>
-                            Последний{'\n'}лайкнутый фильм
-                        </Text>
+                        <Text style={{ fontSize: 22 }}>Последний{'\n'}лайкнутый фильм</Text>
                     ),
                     count: (
                         <Text style={{ fontSize: 24, fontFamily: 'Inter-ExtraBold' }}>
                             {lastSavedMovie}
                         </Text>
                     ),
-                    icon: <Icons.MaterialCommunityIcons name="movie-open-star-outline" color="white" size={70} />,
+                    icon: (
+                        <Icons.MaterialCommunityIcons
+                            name="movie-open-star-outline"
+                            color="white"
+                            size={70}
+                        />
+                    ),
                     color1: '#b429f9',
                     color2: '#26c5f3',
                     description:
@@ -389,34 +396,23 @@ export default function AdminScreen({ navigation }) {
                         backgroundColor="transparent"
                         showBorder
                         type="Подсистема">
-                        <ScrollView
+                        {/* Main pure component */}
+                        <MemoizedScrollView
                             style={{ paddingVertical: 8 }}
                             showsVerticalScrollIndicator={false}>
-                            <TypeWriter
-                                style={{
-                                    fontFamily: 'Inter-ExtraBold',
-                                    fontSize: 32,
-                                    textAlign: 'center',
-                                    textShadowColor: 'rgba(226, 232, 240, 0.25)',
-                                    textShadowOffset: { width: 0, height: 3 },
-                                    textShadowRadius: 4,
-                                }}
-                                minDelay={0.2}
-                                typing={1}
-                                onTypingStart={() => setCanBeShowed(false)}
-                                onTypingEnd={() => setCanBeShowed(true)}>
-                                Добро пожаловать!
-                            </TypeWriter>
+                            {/* Title */}
+                            <MemoizedTypeWriter setCanBeShowed={setCanBeShowed} />
 
-                            <Text style={{ textAlign: 'center', fontFamily: 'Inter-Light' }}>
-                                {formatDate(currentTime)}
-                            </Text>
+                            {/* Date with clocks */}
+                            <MemoizedClocks currentTime={currentTime} />
 
+                            {/* Carousel with database info */}
                             <InfoCarousel
                                 data={data}
                                 setActiveSlide={SetInfoCarouselActiveSlide}
                             />
 
+                            {/* Download database button */}
                             <View style={{}}>
                                 <CustomButton
                                     text="Скачать базу данных"
@@ -427,6 +423,7 @@ export default function AdminScreen({ navigation }) {
 
                             <Title title={'Статистика'} />
 
+                            {/* Carousel with app's info */}
                             <AppInfoCarousel
                                 activeSlide={AppInfoCarouselActiveSlide}
                                 data={appData}
@@ -435,6 +432,7 @@ export default function AdminScreen({ navigation }) {
 
                             <Title title="Таблицы" />
 
+                            {/* Database tables carousel */}
                             <TablesCarousel
                                 navigation={navigation}
                                 data={tablesData}
@@ -443,9 +441,9 @@ export default function AdminScreen({ navigation }) {
 
                             <Title title="О приложении" />
 
+                            {/* About app section */}
                             <AboutApp />
-                            {/* {usersData.length > 0 && <UserTable table={usersData} />} */}
-                        </ScrollView>
+                        </MemoizedScrollView>
                     </CustomDrawer>
                 </Animatable.View>
             )}
