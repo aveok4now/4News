@@ -1,41 +1,88 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, ScrollView } from 'react-native';
 import { theme } from '../../MovieNewsScreen/theme';
 import { width } from '../../../utils/getDimensions';
 
 export default function DataTable({ data }) {
+    const [tableData, setTableData] = useState(data);
 
-    const blockList = ["Likes", "liked", "isLiked", "isLied"]
+    const blockList = ['Likes', 'liked', 'isLiked', 'isLied'];
 
-    if (!data || data.length === 0) {
-        return <Text style={{ textAlign: 'center', alignSelf: 'center', fontFamily: 'Inter-Regular', marginVertical: 16 }}>Данных пока нет.</Text>;
-    }
+    const [sortColumn, setSortColumn] = useState({
+        column: null,
+        isAscending: true,
+    });
+
+    const handleSort = column => {
+        if (sortColumn.column === column) {
+            setSortColumn({ column, isAscending: !sortColumn.isAscending });
+        } else {
+            setSortColumn({ column, isAscending: true });
+        }
+    };
+
+    useEffect(() => {
+        let sorted;
+        if (sortColumn.column) {
+            sorted = [...data].sort((a, b) =>
+                sortColumn.isAscending
+                    ? a[sortColumn.column] > b[sortColumn.column]
+                        ? 1
+                        : -1
+                    : b[sortColumn.column] > a[sortColumn.column]
+                        ? 1
+                        : -1,
+            );
+            setTableData(sorted);
+        } else {
+            sorted = [...data];
+        }
+    }, [sortColumn]);
 
     return (
         <View style={styles.container}>
             <ScrollView horizontal={true}>
                 <View style={styles.table}>
                     <View style={styles.headerRow}>
-                        {Object.keys(data[0]).map((key) => {
+                        {Object.keys(tableData[0]).map(key => {
                             if (blockList.includes(key)) {
                                 return null;
                             }
                             return (
-                                <Text style={styles.headerText} key={key}>
+                                <Text
+                                    style={styles.headerText}
+                                    onPress={() => handleSort(key)}
+                                    key={key}>
                                     {key}
+                                    {sortColumn.column === key && (
+                                        <SortIndicator isAscending={sortColumn.isAscending} />
+                                    )}
                                 </Text>
                             );
                         })}
                     </View>
-                    {data.map((row, rowIndex) => (
-                        <View style={styles.row} key={rowIndex}>
+                    {tableData.map((row, rowIndex) => (
+                        <View
+                            style={[
+                                styles.row,
+                                rowIndex === tableData.length - 1 && { borderBottomWidth: 0 },
+                                {
+                                    backgroundColor:
+                                        rowIndex % 2 === 0
+                                            ? theme.bgWhite(0.05)
+                                            : theme.bgWhite(0.25),
+                                },
+                            ]}
+                            key={rowIndex}>
                             {Object.entries(row).map(([key, value], columnIndex) => {
                                 if (blockList.includes(key)) {
                                     return null;
                                 }
                                 return (
                                     <Text style={styles.cell} key={columnIndex}>
-                                        {value && value.length > 20 ? value.slice(0, 20) + "..." : value}
+                                        {value && value.length > 20
+                                            ? value.slice(0, 20) + '...'
+                                            : value}
                                     </Text>
                                 );
                             })}
@@ -47,6 +94,9 @@ export default function DataTable({ data }) {
     );
 }
 
+const SortIndicator = ({ isAscending }) => (
+    <Text style={{ color: 'rgb(103 232 249)' }}>{isAscending ? '⬆️' : '⬇️'}</Text>
+);
 
 const styles = StyleSheet.create({
     container: {
@@ -54,7 +104,7 @@ const styles = StyleSheet.create({
         padding: 8,
         justifyContent: 'center',
         alignItems: 'center',
-        marginVertical: 16
+        marginVertical: 16,
     },
     table: {
         backgroundColor: theme.bgWhite(0.1),
@@ -70,7 +120,7 @@ const styles = StyleSheet.create({
         fontFamily: 'Inter-ExtraBold',
         flex: 1,
         marginRight: 16,
-        textAlign: 'center'
+        textAlign: 'center',
     },
     row: {
         flexDirection: 'row',
@@ -78,12 +128,11 @@ const styles = StyleSheet.create({
         paddingHorizontal: 16,
         borderBottomWidth: 1,
         borderBottomColor: '#ccc',
-
     },
     cell: {
         flex: 1,
         marginRight: 16,
         fontFamily: 'Inter-Light',
-        textAlign: 'center'
+        textAlign: 'center',
     },
 });

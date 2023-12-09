@@ -5,9 +5,9 @@ import { width, height } from '../../../utils/getDimensions';
 import { theme } from '../../MovieNewsScreen/theme';
 import DataTable from './DataTable';
 import SQLite from 'react-native-sqlite-storage';
-import Loader from '../../../components/MovieNewsComponents/Loader';
 import { ActivityIndicator } from 'react-native-paper';
-
+import * as Animatable from 'react-native-animatable';
+import AnimatedText from '../../../components/UsersNewsComponents/AnimatedText';
 
 class TableItem extends React.PureComponent {
     render() {
@@ -39,7 +39,7 @@ class TableItem extends React.PureComponent {
 export default function TablesCarousel({ data, setActiveSlide, navigation }) {
     const [showTable, setShowTable] = useState(false);
 
-    const [selectedTable, setSelectedTable] = useState(null);
+    const [selectedTable, setSelectedTable] = useState('Users');
     const [tableData, setTableData] = useState([]);
 
     const [isLoading, setIsLoading] = useState(false);
@@ -84,6 +84,7 @@ export default function TablesCarousel({ data, setActiveSlide, navigation }) {
 
     return (
         <>
+            <AnimatedText title={selectedTable} />
             <Carousel
                 data={data}
                 renderItem={({ item, index }) => tableItems[index]}
