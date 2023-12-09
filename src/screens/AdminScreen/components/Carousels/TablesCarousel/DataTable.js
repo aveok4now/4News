@@ -8,9 +8,18 @@ import {
 } from 'react-native';
 import { theme } from '../../../../MovieNewsScreen/theme';
 import { width } from '../../../../../utils/getDimensions';
+import Modal from './Modal';
+import SQLite from 'react-native-sqlite-storage';
+import { tableIdMap } from './tablesMap';
 
-export default function DataTable({ data }) {
+export default function DataTable({ data, tables, selectedTable }) {
+
     const [tableData, setTableData] = useState(data);
+    const [showModal, setShowModal] = useState(false);
+
+    const [selectedRow, setSelectedRow] = useState(null);
+    const [deletedRow, setDeletedRow] = useState(null);
+
 
     const blockList = ['Likes', 'liked', 'isLiked', 'isLied'];
 
@@ -43,9 +52,56 @@ export default function DataTable({ data }) {
         }
     }, [sortColumn]);
 
+    const handleDelete = async () => {
+        if (selectedRow === null) return;
+
+        try {
+            const db = await SQLite.openDatabase({ name: 'news.db', location: 1 });
+
+            const query1 = `SELECT rowid, ${tableIdMap[selectedTable]} AS id FROM ${selectedTable} LIMIT 1 OFFSET ${selectedRow}`;
+            const result = await db.executeSql(query1);
+            const row = result[0].rows.item(0);
+
+            if (row !== undefined) {
+                const { rowid, id } = row;
+
+                const query = rowid !== undefined
+                    ? `DELETE FROM ${selectedTable} WHERE rowid = ?`
+                    : `DELETE FROM ${selectedTable} WHERE ${tableIdMap[selectedTable]} = ?`;
+
+                const queryArgs = [rowid !== undefined ? rowid : id];
+                await db.executeSql(query, queryArgs);
+
+                console.log('success');
+                setDeletedRow(selectedRow);
+                setSelectedRow(null);
+            } else {
+                console.log('row is undefined');
+            }
+        } catch (err) {
+            console.log(err);
+        }
+
+        setShowModal(false);
+        setTableData((prev) => prev.filter((row, i) => i !== selectedRow));
+    };
+
+
+
+
+
+    const handleLongPress = (rowIndex) => {
+        setSelectedRow(rowIndex);
+        setShowModal(true);
+    }
+
+
     return (
         <View style={styles.container}>
             <ScrollView horizontal={true}>
+                {showModal && (
+                    <Modal showModal={showModal} onPress={() => setShowModal(false)} onDelete={handleDelete} />
+                )}
                 <View style={styles.table}>
                     <View style={styles.headerRow}>
                         {Object.keys(tableData[0]).map(key => {
@@ -64,33 +120,41 @@ export default function DataTable({ data }) {
                             );
                         })}
                     </View>
-                    {tableData.map((row, rowIndex) => (
-                        <View
-                            style={[
-                                styles.row,
-                                rowIndex === tableData.length - 1 && { borderBottomWidth: 0 },
-                                {
-                                    backgroundColor:
-                                        rowIndex % 2 === 0
-                                            ? theme.bgWhite(0.05)
-                                            : theme.bgWhite(0.25),
-                                },
-                            ]}
-                            key={rowIndex}>
-                            {Object.entries(row).map(([key, value], columnIndex) => {
-                                if (blockList.includes(key)) {
-                                    return null;
-                                }
-                                return (
-                                    <Text style={styles.cell} key={columnIndex}>
-                                        {value && value.length > 20
-                                            ? value.slice(0, 20) + '...'
-                                            : value}
-                                    </Text>
-                                );
-                            })}
-                        </View>
-                    ))}
+                    {tableData.map((row, rowIndex) => {
+                        if (rowIndex === deletedRow) {
+                            return null;
+                        }
+                        return (
+                            <TouchableOpacity key={rowIndex} onLongPress={() => handleLongPress(rowIndex)}>
+                                <View
+                                    style={[
+                                        styles.row,
+                                        rowIndex === tableData.length - 1 && { borderBottomWidth: 0 },
+                                        {
+                                            backgroundColor:
+                                                rowIndex % 2 === 0
+                                                    ? theme.bgWhite(0.05)
+                                                    : theme.bgWhite(0.25),
+                                        },
+                                    ]}
+                                >
+                                    {Object.entries(row).map(([key, value], columnIndex) => {
+                                        if (blockList.includes(key)) {
+                                            return null;
+                                        }
+                                        return (
+                                            <Text style={styles.cell} key={columnIndex}>
+                                                {value && value.length > 20
+                                                    ? value.slice(0, 20) + '...'
+                                                    : value}
+                                            </Text>
+                                        );
+                                    })}
+                                </View>
+                            </TouchableOpacity>
+                        )
+
+                    })}
                 </View>
             </ScrollView>
         </View>

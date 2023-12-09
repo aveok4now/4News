@@ -110,7 +110,7 @@ export default function TablesCarousel({ data, setActiveSlide, navigation }) {
             {isLoading && (
                 <ActivityIndicator style={{ marginTop: 20 }} size={30} color="white" />
             )}
-            {showTable && !isLoading && <DataTable data={tableData} />}
+            {showTable && !isLoading && <DataTable data={tableData} tables={data} selectedTable={selectedTable} />}
         </>
     );
 }

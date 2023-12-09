@@ -150,6 +150,7 @@ export default function AdminScreen({ navigation }) {
             const guestsQuery = 'SELECT COUNT(*) as guestsCount from Guests';
             const ratesQuery = 'SELECT id, AVG(rating) as ratesCount from Rates';
             const commentsQuery = 'SELECT COUNT(*) as commentsCount from Comments';
+            const categoriesQuery = 'SELECT COUNT(*) as categoriesCount from Categories'
 
             const [
                 usersResult,
@@ -160,6 +161,7 @@ export default function AdminScreen({ navigation }) {
                 guestsResult,
                 ratesResult,
                 commentsResult,
+                categoriesResult
             ] = await Promise.all([
                 fetchData(usersQuery),
                 fetchData(adminsQuery),
@@ -169,6 +171,7 @@ export default function AdminScreen({ navigation }) {
                 fetchData(guestsQuery),
                 fetchData(ratesQuery),
                 fetchData(commentsQuery),
+                fetchData(categoriesQuery)
             ]);
 
             const getCount = (result, key) =>
@@ -223,6 +226,12 @@ export default function AdminScreen({ navigation }) {
                     title: 'Комментариев',
                     count: getCount(commentsResult, 'commentsCount'),
                     icon: <Icons.FontAwesome5 name="comments" color="white" size={90} />,
+                },
+                {
+                    id: 8,
+                    title: 'Категорий',
+                    count: getCount(categoriesResult, 'categoriesCount'),
+                    icon: <Icons.MaterialIcons name="category" color="white" size={100} />,
                 },
             ];
 
