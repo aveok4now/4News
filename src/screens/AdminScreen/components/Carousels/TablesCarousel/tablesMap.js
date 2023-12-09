@@ -6,4 +6,5 @@ export const tableIdMap = {
     Comments: 'commentId',
     userFavorites: 'favoriteNewsId',
     Rates: 'id',
+    Guests: 'guestId'
 };

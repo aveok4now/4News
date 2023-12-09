@@ -11,15 +11,16 @@ import { width } from '../../../../../utils/getDimensions';
 import Modal from './Modal';
 import SQLite from 'react-native-sqlite-storage';
 import { tableIdMap } from './tablesMap';
+import { Icons } from '../../../../../components/Icons';
 
 export default function DataTable({ data, tables, selectedTable }) {
-
     const [tableData, setTableData] = useState(data);
     const [showModal, setShowModal] = useState(false);
 
     const [selectedRow, setSelectedRow] = useState(null);
     const [deletedRow, setDeletedRow] = useState(null);
 
+    const [visibleRows, setVisibleRows] = useState(10);
 
     const blockList = ['Likes', 'liked', 'isLiked', 'isLied'];
 
@@ -65,9 +66,10 @@ export default function DataTable({ data, tables, selectedTable }) {
             if (row !== undefined) {
                 const { rowid, id } = row;
 
-                const query = rowid !== undefined
-                    ? `DELETE FROM ${selectedTable} WHERE rowid = ?`
-                    : `DELETE FROM ${selectedTable} WHERE ${tableIdMap[selectedTable]} = ?`;
+                const query =
+                    rowid !== undefined
+                        ? `DELETE FROM ${selectedTable} WHERE rowid = ?`
+                        : `DELETE FROM ${selectedTable} WHERE ${tableIdMap[selectedTable]} = ?`;
 
                 const queryArgs = [rowid !== undefined ? rowid : id];
                 await db.executeSql(query, queryArgs);
@@ -83,24 +85,27 @@ export default function DataTable({ data, tables, selectedTable }) {
         }
 
         setShowModal(false);
-        setTableData((prev) => prev.filter((row, i) => i !== selectedRow));
+        setTableData(prev => prev.filter((row, i) => i !== selectedRow));
     };
 
-
-
-
-
-    const handleLongPress = (rowIndex) => {
+    const handleLongPress = rowIndex => {
         setSelectedRow(rowIndex);
         setShowModal(true);
-    }
+    };
 
+    const handleShowMore = () => {
+        setVisibleRows(prevVisibleRows => prevVisibleRows + 10);
+    };
 
     return (
         <View style={styles.container}>
             <ScrollView horizontal={true}>
                 {showModal && (
-                    <Modal showModal={showModal} onPress={() => setShowModal(false)} onDelete={handleDelete} />
+                    <Modal
+                        showModal={showModal}
+                        onPress={() => setShowModal(false)}
+                        onDelete={handleDelete}
+                    />
                 )}
                 <View style={styles.table}>
                     <View style={styles.headerRow}>
@@ -123,9 +128,11 @@ export default function DataTable({ data, tables, selectedTable }) {
                     {tableData.map((row, rowIndex) => {
                         if (rowIndex === deletedRow) {
                             return null;
-                        }
+                        } else if (rowIndex >= visibleRows) return null;
                         return (
-                            <TouchableOpacity key={rowIndex} onLongPress={() => handleLongPress(rowIndex)}>
+                            <TouchableOpacity
+                                key={rowIndex}
+                                onLongPress={() => handleLongPress(rowIndex)}>
                                 <View
                                     style={[
                                         styles.row,
@@ -136,27 +143,32 @@ export default function DataTable({ data, tables, selectedTable }) {
                                                     ? theme.bgWhite(0.05)
                                                     : theme.bgWhite(0.25),
                                         },
-                                    ]}
-                                >
+                                    ]}>
                                     {Object.entries(row).map(([key, value], columnIndex) => {
                                         if (blockList.includes(key)) {
                                             return null;
                                         }
                                         return (
                                             <Text style={styles.cell} key={columnIndex}>
-                                                {value && value.length > 20
-                                                    ? value.slice(0, 20) + '...'
+                                                {value && value.length > 14
+                                                    ? value.slice(0, 14) + '...'
                                                     : value}
                                             </Text>
                                         );
                                     })}
                                 </View>
                             </TouchableOpacity>
-                        )
-
+                        );
                     })}
                 </View>
+
             </ScrollView>
+            {tableData.length > visibleRows && (
+                <TouchableOpacity onPress={handleShowMore} style={{ justifyContent: 'center', alignItems: 'center', marginVertical: 8 }}>
+                    <Icons.EvilIcons name="arrow-down" size={40} color="white" />
+                    <Text style={{ fontFamily: 'Inter-Light', opacity: 0.6 }}>Показать ещё</Text>
+                </TouchableOpacity>
+            )}
         </View>
     );
 }
