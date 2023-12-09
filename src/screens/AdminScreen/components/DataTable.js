@@ -1,5 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, ScrollView } from 'react-native';
+import {
+    View,
+    Text,
+    StyleSheet,
+    ScrollView,
+    TouchableOpacity,
+} from 'react-native';
 import { theme } from '../../MovieNewsScreen/theme';
 import { width } from '../../../utils/getDimensions';
 
@@ -22,20 +28,18 @@ export default function DataTable({ data }) {
     };
 
     useEffect(() => {
-        let sorted;
         if (sortColumn.column) {
-            sorted = [...data].sort((a, b) =>
-                sortColumn.isAscending
-                    ? a[sortColumn.column] > b[sortColumn.column]
-                        ? 1
-                        : -1
-                    : b[sortColumn.column] > a[sortColumn.column]
-                        ? 1
-                        : -1,
-            );
-            setTableData(sorted);
-        } else {
-            sorted = [...data];
+            setTableData(prevData => {
+                return [...prevData].sort((a, b) =>
+                    sortColumn.isAscending
+                        ? a[sortColumn.column] > b[sortColumn.column]
+                            ? 1
+                            : -1
+                        : b[sortColumn.column] > a[sortColumn.column]
+                            ? 1
+                            : -1,
+                );
+            });
         }
     }, [sortColumn]);
 
@@ -49,15 +53,14 @@ export default function DataTable({ data }) {
                                 return null;
                             }
                             return (
-                                <Text
-                                    style={styles.headerText}
-                                    onPress={() => handleSort(key)}
-                                    key={key}>
-                                    {key}
-                                    {sortColumn.column === key && (
-                                        <SortIndicator isAscending={sortColumn.isAscending} />
-                                    )}
-                                </Text>
+                                <TouchableOpacity key={key} onPress={() => handleSort(key)}>
+                                    <Text style={styles.headerText}>
+                                        {key}
+                                        {sortColumn.column === key && (
+                                            <SortIndicator isAscending={sortColumn.isAscending} />
+                                        )}
+                                    </Text>
+                                </TouchableOpacity>
                             );
                         })}
                     </View>
@@ -95,7 +98,9 @@ export default function DataTable({ data }) {
 }
 
 const SortIndicator = ({ isAscending }) => (
-    <Text style={{ color: 'rgb(103 232 249)' }}>{isAscending ? '⬆️' : '⬇️'}</Text>
+    <Text style={{ color: 'rgb(103 232 249)' }}>
+        {isAscending ? ' ⬆️ ' : ' ⬇️ '}
+    </Text>
 );
 
 const styles = StyleSheet.create({
