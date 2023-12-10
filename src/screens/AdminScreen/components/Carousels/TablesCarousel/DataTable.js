@@ -123,14 +123,38 @@ export default function DataTable({ data, tables, selectedTable }) {
 
     const handleSave = async () => {
         try {
-            const updatedData = tableData.map((row, rowIndex) => {
-                if (updatedRows[rowIndex]) {
-                    return { ...row, ...updatedRows[rowIndex] };
-                }
-                return row;
-            });
+            const db = await SQLite.openDatabase({ name: 'news.db', location: 1 });
 
-            // db update
+            const updatedData = await Promise.all(
+                tableData.map(async (row, rowIndex) => {
+                    if (updatedRows[rowIndex]) {
+                        const updatedRow = { ...row, ...updatedRows[rowIndex] };
+
+                        const modifiedFields = Object.keys(updatedRows[rowIndex]).filter(
+                            key => updatedRows[rowIndex][key] !== row[key],
+                        );
+
+                        console.log('Modified fields:', modifiedFields);
+
+                        if (modifiedFields.length > 0) {
+                            const setStatements = modifiedFields
+                                .map(field => `${field} = ?`)
+                                .join(', ');
+                            const idField = tableIdMap[selectedTable];
+                            const query = `UPDATE ${selectedTable} SET ${setStatements} WHERE ${idField} = ?`;
+                            const queryArgs = [
+                                ...modifiedFields.map(field => updatedRow[field]),
+                                row[idField],
+                            ];
+
+                            await db.executeSql(query, queryArgs);
+                        }
+
+                        return updatedRow;
+                    }
+                    return row;
+                }),
+            );
 
             setTableData(updatedData);
         } catch (err) {
@@ -201,25 +225,33 @@ export default function DataTable({ data, tables, selectedTable }) {
                                                         {rowIndex === selectedRow ? (
                                                             <TextInput
                                                                 style={styles.cell}
-                                                                value={updatedRows[rowIndex]?.[key] || value}
+                                                                value={
+                                                                    String(updatedRows[rowIndex]?.[key]) || ''
+                                                                }
                                                                 onChangeText={text =>
                                                                     handleInputChange(rowIndex, key, text)
                                                                 }
                                                             />
                                                         ) : (
-                                                            <Text style={styles.cell}>
-                                                                {value && value.length > 14
-                                                                    ? value.slice(0, 14) + '...'
-                                                                    : value}
-                                                            </Text>
+                                                            value !== null &&
+                                                            value !== '' && (
+                                                                <Text style={styles.cell}>
+                                                                    {String(value).length > 14
+                                                                        ? String(value).slice(0, 14) + '...'
+                                                                        : String(value)}
+                                                                </Text>
+                                                            )
                                                         )}
                                                     </View>
                                                 ) : (
-                                                    <Text style={styles.cell}>
-                                                        {value && value.length > 14
-                                                            ? value.slice(0, 14) + '...'
-                                                            : value}
-                                                    </Text>
+                                                    value !== null &&
+                                                    value !== '' && (
+                                                        <Text style={styles.cell}>
+                                                            {String(value).length > 14
+                                                                ? String(value).slice(0, 14) + '...'
+                                                                : String(value)}
+                                                        </Text>
+                                                    )
                                                 )}
                                             </View>
                                         );

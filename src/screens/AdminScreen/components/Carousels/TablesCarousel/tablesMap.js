@@ -3,8 +3,10 @@ export const tableIdMap = {
     Administrators: 'adminId',
     Users: 'userId',
     Likes: 'id',
-    Comments: 'commentId',
-    userFavorites: 'favoriteNewsId',
+    Comments: 'id',
+    UserFavorites: 'favoriteNewsId',
     Rates: 'id',
-    Guests: 'guestId'
+    Guests: 'guestId',
+    News: 'newsId',
+    likedMovies: 'id'
 };
