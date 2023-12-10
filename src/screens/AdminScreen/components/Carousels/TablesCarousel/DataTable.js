@@ -5,6 +5,7 @@ import {
     StyleSheet,
     ScrollView,
     TouchableOpacity,
+    TextInput,
 } from 'react-native';
 import { theme } from '../../../../MovieNewsScreen/theme';
 import { width } from '../../../../../utils/getDimensions';
@@ -12,6 +13,7 @@ import Modal from './Modal';
 import SQLite from 'react-native-sqlite-storage';
 import { tableIdMap } from './tablesMap';
 import { Icons } from '../../../../../components/Icons';
+import CustomButton from '../../../../../components/customs/CustomButton';
 
 export default function DataTable({ data, tables, selectedTable }) {
     const [tableData, setTableData] = useState(data);
@@ -19,6 +21,9 @@ export default function DataTable({ data, tables, selectedTable }) {
 
     const [selectedRow, setSelectedRow] = useState(null);
     const [deletedRow, setDeletedRow] = useState(null);
+
+    const [editMode, setEditMode] = useState(false);
+    const [updatedRows, setUpdatedRows] = useState({});
 
     const [visibleRows, setVisibleRows] = useState(10);
 
@@ -97,6 +102,45 @@ export default function DataTable({ data, tables, selectedTable }) {
         setVisibleRows(prevVisibleRows => prevVisibleRows + 10);
     };
 
+    const handleUpdate = () => {
+        setShowModal(false);
+        setEditMode(true);
+        setUpdatedRows(prev => ({
+            ...prev,
+            [selectedRow]: { ...tableData[selectedRow] },
+        }));
+    };
+
+    const handleInputChange = (rowIndex, key, value) => {
+        setUpdatedRows(prev => ({
+            ...prev,
+            [rowIndex]: {
+                ...(prev[rowIndex] || {}),
+                [key]: value,
+            },
+        }));
+    };
+
+    const handleSave = async () => {
+        try {
+            const updatedData = tableData.map((row, rowIndex) => {
+                if (updatedRows[rowIndex]) {
+                    return { ...row, ...updatedRows[rowIndex] };
+                }
+                return row;
+            });
+
+            // db update
+
+            setTableData(updatedData);
+        } catch (err) {
+            console.error(err);
+        }
+
+        setEditMode(false);
+        setUpdatedRows({});
+    };
+
     return (
         <View style={styles.container}>
             <ScrollView horizontal={true}>
@@ -105,6 +149,8 @@ export default function DataTable({ data, tables, selectedTable }) {
                         showModal={showModal}
                         onPress={() => setShowModal(false)}
                         onDelete={handleDelete}
+                        onUpdate={handleUpdate}
+                        onSave={handleSave}
                     />
                 )}
                 <View style={styles.table}>
@@ -149,24 +195,64 @@ export default function DataTable({ data, tables, selectedTable }) {
                                             return null;
                                         }
                                         return (
-                                            <Text style={styles.cell} key={columnIndex}>
-                                                {value && value.length > 14
-                                                    ? value.slice(0, 14) + '...'
-                                                    : value}
-                                            </Text>
+                                            <View key={columnIndex} style={{ flex: 1 }}>
+                                                {editMode ? (
+                                                    <View>
+                                                        {rowIndex === selectedRow ? (
+                                                            <TextInput
+                                                                style={styles.cell}
+                                                                value={updatedRows[rowIndex]?.[key] || value}
+                                                                onChangeText={text =>
+                                                                    handleInputChange(rowIndex, key, text)
+                                                                }
+                                                            />
+                                                        ) : (
+                                                            <Text style={styles.cell}>
+                                                                {value && value.length > 14
+                                                                    ? value.slice(0, 14) + '...'
+                                                                    : value}
+                                                            </Text>
+                                                        )}
+                                                    </View>
+                                                ) : (
+                                                    <Text style={styles.cell}>
+                                                        {value && value.length > 14
+                                                            ? value.slice(0, 14) + '...'
+                                                            : value}
+                                                    </Text>
+                                                )}
+                                            </View>
                                         );
                                     })}
+                                    {editMode && rowIndex === selectedRow && (
+                                        <TouchableOpacity
+                                            onPress={handleSave}
+                                            style={{
+                                                flex: 1,
+                                                justifyContent: 'center',
+                                                alignItems: 'center',
+                                            }}>
+                                            <Text style={{ fontSize: 24 }}>✅</Text>
+                                        </TouchableOpacity>
+                                    )}
                                 </View>
                             </TouchableOpacity>
                         );
                     })}
                 </View>
-
             </ScrollView>
             {tableData.length > visibleRows && (
-                <TouchableOpacity onPress={handleShowMore} style={{ justifyContent: 'center', alignItems: 'center', marginVertical: 8 }}>
+                <TouchableOpacity
+                    onPress={handleShowMore}
+                    style={{
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        marginVertical: 8,
+                    }}>
                     <Icons.EvilIcons name="arrow-down" size={40} color="white" />
-                    <Text style={{ fontFamily: 'Inter-Light', opacity: 0.6 }}>Показать ещё</Text>
+                    <Text style={{ fontFamily: 'Inter-Light', opacity: 0.6 }}>
+                        Показать ещё
+                    </Text>
                 </TouchableOpacity>
             )}
         </View>

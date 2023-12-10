@@ -25,7 +25,7 @@ export default function AboutApp() {
                     <Text style={{ fontFamily: 'Inter-ExtraBold' }}>SQLite</Text>. Является
                     нормализанованной и находится в третьей нормальной форме. Исходный код приложения:
                 </Text>
-                <TouchableOpacity onPress={() => openLinkInBrowserHandler(1)}>
+                <TouchableOpacity onPress={() => openLinkInBrowserHandler(3)}>
                     <View
                         style={{
                             alignSelf: 'center',
