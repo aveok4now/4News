@@ -17,16 +17,16 @@ import CustomButton from '../../../../../components/customs/CustomButton';
 
 export default function DataTable({ data, tables, selectedTable }) {
     const [tableData, setTableData] = useState(data);
-    const [showModal, setShowModal] = useState(false);
-
     const [selectedRow, setSelectedRow] = useState(null);
     const [deletedRow, setDeletedRow] = useState(null);
 
+    const [showModal, setShowModal] = useState(false);
+
     const [editMode, setEditMode] = useState(false);
     const [updatedRows, setUpdatedRows] = useState({});
-
     const [visibleRows, setVisibleRows] = useState(10);
 
+    const [inputHasChanges, setInputHasChanges] = useState(false);
     const blockList = ['Likes', 'liked', 'isLiked', 'isLied'];
 
     const [sortColumn, setSortColumn] = useState({
@@ -119,6 +119,13 @@ export default function DataTable({ data, tables, selectedTable }) {
                 [key]: value,
             },
         }));
+
+        const originalValue = tableData[rowIndex][key];
+        if (value !== originalValue) {
+            setInputHasChanges(true);
+        } else {
+            setInputHasChanges(false);
+        }
     };
 
     const handleSave = async () => {
@@ -163,6 +170,12 @@ export default function DataTable({ data, tables, selectedTable }) {
 
         setEditMode(false);
         setUpdatedRows({});
+        setInputHasChanges(false);
+    };
+
+    const handleEditCancel = () => {
+        setInputHasChanges(false);
+        setEditMode(false);
     };
 
     return (
@@ -226,11 +239,15 @@ export default function DataTable({ data, tables, selectedTable }) {
                                                             <TextInput
                                                                 style={styles.cell}
                                                                 value={
-                                                                    String(updatedRows[rowIndex]?.[key]) || ''
+                                                                    updatedRows[rowIndex]?.[key] !== null
+                                                                        ? String(updatedRows[rowIndex]?.[key])
+                                                                        : ''
                                                                 }
                                                                 onChangeText={text =>
                                                                     handleInputChange(rowIndex, key, text)
                                                                 }
+                                                                selectionColor={'#7a8fd3'}
+                                                                cursorColor={'white'}
                                                             />
                                                         ) : (
                                                             value !== null &&
@@ -257,15 +274,29 @@ export default function DataTable({ data, tables, selectedTable }) {
                                         );
                                     })}
                                     {editMode && rowIndex === selectedRow && (
-                                        <TouchableOpacity
-                                            onPress={handleSave}
-                                            style={{
-                                                flex: 1,
-                                                justifyContent: 'center',
-                                                alignItems: 'center',
-                                            }}>
-                                            <Text style={{ fontSize: 24 }}>✅</Text>
-                                        </TouchableOpacity>
+                                        <View style={styles.buttonContainer}>
+                                            <TouchableOpacity
+                                                onPress={handleEditCancel}
+                                                style={[
+                                                    styles.button,
+                                                    { backgroundColor: theme.bgWhite(0.2) },
+                                                ]}>
+                                                <Icons.AntDesign name="close" size={24} />
+                                            </TouchableOpacity>
+                                            <TouchableOpacity
+                                                disabled={!inputHasChanges}
+                                                onPress={handleSave}
+                                                style={[
+                                                    styles.button,
+                                                    {
+                                                        backgroundColor: inputHasChanges
+                                                            ? theme.bgWhite(0.2)
+                                                            : theme.bgWhite(0.05),
+                                                    },
+                                                ]}>
+                                                <Icons.Feather name="check" size={24} />
+                                            </TouchableOpacity>
+                                        </View>
                                     )}
                                 </View>
                             </TouchableOpacity>
@@ -333,5 +364,17 @@ const styles = StyleSheet.create({
         marginRight: 16,
         fontFamily: 'Inter-Light',
         textAlign: 'center',
+    },
+    buttonContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+    },
+    button: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderRadius: 55,
+        padding: 10,
+        margin: 2,
     },
 });
