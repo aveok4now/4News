@@ -9,7 +9,6 @@ import InfoCarousel from './components/Carousels/InfoCarousel/InfoCarousel';
 import SQLite from 'react-native-sqlite-storage';
 import { fetchData, downloadFile, fetchAllUsers } from './db/databaseUtils';
 import AppInfoCarousel from './components/Carousels/AppInfoCarousel/appInfoCarousel';
-import { formatDate } from './utils/formateDate';
 import Loader from '../../components/MovieNewsComponents/Loader';
 import AboutApp from './components/AboutAppSection/AboutApp';
 import TablesCarousel from './components/Carousels/TablesCarousel/TablesCarousel';

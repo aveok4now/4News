@@ -16,7 +16,7 @@ export default function Button({ onPress, children }) {
                     justifyContent: 'space-evenly',
                     borderRadius: 8,
                     alignItems: 'center',
-                    marginVertical: 8
+                    marginVertical: 16,
                 }}>
                 {children}
             </View>

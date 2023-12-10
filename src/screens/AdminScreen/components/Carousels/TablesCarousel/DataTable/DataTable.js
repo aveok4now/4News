@@ -7,13 +7,16 @@ import {
     TouchableOpacity,
     TextInput,
 } from 'react-native';
-import { theme } from '../../../../MovieNewsScreen/theme';
-import Modal from './Modal';
+import { theme } from '../../../../../MovieNewsScreen/theme';
+import Modal from './components/Modals/Modal';
 import SQLite from 'react-native-sqlite-storage';
-import { tableIdMap } from './utils/tablesMap';
-import { Icons } from '../../../../../components/Icons';
-import { handleExportCSV } from './utils/tableExport';
-import Button from '../../Button';
+import { tableIdMap } from '../utils/tablesMap';
+import { Icons } from '../../../../../../components/Icons';
+import { handleExportCSV } from '../utils/tableExport';
+import Button from '../../../Button';
+import EditButtons from './components/Buttons/EditButtons';
+import ShowMoreButton from './components/Buttons/ShowMoreButton';
+import SortIndicator from './components/SortIndicator/SortIndicator';
 
 export default function DataTable({ data, tables, selectedTable }) {
     const [tableData, setTableData] = useState(data);
@@ -274,29 +277,11 @@ export default function DataTable({ data, tables, selectedTable }) {
                                         );
                                     })}
                                     {editMode && rowIndex === selectedRow && (
-                                        <View style={styles.buttonContainer}>
-                                            <TouchableOpacity
-                                                onPress={handleEditCancel}
-                                                style={[
-                                                    styles.button,
-                                                    { backgroundColor: theme.bgWhite(0.2) },
-                                                ]}>
-                                                <Icons.AntDesign name="close" size={24} />
-                                            </TouchableOpacity>
-                                            <TouchableOpacity
-                                                disabled={!inputHasChanges}
-                                                onPress={handleSave}
-                                                style={[
-                                                    styles.button,
-                                                    {
-                                                        backgroundColor: inputHasChanges
-                                                            ? theme.bgWhite(0.2)
-                                                            : theme.bgWhite(0.05),
-                                                    },
-                                                ]}>
-                                                <Icons.Feather name="check" size={24} />
-                                            </TouchableOpacity>
-                                        </View>
+                                        <EditButtons
+                                            handleEditCancel={handleEditCancel}
+                                            handleSave={handleSave}
+                                            inputHasChanges={inputHasChanges}
+                                        />
                                     )}
                                 </View>
                             </TouchableOpacity>
@@ -305,18 +290,7 @@ export default function DataTable({ data, tables, selectedTable }) {
                 </View>
             </ScrollView>
             {tableData.length > visibleRows && (
-                <TouchableOpacity
-                    onPress={handleShowMore}
-                    style={{
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        marginVertical: 8,
-                    }}>
-                    <Icons.EvilIcons name="arrow-down" size={40} color="white" />
-                    <Text style={{ fontFamily: 'Inter-Light', opacity: 0.6 }}>
-                        Показать ещё
-                    </Text>
-                </TouchableOpacity>
+                <ShowMoreButton onPress={handleShowMore} />
             )}
 
             <Button onPress={() => handleExportCSV(tableData, selectedTable)}>
@@ -329,12 +303,6 @@ export default function DataTable({ data, tables, selectedTable }) {
     );
 }
 
-const SortIndicator = ({ isAscending }) => (
-    <Text style={{ color: 'rgb(103 232 249)' }}>
-        {isAscending ? ' ⬆️ ' : ' ⬇️ '}
-    </Text>
-);
-
 const styles = StyleSheet.create({
     container: {
         flex: 1,
@@ -345,7 +313,6 @@ const styles = StyleSheet.create({
     },
     table: {
         backgroundColor: theme.bgWhite(0.1),
-        //width: width
     },
     headerRow: {
         flexDirection: 'row',
@@ -371,17 +338,5 @@ const styles = StyleSheet.create({
         marginRight: 16,
         fontFamily: 'Inter-Light',
         textAlign: 'center',
-    },
-    buttonContainer: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-    },
-    button: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        borderRadius: 55,
-        padding: 10,
-        margin: 2,
     },
 });

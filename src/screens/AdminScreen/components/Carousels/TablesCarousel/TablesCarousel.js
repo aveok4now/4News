@@ -3,7 +3,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import Carousel from 'react-native-snap-carousel';
 import { width, height } from '../../../../../utils/getDimensions';
 import { theme } from '../../../../MovieNewsScreen/theme';
-import DataTable from './DataTable';
+import DataTable from './DataTable/DataTable';
 import SQLite from 'react-native-sqlite-storage';
 import { ActivityIndicator } from 'react-native-paper';
 import * as Animatable from 'react-native-animatable';
