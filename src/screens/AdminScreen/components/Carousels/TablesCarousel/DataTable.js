@@ -8,12 +8,12 @@ import {
     TextInput,
 } from 'react-native';
 import { theme } from '../../../../MovieNewsScreen/theme';
-import { width } from '../../../../../utils/getDimensions';
 import Modal from './Modal';
 import SQLite from 'react-native-sqlite-storage';
-import { tableIdMap } from './tablesMap';
+import { tableIdMap } from './utils/tablesMap';
 import { Icons } from '../../../../../components/Icons';
-import CustomButton from '../../../../../components/customs/CustomButton';
+import { handleExportCSV } from './utils/tableExport';
+import Button from '../../Button';
 
 export default function DataTable({ data, tables, selectedTable }) {
     const [tableData, setTableData] = useState(data);
@@ -180,7 +180,7 @@ export default function DataTable({ data, tables, selectedTable }) {
 
     return (
         <View style={styles.container}>
-            <ScrollView horizontal={true}>
+            <ScrollView horizontal={true} persistentScrollbar>
                 {showModal && (
                     <Modal
                         showModal={showModal}
@@ -318,6 +318,13 @@ export default function DataTable({ data, tables, selectedTable }) {
                     </Text>
                 </TouchableOpacity>
             )}
+
+            <Button onPress={() => handleExportCSV(tableData, selectedTable)}>
+                <Icons.Foundation name="page-export-csv" size={50} />
+                <Text style={{ fontFamily: 'Inter-ExtraBold', fontSize: 22 }}>
+                    Экспорт
+                </Text>
+            </Button>
         </View>
     );
 }

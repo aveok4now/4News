@@ -257,7 +257,7 @@ export default function AdminScreen({ navigation }) {
             const lastRegisteredUserQuery =
                 'SELECT userLogin FROM Users ORDER BY userId DESC LIMIT 1';
             const lastSavedMovieQuery =
-                'SELECT title FROM likedMovies WHERE ROWID = last_insert_rowid()';
+                'SELECT title FROM likedMovies WHERE rowid = last_insert_rowid()';
 
             const ratesResult = await fetchData(ratesQuery);
             const cityResult = await fetchData(mostPopularCityQuery);
@@ -293,8 +293,8 @@ export default function AdminScreen({ navigation }) {
                 },
                 {
                     id: 2,
-                    title: 'Популярный город',
-                    count: mostPopularCity,
+                    title: <Text style={{ fontSize: 24 }}>Популярный{'\n'}город</Text>,
+                    count: <Text style={{ fontSize: 35 }}>{mostPopularCity}</Text>,
                     icon: <Icons.FontAwesome name="building" color="white" size={75} />,
                     color1: '#ff1b6b',
                     color2: '#45caff',
