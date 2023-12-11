@@ -187,22 +187,41 @@ export default function DataTable({ data, tables, selectedTable }) {
     };
 
     const handleEditCancel = () => {
-        setInputHasChanges(false);
-        setEditMode(false);
+        if (isNewRow) {
+            handleCancelAddRow();
+        } else {
+            setInputHasChanges(false);
+            setEditMode(false);
+        }
     };
 
+
     const handleAddRow = () => {
+        const newRowObject = {};
         Object.keys(tableData[0]).forEach(key => {
-            newRow[key] = '';
+            newRowObject[key] = '';
         });
 
-        setTableData([newRow, ...tableData]);
+        setNewRow(prevNewRow => ({ ...prevNewRow, ...newRowObject }));
+
+        setTableData([newRowObject, ...tableData]);
 
         setSelectedRow(0);
         setIsNewRow(true);
         setEditMode(true);
-        setUpdatedRows({ 0: { ...newRow } });
+        setUpdatedRows({ 0: { ...newRowObject } });
     };
+
+    const handleCancelAddRow = () => {
+        setTableData(prev => prev.slice(1));
+
+        setNewRow({});
+        setIsNewRow(false);
+        setEditMode(false);
+        setUpdatedRows({});
+        setInputHasChanges(false);
+    };
+
 
     return (
         <View style={styles.container}>
@@ -317,11 +336,14 @@ export default function DataTable({ data, tables, selectedTable }) {
                 <ShowMoreButton onPress={handleShowMore} />
             )}
 
-            <CustomButton
-                type="Tertiary"
-                onPress={handleAddRow}
-                text="Добавить строку"
-            />
+            {!editMode && (
+                <CustomButton
+                    type="Tertiary"
+                    onPress={handleAddRow}
+                    text="Добавить строку"
+                />
+            )}
+
 
             <Button onPress={() => handleExportCSV(tableData, selectedTable)}>
                 <Icons.Foundation name="page-export-csv" size={50} />
