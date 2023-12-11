@@ -17,6 +17,7 @@ import Button from '../../../Button';
 import EditButtons from './components/Buttons/EditButtons';
 import ShowMoreButton from './components/Buttons/ShowMoreButton';
 import SortIndicator from './components/SortIndicator/SortIndicator';
+import CustomButton from '../../../../../../components/customs/CustomButton';
 
 export default function DataTable({ data, tables, selectedTable }) {
     const [tableData, setTableData] = useState(data);
@@ -36,6 +37,9 @@ export default function DataTable({ data, tables, selectedTable }) {
         column: null,
         isAscending: true,
     });
+
+    const [isNewRow, setIsNewRow] = useState(false);
+    const [newRow, setNewRow] = useState({});
 
     const handleSort = column => {
         if (sortColumn.column === column) {
@@ -151,11 +155,17 @@ export default function DataTable({ data, tables, selectedTable }) {
                                 .map(field => `${field} = ?`)
                                 .join(', ');
                             const idField = tableIdMap[selectedTable];
-                            const query = `UPDATE ${selectedTable} SET ${setStatements} WHERE ${idField} = ?`;
-                            const queryArgs = [
-                                ...modifiedFields.map(field => updatedRow[field]),
-                                row[idField],
-                            ];
+
+                            const query = isNewRow
+                                ? `INSERT INTO ${selectedTable} (${Object.keys(newRow).join(', ')}) VALUES (${Object.keys(newRow).fill('?').join(', ')})`
+                                : `UPDATE ${selectedTable} SET ${setStatements} WHERE ${tableIdMap[selectedTable]} = ?`;
+
+                            const queryArgs = isNewRow
+                                ? modifiedFields.map(field => updatedRow[field])
+                                : [
+                                    ...modifiedFields.map(field => updatedRow[field]),
+                                    row[tableIdMap[selectedTable]],
+                                ];
 
                             await db.executeSql(query, queryArgs);
                         }
@@ -179,6 +189,19 @@ export default function DataTable({ data, tables, selectedTable }) {
     const handleEditCancel = () => {
         setInputHasChanges(false);
         setEditMode(false);
+    };
+
+    const handleAddRow = () => {
+        Object.keys(tableData[0]).forEach(key => {
+            newRow[key] = '';
+        });
+
+        setTableData([newRow, ...tableData]);
+
+        setSelectedRow(0);
+        setIsNewRow(true);
+        setEditMode(true);
+        setUpdatedRows({ 0: { ...newRow } });
     };
 
     return (
@@ -238,7 +261,8 @@ export default function DataTable({ data, tables, selectedTable }) {
                                             <View key={columnIndex} style={{ flex: 1 }}>
                                                 {editMode ? (
                                                     <View>
-                                                        {rowIndex === selectedRow ? (
+                                                        {rowIndex === selectedRow ||
+                                                            (isNewRow && rowIndex === 0) ? (
                                                             <TextInput
                                                                 style={styles.cell}
                                                                 value={
@@ -292,6 +316,12 @@ export default function DataTable({ data, tables, selectedTable }) {
             {tableData.length > visibleRows && (
                 <ShowMoreButton onPress={handleShowMore} />
             )}
+
+            <CustomButton
+                type="Tertiary"
+                onPress={handleAddRow}
+                text="Добавить строку"
+            />
 
             <Button onPress={() => handleExportCSV(tableData, selectedTable)}>
                 <Icons.Foundation name="page-export-csv" size={50} />
