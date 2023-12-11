@@ -14,15 +14,13 @@ import {
 import * as Animatable from 'react-native-animatable';
 import LinearGradient from 'react-native-linear-gradient';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { assets } from '../../../react-native.config';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import ModalPopup from '../customs/CustomModal/CustomModal';
-import CustomButton from '../customs/CustomButton';
 import useUserCredentials from '../../utils/hooks/useUserCredentials';
 import { Icons } from '../Icons';
 import { theme } from '../../screens/WeatherScreen/theme';
 import { handleShare } from '../../utils/Share';
 import GuestModal from '../customs/CustomModal/GuestModal';
+import SQLite from 'react-native-sqlite-storage';
 
 const Card = ({ item, navigation, data, needMargin = true }) => {
     const defaultImage =
@@ -31,7 +29,8 @@ const Card = ({ item, navigation, data, needMargin = true }) => {
     //console.log(item);
     const [imageLoaded, setImageLoaded] = useState(false);
     const [isImageLoading, setIsImageLoading] = useState(true);
-    const [imageUrl, setImageUrl] = useState(item.urlToImage || defaultImage);
+
+    let imageUrl = item.urlToImage || defaultImage;
 
     const [isLiked, setIsLiked] = useState(false);
     const [isShared, setIsShared] = useState(false);
@@ -79,10 +78,29 @@ const Card = ({ item, navigation, data, needMargin = true }) => {
                     'savedNewsItems',
                     JSON.stringify(updatedSavedNewsItems),
                 );
+
+                const newSavedNewsCount = updatedSavedNewsItems.length;
+                await updateSavedNewsCountInDatabase(newSavedNewsCount);
+
                 console.log('removed');
             }
         } catch (error) {
             console.error('Error saving news item:', error);
+        }
+    };
+
+    const updateSavedNewsCountInDatabase = async (newCount) => {
+        try {
+            const db = await SQLite.openDatabase({ name: 'news.db', location: 1 });
+
+            const userId = '1';
+
+            const updateQuery = `UPDATE UserFavorites SET favoriteNewsCount = ${newCount} WHERE userId = ${userId}`;
+            await db.executeSql(updateQuery);
+
+            getData();
+        } catch (error) {
+            console.error('Error updating saved news count in the database:', error);
         }
     };
 
@@ -174,17 +192,16 @@ const Card = ({ item, navigation, data, needMargin = true }) => {
                         animation="fadeIn"
                         duration={1000}
                         source={{ uri: imageUrl }}
-                        defaultSource={{ uri: defaultImage }}
                         style={[
                             styles.image,
                             {
-                                //opacity: imageLoaded ? 1 : 0,
+                                opacity: imageLoaded ? 1 : 0,
                             },
                             styles.shadowProp,
                             { shadowOpacity: 0.8 },
                         ]}
                         onLoad={handleImageLoad}
-                        onError={() => setIsImageLoading(false)}
+                        //onError={() => setIsImageLoading(false)}
                         resizeMethod="resize"
                     />
                 </Pressable>

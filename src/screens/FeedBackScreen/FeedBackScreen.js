@@ -16,8 +16,11 @@ import { useForm } from 'react-hook-form';
 import * as Animatable from 'react-native-animatable';
 import TypeWriter from 'react-native-typewriter';
 import { setStatusBarColor } from '../../utils/StatusBarManager';
+import SQLite from 'react-native-sqlite-storage';
+import useUserCredentials from '../../utils/hooks/useUserCredentials';
 
 export default function FeedBackScreen({ navigation }) {
+    let identify = useUserCredentials();
     const [showModal, setShowModal] = useState(true);
     const [isMessageSend, setIsMessageSend] = useState(false);
 
@@ -28,12 +31,46 @@ export default function FeedBackScreen({ navigation }) {
 
     const [countdown, setCountdown] = useState(4);
 
-    const sendMessage = () => {
+    const sendMessage = async () => {
+        await saveFeedbackIntoDB(identify, message);
         const subject = 'Связь с 4News';
         const mailtoUrl = `mailto:sevsufornews@gmail.com?subject=
         ${encodeURIComponent(subject)}&body=${encodeURIComponent(message)}`;
         Linking.openURL(mailtoUrl);
         setIsMessageSend(true);
+    };
+
+    const saveFeedbackIntoDB = async (identify, message) => {
+        try {
+            console.log(message);
+            const db = await SQLite.openDatabase({ name: 'news.db', location: 1 });
+
+            let createTableQuery = `
+                CREATE TABLE IF NOT EXISTS UsersFeedbacks (
+                    userId INTEGER PRIMARY KEY AUTOINCREMENT,
+                    userLogin TEXT NULL,
+                    feedBack TEXT NULL 
+                )`;
+            await db.executeSql(createTableQuery);
+
+            let insertFeedBackQuery = `
+                INSERT INTO UsersFeedbacks (userLogin, feedBack)
+                VALUES (?, ?)`;
+            let insertFeedBackQueryArgs = [identify, message];
+            const [results] = await db.executeSql(
+                insertFeedBackQuery,
+                insertFeedBackQueryArgs,
+            );
+
+            if (results.rowsAffected > 0) {
+                console.log('Table UsersFeedbacks created or already exists.');
+                console.log(`Rows affected by INSERT: ${results.rowsAffected}`);
+            } else {
+                console.error('Failed to insert feedback into the database.');
+            }
+        } catch (err) {
+            console.error('An error occurred:', err);
+        }
     };
 
     const handleTypeComplete = () => setIsTyped(true);

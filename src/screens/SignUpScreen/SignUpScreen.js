@@ -85,11 +85,12 @@ const SignUpScreen = () => {
                 );
                 showToast('Пользователь с таким именем уже существует.');
             } else {
-                const getLastUserID = async () => {
+                let result = null;
+                const getLastID = async (id, table) => {
                     return new Promise((resolve, reject) => {
                         db.transaction(tx => {
                             tx.executeSql(
-                                'SELECT MAX(userID) AS maxID FROM Users',
+                                `SELECT MAX(${id}) AS maxID FROM ${table}`,
                                 [],
                                 (_, { rows }) => {
                                     const { maxID } = rows.item(0);
@@ -103,13 +104,38 @@ const SignUpScreen = () => {
                     });
                 };
 
-                const lastUserID = await getLastUserID();
+                const lastUserID = await getLastID('userId', 'Users');
                 const newUserID = lastUserID + 1;
 
-                const [result] = await db.executeSql(
-                    'INSERT INTO Users (userID, userLogin, userPassword, userEmail) VALUES (?, ?, ?, ?)',
-                    [newUserID, data.username, data.password, data.email],
-                );
+                const lastAdminID = await getLastID('adminId', 'Administrators');
+                const newAdminID = lastAdminID + 1;
+
+
+                //let query1 = `DELETE FROM Administrators`;
+                //                 let query2 = `
+                //     INSERT INTO Administrators (adminId, adminLogin, adminPassword, adminComments, adminPosts, adminEmail)
+                //     SELECT userId, userLogin, userPassword, 0, 0, userEmail
+                //     FROM Users
+                //     WHERE userLogin LIKE 'admin%';
+                // `;
+
+                //await db.executeSql(query1);
+                //await db.executeSql(query2);
+
+                if (data.username.includes('admin')) {
+                    [result] = await db.executeSql(
+                        'INSERT INTO Administrators (adminId, adminLogin, adminPassword, adminComments, adminPosts, adminEmail) VALUES (?, ?, ?, ?, ?, ?)',
+                        [newAdminID, data.username, data.password, 0, 0, data.email]
+                    );
+                } else {
+                    [result] = await db.executeSql(
+                        'INSERT INTO Users (userId, userLogin, userPassword, userEmail) VALUES (?, ?, ?, ?)',
+                        [newUserID, data.username, data.password, data.email]
+                    );
+                }
+
+
+
 
                 if (result.rowsAffected > 0) {
                     await AsyncStorage.setItem('username', data.username);

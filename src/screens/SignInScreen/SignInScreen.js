@@ -131,14 +131,20 @@ const SignInScreen = ({ route }) => {
                 `;
                 queryArgs = [data.username, data.password];
             } else {
-                query = 'SELECT * FROM Users WHERE userLogin = ? AND userPassword = ?';
-                queryArgs = [data.username, data.password];
+                if (data.username.includes('admin')) {
+                    query = 'SELECT * FROM Administrators WHERE adminLogin = ? AND adminPassword = ?';
+                    queryArgs = [data.username, data.password];
+                } else {
+                    query = 'SELECT * FROM Users WHERE userLogin = ? AND userPassword = ?';
+                    queryArgs = [data.username, data.password];
+                }
+
             }
 
             const [result] = await db.executeSql(query, queryArgs);
             if (result.rows.length > 0) {
                 const user = result.rows.item(0);
-                const username = user.userLogin;
+                const username = user.userLogin || user.adminLogin;
                 setUserExist(true);
                 await AsyncStorage.setItem('username', username);
                 await AsyncStorage.setItem('password', data.password);
