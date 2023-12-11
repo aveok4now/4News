@@ -127,7 +127,7 @@ const NewsOverviewScreen = ({ route, navigation }) => {
 
     return (
         <>
-            <StatusBar backgroundColor={'transparent'} />
+            <StatusBar backgroundColor={'#041147'} />
             <View style={{ flex: 1 }}>
                 <Image
                     blurRadius={200}

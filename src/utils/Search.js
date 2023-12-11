@@ -11,6 +11,7 @@ import {
     KeyboardAvoidingView,
     ImageBackground,
     ScrollView,
+    StatusBar
 } from 'react-native';
 import * as Animatable from 'react-native-animatable';
 import RadialGradient from 'react-native-radial-gradient';
@@ -29,23 +30,6 @@ import * as Progress from 'react-native-progress';
 import ShimmerCard from '../components/ShimmerCard';
 
 const Search = ({ navigation }) => {
-    //const navigation = useNavigation();
-
-    const isFocusedScreen = useIsFocused();
-
-    useEffect(() => {
-        if (isFocusedScreen) {
-            setStatusBarColor('#2e408a');
-        } else {
-            resetStatusBarColor();
-        }
-
-        return () => {
-            // Сброс цвета statusBar при размонтировании компонента
-            resetStatusBarColor();
-        };
-    }, [isFocusedScreen]);
-
     const [SearchText, setSearchText] = useState('');
     const [Data, setData] = useState([]);
     const [wasSearched, setWasSearched] = useState(false);
@@ -106,91 +90,95 @@ const Search = ({ navigation }) => {
     const [isFocused, setIsFocused] = useState(false);
 
     return (
-        <View style={{ flex: 1 }}>
-            <ImageBackground
-                blurRadius={100}
-                style={{
-                    flex: 1,
-                    position: 'absolute',
-                    top: 0,
-                    left: 0,
-                    bottom: 0,
-                    right: 0,
-                    zIndex: 0,
-                }}
-                source={require('../screens/assets/images/search-bg.jpg')}
-            />
-            <Animatable.View
-                style={[
-                    { flex: 1 },
-                ]}
-                animation="fadeIn"
-                duration={1500}>
+        <>
+            <StatusBar backgroundColor='#2e408a' />
+            <View style={{ flex: 1 }}>
+                <ImageBackground
+                    blurRadius={100}
+                    style={{
+                        flex: 1,
+                        position: 'absolute',
+                        top: 0,
+                        left: 0,
+                        bottom: 0,
+                        right: 0,
+                        zIndex: 0,
+                    }}
+                    source={require('../screens/assets/images/search-bg.jpg')}
+                />
                 <Animatable.View
                     style={[
-                        styles.search,
-                        { backgroundColor: isFocused ? theme.bgWhite(0.2) : 'transparent' },
+                        { flex: 1 },
                     ]}
                     animation="fadeIn"
-                    duration={1000}>
-                    <TouchableOpacity
-                        onPress={() => {
-                            navigation.navigate('Домашняя страница');
-                        }}>
-                        <Icon
-                            style={styles.arrow}
-                            name="arrowleft"
-                            size={24}
-                            color="white"
+                    duration={1500}>
+                    <Animatable.View
+                        style={[
+                            styles.search,
+                            { backgroundColor: isFocused ? theme.bgWhite(0.2) : 'transparent' },
+                        ]}
+                        animation="fadeIn"
+                        duration={1000}>
+                        <TouchableOpacity
+                            onPress={() => {
+                                navigation.navigate('Домашняя страница');
+                            }}>
+                            <Icon
+                                style={styles.arrow}
+                                name="arrowleft"
+                                size={24}
+                                color="white"
+                            />
+                        </TouchableOpacity>
+                        <TextInput
+                            style={{ fontSize: 16, width: '100%', fontFamily: 'Inter-Bold' }}
+                            placeholder="Что будем искать?"
+                            placeholderTextColor={'white'}
+                            onChangeText={handleTextChange}
+                            selectionColor={'#F7F6C5'}
+                            value={SearchText}
+                            maxLength={20}
+                            onFocus={() => setIsFocused(true)}
+                            onBlur={() => setIsFocused(false)}
                         />
-                    </TouchableOpacity>
-                    <TextInput
-                        style={{ fontSize: 16, width: '100%', fontFamily: 'Inter-Bold' }}
-                        placeholder="Что будем искать?"
-                        placeholderTextColor={'white'}
-                        onChangeText={handleTextChange}
-                        selectionColor={'#F7F6C5'}
-                        value={SearchText}
-                        maxLength={20}
-                        onFocus={() => setIsFocused(true)}
-                        onBlur={() => setIsFocused(false)}
-                    />
+                    </Animatable.View>
+
+                    {Data.length === 0 && isLoading && SearchText.length !== 0 && (
+                        <ScrollView>
+                            <ShimmerCard />
+                        </ScrollView>
+                    )}
+
+                    {Data.length === 0 && !isLoading && (
+                        <View style={{ flex: 1, alignItems: 'center' }}>
+                            {wasSearched && SearchText.length !== 0 && (
+                                <Text style={{ textAlign: 'center', fontFamily: 'Inter-Light' }}>
+                                    {noResultsMessage}
+                                </Text>
+                            )}
+                            <LottieView
+                                style={styles.lottie}
+                                source={require('../screens/assets/animations/news.json')}
+                                autoPlay={true}
+                                loop={true}
+                            />
+                        </View>
+                    )}
+                    {SearchText.length !== 0 && (
+                        <FlatList
+                            style={{ flex: 1, zIndex: 1 }}
+                            scrollEventThrottle={16}
+                            showsVerticalScrollIndicator={false}
+                            data={Data}
+                            renderItem={({ item, index }) => {
+                                return <Card item={item} navigation={navigation} data={Data} />;
+                            }}
+                        />
+                    )}
                 </Animatable.View>
+            </View>
+        </>
 
-                {Data.length === 0 && isLoading && SearchText.length !== 0 && (
-                    <ScrollView>
-                        <ShimmerCard />
-                    </ScrollView>
-                )}
-
-                {Data.length === 0 && !isLoading && (
-                    <View style={{ flex: 1, alignItems: 'center' }}>
-                        {wasSearched && SearchText.length !== 0 && (
-                            <Text style={{ textAlign: 'center', fontFamily: 'Inter-Light' }}>
-                                {noResultsMessage}
-                            </Text>
-                        )}
-                        <LottieView
-                            style={styles.lottie}
-                            source={require('../screens/assets/animations/news.json')}
-                            autoPlay={true}
-                            loop={true}
-                        />
-                    </View>
-                )}
-                {SearchText.length !== 0 && (
-                    <FlatList
-                        style={{ flex: 1, zIndex: 1 }}
-                        scrollEventThrottle={16}
-                        showsVerticalScrollIndicator={false}
-                        data={Data}
-                        renderItem={({ item, index }) => {
-                            return <Card item={item} navigation={navigation} data={Data} />;
-                        }}
-                    />
-                )}
-            </Animatable.View>
-        </View>
     );
 };
 

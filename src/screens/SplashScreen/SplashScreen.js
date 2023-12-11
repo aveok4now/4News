@@ -32,7 +32,7 @@ const Splash = ({ navigation }) => {
 
     const handleTypeComplete = () => {
         setIsTyped(true);
-        resetStatusBarColor();
+        //resetStatusBarColor();
         navigation.navigate('Домашняя страница');
 
         navigation.reset({

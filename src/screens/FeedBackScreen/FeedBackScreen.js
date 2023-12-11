@@ -5,6 +5,7 @@ import {
     ScrollView,
     Linking,
     KeyboardAvoidingView,
+    StatusBar
 } from 'react-native';
 import React, { useState, useEffect } from 'react';
 import CustomDrawer from '../../components/customs/CustomDrawer';
@@ -88,99 +89,102 @@ export default function FeedBackScreen({ navigation }) {
     useEffect(() => {
         if (countdown === 0 && isTyped && navigation) {
             navigation.navigate('Домашняя страница');
-            setStatusBarColor('#36d1dc');
+            //setStatusBarColor('#36d1dc');
         }
     }, [countdown, isTyped, navigation]);
 
-    setStatusBarColor('rgba(54, 209, 220, 0.5)');
+    //setStatusBarColor('rgba(54, 209, 220, 0.5)');
 
     return (
-        <LinearGradient
-            colors={['rgba(58, 131, 244, 0.4)', 'rgba(9, 181, 211, 0.4)']}
-            style={{ width: '100%', flex: 1 }}>
-            <View style={styles.root}>
-                {showModal && (
-                    <>
-                        <ModalPopup
-                            navigation={navigation}
-                            visible={showModal}
-                            backgroundColor="#7692FF">
-                            {!isMessageSend ? (
-                                <View>
-                                    <Text
-                                        style={{
-                                            textAlign: 'center',
-                                            fontFamily: 'Inter-ExtraBold',
-                                        }}>
-                                        Оставьте свой отзыв и помогите нам стать лучше!
-                                    </Text>
-                                    <CustomInput
-                                        name="feedback"
-                                        placeholder="Мне не понравилось ..."
-                                        control={control}
-                                        needTrim={false}
-                                        rules={{
-                                            required: 'Пожалуйста, напишите сообщение',
-                                            minLength: {
-                                                value: 3,
-                                                message: 'Сообщение слишком короткое',
-                                            },
-                                        }}
-                                    />
-                                    <View
-                                        style={{
-                                            flexDirection: 'column',
-                                            justifyContent: 'center',
-                                            marginTop: 15,
-                                        }}>
-                                        <CustomButton
-                                            text="Отправить"
-                                            onPress={handleSubmit(sendMessage)}
-                                            showBorder
-                                        />
-                                    </View>
-                                </View>
-                            ) : (
-                                isMessageSend && (
-                                    <View style={{ justifyContent: 'center' }}>
+        <>
+            <StatusBar backgroundColor={'rgba(54, 209, 220, 0.5)'} />
+            <LinearGradient
+                colors={['rgba(58, 131, 244, 0.4)', 'rgba(9, 181, 211, 0.4)']}
+                style={{ width: '100%', flex: 1 }}>
+                <View style={styles.root}>
+                    {showModal && (
+                        <>
+                            <ModalPopup
+                                navigation={navigation}
+                                visible={showModal}
+                                backgroundColor="#7692FF">
+                                {!isMessageSend ? (
+                                    <View>
                                         <Text
                                             style={{
-                                                fontFamily: 'Inter-ExtraLight',
-                                                opacity: isTyped ? 0.5 : 0,
                                                 textAlign: 'center',
+                                                fontFamily: 'Inter-ExtraBold',
                                             }}>
-                                            {countdown}
+                                            Оставьте свой отзыв и помогите нам стать лучше!
                                         </Text>
-                                        <TypeWriter
-                                            style={styles.text}
-                                            minDelay={2}
-                                            typing={1}
-                                            onTypingEnd={handleTypeComplete}>
-                                            Спасибо большое за Ваш отзыв!
-                                        </TypeWriter>
+                                        <CustomInput
+                                            name="feedback"
+                                            placeholder="Мне не понравилось ..."
+                                            control={control}
+                                            needTrim={false}
+                                            rules={{
+                                                required: 'Пожалуйста, напишите сообщение',
+                                                minLength: {
+                                                    value: 3,
+                                                    message: 'Сообщение слишком короткое',
+                                                },
+                                            }}
+                                        />
+                                        <View
+                                            style={{
+                                                flexDirection: 'column',
+                                                justifyContent: 'center',
+                                                marginTop: 15,
+                                            }}>
+                                            <CustomButton
+                                                text="Отправить"
+                                                onPress={handleSubmit(sendMessage)}
+                                                showBorder
+                                            />
+                                        </View>
                                     </View>
-                                )
-                            )}
+                                ) : (
+                                    isMessageSend && (
+                                        <View style={{ justifyContent: 'center' }}>
+                                            <Text
+                                                style={{
+                                                    fontFamily: 'Inter-ExtraLight',
+                                                    opacity: isTyped ? 0.5 : 0,
+                                                    textAlign: 'center',
+                                                }}>
+                                                {countdown}
+                                            </Text>
+                                            <TypeWriter
+                                                style={styles.text}
+                                                minDelay={2}
+                                                typing={1}
+                                                onTypingEnd={handleTypeComplete}>
+                                                Спасибо большое за Ваш отзыв!
+                                            </TypeWriter>
+                                        </View>
+                                    )
+                                )}
 
-                            <Animatable.View
-                                animation="fadeIn"
-                                style={{ justifyContent: 'center' }}>
-                                <CustomButton
-                                    type="Tertiary"
-                                    text="Назад"
-                                    onPress={() => {
-                                        setShowModal(!showModal);
-                                        navigation.navigate('Домашняя страница');
-                                        setStatusBarColor('#36d1dc');
-                                    }}
-                                />
-                            </Animatable.View>
-                        </ModalPopup>
-                    </>
-                )}
-            </View>
-            {/* </CustomDrawer> */}
-        </LinearGradient>
+                                <Animatable.View
+                                    animation="fadeIn"
+                                    style={{ justifyContent: 'center' }}>
+                                    <CustomButton
+                                        type="Tertiary"
+                                        text="Назад"
+                                        onPress={() => {
+                                            setShowModal(!showModal);
+                                            navigation.navigate('Домашняя страница');
+                                            setStatusBarColor('#36d1dc');
+                                        }}
+                                    />
+                                </Animatable.View>
+                            </ModalPopup>
+                        </>
+                    )}
+                </View>
+                {/* </CustomDrawer> */}
+            </LinearGradient>
+        </>
     );
 }
 
