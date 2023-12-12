@@ -54,16 +54,16 @@ React Native News App project, bootstrapped using [`@react-native-community/cli`
     - [x] Favorites List Refresh (Auto & Manual)
     - [x] No Favorite News info
     - [x] Fetching Users Favorites data from Database or AsyncStorage
-  - [ ] Comments Screen
+  - [x] Comments Screen
     - [x] News Data (image, title, publication date)
     - [x] Users comments UI
     - [x] Posting functionality
       - [x] 'No comments available' by using NoNewsInfo component 
       - [x] CustomDropDown component usage to pick options like Report, Delete, Share
         - [x] Custom ModalPopUp usage to confirm comment deleting (also checks user's identify value. For example, Admin can't report but can delete any comment or post, User can delete only posts or comment which were posted by himself, Guest can only report or share)
-    - [ ] Storing comments in database (in progress)
-  - [ ] Community Screen
-    - [ ] Users News w/ comments, likes, date, etc.
+    - [x] Storing comments in database
+  - [x] Community Screen
+    - [x] Users News w/ comments, likes, date, etc.
       - [x] Refreshing functionality which gets all the data from database 
       - [x] Storing posts w/ author's info in a database
         - [x] Storing users likes, isLiked state & likes count
@@ -145,7 +145,18 @@ React Native News App project, bootstrapped using [`@react-native-community/cli`
   - [x] MovieScreen w/ movie info, cast, similar movies
   - [x] MoviePersonScreen person's info
   - [x] MovieSearchScreen
-- [ ] Admin Subsystem (in progress)
+- [x] Admin Subsystem
+  - [x] App statistics
+    - [x] Users, Administrators, Posts, Likes, Saved news, Guests, Comments, Categories count
+    - [x] Average app rating, The most popular city; Feedbacks, Saved movies count; Last registered user; Last liked movie;
+  - [x] Database Tables (Users, Guests, Administrators, News, Categories, Likes, Comments, Rates, UserFavorites, likedMovies) (CRUD)
+    - [x] Snap carousel
+    - [x] Add/Update/Delete row functionality (providing w/ confirm/cancel buttons)
+    - [x] Table export to the CSV format
+  - [x] About App section w/ project description
+  - [x] Refresh functionality      
+    
+  
 
 
 # Ссылки
