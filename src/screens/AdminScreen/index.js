@@ -1,1 +1,1 @@
-export { default } from './AdminScreen'
+export {default} from './AdminScreen';

@@ -1,1 +1,1 @@
-export { default } from './GuestModal'
+export {default} from './GuestModal';

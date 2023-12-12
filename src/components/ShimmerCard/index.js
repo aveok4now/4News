@@ -1,1 +1,1 @@
-export { default } from './ShimmerCard'
+export {default} from './ShimmerCard';

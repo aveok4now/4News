@@ -1,1 +1,1 @@
-export { default } from './DetailItem'
+export {default} from './DetailItem';

@@ -1,1 +1,1 @@
-export { default } from './MovieScreen'
+export {default} from './MovieScreen';

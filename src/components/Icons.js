@@ -13,36 +13,36 @@ import Octicons from 'react-native-vector-icons/Octicons';
 import Foundation from 'react-native-vector-icons/Foundation';
 import EvilIcons from 'react-native-vector-icons/EvilIcons';
 import Fontisto from 'react-native-vector-icons/Fontisto';
-import Zocial from 'react-native-vector-icons/Zocial'
+import Zocial from 'react-native-vector-icons/Zocial';
 
 export const Icons = {
-    MaterialCommunityIcons,
-    MaterialIcons,
-    Ionicons,
-    Feather,
-    FontAwesome,
-    FontAwesome5,
-    FontAwesome6,
-    AntDesign,
-    Entypo,
-    SimpleLineIcons,
-    Octicons,
-    Foundation,
-    EvilIcons,
-    Fontisto,
-    Zocial
-}
+  MaterialCommunityIcons,
+  MaterialIcons,
+  Ionicons,
+  Feather,
+  FontAwesome,
+  FontAwesome5,
+  FontAwesome6,
+  AntDesign,
+  Entypo,
+  SimpleLineIcons,
+  Octicons,
+  Foundation,
+  EvilIcons,
+  Fontisto,
+  Zocial,
+};
 
-const Icon = ({ type, name, color, size = 24, style }) => {
-    const fontSize = 24;
-    const Tag = type;
-    return (
-        <>
-            {type && name && (
-                <Tag name={name} size={size || fontSize} color={color} style={style} />
-            )}
-        </>
-    )
-}
+const Icon = ({type, name, color, size = 24, style}) => {
+  const fontSize = 24;
+  const Tag = type;
+  return (
+    <>
+      {type && name && (
+        <Tag name={name} size={size || fontSize} color={color} style={style} />
+      )}
+    </>
+  );
+};
 
-export default Icon
+export default Icon;

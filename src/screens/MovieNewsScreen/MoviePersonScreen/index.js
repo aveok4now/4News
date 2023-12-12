@@ -1,1 +1,1 @@
-export { default } from './MoviePersonScreen'
+export {default} from './MoviePersonScreen';

@@ -1,1 +1,1 @@
-export { default } from './OnBoardingScreen';
+export {default} from './OnBoardingScreen';

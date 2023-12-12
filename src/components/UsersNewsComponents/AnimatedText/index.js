@@ -1,1 +1,1 @@
-export { default } from './AnimatedText'
+export {default} from './AnimatedText';

@@ -1,1 +1,1 @@
-export { default } from './MovieSeacrhScreen'
+export {default} from './MovieSeacrhScreen';

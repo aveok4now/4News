@@ -1,1 +1,1 @@
-export { default } from './GradientBackground'
+export {default} from './GradientBackground';

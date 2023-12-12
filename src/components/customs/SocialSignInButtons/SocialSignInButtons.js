@@ -1,23 +1,19 @@
 import React from 'react';
-import { View } from 'react-native';
-import CustomButton from '../CustomButton/CustomButton';
 
 // import { Container } from './styles';
 
 const SocialSignInButtons = () => {
+  // const onSignInGoogle = () => {
+  //     console.warn("Вход через Google");
+  // }
 
-    // const onSignInGoogle = () => {
-    //     console.warn("Вход через Google");
-    // }
+  // const onSignInVK = () => {
+  //     console.warn("Вход через ВКонтакте");
+  // }
 
-    // const onSignInVK = () => {
-    //     console.warn("Вход через ВКонтакте");
-    // }
-
-
-    return (
-        <>
-            {/* <CustomButton
+  return (
+    <>
+      {/* <CustomButton
                 text="Google"
                 onPress={onSignInGoogle}
                 bgColor="#FAE9EA"
@@ -29,9 +25,8 @@ const SocialSignInButtons = () => {
                 bgColor="#CFD8F7"
                 fgColor="#154ED3"
             /> */}
-
-        </>
-    );
-}
+    </>
+  );
+};
 
 export default SocialSignInButtons;

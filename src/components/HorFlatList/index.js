@@ -1,1 +1,1 @@
-export { default } from './HorFlatList'
+export {default} from './HorFlatList';

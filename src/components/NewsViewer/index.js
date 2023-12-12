@@ -1,1 +1,1 @@
-export { default } from './NewsViewer'
+export {default} from './NewsViewer';

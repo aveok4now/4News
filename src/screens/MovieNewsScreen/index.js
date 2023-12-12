@@ -1,1 +1,1 @@
-export { default } from './MovieNewsScreen'
+export {default} from './MovieNewsScreen';

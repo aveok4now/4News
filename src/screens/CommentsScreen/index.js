@@ -1,1 +1,1 @@
-export { default } from './CommentsScreen'
+export {default} from './CommentsScreen';

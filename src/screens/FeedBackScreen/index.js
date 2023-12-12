@@ -1,1 +1,1 @@
-export { default } from './FeedBackScreen'
+export {default} from './FeedBackScreen';

@@ -1,1 +1,1 @@
-export { default } from './TrendingMovies'
+export {default} from './TrendingMovies';

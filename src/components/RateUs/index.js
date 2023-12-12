@@ -1,1 +1,1 @@
-export { default } from './RateUs'
+export {default} from './RateUs';
