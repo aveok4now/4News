@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Text,
@@ -6,13 +6,12 @@ import {
   TouchableOpacity,
   StatusBar,
 } from 'react-native';
-import {useNavigation} from '@react-navigation/native';
-// import { Container } from './styles';
+import { useNavigation } from '@react-navigation/native';
 import Onboarding from 'react-native-onboarding-swiper';
 import LottieView from 'lottie-react-native';
 import * as Animatable from 'react-native-animatable';
-import {setItem} from '../../utils/asyncStorage';
-import {width} from '../../utils/getDimensions';
+import { setItem } from '../../utils/global/asyncStorage';
+import { width } from '../../utils/global/getDimensions';
 
 const OnBoardingScreen = () => {
   const navigation = useNavigation();
@@ -21,7 +20,7 @@ const OnBoardingScreen = () => {
     setItem('onboarded', '1');
   };
 
-  const Button = ({text, onPress, buttonStyle, textStyle}) => {
+  const Button = ({ text, onPress, buttonStyle, textStyle }) => {
     return (
       <TouchableOpacity style={buttonStyle} onPress={onPress}>
         <Animatable.Text animation="fadeIn" style={textStyle}>
@@ -31,7 +30,7 @@ const OnBoardingScreen = () => {
     );
   };
 
-  const doneButton = ({...props}) => {
+  const doneButton = ({ ...props }) => {
     return (
       <Button
         text="Начать"
@@ -42,7 +41,7 @@ const OnBoardingScreen = () => {
     );
   };
 
-  const skipButton = ({...props}) => {
+  const skipButton = ({ ...props }) => {
     return (
       <Button
         text="Пропустить"
@@ -52,7 +51,7 @@ const OnBoardingScreen = () => {
     );
   };
 
-  const nextButton = ({...props}) => {
+  const nextButton = ({ ...props }) => {
     return (
       <Button
         text="Далее"
@@ -71,28 +70,28 @@ const OnBoardingScreen = () => {
     {
       statusBarColor: '#40BBC4',
       backgroundColor: '#40BBC4',
-      animationSource: require('../assets/animations/first.json'),
+      animationSource: require('../../../assets/animations/first.json'),
       title: 'Узнавайте всё первыми',
       subtitle: 'Новостная лента с регулярными обновлениями',
     },
     {
       statusBarColor: '#7da9f2',
       backgroundColor: '#7da9f2',
-      animationSource: require('../assets/animations/infinity.json'),
+      animationSource: require('../../../assets/animations/infinity.json'),
       title: 'Лента не имеет конца!',
       subtitle: 'Читайте, сколько угодно',
     },
     {
       statusBarColor: '#5a88e4',
       backgroundColor: '#5a88e4',
-      animationSource: require('../assets/animations/interests.json'),
+      animationSource: require('../../../assets/animations/interests.json'),
       title: 'Находите Ваши интересы',
       subtitle: 'И получайте новости о том, что Вам интересно',
     },
   ];
 
   return (
-    <View style={{flex: 1}}>
+    <View style={{ flex: 1 }}>
       <StatusBar backgroundColor={screens[pageIndex].statusBarColor} />
       <Onboarding
         bottomBarHighlight={false}
@@ -102,7 +101,7 @@ const OnBoardingScreen = () => {
         NextButtonComponent={nextButton}
         SkipButtonComponent={skipButton}
         pageIndexCallback={changePageHandler}
-        containerStyles={{paddingHorizontal: 15}}
+        containerStyles={{ paddingHorizontal: 15 }}
         pages={screens.map((screen, index) => ({
           backgroundColor: screen.backgroundColor,
           image: (
@@ -128,7 +127,7 @@ const styles = StyleSheet.create({
     fontFamily: 'Inter-ExtraBold',
     fontSize: 24,
     textShadowColor: 'rgba(0, 0, 0, 0.25)',
-    textShadowOffset: {width: 0, height: 2},
+    textShadowOffset: { width: 0, height: 2 },
     textShadowRadius: 4,
   },
 

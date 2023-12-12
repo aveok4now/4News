@@ -8,10 +8,10 @@ import {
   Dimensions,
   ScrollView,
 } from 'react-native';
-import React, {useState, useEffect, useCallback} from 'react';
-import {Image} from 'react-native-animatable';
-import {SafeAreaView} from 'react-native-safe-area-context';
-import {theme} from './theme';
+import React, { useState, useEffect, useCallback } from 'react';
+import { Image } from 'react-native-animatable';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { theme } from './theme';
 import Icon from 'react-native-vector-icons/Ionicons';
 import WindIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import DropIcon from 'react-native-vector-icons/Entypo';
@@ -19,22 +19,22 @@ import SunRiseIcon from 'react-native-vector-icons/Feather';
 import CalendarIcon from 'react-native-vector-icons/FontAwesome6';
 import * as Animatable from 'react-native-animatable';
 import LottieView from 'lottie-react-native';
-import {debounce} from 'lodash';
-import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
-import {fetchLocations, fetchWeatherForecast} from '../../api/weather';
-import {weatherImages} from '../../constants';
+import { debounce } from 'lodash';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import { fetchLocations, fetchWeatherForecast } from '../../api/weather';
+import { weatherImages } from '../../constants/WeatherImages';
 import * as Progress from 'react-native-progress';
 import useUserCredentials from '../../utils/hooks/useUserCredentials';
 import SQLite from 'react-native-sqlite-storage';
+import { width } from '../../utils/global/getDimensions';
+import searchBg from '../../../assets/images/search-bg.jpg'
 
-const {width, height} = Dimensions.get('window');
 
-export default function WeatherScreen({navigation}) {
+export default function WeatherScreen({ navigation }) {
   let identify = useUserCredentials();
 
   const [showSearch, setShowSearch] = useState(false);
   const [locations, setLocations] = useState([]);
-  const [showBorder, setShowBorder] = useState(true);
 
   const [loading, setLoading] = useState(true);
   const [weather, setWeather] = useState({});
@@ -43,7 +43,7 @@ export default function WeatherScreen({navigation}) {
 
   const handleSearch = value => {
     if (value.length > 2) {
-      fetchLocations({cityName: value}).then(data => {
+      fetchLocations({ cityName: value }).then(data => {
         //console.log("Результат " + JSON.stringify(data))
         setLocations(data);
       });
@@ -70,7 +70,7 @@ export default function WeatherScreen({navigation}) {
   }, [identify]);
 
   const fetchMyWeatherData = async () => {
-    const db = await SQLite.openDatabase({name: 'news.db', location: 1});
+    const db = await SQLite.openDatabase({ name: 'news.db', location: 1 });
     let myCity = null;
 
     console.log('IDENTIFY' + identify);
@@ -112,7 +112,7 @@ export default function WeatherScreen({navigation}) {
 
   const setUserCityToDB = async name => {
     try {
-      const db = await SQLite.openDatabase({name: 'news.db', location: 1});
+      const db = await SQLite.openDatabase({ name: 'news.db', location: 1 });
       let userId = null;
 
       if (identify !== 'Гость') {
@@ -152,7 +152,7 @@ export default function WeatherScreen({navigation}) {
 
   const handleTextDebounce = useCallback(debounce(handleSearch, 1200), []);
 
-  const {current, location} = weather || {};
+  const { current, location } = weather || {};
 
   const moreInfo = {
     'Минимальная температура': `${query?.mintemp_c}°`,
@@ -174,23 +174,16 @@ export default function WeatherScreen({navigation}) {
     //imageSource: imageSources[key]
   }));
 
-  // const imageSources = {
-  //     'Шанс дождя': weatherImages[weatherTranslations['Rain']],
-  //     'Шанс снега': weatherImages[weatherTranslations['Snow']],
-  //     'Минимальная температура': weatherImages[weatherTranslations['Light rain']],
-  //     'Максимальная температура': weatherImages[weatherTranslations['Sunny']],
-  //     'Средняя влажность': weatherImages[weatherTranslations['Sunny']],
-  // };
 
   const checkLocation = (city, country) =>
     city === 'Sevastopol' && country === 'Ukraine' ? 'Россия' : country;
 
   return loading ? (
-    <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
       <Image
         blurRadius={300}
-        style={{position: 'absolute', width: '100%', height: '100%'}}
-        source={require('../assets/images/search-bg.jpg')}
+        style={{ position: 'absolute', width: '100%', height: '100%' }}
+        source={searchBg}
       />
       <Progress.CircleSnail thickness={10} size={140} color="white" />
     </View>
@@ -198,14 +191,14 @@ export default function WeatherScreen({navigation}) {
     <>
       <StatusBar backgroundColor="#092439" />
       <KeyboardAwareScrollView
-        style={{flex: 1, position: 'relative'}}
+        style={{ flex: 1, position: 'relative' }}
         showsVerticalScrollIndicator={false}>
         <Image
           blurRadius={100}
-          style={{position: 'absolute', width: '100%', height: '100%'}}
-          source={require('../assets/images/search-bg.jpg')}
+          style={{ position: 'absolute', width: '100%', height: '100%' }}
+          source={searchBg}
         />
-        <SafeAreaView style={{display: 'flex', flex: 1}}>
+        <SafeAreaView style={{ display: 'flex', flex: 1 }}>
           <View
             style={{
               height: '7%',
@@ -335,7 +328,7 @@ export default function WeatherScreen({navigation}) {
               </Text>
             </Text>
 
-            <View style={{flexDirection: 'row', justifyContent: 'center'}}>
+            <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
               <LottieView
                 style={styles.lottie}
                 source={weatherImages[current?.condition?.text]}
@@ -375,7 +368,7 @@ export default function WeatherScreen({navigation}) {
                   marginTop: 5,
                 }}>
                 Ощущается как{' '}
-                <Text style={{fontFamily: 'Inter-ExtraBold', color: 'yellow'}}>
+                <Text style={{ fontFamily: 'Inter-ExtraBold', color: 'yellow' }}>
                   {current?.feelslike_c}&#176;
                 </Text>
               </Text>
@@ -447,7 +440,7 @@ export default function WeatherScreen({navigation}) {
               </View>
             </View>
           </View>
-          <View style={{marginBottom: 40}}>
+          <View style={{ marginBottom: 40 }}>
             <View
               style={{
                 flexDirection: 'row',
@@ -456,20 +449,20 @@ export default function WeatherScreen({navigation}) {
                 marginLeft: 12,
               }}>
               <CalendarIcon name="calendar-days" size={22} color="white" />
-              <Text style={{fontFamily: 'Inter-Light', color: 'white'}}>
+              <Text style={{ fontFamily: 'Inter-Light', color: 'white' }}>
                 {'  '}Прогноз на{' '}
-                <Text style={{fontFamily: 'Inter-ExtraBold'}}>Неделю</Text>
+                <Text style={{ fontFamily: 'Inter-ExtraBold' }}>Неделю</Text>
               </Text>
             </View>
             <ScrollView
               horizontal
-              contentContainerStyle={{paddingHorizontal: 15}}
+              contentContainerStyle={{ paddingHorizontal: 15 }}
               showsHorizontalScrollIndicator={false}
-              //keyboardShouldPersistTaps='handled'
+            //keyboardShouldPersistTaps='handled'
             >
               {weather?.forecast?.forecastday?.map((item, index) => {
                 let date = new Date(item.date);
-                let options = {weekday: 'long'};
+                let options = { weekday: 'long' };
                 let dayName = date.toLocaleDateString('ru-RU', options);
                 dayName = dayName.split(',')[0];
                 dayName = dayName.charAt(0).toUpperCase() + dayName.slice(1);
@@ -493,7 +486,7 @@ export default function WeatherScreen({navigation}) {
                         : theme.bgWhite(0.15),
                     }}>
                     <LottieView
-                      style={{height: 44, width: 44}}
+                      style={{ height: 44, width: 44 }}
                       source={
                         weatherImages[item?.day?.condition?.text || 'other']
                       }
@@ -521,7 +514,7 @@ export default function WeatherScreen({navigation}) {
               })}
             </ScrollView>
           </View>
-          <View style={{marginBottom: 80}}>
+          <View style={{ marginBottom: 80 }}>
             <View
               style={{
                 flexDirection: 'row',
@@ -530,17 +523,17 @@ export default function WeatherScreen({navigation}) {
                 marginLeft: 12,
               }}>
               <Icon name="information-circle-outline" size={28} color="white" />
-              <Text style={{fontFamily: 'Inter-Light', color: 'white'}}>
+              <Text style={{ fontFamily: 'Inter-Light', color: 'white' }}>
                 {'  '}
                 Дополнительная информация на{' '}
-                <Text style={{fontFamily: 'Inter-ExtraBold'}}>Сегодня</Text>
+                <Text style={{ fontFamily: 'Inter-ExtraBold' }}>Сегодня</Text>
               </Text>
             </View>
             <ScrollView
               horizontal
-              contentContainerStyle={{paddingHorizontal: 15}}
+              contentContainerStyle={{ paddingHorizontal: 15 }}
               showsHorizontalScrollIndicator={false}>
-              {combinedInfo.map(({key, value}) => (
+              {combinedInfo.map(({ key, value }) => (
                 <View
                   key={key}
                   style={{
@@ -554,12 +547,6 @@ export default function WeatherScreen({navigation}) {
                     marginRight: 16,
                     backgroundColor: theme.bgWhite(0.15),
                   }}>
-                  {/* <LottieView
-                                        style={{ height: 44, width: 44 }}
-                                        source={imageSource}
-                                        autoPlay
-                                        loop
-                                    /> */}
                   <Text
                     style={{
                       color: 'white',

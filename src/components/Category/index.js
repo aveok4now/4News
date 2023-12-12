@@ -1,1 +1,1 @@
-export {default} from './CategoryComp';
+export { default } from './Category';

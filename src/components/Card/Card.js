@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -11,13 +11,13 @@ import LinearGradient from 'react-native-linear-gradient';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import useUserCredentials from '../../utils/hooks/useUserCredentials';
-import {Icons} from '../Icons';
-import {theme} from '../../screens/WeatherScreen/theme';
-import {handleShare} from '../../utils/Share';
+import { Icons } from '../../utils/global/Icons';
+import { theme } from '../../screens/WeatherScreen/theme';
+import { handleShare } from '../../utils/newsUtils/Share';
 import GuestModal from '../customs/CustomModal/GuestModal';
 import SQLite from 'react-native-sqlite-storage';
 
-const Card = ({item, navigation, data, needMargin = true}) => {
+const Card = ({ item, navigation, data, needMargin = true }) => {
   const defaultImage =
     'https://arbeitgeber.de/wp-content/uploads/2020/11/bda-news-header-1920x1280px-1536x1024.jpg';
 
@@ -86,7 +86,7 @@ const Card = ({item, navigation, data, needMargin = true}) => {
 
   const updateSavedNewsCountInDatabase = async newCount => {
     try {
-      const db = await SQLite.openDatabase({name: 'news.db', location: 1});
+      const db = await SQLite.openDatabase({ name: 'news.db', location: 1 });
 
       const userId = '1';
 
@@ -126,7 +126,7 @@ const Card = ({item, navigation, data, needMargin = true}) => {
 
   const onOk = () => {
     setShowModal(false);
-    navigation.navigate('Добро пожаловать !', {status: 'logout'});
+    navigation.navigate('Добро пожаловать !', { status: 'logout' });
   };
 
   const today = new Date();
@@ -171,13 +171,13 @@ const Card = ({item, navigation, data, needMargin = true}) => {
   return item.title.includes('Removed') ? null : (
     <LinearGradient
       colors={['rgb(15 23 42)', 'rgb(56 189 248)']}
-      start={{x: 0, y: 0}}
-      end={{x: 1, y: 1}}>
+      start={{ x: 0, y: 0 }}
+      end={{ x: 1, y: 1 }}>
       <Animatable.View
         style={[
           styles.card,
           item === data[data.length - 1] && data.length !== 1 && needMargin
-            ? {marginBottom: '13%'}
+            ? { marginBottom: '13%' }
             : null,
         ]}
         animation="fadeIn"
@@ -186,14 +186,14 @@ const Card = ({item, navigation, data, needMargin = true}) => {
           <Animatable.Image
             animation="fadeIn"
             duration={1000}
-            source={{uri: imageUrl}}
+            source={{ uri: imageUrl }}
             style={[
               styles.image,
               {
                 opacity: imageLoaded ? 1 : 0,
               },
               styles.shadowProp,
-              {shadowOpacity: 0.8},
+              { shadowOpacity: 0.8 },
             ]}
             onLoad={handleImageLoad}
             //onError={() => setIsImageLoading(false)}
@@ -207,18 +207,18 @@ const Card = ({item, navigation, data, needMargin = true}) => {
             style={[
               styles.podcard,
               item.author && item.author.length > 40
-                ? {flexDirection: 'column', alignItems: 'flex-start'}
+                ? { flexDirection: 'column', alignItems: 'flex-start' }
                 : null,
             ]}>
             <Text style={styles.description}>{item.author || ''} </Text>
             <Text style={styles.description}>{formattedDate}</Text>
           </View>
-          <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+          <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
             <TouchableOpacity
               disabled={includesG}
               style={[
                 styles.more,
-                {opacity: includesG ? 0 : 1},
+                { opacity: includesG ? 0 : 1 },
                 styles.shadowProp,
               ]}
               onPress={() =>
@@ -231,7 +231,7 @@ const Card = ({item, navigation, data, needMargin = true}) => {
                 name="arrow-right"
                 size={20}
                 color="white"
-                style={{marginLeft: 8}}
+                style={{ marginLeft: 8 }}
               />
             </TouchableOpacity>
 
@@ -248,7 +248,7 @@ const Card = ({item, navigation, data, needMargin = true}) => {
                 styles.shadowProp,
               ]}>
               <TouchableOpacity
-                style={{paddingHorizontal: 10}}
+                style={{ paddingHorizontal: 10 }}
                 onPress={handleLike}>
                 <Icon
                   name={isLiked ? 'heart' : 'heart-o'}
@@ -258,11 +258,11 @@ const Card = ({item, navigation, data, needMargin = true}) => {
               </TouchableOpacity>
               <TouchableOpacity
                 onPress={handleNewsPressed}
-                style={{paddingHorizontal: 10}}>
+                style={{ paddingHorizontal: 10 }}>
                 <Icons.Fontisto name={'comment'} size={24} color="white" />
               </TouchableOpacity>
               <TouchableOpacity
-                style={{paddingHorizontal: 10}}
+                style={{ paddingHorizontal: 10 }}
                 onPress={() =>
                   handleShare({
                     url: item.url,
@@ -322,7 +322,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: '35%',
     left: '50%',
-    transform: [{translateX: -12.5}, {translateY: -12.5}],
+    transform: [{ translateX: -12.5 }, { translateY: -12.5 }],
     color: 'red',
   },
   titleView: {
@@ -390,7 +390,7 @@ const styles = StyleSheet.create({
 
   shadowProp: {
     shadowColor: '#171717',
-    shadowOffset: {width: -2, height: 8},
+    shadowOffset: { width: -2, height: 8 },
     shadowOpacity: 0.2,
     shadowRadius: 3,
   },

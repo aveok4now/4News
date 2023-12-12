@@ -1,9 +1,9 @@
-import {View, Text} from 'react-native';
+import { View, Text } from 'react-native';
 import React from 'react';
-import {theme} from '../../../../MovieNewsScreen/theme';
-import {width, height} from '../../../../../utils/getDimensions';
+import { theme } from '../../../../MovieNewsScreen/theme';
+import { width, height } from '../../../../../utils/global/getDimensions';
 
-export default function DBInfo({item}) {
+export default function DBInfo({ item }) {
   return (
     <View
       style={{
@@ -31,11 +31,11 @@ export default function DBInfo({item}) {
           right: 0,
           left: 0,
         }}>
-        <Text style={{fontFamily: 'Inter-Bold', fontSize: 60}}>
+        <Text style={{ fontFamily: 'Inter-Bold', fontSize: 60 }}>
           {item.count}
         </Text>
       </View>
-      <View style={{position: 'absolute', bottom: 0, right: 5}}>
+      <View style={{ position: 'absolute', bottom: 0, right: 5 }}>
         {item.icon}
       </View>
     </View>

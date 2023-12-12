@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -7,19 +7,19 @@ import {
   TouchableOpacity,
   TextInput,
 } from 'react-native';
-import {theme} from '../../../../../MovieNewsScreen/theme';
+import { theme } from '../../../../../MovieNewsScreen/theme';
 import Modal from './components/Modals/Modal';
 import SQLite from 'react-native-sqlite-storage';
-import {tableIdMap} from '../utils/tablesMap';
-import {Icons} from '../../../../../../components/Icons';
-import {handleExportCSV} from '../utils/tableExport';
+import { tableIdMap } from '../utils/tablesMap';
+import { Icons } from '../../../../../../utils/global/Icons';
+import { handleExportCSV } from '../utils/tableExport';
 import Button from '../../../Button';
 import EditButtons from './components/Buttons/EditButtons';
 import ShowMoreButton from './components/Buttons/ShowMoreButton';
 import SortIndicator from './components/SortIndicator/SortIndicator';
 import CustomButton from '../../../../../../components/customs/CustomButton';
 
-export default function DataTable({data, tables, selectedTable}) {
+export default function DataTable({ data, tables, selectedTable }) {
   const [tableData, setTableData] = useState(data);
   const [selectedRow, setSelectedRow] = useState(null);
   const [deletedRow, setDeletedRow] = useState(null);
@@ -43,9 +43,9 @@ export default function DataTable({data, tables, selectedTable}) {
 
   const handleSort = column => {
     if (sortColumn.column === column) {
-      setSortColumn({column, isAscending: !sortColumn.isAscending});
+      setSortColumn({ column, isAscending: !sortColumn.isAscending });
     } else {
-      setSortColumn({column, isAscending: true});
+      setSortColumn({ column, isAscending: true });
     }
   };
 
@@ -58,8 +58,8 @@ export default function DataTable({data, tables, selectedTable}) {
               ? 1
               : -1
             : b[sortColumn.column] > a[sortColumn.column]
-            ? 1
-            : -1,
+              ? 1
+              : -1,
         );
       });
     }
@@ -71,14 +71,14 @@ export default function DataTable({data, tables, selectedTable}) {
     }
 
     try {
-      const db = await SQLite.openDatabase({name: 'news.db', location: 1});
+      const db = await SQLite.openDatabase({ name: 'news.db', location: 1 });
 
       const query1 = `SELECT rowid, ${tableIdMap[selectedTable]} AS id FROM ${selectedTable} LIMIT 1 OFFSET ${selectedRow}`;
       const result = await db.executeSql(query1);
       const row = result[0].rows.item(0);
 
       if (row !== undefined) {
-        const {rowid, id} = row;
+        const { rowid, id } = row;
 
         const query =
           rowid !== undefined
@@ -116,7 +116,7 @@ export default function DataTable({data, tables, selectedTable}) {
     setEditMode(true);
     setUpdatedRows(prev => ({
       ...prev,
-      [selectedRow]: {...tableData[selectedRow]},
+      [selectedRow]: { ...tableData[selectedRow] },
     }));
   };
 
@@ -139,12 +139,12 @@ export default function DataTable({data, tables, selectedTable}) {
 
   const handleSave = async () => {
     try {
-      const db = await SQLite.openDatabase({name: 'news.db', location: 1});
+      const db = await SQLite.openDatabase({ name: 'news.db', location: 1 });
 
       const updatedData = await Promise.all(
         tableData.map(async (row, rowIndex) => {
           if (updatedRows[rowIndex]) {
-            const updatedRow = {...row, ...updatedRows[rowIndex]};
+            const updatedRow = { ...row, ...updatedRows[rowIndex] };
 
             const modifiedFields = Object.keys(updatedRows[rowIndex]).filter(
               key => updatedRows[rowIndex][key] !== row[key],
@@ -160,16 +160,16 @@ export default function DataTable({data, tables, selectedTable}) {
 
               const query = isNewRow
                 ? `INSERT INTO ${selectedTable} (${Object.keys(newRow).join(
-                    ', ',
-                  )}) VALUES (${Object.keys(newRow).fill('?').join(', ')})`
+                  ', ',
+                )}) VALUES (${Object.keys(newRow).fill('?').join(', ')})`
                 : `UPDATE ${selectedTable} SET ${setStatements} WHERE ${tableIdMap[selectedTable]} = ?`;
 
               const queryArgs = isNewRow
                 ? modifiedFields.map(field => updatedRow[field])
                 : [
-                    ...modifiedFields.map(field => updatedRow[field]),
-                    row[tableIdMap[selectedTable]],
-                  ];
+                  ...modifiedFields.map(field => updatedRow[field]),
+                  row[tableIdMap[selectedTable]],
+                ];
 
               await db.executeSql(query, queryArgs);
             }
@@ -205,14 +205,14 @@ export default function DataTable({data, tables, selectedTable}) {
       newRowObject[key] = '';
     });
 
-    setNewRow(prevNewRow => ({...prevNewRow, ...newRowObject}));
+    setNewRow(prevNewRow => ({ ...prevNewRow, ...newRowObject }));
 
     setTableData([newRowObject, ...tableData]);
 
     setSelectedRow(0);
     setIsNewRow(true);
     setEditMode(true);
-    setUpdatedRows({0: {...newRowObject}});
+    setUpdatedRows({ 0: { ...newRowObject } });
   };
 
   const handleCancelAddRow = () => {
@@ -268,7 +268,7 @@ export default function DataTable({data, tables, selectedTable}) {
                 <View
                   style={[
                     styles.row,
-                    rowIndex === tableData.length - 1 && {borderBottomWidth: 0},
+                    rowIndex === tableData.length - 1 && { borderBottomWidth: 0 },
                     {
                       backgroundColor:
                         rowIndex % 2 === 0
@@ -281,11 +281,11 @@ export default function DataTable({data, tables, selectedTable}) {
                       return null;
                     }
                     return (
-                      <View key={columnIndex} style={{flex: 1}}>
+                      <View key={columnIndex} style={{ flex: 1 }}>
                         {editMode ? (
                           <View>
                             {rowIndex === selectedRow ||
-                            (isNewRow && rowIndex === 0) ? (
+                              (isNewRow && rowIndex === 0) ? (
                               <TextInput
                                 style={styles.cell}
                                 value={
@@ -350,7 +350,7 @@ export default function DataTable({data, tables, selectedTable}) {
 
       <Button onPress={() => handleExportCSV(tableData, selectedTable)}>
         <Icons.Foundation name="page-export-csv" size={50} />
-        <Text style={{fontFamily: 'Inter-ExtraBold', fontSize: 22}}>
+        <Text style={{ fontFamily: 'Inter-ExtraBold', fontSize: 22 }}>
           Экспорт
         </Text>
       </Button>

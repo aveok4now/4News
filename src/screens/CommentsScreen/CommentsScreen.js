@@ -9,27 +9,28 @@ import {
   TouchableWithoutFeedback,
   TextInput,
 } from 'react-native';
-import React, {useRef, useState, useEffect} from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import * as Animatable from 'react-native-animatable';
-import {theme} from '../WeatherScreen/theme';
-import {SafeAreaView} from 'react-native-safe-area-context';
-import {Pressable} from 'react-native';
-import {Icons} from '../../components/Icons';
-import {handleShare} from '../../utils/Share';
+import { theme } from '../WeatherScreen/theme';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { Pressable } from 'react-native';
+import { Icons } from '../../utils/global/Icons';
+import { handleShare } from '../../utils/newsUtils/Share';
 import useUserCredentials from '../../utils/hooks/useUserCredentials';
-import {useNavigation} from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import NoNewsInfo from '../../components/NoNewsInfo';
 import CustomButton from '../../components/customs/CustomButton';
-import {formatPostTime} from '../../utils/formatPostTime';
+import { formatPostTime } from '../../utils/global/formatPostTime';
 import ModalPopup from '../../components/customs/CustomModal/CustomModal';
 import CustomDropDown from '../../components/customs/CustomDropDown';
 import Toast from 'react-native-toast-message';
 import useUserImage from '../../utils/hooks/useUserImage';
 import SQLite from 'react-native-sqlite-storage';
+import newsBackgroundImage from '../../../assets/images/newsoverview.jpg'
 
-import {condition, getUserImage} from '../../utils/getUserImage';
+import { condition, getUserImage } from '../../utils/global/getUserImage';
 
-export default function CommentsScreen({route}) {
+export default function CommentsScreen({ route }) {
   const {
     item,
     defaultImage,
@@ -62,7 +63,7 @@ export default function CommentsScreen({route}) {
   useEffect(() => {
     const fetchComments = async () => {
       try {
-        const db = await SQLite.openDatabase({name: 'news.db', location: 1});
+        const db = await SQLite.openDatabase({ name: 'news.db', location: 1 });
 
         const postId = item.id || new Date(item.publishedAt).toString();
 
@@ -109,7 +110,7 @@ export default function CommentsScreen({route}) {
       if (includesG) {
         return;
       }
-      navigation.navigate('NewsViewer', {url: item.url});
+      navigation.navigate('NewsViewer', { url: item.url });
     } catch (err) {
       console.log(err);
       return;
@@ -146,7 +147,7 @@ export default function CommentsScreen({route}) {
     console.log(postText);
 
     try {
-      const db = await SQLite.openDatabase({name: 'news.db', location: 1});
+      const db = await SQLite.openDatabase({ name: 'news.db', location: 1 });
 
       let query = `
               INSERT INTO Comments (postId, authorName, commentText, timestamp)
@@ -180,7 +181,7 @@ export default function CommentsScreen({route}) {
       const comment = comments[selectedCommentIndex];
 
       try {
-        const db = await SQLite.openDatabase({name: 'news.db', location: 1});
+        const db = await SQLite.openDatabase({ name: 'news.db', location: 1 });
 
         let query = 'DELETE FROM Comments WHERE id = ?';
         let queryArgs = [comment.id];
@@ -224,7 +225,7 @@ export default function CommentsScreen({route}) {
     <>
       <StatusBar backgroundColor="#5fa3c5" />
 
-      <SafeAreaView style={{height: '100%'}}>
+      <SafeAreaView style={{ height: '100%' }}>
         <Animatable.View
           animation="fadeIn"
           duration={1500}
@@ -233,20 +234,20 @@ export default function CommentsScreen({route}) {
           }}>
           <Image
             blurRadius={100}
-            style={{position: 'absolute', width: '100%', height: '100%'}}
-            source={require('../assets/images/newsoverview.jpg')}
+            style={{ position: 'absolute', width: '100%', height: '100%' }}
+            source={newsBackgroundImage}
           />
           {showConfirmDeleteModal && (
             <ModalPopup
               visible={showConfirmDeleteModal}
               backgroundColor="rgb(59 130 246)">
-              <View style={{padding: 5}}>
-                <Text style={{fontFamily: 'Inter-ExtraBold', fontSize: 18}}>
+              <View style={{ padding: 5 }}>
+                <Text style={{ fontFamily: 'Inter-ExtraBold', fontSize: 18 }}>
                   Подтверждение
                 </Text>
               </View>
-              <View style={{width: '100%', padding: 5}}>
-                <Text style={{fontFamily: 'Inter-Light', fontSize: 18}}>
+              <View style={{ width: '100%', padding: 5 }}>
+                <Text style={{ fontFamily: 'Inter-Light', fontSize: 18 }}>
                   Вы действительно хотите удалить этот пост?
                 </Text>
               </View>
@@ -312,7 +313,7 @@ export default function CommentsScreen({route}) {
                     <TouchableWithoutFeedback
                       onPress={() =>
                         !includesG &&
-                        navigation.navigate('NewsViewer', {url: item.url})
+                        navigation.navigate('NewsViewer', { url: item.url })
                       }>
                       <Image
                         source={{
@@ -356,12 +357,10 @@ export default function CommentsScreen({route}) {
                   ? postText.slice(0, 150) + ' ...'
                   : postText}
               </Text>
-              {/* <View style={styles.seperator} /> */}
               <View
                 style={{
                   flexDirection: 'row',
                   justifyContent: 'space-between',
-                  //marginHorizontal: 5
                 }}>
                 <Text
                   style={{
@@ -377,7 +376,7 @@ export default function CommentsScreen({route}) {
                   {formattedDate}
                 </Text>
                 <TouchableOpacity
-                  style={{marginRight: 15}}
+                  style={{ marginRight: 15 }}
                   onPress={() =>
                     handleShare({
                       url: item.url,
@@ -394,7 +393,7 @@ export default function CommentsScreen({route}) {
             <View style={styles.inputContainer}>
               <TextInput
                 ref={inputRef}
-                style={{fontFamily: 'Inter-Light', fontSize: 20, width: '100%'}}
+                style={{ fontFamily: 'Inter-Light', fontSize: 20, width: '100%' }}
                 placeholder={`Что думаете, ${identify}?`}
                 selectionColor="white"
                 placeholderTextColor="whitesmoke"
@@ -407,7 +406,7 @@ export default function CommentsScreen({route}) {
                 <Animatable.View
                   animation="flipInX"
                   duration={1000}
-                  style={{position: 'absolute', top: 0, right: 5}}>
+                  style={{ position: 'absolute', top: 0, right: 5 }}>
                   <TouchableOpacity onPress={() => setInputText('')}>
                     <Icons.MaterialCommunityIcons
                       name="close-circle"
@@ -418,7 +417,7 @@ export default function CommentsScreen({route}) {
               )}
               {inputText.length > 5 && (
                 <Animatable.View
-                  style={{width: '80%', alignSelf: 'center'}}
+                  style={{ width: '80%', alignSelf: 'center' }}
                   animation="fadeIn"
                   duration={500}>
                   <CustomButton
@@ -443,7 +442,7 @@ export default function CommentsScreen({route}) {
               }}>
               <ScrollView
                 showsVerticalScrollIndicator={false}
-                style={{marginVertical: 20}}
+                style={{ marginVertical: 20 }}
                 scrollEventThrottle={16}
                 bounces={false}>
                 {comments.map((item, index) => (
@@ -452,7 +451,7 @@ export default function CommentsScreen({route}) {
                       source={item.userAvatar || userImage}
                       style={styles.avatar}
                     />
-                    <View style={{flex: 1}}>
+                    <View style={{ flex: 1 }}>
                       <View
                         style={{
                           flexDirection: 'row',
@@ -492,33 +491,13 @@ export default function CommentsScreen({route}) {
                           resizeMode="cover"
                         />
                       )}
-                      {/* <View style={{ flexDirection: 'row' }}>
-                                                <TouchableOpacity
-                                                    style={{ marginRight: 16 }}
-                                                    onPress={() => alert('pressed')}>
-                                                    <Icons.FontAwesome
-                                                        name={'heart-o'}
-                                                        size={24}
-                                                        color="#73788b"
-                                                    />
-                                                </TouchableOpacity>
-                                                <TouchableOpacity
-                                                    onPress={() => alert('pressed')}
-                                                    style={{}}>
-                                                    <Icons.Fontisto
-                                                        name={'comment'}
-                                                        size={22}
-                                                        color="#73788B"
-                                                    />
-                                                </TouchableOpacity>
-                                            </View> */}
                     </View>
                   </View>
                 ))}
               </ScrollView>
             </View>
           ) : (
-            <View style={{flex: 1}}>
+            <View style={{ flex: 1 }}>
               {inputText.length <= 40 && (
                 <NoNewsInfo
                   primaryText="Комментариев пока нет"
@@ -585,7 +564,7 @@ const styles = StyleSheet.create({
     fontFamily: 'Inter-Bold',
     color: 'rgb(96 165 250)',
     textShadowColor: 'rgba(8, 51, 68, 0.1)',
-    textShadowOffset: {width: 0, height: 2},
+    textShadowOffset: { width: 0, height: 2 },
     textShadowRadius: 4,
   },
   timestamp: {
@@ -594,7 +573,7 @@ const styles = StyleSheet.create({
     color: 'rgb(163 163 163)',
     marginTop: 2,
     textShadowColor: 'rgba(226, 232, 240, 0.25)',
-    textShadowOffset: {width: 0, height: 2},
+    textShadowOffset: { width: 0, height: 2 },
     textShadowRadius: 4,
   },
   post: {

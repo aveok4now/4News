@@ -1,16 +1,16 @@
-import {View, TouchableOpacity} from 'react-native';
-import React, {useState, useEffect, useMemo} from 'react';
+import { View, TouchableOpacity } from 'react-native';
+import React, { useState, useEffect, useMemo } from 'react';
 import Carousel from 'react-native-snap-carousel';
-import {width, height} from '../../../../../utils/getDimensions';
-import {theme} from '../../../../MovieNewsScreen/theme';
+import { width, height } from '../../../../../utils/global/getDimensions';
+import { theme } from '../../../../MovieNewsScreen/theme';
 import DataTable from './DataTable/DataTable';
 import SQLite from 'react-native-sqlite-storage';
-import {ActivityIndicator} from 'react-native-paper';
+import { ActivityIndicator } from 'react-native-paper';
 import AnimatedText from '../../../../../components/UsersNewsComponents/AnimatedText';
 
 class TableItem extends React.PureComponent {
   render() {
-    const {icon, onPress} = this.props;
+    const { icon, onPress } = this.props;
 
     return (
       <View
@@ -25,7 +25,7 @@ class TableItem extends React.PureComponent {
         }}>
         <TouchableOpacity
           onPress={onPress}
-          style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+          style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
           {icon}
         </TouchableOpacity>
       </View>
@@ -33,7 +33,7 @@ class TableItem extends React.PureComponent {
   }
 }
 
-export default function TablesCarousel({data, setActiveSlide, navigation}) {
+export default function TablesCarousel({ data, setActiveSlide, navigation }) {
   const [showTable, setShowTable] = useState(false);
 
   const [selectedTable, setSelectedTable] = useState('Users');
@@ -45,7 +45,7 @@ export default function TablesCarousel({data, setActiveSlide, navigation}) {
     try {
       setIsLoading(true);
       const query = `SELECT * FROM ${tableName}`;
-      const db = await SQLite.openDatabase({name: 'news.db', location: 1});
+      const db = await SQLite.openDatabase({ name: 'news.db', location: 1 });
       const result = await db.executeSql(query);
       const rows = result[0].rows;
       const tableRows = [];
@@ -93,20 +93,20 @@ export default function TablesCarousel({data, setActiveSlide, navigation}) {
       <AnimatedText title={selectedTable} />
       <Carousel
         data={data}
-        renderItem={({item, index}) => tableItems[index]}
+        renderItem={({ item, index }) => tableItems[index]}
         firstItem={0}
         inactiveSlideOpacity={0.5}
         sliderWidth={width}
         sliderHeight={width}
         itemWidth={width * 0.62}
-        slideStyle={{display: 'flex', alignItems: 'center'}}
+        slideStyle={{ display: 'flex', alignItems: 'center' }}
         onSnapToItem={index => {
           setActiveSlide(index);
           handleIconPress(data[index].name);
         }}
       />
       {isLoading && (
-        <ActivityIndicator style={{marginTop: 20}} size={30} color="white" />
+        <ActivityIndicator style={{ marginTop: 20 }} size={30} color="white" />
       )}
       {showTable && !isLoading && (
         <DataTable

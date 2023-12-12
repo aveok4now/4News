@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Text,
@@ -6,28 +6,28 @@ import {
   TouchableOpacity,
   TextInput,
   FlatList,
-  Dimensions,
   ImageBackground,
   ScrollView,
   StatusBar,
 } from 'react-native';
 import * as Animatable from 'react-native-animatable';
 import Icon from 'react-native-vector-icons/AntDesign';
-import Card from '../components/Card';
+import Card from '../../components/Card';
 import LottieView from 'lottie-react-native';
-const {width, height} = Dimensions.get('window');
-import {theme} from '../screens/WeatherScreen/theme';
-import {apiKeyList} from './apiKeys/newsApiKeys';
+import { width } from '../global/getDimensions';
+import { theme } from '../../screens/WeatherScreen/theme';
+import { apiKeyList } from '../apiKeys/newsApiKeys';
+import searchBgImage from '../../../assets/images/search-bg.jpg'
+import newsAnimation from '../../../assets/animations/news.json'
 
-import ShimmerCard from '../components/ShimmerCard';
+import ShimmerCard from '../../components/ShimmerCard';
 
-const Search = ({navigation}) => {
+const Search = ({ navigation }) => {
   const [SearchText, setSearchText] = useState('');
   const [Data, setData] = useState([]);
   const [wasSearched, setWasSearched] = useState(false);
   const [noResultsMessage, setNoResultsMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [shimmering, setShimmering] = useState(true);
 
   let apiKeyIndex = 0;
   let searchTimer = null;
@@ -86,7 +86,7 @@ const Search = ({navigation}) => {
   return (
     <>
       <StatusBar backgroundColor="#2e408a" />
-      <View style={{flex: 1}}>
+      <View style={{ flex: 1 }}>
         <ImageBackground
           blurRadius={100}
           style={{
@@ -98,13 +98,13 @@ const Search = ({navigation}) => {
             right: 0,
             zIndex: 0,
           }}
-          source={require('../screens/assets/images/search-bg.jpg')}
+          source={searchBgImage}
         />
-        <Animatable.View style={[{flex: 1}]} animation="fadeIn" duration={1500}>
+        <Animatable.View style={[{ flex: 1 }]} animation="fadeIn" duration={1500}>
           <Animatable.View
             style={[
               styles.search,
-              {backgroundColor: isFocused ? theme.bgWhite(0.2) : 'transparent'},
+              { backgroundColor: isFocused ? theme.bgWhite(0.2) : 'transparent' },
             ]}
             animation="fadeIn"
             duration={1000}>
@@ -120,7 +120,7 @@ const Search = ({navigation}) => {
               />
             </TouchableOpacity>
             <TextInput
-              style={{fontSize: 16, width: '100%', fontFamily: 'Inter-Bold'}}
+              style={{ fontSize: 16, width: '100%', fontFamily: 'Inter-Bold' }}
               placeholder="Что будем искать?"
               placeholderTextColor={'white'}
               onChangeText={handleTextChange}
@@ -139,15 +139,15 @@ const Search = ({navigation}) => {
           )}
 
           {Data.length === 0 && !isLoading && (
-            <View style={{flex: 1, alignItems: 'center'}}>
+            <View style={{ flex: 1, alignItems: 'center' }}>
               {wasSearched && SearchText.length !== 0 && (
-                <Text style={{textAlign: 'center', fontFamily: 'Inter-Light'}}>
+                <Text style={{ textAlign: 'center', fontFamily: 'Inter-Light' }}>
                   {noResultsMessage}
                 </Text>
               )}
               <LottieView
                 style={styles.lottie}
-                source={require('../screens/assets/animations/news.json')}
+                source={newsAnimation}
                 autoPlay={true}
                 loop={true}
               />
@@ -155,11 +155,11 @@ const Search = ({navigation}) => {
           )}
           {SearchText.length !== 0 && (
             <FlatList
-              style={{flex: 1, zIndex: 1}}
+              style={{ flex: 1, zIndex: 1 }}
               scrollEventThrottle={16}
               showsVerticalScrollIndicator={false}
               data={Data}
-              renderItem={({item, index}) => {
+              renderItem={({ item, index }) => {
                 return <Card item={item} navigation={navigation} data={Data} />;
               }}
             />

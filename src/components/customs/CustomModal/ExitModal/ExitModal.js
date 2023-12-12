@@ -1,19 +1,21 @@
-import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import React from 'react';
 import CustomButton from '../../CustomButton';
 import LottieView from 'lottie-react-native';
-import {width} from '../../../../utils/getDimensions';
+import { width } from '../../../../utils/global/getDimensions';
 import ModalPopup from '../CustomModal';
+import closeButton from '../../../../../assets/animations/close.json';
+import exitAnimation from '../../../../../assets/animations/exit.json';
 
-export default function ExitModal({visible, onYes, setVisible}) {
+export default function ExitModal({ visible, onYes, setVisible }) {
   return (
     <ModalPopup visible={visible}>
-      <View style={{alignItems: 'center'}}>
+      <View style={{ alignItems: 'center' }}>
         <View style={styles.header}>
           <TouchableOpacity onPress={() => setVisible(false)}>
             <LottieView
               style={styles.lottieClose}
-              source={require('../../../../screens/assets/animations/close.json')}
+              source={closeButton}
               autoPlay={true}
               loop={false}
             />
@@ -22,7 +24,7 @@ export default function ExitModal({visible, onYes, setVisible}) {
       </View>
       <LottieView
         style={styles.lottie}
-        source={require('../../../../screens/assets/animations/exit.json')}
+        source={exitAnimation}
         autoPlay={true}
         loop={false}
       />
@@ -34,7 +36,7 @@ export default function ExitModal({visible, onYes, setVisible}) {
           textDecorationColor: 'white',
           fontFamily: 'Inter-Black',
           textShadowColor: 'rgba(226, 232, 240, 0.25)',
-          textShadowOffset: {width: 0, height: 3},
+          textShadowOffset: { width: 0, height: 3 },
           textShadowRadius: 4,
         }}>
         Уже уходите ? 🥺
@@ -47,12 +49,12 @@ export default function ExitModal({visible, onYes, setVisible}) {
           textDecorationColor: 'white',
           fontFamily: 'Inter-Light',
           textShadowColor: 'rgba(226, 232, 240, 0.25)',
-          textShadowOffset: {width: 0, height: 3},
+          textShadowOffset: { width: 0, height: 3 },
           textShadowRadius: 4,
         }}>
         Будем рады увидеть Вас снова!
       </Text>
-      <View style={{flexDirection: 'column', justifyContent: 'center'}}>
+      <View style={{ flexDirection: 'column', justifyContent: 'center' }}>
         <CustomButton text="Да" onPress={() => onYes()} />
         <CustomButton
           type="Tertiary"
@@ -81,7 +83,6 @@ const styles = StyleSheet.create({
     width: '120%',
     height: 40,
     alignItems: 'flex-end',
-    // paddingHorizontal: -15,
     justifyContent: 'center',
   },
 });

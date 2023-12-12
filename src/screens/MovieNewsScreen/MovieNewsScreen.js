@@ -1,5 +1,5 @@
-import {View, StatusBar, ScrollView, Image} from 'react-native';
-import React, {useEffect, useState} from 'react';
+import { View, StatusBar, ScrollView, Image } from 'react-native';
+import React, { useEffect, useState } from 'react';
 import CustomDrawer from '../../components/customs/CustomDrawer';
 import TrendingMovies from '../../components/MovieNewsComponents/TrendingMovies';
 import MovieList from '../../components/MovieNewsComponents/MovieList';
@@ -9,8 +9,9 @@ import {
   fetchUpcomingMovies,
   fetchTopRatedMovies,
 } from '../../api/moviedb';
+import searchBg from '../../../assets/images/search-bg.jpg';
 
-export default function MovieNewsScreen({navigation}) {
+export default function MovieNewsScreen({ navigation }) {
   const [trending, setTrending] = useState([]);
   const [upcoming, setUpcoming] = useState([]);
   const [topRated, setTopRated] = useState([]);
@@ -57,11 +58,11 @@ export default function MovieNewsScreen({navigation}) {
   return (
     <>
       <StatusBar backgroundColor="#092439" />
-      <View style={{flex: 1}}>
+      <View style={{ flex: 1 }}>
         <Image
           blurRadius={50}
-          style={{position: 'absolute', width: '100%', height: '100%'}}
-          source={require('../assets/images/search-bg.jpg')}
+          style={{ position: 'absolute', width: '100%', height: '100%' }}
+          source={searchBg}
         />
         <CustomDrawer
           type="Новости Кино"
@@ -70,18 +71,13 @@ export default function MovieNewsScreen({navigation}) {
           showBorder={true}
           showSearch="true"
           navigation={navigation}
-          destination="MovieSearchScreen"
-          //titleColor='rgb(34 211 238)'
-        >
-          {/* <SafeAreaView style={{ marginBottom: ios ? -8 : 16 }}>
-                    <StatusBar style="light" />
-                </SafeAreaView> */}
+          destination="MovieSearchScreen">
           {isLoading ? (
             <Loader />
           ) : (
             <ScrollView
               showsVerticalScrollIndicator={false}
-              contentContainerStyle={{paddingBottom: 10}}>
+              contentContainerStyle={{ paddingBottom: 10 }}>
               {/* Сейчас в тренде */}
               {trending.length > 0 && (
                 <TrendingMovies data={trending} navigation={navigation} />

@@ -1,7 +1,8 @@
-import React, {useEffect, useState, useRef} from 'react';
-import {Modal, View, Animated, Dimensions} from 'react-native';
+import React, { useEffect, useState, useRef } from 'react';
+import { Modal, View, Animated } from 'react-native';
+import { height } from '../../../utils/global/getDimensions';
 
-const {width, height} = Dimensions.get('window');
+
 const ModalPopup = ({
   visible,
   children,
@@ -41,7 +42,7 @@ const ModalPopup = ({
           style={[
             styles.modalContainer,
             {
-              transform: [{scale: scaleValue}],
+              transform: [{ scale: scaleValue }],
               backgroundColor: backgroundColor,
             },
           ]}>

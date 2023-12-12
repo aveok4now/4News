@@ -1,12 +1,12 @@
-import React, {useState, useEffect} from 'react';
-import {View, StyleSheet, ScrollView, StatusBar} from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, StyleSheet, ScrollView, StatusBar } from 'react-native';
 import CustomInput from '../../components/customs/CustomInput/CustomInput';
 import CustomButton from '../../components/customs/CustomButton/CustomButton';
-import {useNavigation} from '@react-navigation/native';
-import {useForm} from 'react-hook-form';
+import { useNavigation } from '@react-navigation/native';
+import { useForm } from 'react-hook-form';
 import LottieView from 'lottie-react-native';
-import {width} from '../../utils/getDimensions';
-import forgotPassword from '../assets/animations/forgot_password';
+import { width } from '../../utils/global/getDimensions';
+import forgotPassword from '../../../assets/animations/forgot_password.json';
 import SQLite from 'react-native-sqlite-storage';
 import Toast from 'react-native-toast-message';
 import GradientBackground from '../../components/GradientBackground';
@@ -14,7 +14,7 @@ import GradientBackground from '../../components/GradientBackground';
 const ForgotPasswordScreen = () => {
   const email_regex =
     /^[a-zA-Z0-9.!#$%&'+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)+$/;
-  const {control, handleSubmit} = useForm();
+  const { control, handleSubmit } = useForm();
   const navigation = useNavigation();
 
   const [error, setError] = useState('');
@@ -39,7 +39,7 @@ const ForgotPasswordScreen = () => {
       //await sendCodeByEmail(userEmail, randomCode);
 
       console.log('Пользователь существует');
-      navigation.navigate('Новый пароль', {username: data.username});
+      navigation.navigate('Новый пароль', { username: data.username });
       setError(false);
     } else {
       console.log('Пользователь не существует');
@@ -54,7 +54,7 @@ const ForgotPasswordScreen = () => {
   const checkUser = async username => {
     try {
       console.log(username);
-      const db = await SQLite.openDatabase({name: 'news.db', location: 1});
+      const db = await SQLite.openDatabase({ name: 'news.db', location: 1 });
 
       let query;
       let queryArgs;
@@ -78,7 +78,7 @@ const ForgotPasswordScreen = () => {
   const getUserEmail = async userName => {
     try {
       console.log(userName);
-      const db = await SQLite.openDatabase({name: 'news.db', location: 1});
+      const db = await SQLite.openDatabase({ name: 'news.db', location: 1 });
 
       let query;
       let queryArgs;

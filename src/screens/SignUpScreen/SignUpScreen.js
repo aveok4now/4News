@@ -1,15 +1,15 @@
-import React, {useState, useRef, useEffect} from 'react';
-import {View, Text, StyleSheet, ScrollView, StatusBar} from 'react-native';
+import React, { useState, useRef, useEffect } from 'react';
+import { View, Text, StyleSheet, ScrollView, StatusBar } from 'react-native';
 import CustomInput from '../../components/customs/CustomInput/CustomInput';
 import CustomButton from '../../components/customs/CustomButton/CustomButton';
 import SocialSignInButtons from '../../components/customs/SocialSignInButtons';
-import {useNavigation} from '@react-navigation/native';
-import {useForm} from 'react-hook-form';
+import { useNavigation } from '@react-navigation/native';
+import { useForm } from 'react-hook-form';
 import BottomSheet from 'react-native-simple-bottom-sheet';
 import SQLite from 'react-native-sqlite-storage';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Toast from 'react-native-toast-message';
-import {height} from '../../utils/getDimensions';
+import { height } from '../../utils/global/getDimensions';
 import GradientBackground from '../../components/GradientBackground';
 
 SQLite.enablePromise(true);
@@ -19,7 +19,7 @@ const email_regex =
 const name_regex = /^[a-zA-Z]+$/;
 
 const SignUpScreen = () => {
-  const {control, handleSubmit, watch} = useForm();
+  const { control, handleSubmit, watch } = useForm();
   const pwd = watch('password');
   const navigation = useNavigation();
   const panelRef = useRef(null);
@@ -59,7 +59,7 @@ const SignUpScreen = () => {
     setIsButtonPressed(true);
 
     try {
-      const db = await SQLite.openDatabase({name: 'news.db', location: 1});
+      const db = await SQLite.openDatabase({ name: 'news.db', location: 1 });
 
       const [existingUserByUsername] = await db.executeSql(
         'SELECT * FROM Users WHERE userLogin = ?',
@@ -89,8 +89,8 @@ const SignUpScreen = () => {
               tx.executeSql(
                 `SELECT MAX(${id}) AS maxID FROM ${table}`,
                 [],
-                (_, {rows}) => {
-                  const {maxID} = rows.item(0);
+                (_, { rows }) => {
+                  const { maxID } = rows.item(0);
                   resolve(maxID || 0);
                 },
                 error => {
@@ -139,7 +139,7 @@ const SignUpScreen = () => {
           navigation.navigate('Домашняя страница');
           navigation.reset({
             index: 0,
-            routes: [{name: 'Домашняя страница'}],
+            routes: [{ name: 'Домашняя страница' }],
           });
         } else {
           console.warn('Ошибка при добавлении пользователя в базу данных');
@@ -151,7 +151,7 @@ const SignUpScreen = () => {
   };
 
   const onSignInPress = () => {
-    navigation.navigate('Добро пожаловать !', {status: 'logout'});
+    navigation.navigate('Добро пожаловать !', { status: 'logout' });
   };
 
   const onTermsOfUsePressed = () => {
@@ -172,7 +172,7 @@ const SignUpScreen = () => {
       <GradientBackground colors={['#357ae0', '#48AFBD']}>
         <ScrollView
           showsVerticalScrollIndicator={false}
-          contentContainerStyle={{flexGrow: 1}}>
+          contentContainerStyle={{ flexGrow: 1 }}>
           <View style={styles.root}>
             <CustomInput
               name="username"
@@ -189,11 +189,11 @@ const SignUpScreen = () => {
                   message: 'Имя пользователя должно быть не более 15 символов',
                 },
                 pattern: [
-                  {value: name_regex, message: 'Некорректный ввод имени'},
+                  { value: name_regex, message: 'Некорректный ввод имени' },
                 ],
               }}
               setIsTyping={setIsTyping}
-              //selectionColor={'#C2F970'}
+            //selectionColor={'#C2F970'}
             />
 
             <CustomInput
@@ -208,7 +208,7 @@ const SignUpScreen = () => {
                 },
               }}
               setIsTyping={setIsTyping}
-              //selectionColor={'#00EEFB'}
+            //selectionColor={'#00EEFB'}
             />
 
             <CustomInput
@@ -230,7 +230,7 @@ const SignUpScreen = () => {
               setIsTyping={setIsTyping}
               isPasswordVisible={isPasswordVisible}
               onPasswordVisibilityChange={handlePasswordVisibilityChange}
-              //selectionColor={'#DF57BC'}
+            //selectionColor={'#DF57BC'}
             />
 
             <CustomInput
@@ -245,7 +245,7 @@ const SignUpScreen = () => {
               setIsTyping={setIsTyping}
               isPasswordVisible={isPasswordVisible}
               onPasswordVisibilityChange={handlePasswordVisibilityChange}
-              //selectionColor={'#F6AE2D'}
+            //selectionColor={'#F6AE2D'}
             />
 
             <CustomButton
@@ -282,7 +282,7 @@ const SignUpScreen = () => {
               onClose={() => setShowTermsSheet(false)}
               sliderMaxHeight={height}
               wrapperStyle={styles.bottomSheet}>
-              <View style={{height: 500}}>
+              <View style={{ height: 500 }}>
                 <Text style={styles.terms}>Условия использования</Text>
                 <Text
                   style={{
@@ -317,7 +317,7 @@ const SignUpScreen = () => {
               onClose={() => setShowPrivacySheet(false)}
               sliderMaxHeight={height}
               wrapperStyle={styles.bottomSheet}>
-              <View style={{height: 500}}>
+              <View style={{ height: 500 }}>
                 <Text style={styles.terms}>Политика конфиденциальности</Text>
                 <Text
                   style={{
@@ -368,7 +368,7 @@ const styles = StyleSheet.create({
   link: {
     color: '#9FFFCB',
     textShadowColor: 'rgba(0, 0, 0, 0.25)',
-    textShadowOffset: {width: 0, height: 2},
+    textShadowOffset: { width: 0, height: 2 },
     textShadowRadius: 4,
     fontFamily: 'Inter-Light',
   },
@@ -383,7 +383,7 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     fontFamily: 'Inter-ExtraBold',
     textShadowColor: 'rgba(0, 0, 0, 0.25)',
-    textShadowOffset: {width: 0, height: 2},
+    textShadowOffset: { width: 0, height: 2 },
     textShadowRadius: 4,
   },
   errorText: {
@@ -392,7 +392,7 @@ const styles = StyleSheet.create({
     color: '#F0A5A5',
     paddingVertical: 5,
     textShadowColor: 'rgba(0, 0, 0, 0.25)',
-    textShadowOffset: {width: 0, height: 2},
+    textShadowOffset: { width: 0, height: 2 },
     textShadowRadius: 4,
   },
 });

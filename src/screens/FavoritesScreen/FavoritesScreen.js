@@ -1,10 +1,9 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
   FlatList,
   StyleSheet,
-  Dimensions,
   Image,
   StatusBar,
   RefreshControl,
@@ -17,12 +16,12 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import LottieView from 'lottie-react-native';
 import useUserCredentials from '../../utils/hooks/useUserCredentials';
 import CustomDrawer from '../../components/customs/CustomDrawer';
+import { width } from '../../utils/global/getDimensions';
+import newsOverViewImage from '../../../assets/images/newsoverview.jpg'
+import interestsAnimation from '../../../assets/animations/interests.json'
 
-const {width, height} = Dimensions.get('window');
-export default function FavoritesScreen({navigation}) {
+export default function FavoritesScreen({ navigation }) {
   const [favorites, setFavorites] = useState([]);
-
-  //const [state] = useState("📰 Ваши сохранённые новости, ")
   const [isRefreshing, setIsRefreshing] = useState(false);
 
   let identify = useUserCredentials();
@@ -66,17 +65,15 @@ export default function FavoritesScreen({navigation}) {
   return identify !== 'Гость' ? (
     <>
       <StatusBar backgroundColor="#092439" />
-      <View style={{flex: 1}}>
+      <View style={{ flex: 1 }}>
         <Image
           blurRadius={150}
-          style={{position: 'absolute', width: '100%', height: '100%'}}
-          source={require('../assets/images/newsoverview.jpg')}
+          style={{ position: 'absolute', width: '100%', height: '100%' }}
+          source={newsOverViewImage}
         />
 
         <CustomDrawer
           type="Избранное"
-          //backgroundColor="#5b86e5"
-          //fgColor="#5b86e5"
           showBorder={true}
           letterSpacing={1}
           fontFamily="Inter-ExtraBold"
@@ -94,7 +91,7 @@ export default function FavoritesScreen({navigation}) {
               }
               data={favorites}
               keyExtractor={item => item.url}
-              renderItem={({item}) => {
+              renderItem={({ item }) => {
                 return (
                   <Card item={item} navigation={navigation} data={favorites} />
                 );
@@ -107,7 +104,7 @@ export default function FavoritesScreen({navigation}) {
                   alignItems: 'center',
                   marginTop: '30%',
                 }}>
-                <Text style={{fontFamily: 'Inter-Light', fontSize: 20}}>
+                <Text style={{ fontFamily: 'Inter-Light', fontSize: 20 }}>
                   Здесь будут появляться избранные новости, нажимайте на кнопку{' '}
                   <Icon name={'heart-o'} size={20} color="white" /> , чтобы
                   сохранить их!
@@ -115,7 +112,7 @@ export default function FavoritesScreen({navigation}) {
                 <View>
                   <LottieView
                     style={styles.lottie}
-                    source={require('../assets/animations/interests.json')}
+                    source={interestsAnimation}
                     autoPlay
                     loop
                   />
@@ -128,11 +125,11 @@ export default function FavoritesScreen({navigation}) {
     </>
   ) : (
     <>
-      <View style={{flex: 1}}>
+      <View style={{ flex: 1 }}>
         <Image
           blurRadius={150}
-          style={{position: 'absolute', width: '100%', height: '100%'}}
-          source={require('../assets/images/newsoverview.jpg')}
+          style={{ position: 'absolute', width: '100%', height: '100%' }}
+          source={newsOverViewImage}
         />
         <CustomDrawer navigation={navigation} showBorder={true}>
           <View
@@ -148,13 +145,13 @@ export default function FavoritesScreen({navigation}) {
               аккаунт
             </Text>
 
-            <View style={{width: '60%', marginVertical: 15}}>
+            <View style={{ width: '60%', marginVertical: 15 }}>
               <CustomButton
                 bgColor="white"
                 fgColor="blue"
                 text="Войти"
                 onPress={() =>
-                  navigation.navigate('Добро пожаловать !', {status: 'logout'})
+                  navigation.navigate('Добро пожаловать !', { status: 'logout' })
                 }
               />
             </View>
@@ -177,8 +174,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
   },
   header: {
-    // width: '100%',
-    // height: Dimensions.get("screen").height * 0.1
     alignItems: 'center',
     paddingVertical: 10,
     paddingHorizontal: 10,
@@ -191,7 +186,6 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     justifyContent: 'center',
     fontSize: 20,
-    //justifyContent: 'center'
   },
   guestInfo: {
     textAlign: 'center',

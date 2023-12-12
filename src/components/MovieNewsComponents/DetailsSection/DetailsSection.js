@@ -1,8 +1,9 @@
-import {ScrollView} from 'react-native';
+import { ScrollView } from 'react-native';
 import React from 'react';
 import DetailItem from './DetailItem';
-import {theme} from '../../../screens/MovieNewsScreen/theme';
-export default function DetailsSection({title, items}) {
+import { theme } from '../../../screens/MovieNewsScreen/theme';
+
+export default function DetailsSection({ title, items }) {
   return (
     <ScrollView
       horizontal

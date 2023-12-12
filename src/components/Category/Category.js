@@ -1,7 +1,7 @@
-import {View, Text, StyleSheet, Image, TouchableOpacity} from 'react-native';
+import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import React from 'react';
 
-export default function CategoryComp(props) {
+export default function Category(props) {
   return (
     <TouchableOpacity>
       <View
@@ -12,7 +12,7 @@ export default function CategoryComp(props) {
           borderWidth: 0.5,
           borderColor: '#dddddd',
         }}>
-        <View style={{flex: 2}}>
+        <View style={{ flex: 2 }}>
           <Image
             source={props.imageUri}
             style={{
@@ -24,7 +24,7 @@ export default function CategoryComp(props) {
           />
         </View>
 
-        <View style={{flex: 1, paddingLeft: 10, paddingTop: 10}}>
+        <View style={{ flex: 1, paddingLeft: 10, paddingTop: 10 }}>
           <Text style={styles.categoryName}>{props.name}</Text>
         </View>
       </View>
