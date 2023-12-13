@@ -15,12 +15,10 @@ import {
   privacyPolicyText,
   termsText,
 } from './components/BottomSheetTerms/Texts';
+import { email_regex, name_regex } from '../../constants/Regex';
 
 SQLite.enablePromise(true);
 
-const email_regex =
-  /^[a-zA-Z0-9.!#$%&'+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)+$/;
-const name_regex = /^[a-zA-Z]+$/;
 
 const SignUpScreen = () => {
   const { control, handleSubmit, watch } = useForm();

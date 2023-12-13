@@ -51,7 +51,7 @@ const styles = StyleSheet.create({
     lottie: {
         width: width * 0.6,
         height: width,
-        marginVertical: 8
+        marginBottom: 8
     }
 });
 

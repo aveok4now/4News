@@ -18,7 +18,7 @@ ullamcorper sit amet risus nullam.
 `;
 
 export const privacyPolicyText = `
-Ullamco veniam ad enim dolore proident proident do ipsum sint incididunt amet elit. Aliquip ut elit est Lorem reprehenderit ad adipisicing sunt dolor incididunt dolore est. Et commodo aliquip est qui magna nulla officia. Consequat fugiat excepteur nulla sint. Ullamco labore voluptate officia aliquip magna laboris duis occaecat est. Reprehenderit ut est quis nostrud nulla sit. Incididunt amet reprehenderit do nostrud deserunt eu qui reprehenderit. Amet id cillum fugiat eu ipsum est ad eiusmod elit. Velit mollit laboris culpa anim nostrud culpa.
+Ullamco veniam ad enim dolore proident proident do ipsum sint incididunt amet elit. Aliquip ut elit est Lorem reprehenderit ad adipisicing sunt dolor incididunt dolore est. Et commodo aliquip est qui magna nulla officia. Consequat fugiat excepteur nulla sint. Ullamco labore voluptate officia aliquip magna laboris duis occaecat est. Reprehenderit ut est quis nostrud nulla sit. Incididunt amet reprehenderit do nostrud deserunt eu qui reprehenderit. Amet id cillum fugiat eu ipsum est ad eiusmod elit. 
 `;
 
 export const termsText = `
