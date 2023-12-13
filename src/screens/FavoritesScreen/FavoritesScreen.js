@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   View,
   Text,
@@ -16,11 +16,11 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import LottieView from 'lottie-react-native';
 import useUserCredentials from '../../utils/hooks/useUserCredentials';
 import CustomDrawer from '../../components/customs/CustomDrawer';
-import { width } from '../../utils/global/getDimensions';
-import newsOverViewImage from '../../../assets/images/newsoverview.jpg'
-import interestsAnimation from '../../../assets/animations/interests.json'
+import {width} from '../../utils/global/getDimensions';
+import newsOverViewImage from '../../../assets/images/newsoverview.jpg';
+import interestsAnimation from '../../../assets/animations/interests.json';
 
-export default function FavoritesScreen({ navigation }) {
+export default function FavoritesScreen({navigation}) {
   const [favorites, setFavorites] = useState([]);
   const [isRefreshing, setIsRefreshing] = useState(false);
 
@@ -65,10 +65,10 @@ export default function FavoritesScreen({ navigation }) {
   return identify !== 'Гость' ? (
     <>
       <StatusBar backgroundColor="#092439" />
-      <View style={{ flex: 1 }}>
+      <View style={{flex: 1}}>
         <Image
           blurRadius={150}
-          style={{ position: 'absolute', width: '100%', height: '100%' }}
+          style={{position: 'absolute', width: '100%', height: '100%'}}
           source={newsOverViewImage}
         />
 
@@ -91,7 +91,7 @@ export default function FavoritesScreen({ navigation }) {
               }
               data={favorites}
               keyExtractor={item => item.url}
-              renderItem={({ item }) => {
+              renderItem={({item}) => {
                 return (
                   <Card item={item} navigation={navigation} data={favorites} />
                 );
@@ -104,7 +104,7 @@ export default function FavoritesScreen({ navigation }) {
                   alignItems: 'center',
                   marginTop: '30%',
                 }}>
-                <Text style={{ fontFamily: 'Inter-Light', fontSize: 20 }}>
+                <Text style={{fontFamily: 'Inter-Light', fontSize: 20}}>
                   Здесь будут появляться избранные новости, нажимайте на кнопку{' '}
                   <Icon name={'heart-o'} size={20} color="white" /> , чтобы
                   сохранить их!
@@ -125,10 +125,10 @@ export default function FavoritesScreen({ navigation }) {
     </>
   ) : (
     <>
-      <View style={{ flex: 1 }}>
+      <View style={{flex: 1}}>
         <Image
           blurRadius={150}
-          style={{ position: 'absolute', width: '100%', height: '100%' }}
+          style={{position: 'absolute', width: '100%', height: '100%'}}
           source={newsOverViewImage}
         />
         <CustomDrawer navigation={navigation} showBorder={true}>
@@ -145,13 +145,13 @@ export default function FavoritesScreen({ navigation }) {
               аккаунт
             </Text>
 
-            <View style={{ width: '60%', marginVertical: 15 }}>
+            <View style={{width: '60%', marginVertical: 15}}>
               <CustomButton
                 bgColor="white"
                 fgColor="blue"
                 text="Войти"
                 onPress={() =>
-                  navigation.navigate('Добро пожаловать !', { status: 'logout' })
+                  navigation.navigate('Добро пожаловать !', {status: 'logout'})
                 }
               />
             </View>

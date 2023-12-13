@@ -1,9 +1,9 @@
-import { View, TouchableOpacity } from 'react-native';
+import {View, TouchableOpacity} from 'react-native';
 import React from 'react';
-import { theme } from '../../../MovieNewsScreen/theme';
-import { width } from '../../../../utils/global/getDimensions';
+import {theme} from '../../../MovieNewsScreen/theme';
+import {width} from '../../../../utils/global/getDimensions';
 
-export default function Button({ onPress, children }) {
+export default function Button({onPress, children}) {
   return (
     <TouchableOpacity onPress={onPress}>
       <View

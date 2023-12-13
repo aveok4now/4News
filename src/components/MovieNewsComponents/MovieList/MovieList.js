@@ -7,16 +7,16 @@ import {
   Image,
 } from 'react-native';
 import React from 'react';
-import { styles } from '../../../screens/MovieNewsScreen/theme';
-import { width, height } from '../../../utils/global/getDimensions';
-import { image185 } from '../../../api/moviedb';
+import {styles} from '../../../screens/MovieNewsScreen/theme';
+import {width, height} from '../../../utils/global/getDimensions';
+import {image185} from '../../../api/moviedb';
 
-export default function MovieList({ title, data, navigation, hideSeeAll }) {
+export default function MovieList({title, data, navigation, hideSeeAll}) {
   let upComingLink = 'https://www.imdb.com/calendar/';
   let topMoviesLink = 'https://www.imdb.com/chart/top/';
 
   return (
-    <View style={{ marginBottom: 32, marginTop: 16 }}>
+    <View style={{marginBottom: 32, marginTop: 16}}>
       <View
         style={{
           marginHorizontal: 16,
@@ -31,13 +31,13 @@ export default function MovieList({ title, data, navigation, hideSeeAll }) {
             fontSize: 20,
             lineHeight: 28,
             textShadowColor: 'rgba(226, 232, 240, 0.25)',
-            textShadowOffset: { width: 0, height: 3 },
+            textShadowOffset: {width: 0, height: 3},
             textShadowRadius: 4,
           }}>
           {title.split(' ').map((word, index) =>
             word.toLowerCase() === 'новинки' ||
-              word.toLowerCase() === 'рейтинга' ? (
-              <Text key={index} style={{ fontFamily: 'Inter-ExtraBold' }}>
+            word.toLowerCase() === 'рейтинга' ? (
+              <Text key={index} style={{fontFamily: 'Inter-ExtraBold'}}>
                 {word}{' '}
               </Text>
             ) : (
@@ -55,7 +55,7 @@ export default function MovieList({ title, data, navigation, hideSeeAll }) {
             <Text
               style={[
                 styles.text,
-                { fontSize: 16, lineHeight: 24, fontFamily: 'Inter-Light' },
+                {fontSize: 16, lineHeight: 24, fontFamily: 'Inter-Light'},
               ]}>
               Смотреть все
             </Text>
@@ -65,13 +65,13 @@ export default function MovieList({ title, data, navigation, hideSeeAll }) {
       <ScrollView
         horizontal
         showsHorizontalScrollIndicator={false}
-        contentContainerStyle={{ paddingHorizontal: 15 }}>
+        contentContainerStyle={{paddingHorizontal: 15}}>
         {data.map((item, index) => {
           return (
             <TouchableWithoutFeedback
               key={index}
               onPress={() => navigation.push('MovieScreen', item)}>
-              <View style={{ marginTop: 4, marginRight: 16 }}>
+              <View style={{marginTop: 4, marginRight: 16}}>
                 <Image
                   style={{
                     borderRadius: 24,
@@ -89,11 +89,9 @@ export default function MovieList({ title, data, navigation, hideSeeAll }) {
                     textAlign: 'center',
                     fontFamily: 'Inter-Black',
                   }}>
-                  {
-                    item.title && item.title.length > 14
-                      ? item.title.slice(0, 14) + '...'
-                      : item.title
-                  }
+                  {item.title && item.title.length > 14
+                    ? item.title.slice(0, 14) + '...'
+                    : item.title}
                 </Text>
               </View>
             </TouchableWithoutFeedback>

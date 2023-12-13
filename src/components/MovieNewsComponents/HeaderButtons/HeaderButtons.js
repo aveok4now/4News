@@ -1,9 +1,9 @@
-import { SafeAreaView, TouchableOpacity } from 'react-native';
-import React, { useState, useEffect } from 'react';
-import { styles } from '../../../screens/MovieNewsScreen/theme';
-import { Icons } from '../../../utils/global/Icons';
-import { ios } from '../../../utils/global/getDimensions';
-import { theme } from '../../../screens/MovieNewsScreen/theme';
+import {SafeAreaView, TouchableOpacity} from 'react-native';
+import React, {useState, useEffect} from 'react';
+import {styles} from '../../../screens/MovieNewsScreen/theme';
+import {Icons} from '../../../utils/global/Icons';
+import {ios} from '../../../utils/global/getDimensions';
+import {theme} from '../../../screens/MovieNewsScreen/theme';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import SQLite from 'react-native-sqlite-storage';
 import useUserCredentials from '../../../utils/hooks/useUserCredentials';
@@ -27,7 +27,7 @@ export default function HeaderButtons({
 
   const handleLike = async movieId => {
     try {
-      const db = await SQLite.openDatabase({ name: 'news.db', location: 1 });
+      const db = await SQLite.openDatabase({name: 'news.db', location: 1});
 
       await db.executeSql(`
                     CREATE TABLE IF NOT EXISTS likedMovies (
@@ -84,7 +84,7 @@ export default function HeaderButtons({
   const loadLikes = async movieId => {
     try {
       const likedMovies = await AsyncStorage.getItem('likedMovies');
-      const db = await SQLite.openDatabase({ name: 'news.db', location: 1 });
+      const db = await SQLite.openDatabase({name: 'news.db', location: 1});
 
       const parsedLikedMovies = JSON.parse(likedMovies) || [];
       setFavorites(parsedLikedMovies);
@@ -101,7 +101,7 @@ export default function HeaderButtons({
 
       if (result[0].rows.length > 0) {
         const movieDataFromDB = result[0].rows.item(0);
-        const updatedMovie = { ...movieDataFromDB, title: movie.title };
+        const updatedMovie = {...movieDataFromDB, title: movie.title};
         await db.executeSql('UPDATE likedMovies SET title = ? WHERE id = ?', [
           updatedMovie.title,
           movieId,
@@ -130,24 +130,24 @@ export default function HeaderButtons({
       <TouchableOpacity
         style={[
           styles.background,
-          { borderRadius: 12, padding: 4, marginTop: topMargin },
+          {borderRadius: 12, padding: 4, marginTop: topMargin},
         ]}
         onPress={() => navigation.goBack()}>
         <Icons.Feather
           name="chevron-left"
           size={32}
           color="white"
-          style={{ alignSelf: 'center' }}
+          style={{alignSelf: 'center'}}
         />
       </TouchableOpacity>
       <TouchableOpacity
-        style={[{ borderRadius: 12, padding: 4, marginTop: topMargin }]}
+        style={[{borderRadius: 12, padding: 4, marginTop: topMargin}]}
         onPress={() => handleLike(movie.id)}>
         <Icons.FontAwesome
           name="heart"
           size={32}
           color={isFavorite ? theme.background : 'white'}
-          style={{ alignSelf: 'center' }}
+          style={{alignSelf: 'center'}}
         />
       </TouchableOpacity>
     </SafeAreaView>

@@ -1,8 +1,8 @@
-import { View, Text, ScrollView } from 'react-native';
-import React, { useEffect, useState } from 'react';
-import { useRoute } from '@react-navigation/native';
-import { width, height } from '../../../utils/global/getDimensions';
-import { Image } from 'react-native';
+import {View, Text, ScrollView} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {useRoute} from '@react-navigation/native';
+import {width, height} from '../../../utils/global/getDimensions';
+import {Image} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import Cast from '../../../components/MovieNewsComponents/Cast';
 import MovieList from '../../../components/MovieNewsComponents/MovieList';
@@ -15,8 +15,8 @@ import {
   image500,
 } from '../../../api/moviedb';
 
-export default function MovieScreen({ navigation }) {
-  const { params: item } = useRoute();
+export default function MovieScreen({navigation}) {
+  const {params: item} = useRoute();
 
   const [cast, setCast] = useState([]);
   const [similarMovies, setSimilarMovies] = useState([]);
@@ -60,19 +60,19 @@ export default function MovieScreen({ navigation }) {
   return (
     <ScrollView
       showsVerticalScrollIndicator={false}
-      contentContainerStyle={{ paddingBottom: 20 }}
-      style={{ flex: 1, backgroundColor: 'rgb(23 23 23)' }}>
-      <View style={{ width: '100%' }}>
+      contentContainerStyle={{paddingBottom: 20}}
+      style={{flex: 1, backgroundColor: 'rgb(23 23 23)'}}>
+      <View style={{width: '100%'}}>
         <HeaderButtons navigation={navigation} movie={movie} />
         {isLoading ? (
           <Loader />
         ) : (
-          <View style={{ flex: 1 }}>
+          <View style={{flex: 1}}>
             <Image
               source={{
                 uri: image500(movie?.poster_path),
               }}
-              style={{ width: width, height: height * 0.55 }}
+              style={{width: width, height: height * 0.55}}
             />
             <LinearGradient
               colors={[
@@ -86,13 +86,13 @@ export default function MovieScreen({ navigation }) {
                 position: 'absolute',
                 bottom: 0,
               }}
-              start={{ x: 0.5, y: 0 }}
-              end={{ x: 0.5, y: 1 }}
+              start={{x: 0.5, y: 0}}
+              end={{x: 0.5, y: 1}}
             />
           </View>
         )}
       </View>
-      <View style={{ marginTop: -(height * 0.09), marginVertical: 12 }}>
+      <View style={{marginTop: -(height * 0.09), marginVertical: 12}}>
         <Text
           style={{
             color: 'white',
@@ -101,7 +101,7 @@ export default function MovieScreen({ navigation }) {
             fontSize: 30,
             lineHeight: 36,
             textShadowColor: 'rgba(226, 232, 240, 0.25)',
-            textShadowOffset: { width: 0, height: 3 },
+            textShadowOffset: {width: 0, height: 3},
             textShadowRadius: 4,
           }}>
           {movie?.title}

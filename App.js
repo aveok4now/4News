@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { SafeAreaView, BackHandler } from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {SafeAreaView, BackHandler} from 'react-native';
 import Navigation from './src/navigation';
 import SplashScreen from 'react-native-splash-screen';
 import SQLite from 'react-native-sqlite-storage';
@@ -35,7 +35,7 @@ const App = () => {
 
   return (
     <>
-      <SafeAreaView style={{ flex: 1 }}>
+      <SafeAreaView style={{flex: 1}}>
         <ExitModal visible={visible} onYes={onYes} setVisible={setVisible} />
         <Navigation />
       </SafeAreaView>

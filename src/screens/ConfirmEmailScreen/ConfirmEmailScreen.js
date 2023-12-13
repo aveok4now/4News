@@ -1,14 +1,14 @@
 import React from 'react';
-import { View, Text, StyleSheet, ScrollView } from 'react-native';
+import {View, Text, StyleSheet, ScrollView} from 'react-native';
 import CustomInput from '../../components/customs/CustomInput/CustomInput';
 import CustomButton from '../../components/customs/CustomButton/CustomButton';
-import { useNavigation } from '@react-navigation/native';
-import { useForm } from 'react-hook-form';
+import {useNavigation} from '@react-navigation/native';
+import {useForm} from 'react-hook-form';
 // import { Container } from './styles';
 
 const code_regex = /^\d+$/;
 const ConfirmEmailScreen = () => {
-  const { control, handleSubmit } = useForm();
+  const {control, handleSubmit} = useForm();
 
   const navigation = useNavigation();
 
@@ -38,9 +38,9 @@ const ConfirmEmailScreen = () => {
           placeholder="Введите код подтверждения"
           rules={{
             required: 'Необходимо ввести код подтверждения',
-            minLength: { value: 4, message: 'Код состоит из четырёх символов' },
-            maxLength: { value: 4, message: 'Код состоит из четырёх символов' },
-            pattern: { value: code_regex, message: 'Код состоит только из цифр' },
+            minLength: {value: 4, message: 'Код состоит из четырёх символов'},
+            maxLength: {value: 4, message: 'Код состоит из четырёх символов'},
+            pattern: {value: code_regex, message: 'Код состоит только из цифр'},
           }}
         />
 

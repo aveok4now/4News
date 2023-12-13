@@ -4,7 +4,7 @@ import WeatherScreen from '../../screens/WeatherScreen';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import * as Animatable from 'react-native-animatable';
 import FavoritesScreen from '../../screens/FavoritesScreen';
-import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
+import {createMaterialBottomTabNavigator} from '@react-navigation/material-bottom-tabs';
 import UsersNewsScreen from '../../screens/UsersNewsScreen';
 import MovieNewsScreen from '../../screens/MovieNewsScreen';
 
@@ -78,10 +78,10 @@ const screens = [
 
 const Tab = createMaterialBottomTabNavigator();
 
-export default function BottomTabBar({ showing }) {
+export default function BottomTabBar({showing}) {
   return (
     <Tab.Navigator
-      barStyle={{ backgroundColor: '#0f172a', height: 70 }}
+      barStyle={{backgroundColor: '#0f172a', height: 70}}
       activeColor="rgb(14 165 233)"
       inactiveColor="rgb(87 83 78)"
       labeled={true}
@@ -94,11 +94,11 @@ export default function BottomTabBar({ showing }) {
           name={screen.name}
           component={screen.component}
           options={{
-            tabBarIcon: ({ focused }) => (
+            tabBarIcon: ({focused}) => (
               <Animatable.View
                 animation={screen.animation}
                 duration={screen.animationDuration}
-                style={{ alignItems: 'center', justifyContent: 'center' }}>
+                style={{alignItems: 'center', justifyContent: 'center'}}>
                 <screen.icon.type
                   name={
                     focused

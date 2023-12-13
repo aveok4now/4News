@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react';
-import { StyleSheet, TouchableOpacity } from 'react-native';
-import { DefaultTheme, NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import React, {useEffect, useState} from 'react';
+import {StyleSheet, TouchableOpacity} from 'react-native';
+import {DefaultTheme, NavigationContainer} from '@react-navigation/native';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import * as Animatable from 'react-native-animatable';
 import SignInScreen from '../screens/SignInScreen';
 import SignUpScreen from '../screens/SignUpScreen';
@@ -9,7 +9,7 @@ import ConfirmEmailScreen from '../screens/ConfirmEmailScreen';
 import ForgotPasswordScreen from '../screens/ForgotPasswordScreen';
 import NewPasswordScreen from '../screens/NewPasswordScreen';
 import OnBoardingScreen from '../screens/OnBoardingScreen';
-import { getItem } from '../utils/global/asyncStorage';
+import {getItem} from '../utils/global/asyncStorage';
 import Search from '../utils/newsUtils/Search';
 import Splash from '../screens/SplashScreen/SplashScreen';
 import NewsViewer from '../components/NewsViewer/NewsViewer';
@@ -19,7 +19,7 @@ import FavoritesScreen from '../screens/FavoritesScreen';
 import FeedBackScreen from '../screens/FeedBackScreen/FeedBackScreen';
 import CommentsScreen from '../screens/CommentsScreen';
 import NewsOverviewScreen from '../screens/NewsOverviewScreen';
-import { Icons } from '../utils/global/Icons';
+import {Icons} from '../utils/global/Icons';
 import UsersNewsScreen from '../screens/UsersNewsScreen';
 import MovieScreen from '../screens/MovieNewsScreen/MovieScreen';
 import MoviePersonScreen from '../screens/MovieNewsScreen/MoviePersonScreen';
@@ -73,7 +73,7 @@ const Navigation = () => {
       <NavigationContainer theme={navTheme} style={styles.container}>
         {/* show header or not */}
         <Stack.Navigator
-          screenOptions={{ headerShown: false }}
+          screenOptions={{headerShown: false}}
           initialRouteName={
             showOnboarding ? 'Приветствие' : 'Добро пожаловать !'
           }>
@@ -85,7 +85,7 @@ const Navigation = () => {
               headerStyle: {
                 backgroundColor: '#648DE5',
                 shadowColor: 'rgba(0, 0, 0, 0.75)',
-                shadowOffset: { width: 0, height: 2 },
+                shadowOffset: {width: 0, height: 2},
                 shadowOpacity: 0.5,
                 shadowRadius: 2,
                 elevation: 5,
@@ -135,7 +135,7 @@ const Navigation = () => {
           <Stack.Screen
             name="Новости по категориям"
             component={NewsOverviewScreen}
-            options={({ navigation }) => ({
+            options={({navigation}) => ({
               ...screenOptions,
               headerTitle: '',
               headerLeft: () => (

@@ -1,6 +1,6 @@
-import { View } from 'react-native';
+import {View} from 'react-native';
 import React from 'react';
-import { width, height } from '../../../utils/global/getDimensions';
+import {width, height} from '../../../utils/global/getDimensions';
 import * as Progress from 'react-native-progress';
 
 export default function Loader() {

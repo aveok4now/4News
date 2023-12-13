@@ -1,8 +1,8 @@
-import { StyleSheet, ActivityIndicator } from 'react-native';
-import React, { useState } from 'react';
+import {StyleSheet, ActivityIndicator} from 'react-native';
+import React, {useState} from 'react';
 import * as Animatable from 'react-native-animatable';
 
-export default function HorFlatList({ item }) {
+export default function HorFlatList({item}) {
   const defaultImage =
     'https://arbeitgeber.de/wp-content/uploads/2020/11/bda-news-header-1920x1280px-1536x1024.jpg';
   const [imageLoaded, setImageLoaded] = useState(false);
@@ -18,7 +18,7 @@ export default function HorFlatList({ item }) {
         {!imageLoaded && <ActivityIndicator style={styles.loader} />}
 
         <Animatable.Image
-          source={{ uri: imageUrl }}
+          source={{uri: imageUrl}}
           style={[
             styles.image,
             {

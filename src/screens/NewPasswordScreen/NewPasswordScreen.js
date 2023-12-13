@@ -1,16 +1,16 @@
-import React, { useState } from 'react';
-import { View, StyleSheet, ScrollView, StatusBar } from 'react-native';
+import React, {useState} from 'react';
+import {View, StyleSheet, ScrollView, StatusBar} from 'react-native';
 import CustomInput from '../../components/customs/CustomInput/CustomInput';
 import CustomButton from '../../components/customs/CustomButton/CustomButton';
-import { useNavigation } from '@react-navigation/native';
-import { useForm } from 'react-hook-form';
+import {useNavigation} from '@react-navigation/native';
+import {useForm} from 'react-hook-form';
 import GradientBackground from '../../components/GradientBackground';
 
-const NewPasswordScreen = ({ route }) => {
-  const { username } = route?.params;
+const NewPasswordScreen = ({route}) => {
+  const {username} = route?.params;
   console.log('newpassword screen' + username);
 
-  const { control, handleSubmit, watch } = useForm();
+  const {control, handleSubmit, watch} = useForm();
   const navigation = useNavigation();
   const pwd = watch('password');
   const code_regex = /^\d+$/;
