@@ -1,11 +1,12 @@
-import {View, Image, StatusBar, FlatList} from 'react-native';
-import React, {useState, useEffect} from 'react';
+import { View, Image, StatusBar, FlatList } from 'react-native';
+import React, { useState, useEffect } from 'react';
 import * as Progress from 'react-native-progress';
 import Card from '../../components/Card';
 import newsOverviewImage from '../../../assets/images/newsoverview.jpg';
+import { newsWebsites } from '../../constants/NewsWebsites';
 
-const NewsOverviewScreen = ({route, navigation}) => {
-  const {apiKeyList, apiKeyIndex, caption, ruCaption} = route.params;
+const NewsOverviewScreen = ({ route, navigation }) => {
+  const { apiKeyList, apiKeyIndex, caption, ruCaption } = route.params;
   console.log(apiKeyList);
   console.log(apiKeyIndex);
 
@@ -32,33 +33,6 @@ const NewsOverviewScreen = ({route, navigation}) => {
     apiKeyIndex: apiKeyIndex,
   };
 
-  const newsWebsites = {
-    'Газета.Ru': 'gazeta.ru',
-    'Lenta.ru': 'lenta.ru',
-    ТАСС: 'tass.ru',
-    Известия: 'iz.ru',
-    Хабр: 'habr.com',
-    IXBT: 'ixbt.com',
-    'Мэйл.ру': 'mail.ru',
-    Onliner: 'onliner.by',
-    YouTube: 'youtube.com',
-    КиноПоиск: 'kinopoisk.ru',
-    Пикабу: 'pikabu.ru',
-    'Ferra.ru': 'ferra.ru',
-    Игромания: 'igromania.ru',
-    Ведомости: 'vedomosti.ru',
-    Биллборд: 'billboard.com',
-    Коммерсантъ: 'kommersant.ru',
-    Канобу: 'kanobu.ru',
-    Apple: 'apple.com',
-    'F1NEWS.RU': 'f1news.ru',
-    RGRU: 'rg.ru',
-    Медуза: 'meduza.io',
-    Интерфакс: 'interfax.ru',
-    LIFE: 'life.ru',
-    ВЗГЛЯД: 'vz.ru',
-  };
-
   const getDataByQ = async () => {
     setIsLoading(true);
     try {
@@ -68,13 +42,11 @@ const NewsOverviewScreen = ({route, navigation}) => {
         apiEndpoint = `domains=${newsWebsites[ruCaption]}&apiKey=${newApiKeyList[newApiKeyIndex]}`;
       } else {
         const response = await fetch(
-          `https://newsapi.org/v2/everything?q=${caption.toLowerCase()}&from=${formattedDate}&to=${currentDate}&sortBy=publishedAt&apiKey=${
-            newApiKeyList[newApiKeyIndex]
+          `https://newsapi.org/v2/everything?q=${caption.toLowerCase()}&from=${formattedDate}&to=${currentDate}&sortBy=publishedAt&apiKey=${newApiKeyList[newApiKeyIndex]
           }`,
         );
         const ruResponse = await fetch(
-          `https://newsapi.org/v2/everything?q=${ruCaption.toLowerCase()}&from=${formattedDate}&to=${currentDate}&sortBy=publishedAt&apiKey=${
-            newApiKeyList[newApiKeyIndex]
+          `https://newsapi.org/v2/everything?q=${ruCaption.toLowerCase()}&from=${formattedDate}&to=${currentDate}&sortBy=publishedAt&apiKey=${newApiKeyList[newApiKeyIndex]
           }`,
         );
 
@@ -130,15 +102,15 @@ const NewsOverviewScreen = ({route, navigation}) => {
   return (
     <>
       <StatusBar backgroundColor={'#041147'} />
-      <View style={{flex: 1}}>
+      <View style={{ flex: 1 }}>
         <Image
           blurRadius={200}
-          style={{position: 'absolute', width: '100%', height: '100%'}}
+          style={{ position: 'absolute', width: '100%', height: '100%' }}
           source={newsOverviewImage}
         />
         {isLoading ? (
           <View
-            style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+            style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
             <Progress.CircleSnail thickness={10} size={140} color="white" />
           </View>
         ) : (
@@ -148,7 +120,7 @@ const NewsOverviewScreen = ({route, navigation}) => {
               refreshing={isRefreshing}
               showsVerticalScrollIndicator={false}
               data={Data}
-              renderItem={({item, index}) => {
+              renderItem={({ item, index }) => {
                 return (
                   <Card
                     item={item}

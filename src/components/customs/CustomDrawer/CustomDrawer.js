@@ -1,4 +1,4 @@
-import React, {useState, useRef, useEffect} from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import {
   View,
   TouchableOpacity,
@@ -10,14 +10,14 @@ import * as Animatable from 'react-native-animatable';
 import useUserCredentials from '../../../utils/hooks/useUserCredentials';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import SQLite from 'react-native-sqlite-storage';
-import {Icons} from '../../../utils/global/Icons';
-import {openLinkInBrowserHandler} from './utils/openLink';
+import { Icons } from '../../../constants/Icons';
+import { openLinkInBrowserHandler } from './utils/openLink';
 import RateUSModal from './components/RateUSModal/RateUSModal';
 import LogOutModal from './components/LogOutModal/LogOutModal';
-import UserAvatar from './components/userAvatar/userAvatar';
+import UserAvatar from './components/UserAvatar/UserAvatar';
 import UserCredentials from './components/UserCredentials/UserCredentials';
 import DrawerMenu from './components/Menu/DrawerMenu';
-import {styles} from './styles/drawerStyles';
+import { styles } from './styles/drawerStyles';
 
 export default function CustomDrawer({
   children,
@@ -53,7 +53,7 @@ export default function CustomDrawer({
 
   const rate = async star => {
     try {
-      const db = await SQLite.openDatabase({name: 'news.db', location: 1});
+      const db = await SQLite.openDatabase({ name: 'news.db', location: 1 });
       let userId = null;
 
       if (identify !== 'Гость') {
@@ -128,7 +128,7 @@ export default function CustomDrawer({
     try {
       let userRating = null;
       let userId = null;
-      const db = await SQLite.openDatabase({name: 'news.db', location: 1});
+      const db = await SQLite.openDatabase({ name: 'news.db', location: 1 });
 
       if (identify !== 'Гость') {
         const query = 'SELECT userID FROM users WHERE userLogin = ?';
@@ -177,37 +177,37 @@ export default function CustomDrawer({
   };
 
   const menu = [
-    {icon: 'university', title: 'Университет'},
-    {icon: 'github', title: 'Коммит'},
-    {icon: 'email', title: 'Оставить отзыв'},
-    {icon: 'star-half-o', title: 'Оценить нас'},
+    { icon: 'university', title: 'Университет' },
+    { icon: 'github', title: 'Коммит' },
+    { icon: 'email', title: 'Оставить отзыв' },
+    { icon: 'star-half-o', title: 'Оценить нас' },
 
-    ...(isAdmin ? [{icon: 'admin-panel-settings', title: 'Подсистема'}] : []),
+    ...(isAdmin ? [{ icon: 'admin-panel-settings', title: 'Подсистема' }] : []),
     ...(isGuest
       ? [
-          {icon: 'user-circle', title: 'Регистрация'},
-          {icon: 'home', title: 'Домой'},
-        ]
-      : [{icon: 'logout', title: 'Выход'}]),
+        { icon: 'user-circle', title: 'Регистрация' },
+        { icon: 'home', title: 'Домой' },
+      ]
+      : [{ icon: 'logout', title: 'Выход' }]),
   ];
 
   const iconMap = {
-    Университет: {icon: <Icons.FontAwesome5 size={24} />, color: 'white'},
-    Выход: {icon: <Icons.MaterialIcons size={24} />, color: 'white'},
+    Университет: { icon: <Icons.FontAwesome5 size={24} />, color: 'white' },
+    Выход: { icon: <Icons.MaterialIcons size={24} />, color: 'white' },
     'Оставить отзыв': {
       icon: <Icons.MaterialCommunityIcons size={24} />,
       color: 'white',
     },
-    Коммит: {icon: <Icons.FontAwesome5 size={24} />, color: 'white'},
-    'Оценить нас': {icon: <Icons.FontAwesome size={24} />, color: 'white'},
-    Подсистема: {icon: <Icons.MaterialIcons size={24} />, color: 'white'},
-    default: {icon: <Icons.FontAwesome5 size={24} />, color: 'white'},
+    Коммит: { icon: <Icons.FontAwesome5 size={24} />, color: 'white' },
+    'Оценить нас': { icon: <Icons.FontAwesome size={24} />, color: 'white' },
+    Подсистема: { icon: <Icons.MaterialIcons size={24} />, color: 'white' },
+    default: { icon: <Icons.FontAwesome5 size={24} />, color: 'white' },
   };
 
   const getIconInfo = (title, item) => {
     const iconInfo = iconMap[title] || iconMap.default;
     return {
-      icon: React.cloneElement(iconInfo.icon, {name: item.icon}),
+      icon: React.cloneElement(iconInfo.icon, { name: item.icon }),
       color: iconInfo.color,
     };
   };
@@ -215,7 +215,7 @@ export default function CustomDrawer({
   const handleMenuItemPress = async (index, title) => {
     switch (title) {
       case 'Домой':
-        navigation.navigate('Добро пожаловать !', {status: 'logout'});
+        navigation.navigate('Добро пожаловать !', { status: 'logout' });
         break;
       case 'Коммит':
       case 'Университет':
@@ -287,19 +287,19 @@ export default function CustomDrawer({
 
     await AsyncStorage.setItem('loggedOut', 'true');
 
-    navigation.navigate('Добро пожаловать !', {status: 'logout'});
+    navigation.navigate('Добро пожаловать !', { status: 'logout' });
     navigation.reset({
       index: 0,
-      routes: [{name: 'Добро пожаловать !'}],
+      routes: [{ name: 'Добро пожаловать !' }],
       status: 'logout',
     });
     setShowLogOutModal(false);
   };
 
   return (
-    <View style={{flex: 1, borderRadius: showMenu ? 15 : 0}}>
+    <View style={{ flex: 1, borderRadius: showMenu ? 15 : 0 }}>
       {showMenu && (
-        <Animatable.View animation="fadeIn" style={{flex: 1}}>
+        <Animatable.View animation="fadeIn" style={{ flex: 1 }}>
           <View
             style={{
               width: '100%',
@@ -353,7 +353,7 @@ export default function CustomDrawer({
           right: 0,
           top: 0,
           bottom: 0,
-          transform: [{scale: scale}, {translateX: moveToRight}],
+          transform: [{ scale: scale }, { translateX: moveToRight }],
           borderRadius: showMenu ? 15 : 0,
           elevation: showMenu ? elevation : 0,
           borderWidth: showBorder && showMenu ? 0.25 : 0,
@@ -373,14 +373,14 @@ export default function CustomDrawer({
                 name={'close'}
                 size={32}
                 color="#21FA90"
-                style={{transform: showMenu ? [{rotate: '90deg'}] : []}}
+                style={{ transform: showMenu ? [{ rotate: '90deg' }] : [] }}
               />
             ) : (
               <Icons.SimpleLineIcons
                 name={'menu'}
                 size={24}
                 color="white"
-                style={{transform: showMenu ? [{rotate: '90deg'}] : []}}
+                style={{ transform: showMenu ? [{ rotate: '90deg' }] : [] }}
               />
             )}
           </TouchableOpacity>
@@ -402,7 +402,7 @@ export default function CustomDrawer({
               <Icons.FontAwesome5 name="search" size={24} color="white" />
             </TouchableOpacity>
           ) : (
-            <View style={{width: 24, height: 24}} />
+            <View style={{ width: 24, height: 24 }} />
           )}
         </View>
         {children}

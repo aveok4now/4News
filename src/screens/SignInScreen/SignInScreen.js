@@ -1,7 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {useNavigation} from '@react-navigation/native';
-import React, {useEffect, useState} from 'react';
-import {useForm} from 'react-hook-form';
+import { useNavigation } from '@react-navigation/native';
+import React, { useEffect, useState } from 'react';
+import { useForm } from 'react-hook-form';
 import {
   BackHandler,
   ScrollView,
@@ -16,27 +16,29 @@ import * as Animatable from 'react-native-animatable';
 import SQLite from 'react-native-sqlite-storage';
 import Toast from 'react-native-toast-message';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import Logo from '../../../assets/images/seved.png';
+import LogoImage from '../../../assets/images/seved.png';
 import GradientBackground from '../../components/GradientBackground';
 import CustomButton from '../../components/customs/CustomButton/CustomButton';
 import CustomInput from '../../components/customs/CustomInput/CustomInput';
 import ExitModal from '../../components/customs/CustomModal/ExitModal';
-import {removeItem} from '../../utils/global/asyncStorage';
-import {height, width} from '../../utils/global/getDimensions';
+import { removeItem } from '../../utils/global/asyncStorage';
+import { height, width } from '../../utils/global/getDimensions';
+import Logo from './components/Logo/Logo';
+import HeaderButton from './components/HeaderButton/HeaderButton/HeaderButton';
 
 SQLite.enablePromise(true);
 
-const SignInScreen = ({route}) => {
-  const [userExist, setUserExist] = useState(true);
+const SignInScreen = ({ route }) => {
   const navigation = useNavigation();
   const invalidCredentialsText = '❌ Неверный логин или пароль';
-  const [isTyping, setIsTyping] = useState(false);
 
+  const [userExist, setUserExist] = useState(true);
+  const [isTyping, setIsTyping] = useState(false);
   const [inputFocus, setIsInputFocus] = useState(false);
+  const [isPasswordVisible, setIsPasswordVisible] = useState(true);
+  const [modalVisible, setModalVisible] = useState(false);
 
   const onYes = () => BackHandler.exitApp();
-
-  const [isPasswordVisible, setIsPasswordVisible] = useState(true);
 
   const handlePasswordVisibilityChange = () => {
     setIsPasswordVisible(!isPasswordVisible);
@@ -67,12 +69,12 @@ const SignInScreen = ({route}) => {
       } else {
         if (savedUsername && savedPassword) {
           if (isLoggedOut === 'false') {
-            onSignInPressed({username: savedUsername, password: savedPassword});
+            onSignInPressed({ username: savedUsername, password: savedPassword });
             // AsyncStorage.setItem('loggedOut', '');
           }
         } else if (savedUsername === 'guest') {
           if (guestID) {
-            onSignInAsGuestPressed({guestID: guestID});
+            onSignInAsGuestPressed({ guestID: guestID });
           } else {
             onSignInAsGuestPressed();
           }
@@ -86,36 +88,13 @@ const SignInScreen = ({route}) => {
   const {
     control,
     handleSubmit,
-    formState: {errors},
+    formState: { errors },
   } = useForm();
-
-  // const onSignInPressed = (data) => {
-  //     //console.warn("Вход");
-  //     //валидация
-  //     console.warn(data);
-  //     navigation.navigate('Домашняя страница');
-
-  // }
-
-  // const createGuestsTable = async () => {
-  //     const db = await SQLite.openDatabase({ name: 'news.db', location: 1 });
-  //     db.executeSql('CREATE TABLE IF NOT EXISTS Guests (guestId INTEGER PRIMARY KEY AUTOINCREMENT)');
-  // };
-
-  // const addGuestToDatabase = async () => {
-  //     try {
-  //         const db = await SQLite.openDatabase({ name: 'news.db', location: 1 });
-  //         await db.executeSql('INSERT INTO Guests VALUES (guestId = 10)');
-  //         console.log('Гость успешно добавлен в базу данных');
-  //     } catch (error) {
-  //         console.error(error);
-  //     }
-  // };
 
   const onSignInPressed = async data => {
     try {
       console.log(data);
-      const db = await SQLite.openDatabase({name: 'news.db', location: 1});
+      const db = await SQLite.openDatabase({ name: 'news.db', location: 1 });
 
       let query;
       let queryArgs;
@@ -146,7 +125,6 @@ const SignInScreen = ({route}) => {
         setUserExist(true);
         await AsyncStorage.setItem('username', username);
         await AsyncStorage.setItem('password', data.password);
-        // navigation.navigate('Домашняя страница');
         AsyncStorage.setItem('loggedOut', 'false');
         navigation.navigate('Splash');
       } else {
@@ -161,15 +139,15 @@ const SignInScreen = ({route}) => {
 
   const onSignInAsGuestPressed = async data => {
     try {
-      const db = await SQLite.openDatabase({name: 'news.db', location: 1});
+      const db = await SQLite.openDatabase({ name: 'news.db', location: 1 });
       const getLastGuestID = async () => {
         return new Promise((resolve, reject) => {
           db.transaction(tx => {
             tx.executeSql(
               'SELECT MAX(guestId) AS maxID FROM Guests',
               [],
-              (_, {rows}) => {
-                const {maxID} = rows.item(0);
+              (_, { rows }) => {
+                const { maxID } = rows.item(0);
                 resolve(maxID || 0);
               },
               error => {
@@ -203,12 +181,10 @@ const SignInScreen = ({route}) => {
   };
 
   const onForgotPassword = () => {
-    // console.warn("Забыли пароль");
     navigation.navigate('Восстановление пароля');
   };
 
   const onSignUpPress = () => {
-    //  console.warn("Регистрация");
     navigation.navigate('Регистрация');
   };
 
@@ -218,19 +194,9 @@ const SignInScreen = ({route}) => {
     navigation.push('Приветствие');
   };
 
-  const [modalVisible, setModalVisible] = useState(false); // Состояние для видимости модального окна
-
   const openModal = () => {
     Vibration.vibrate(10);
-    setModalVisible(true); // Функция для открытия модального окна
-  };
-
-  const closeModal = () => {
-    setModalVisible(false); // Функция для закрытия модального окна
-  };
-
-  const handleInputFocus = () => {
-    setIsInputFocus(true);
+    setModalVisible(true);
   };
 
   const showToast = (text, type = 'error') => {
@@ -246,41 +212,23 @@ const SignInScreen = ({route}) => {
   return (
     <>
       <StatusBar backgroundColor="#57e0f3" />
-
       <GradientBackground>
         <ScrollView showsVerticalScrollIndicator={false}>
           <View style={styles.root}>
-            <TouchableOpacity onPress={handleReset} style={styles.questionIcon}>
-              <Animatable.View animation="bounceIn" duration={1500}>
-                <Icon name="question-circle" size={30} color="white" />
-              </Animatable.View>
-            </TouchableOpacity>
 
-            <TouchableWithoutFeedback
-              onPress={() =>
-                navigation.navigate('NewsViewer', {
-                  url: 'www.sevsu.ru',
-                })
-              }>
-              <Animatable.Image
-                animation="bounceIn"
-                duration={1500}
-                source={Logo}
-                style={[
-                  styles.logo,
-                  {
-                    height: height * 0.17,
-                  },
-                ]}
-                resizeMode="contain"
-              />
-            </TouchableWithoutFeedback>
+            <HeaderButton
+              onPress={handleReset}
+              style={styles.questionIcon}
+              iconName={'question-circle'}
+            />
 
-            <TouchableOpacity onPress={openModal} style={styles.exitIcon}>
-              <Animatable.View animation="bounceIn" duration={1500}>
-                <Icon name="sign-out" size={30} color="white" />
-              </Animatable.View>
-            </TouchableOpacity>
+            <Logo navigation={navigation} source={LogoImage} height={height} />
+
+            <HeaderButton
+              onPress={openModal}
+              style={styles.exitIcon}
+              iconName={'sign-out'}
+            />
 
             <ExitModal
               visible={modalVisible}
@@ -370,13 +318,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: 20,
   },
-  logo: {
-    marginTop: '20%',
-    marginBottom: '5%',
-    width: '70%',
-    maxWidth: 500,
-    maxHeight: 200,
-  },
   questionIcon: {
     position: 'absolute',
     top: 15,
@@ -399,7 +340,6 @@ const styles = StyleSheet.create({
     height: 90,
     marginLeft: 55,
   },
-
   header: {
     width: '120%',
     height: 40,
@@ -411,7 +351,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
     marginBottom: 10,
     textShadowColor: 'rgba(226, 232, 240, 0.15)',
-    textShadowOffset: {width: -2, height: 1},
+    textShadowOffset: { width: -2, height: 1 },
     textShadowRadius: 4,
     fontFamily: 'Inter-Bold',
   },

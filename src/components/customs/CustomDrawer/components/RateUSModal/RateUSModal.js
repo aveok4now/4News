@@ -1,7 +1,7 @@
-import {View, TouchableOpacity, Animated} from 'react-native';
+import { View, TouchableOpacity, Animated } from 'react-native';
 import React from 'react';
 import ModalPopup from '../../../CustomModal/CustomModal';
-import {Icons} from '../../../../../utils/global/Icons';
+import { Icons } from '../../../../../constants/Icons';
 import RateUs from '../../../../RateUs';
 
 export default function RateUSModal({
@@ -18,7 +18,7 @@ export default function RateUSModal({
       visible={showRateUSModal}
       backgroundColor="#7692FF">
       <TouchableOpacity
-        style={{position: 'absolute', top: 10, right: 10}}
+        style={{ position: 'absolute', top: 10, right: 10 }}
         onPress={() => {
           setShowRateUSModal(!showRateUSModal);
         }}>

@@ -1,9 +1,9 @@
-import {View, TextInput, TouchableOpacity, StyleSheet} from 'react-native';
+import { View, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
 import React from 'react';
-import {Icons} from '../../../../utils/global/Icons';
+import { Icons } from '../../../../constants/Icons';
 import * as Animatable from 'react-native-animatable';
 import CustomButton from '../../../../components/customs/CustomButton';
-import {theme} from '../../../WeatherScreen/theme';
+import { theme } from '../../../WeatherScreen/theme';
 
 export default function Input({
   inputRef,
@@ -16,7 +16,7 @@ export default function Input({
     <View style={styles.inputContainer}>
       <TextInput
         ref={inputRef}
-        style={{fontFamily: 'Inter-Light', fontSize: 20, width: '100%'}}
+        style={{ fontFamily: 'Inter-Light', fontSize: 20, width: '100%' }}
         placeholder={`Что думаете, ${identify}?`}
         selectionColor="white"
         placeholderTextColor="whitesmoke"
@@ -29,7 +29,7 @@ export default function Input({
         <Animatable.View
           animation="flipInX"
           duration={1000}
-          style={{position: 'absolute', top: 0, right: 5}}>
+          style={{ position: 'absolute', top: 0, right: 5 }}>
           <TouchableOpacity onPress={() => setInputText('')}>
             <Icons.MaterialCommunityIcons name="close-circle" size={32} />
           </TouchableOpacity>
@@ -37,7 +37,7 @@ export default function Input({
       )}
       {inputText.length > 5 && (
         <Animatable.View
-          style={{width: '80%', alignSelf: 'center'}}
+          style={{ width: '80%', alignSelf: 'center' }}
           animation="fadeIn"
           duration={500}>
           <CustomButton

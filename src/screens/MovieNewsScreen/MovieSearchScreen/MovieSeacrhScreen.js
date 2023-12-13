@@ -7,17 +7,17 @@ import {
   TouchableWithoutFeedback,
   Image,
 } from 'react-native';
-import React, {useState, useCallback} from 'react';
-import {width, height} from '../../../utils/global/getDimensions';
-import {SafeAreaView} from 'react-native-safe-area-context';
-import {theme} from '../theme';
-import {Icons} from '../../../utils/global/Icons';
-import {useNavigation} from '@react-navigation/native';
+import React, { useState, useCallback } from 'react';
+import { width, height } from '../../../utils/global/getDimensions';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { theme } from '../theme';
+import { Icons } from '../../../constants/Icons';
+import { useNavigation } from '@react-navigation/native';
 import LottieView from 'lottie-react-native';
 import newsAnimation from '../../../../assets/animations/nothing_found.json';
 import Loader from '../../../components/MovieNewsComponents/Loader';
-import {debounce} from 'lodash';
-import {image185, searchMovies} from '../../../api/moviedb';
+import { debounce } from 'lodash';
+import { image185, searchMovies } from '../../../api/moviedb';
 
 export default function MovieSeacrhScreen() {
   const [showSearch, setShowSearch] = useState(true);
@@ -52,7 +52,7 @@ export default function MovieSeacrhScreen() {
 
   return (
     <SafeAreaView
-      style={{flex: 1, backgroundColor: 'rgb(30 58 138)', display: 'flex'}}>
+      style={{ flex: 1, backgroundColor: 'rgb(30 58 138)', display: 'flex' }}>
       <View
         style={{
           marginHorizontal: 16,
@@ -100,8 +100,8 @@ export default function MovieSeacrhScreen() {
         <ScrollView
           scrollEventThrottle={16}
           showsVerticalScrollIndicator={false}
-          contentContainerStyle={{paddingHorizontal: 15}}
-          style={{marginTop: 12}}>
+          contentContainerStyle={{ paddingHorizontal: 15 }}
+          style={{ marginTop: 12 }}>
           <Text
             style={{
               fontFamily: 'Inter-SemiBold',
@@ -121,7 +121,7 @@ export default function MovieSeacrhScreen() {
                 <TouchableWithoutFeedback
                   key={index}
                   onPress={() => navigation.push('MovieScreen', item)}>
-                  <View style={{marginTop: 8, marginBottom: 16}}>
+                  <View style={{ marginTop: 8, marginBottom: 16 }}>
                     <Image
                       style={{
                         borderRadius: 24,
@@ -149,7 +149,7 @@ export default function MovieSeacrhScreen() {
           </View>
         </ScrollView>
       ) : (
-        <View style={{flexDirection: 'row', justifyContent: 'center'}}>
+        <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
           <LottieView
             style={{
               justifyContent: 'center',

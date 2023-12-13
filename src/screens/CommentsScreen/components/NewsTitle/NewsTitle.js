@@ -1,11 +1,11 @@
-import {View, Text, TouchableOpacity} from 'react-native';
+import { View, Text, TouchableOpacity } from 'react-native';
 import React from 'react';
 import * as Animatable from 'react-native-animatable';
-import {handleUsersNewsShare} from '../../../../utils/newsUtils/Share';
-import {Icons} from '../../../../utils/global/Icons';
-import {formatPostTime} from '../../../../utils/global/formatPostTime';
+import { handleUsersNewsShare } from '../../../../utils/newsUtils/Share';
+import { Icons } from '../../../../constants/Icons';
+import { formatPostTime } from '../../../../utils/global/formatPostTime';
 
-export default function NewsTitle({item, postAuthor, postText, formattedDate}) {
+export default function NewsTitle({ item, postAuthor, postText, formattedDate }) {
   return (
     <Animatable.View animation="slideInRight" duration={1000}>
       <Text
@@ -40,7 +40,7 @@ export default function NewsTitle({item, postAuthor, postText, formattedDate}) {
           {formattedDate}
         </Text>
         <TouchableOpacity
-          style={{marginRight: 15}}
+          style={{ marginRight: 15 }}
           onPress={() =>
             handleUsersNewsShare({
               newsTitle: item.title || item.post,
