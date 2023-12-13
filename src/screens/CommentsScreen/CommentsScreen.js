@@ -8,6 +8,7 @@ import {
   ScrollView,
   TouchableWithoutFeedback,
   TextInput,
+  RefreshControl
 } from 'react-native';
 import React, { useRef, useState, useEffect } from 'react';
 import * as Animatable from 'react-native-animatable';
@@ -26,9 +27,14 @@ import CustomDropDown from '../../components/customs/CustomDropDown';
 import Toast from 'react-native-toast-message';
 import useUserImage from '../../utils/hooks/useUserImage';
 import SQLite from 'react-native-sqlite-storage';
-import newsBackgroundImage from '../../../assets/images/newsoverview.jpg'
+import newsBackgroundImage from '../../../assets/images/newsoverview.jpg';
 
 import { condition, getUserImage } from '../../utils/global/getUserImage';
+import ConfirmDeleteModal from './components/ConfirmDeleteModal/ConfirmDeleteModal';
+import NewsImage from './components/NewsImage/NewsImage';
+import NewsTitle from './components/NewsTitle/NewsTitle';
+import Input from './components/Input/Input';
+import Comment from './components/Comment/Comment';
 
 export default function CommentsScreen({ route }) {
   const {
@@ -43,7 +49,7 @@ export default function CommentsScreen({ route }) {
   const dataArray = [];
 
   let postText = item.title || item.post;
-  let postAuhor = item.userName || item.source.name;
+  let postAuthor = item.userName || item.source?.name;
 
   const [comments, setComments] = useState(dataArray);
 
@@ -60,50 +66,55 @@ export default function CommentsScreen({ route }) {
   const [selectedCommentIndex, setSelectedCommentIndex] = useState(null);
   const [showToast, setShowToast] = useState(false);
 
+  const [isRefreshing, setIsRefreshing] = useState(false);
+
   useEffect(() => {
-    const fetchComments = async () => {
-      try {
-        const db = await SQLite.openDatabase({ name: 'news.db', location: 1 });
-
-        const postId = item.id || new Date(item.publishedAt).toString();
-
-        let query =
-          'SELECT * FROM Comments WHERE postId = ? ORDER BY timestamp DESC';
-        let queryArgs = [postId];
-
-        const [result] = await db.executeSql(query, queryArgs);
-
-        if (result.rows.length > 0) {
-          const fetchedComments = [];
-
-          for (let i = 0; i < result.rows.length; i++) {
-            const comment = result.rows.item(i);
-
-            console.log('id', comment.id.toString());
-            console.log('postId', comment.postId);
-            console.log('authorName', comment.authorName);
-            console.log('commentText', comment.commentText);
-            console.log('timeStamp', new Date(comment.timestamp));
-
-            fetchedComments.push({
-              id: comment.id.toString(),
-              postId: comment.postId,
-              authorName: comment.authorName,
-              postText: comment.commentText,
-              timestamp: new Date(comment.timestamp),
-              userAvatar: getUserImage(comment.authorName, identify),
-            });
-          }
-
-          setComments(fetchedComments);
-        }
-      } catch (err) {
-        console.log(err);
-      }
-    };
-
     fetchComments();
   }, [item.id, item.publishedAt]);
+
+
+  const fetchComments = async () => {
+    try {
+      setIsRefreshing(true);
+      const db = await SQLite.openDatabase({ name: 'news.db', location: 1 });
+
+      const postId = item.id || new Date(item.publishedAt).toString();
+
+      let query =
+        'SELECT * FROM Comments WHERE postId = ? ORDER BY timestamp DESC';
+      let queryArgs = [postId];
+
+      const [result] = await db.executeSql(query, queryArgs);
+
+      if (result.rows.length > 0) {
+        const fetchedComments = [];
+
+        for (let i = 0; i < result.rows.length; i++) {
+          const comment = result.rows.item(i);
+
+          console.log('id', comment.id.toString());
+          console.log('postId', comment.postId);
+          console.log('authorName', comment.authorName);
+          console.log('commentText', comment.commentText);
+          console.log('timeStamp', new Date(comment.timestamp));
+
+          fetchedComments.push({
+            id: comment.id.toString(),
+            postId: comment.postId,
+            authorName: comment.authorName,
+            postText: comment.commentText,
+            timestamp: new Date(comment.timestamp),
+            userAvatar: getUserImage(comment.authorName, identify),
+          });
+        }
+
+        setComments(fetchedComments);
+        setIsRefreshing(false);
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   const handleImagePressed = () => {
     try {
@@ -144,8 +155,6 @@ export default function CommentsScreen({ route }) {
       timestamp: new Date().toISOString(),
     };
 
-    console.log(postText);
-
     try {
       const db = await SQLite.openDatabase({ name: 'news.db', location: 1 });
 
@@ -169,7 +178,7 @@ export default function CommentsScreen({ route }) {
       }
       const updatedComments = [newComment, ...comments];
       setComments(updatedComments);
-
+      await fetchComments();
       setInputText('');
     } catch (err) {
       console.log(err);
@@ -197,7 +206,7 @@ export default function CommentsScreen({ route }) {
         const updatedComments = [...comments];
         updatedComments.splice(selectedCommentIndex, 1);
         setComments(updatedComments);
-
+        await fetchComments();
         setSelectedCommentIndex(null);
         setShowConfirmDeleteModal(false);
       } catch (err) {
@@ -221,6 +230,8 @@ export default function CommentsScreen({ route }) {
   //     await db.executeSql(query);
   // };
 
+  const onRefresh = async () => { await fetchComments(); }
+
   return (
     <>
       <StatusBar backgroundColor="#5fa3c5" />
@@ -237,44 +248,15 @@ export default function CommentsScreen({ route }) {
             style={{ position: 'absolute', width: '100%', height: '100%' }}
             source={newsBackgroundImage}
           />
+
           {showConfirmDeleteModal && (
-            <ModalPopup
-              visible={showConfirmDeleteModal}
-              backgroundColor="rgb(59 130 246)">
-              <View style={{ padding: 5 }}>
-                <Text style={{ fontFamily: 'Inter-ExtraBold', fontSize: 18 }}>
-                  Подтверждение
-                </Text>
-              </View>
-              <View style={{ width: '100%', padding: 5 }}>
-                <Text style={{ fontFamily: 'Inter-Light', fontSize: 18 }}>
-                  Вы действительно хотите удалить этот пост?
-                </Text>
-              </View>
-              <View style={styles.divider} />
-              <View
-                style={{
-                  flexDirection: 'row',
-                  width: '50%',
-                  padding: 5,
-                  justifyContent: 'space-between',
-                  gap: 10,
-                }}>
-                <CustomButton
-                  text="Нет"
-                  type="Tertiary"
-                  onPress={() =>
-                    setShowConfirmDeleteModal(!showConfirmDeleteModal)
-                  }
-                />
-                <CustomButton
-                  text="Да"
-                  type="Tertiary"
-                  onPress={handleDeleteComment}
-                />
-              </View>
-            </ModalPopup>
+            <ConfirmDeleteModal
+              showConfirmDeleteModal={showConfirmDeleteModal}
+              setShowConfirmDeleteModal={setShowConfirmDeleteModal}
+              handleDeleteComment={handleDeleteComment}
+            />
           )}
+
           <CustomDropDown
             visible={showDeleteModal}
             identify={identify}
@@ -299,135 +281,32 @@ export default function CommentsScreen({ route }) {
               alignItems: 'center',
               marginHorizontal: '2%',
             }}>
-            <Pressable onPress={handleImagePressed}>
-              <View
-                style={{
-                  width: 65,
-                  height: 65,
-                }}>
-                <Animatable.View
-                  animation="slideInLeft"
-                  duration={1000}
-                  style={styles.imageContainer}>
-                  {isImageUrl ? (
-                    <TouchableWithoutFeedback
-                      onPress={() =>
-                        !includesG &&
-                        navigation.navigate('NewsViewer', { url: item.url })
-                      }>
-                      <Image
-                        source={{
-                          uri: imageLoaded
-                            ? item.urlToImage || defaultImage
-                            : defaultImage,
-                        }}
-                        style={{
-                          width: '100%',
-                          height: '100%',
-                          resizeMode: 'cover',
-                        }}
-                      />
-                    </TouchableWithoutFeedback>
-                  ) : (
-                    <TouchableWithoutFeedback>
-                      <Image
-                        source={item.userImage}
-                        style={{
-                          width: '100%',
-                          height: '100%',
-                          resizeMode: 'cover',
-                        }}
-                      />
-                    </TouchableWithoutFeedback>
-                  )}
-                </Animatable.View>
-              </View>
-            </Pressable>
-            <Animatable.View animation="slideInRight" duration={1000}>
-              <Text
-                style={{
-                  color: 'white',
-                  fontFamily: 'Inter-ExtraBold',
-                  textAlign: 'auto',
-                  paddingHorizontal: 15,
-                  fontSize: 18,
-                  letterSpacing: -1,
-                }}>
-                {postAuhor && postText && postText.length > 150
-                  ? postText.slice(0, 150) + ' ...'
-                  : postText}
-              </Text>
-              <View
-                style={{
-                  flexDirection: 'row',
-                  justifyContent: 'space-between',
-                }}>
-                <Text
-                  style={{
-                    color: 'white',
-                    opacity: 0.8,
-                    fontFamily: 'Inter-Light',
-                    textAlign: 'justify',
-                    paddingHorizontal: 15,
-                    fontSize: 14,
-                  }}>
-                  {postAuhor}
-                  {' • '}
-                  {formattedDate}
-                </Text>
-                <TouchableOpacity
-                  style={{ marginRight: 15 }}
-                  onPress={() =>
-                    handleShare({
-                      url: item.url,
-                      newsTitle: item.title || item.post,
-                    })
-                  }>
-                  <Icons.FontAwesome name={'send-o'} size={24} color="white" />
-                </TouchableOpacity>
-              </View>
-            </Animatable.View>
+            <NewsImage
+              navigation={navigation}
+              item={item}
+              handleImagePressed={handleImagePressed}
+              isImageUrl={isImageUrl}
+              defaultImage={defaultImage}
+              includesG={includesG}
+              imageLoaded={imageLoaded}
+            />
+
+            <NewsTitle
+              item={item}
+              postAuthor={postAuthor}
+              postText={postText}
+              formattedDate={formattedDate}
+            />
           </View>
 
           {identify !== 'Гость' && (
-            <View style={styles.inputContainer}>
-              <TextInput
-                ref={inputRef}
-                style={{ fontFamily: 'Inter-Light', fontSize: 20, width: '100%' }}
-                placeholder={`Что думаете, ${identify}?`}
-                selectionColor="white"
-                placeholderTextColor="whitesmoke"
-                multiline={true}
-                numberOfLines={2}
-                value={inputText}
-                onChangeText={text => setInputText(text)}
-              />
-              {inputText.length > 0 && (
-                <Animatable.View
-                  animation="flipInX"
-                  duration={1000}
-                  style={{ position: 'absolute', top: 0, right: 5 }}>
-                  <TouchableOpacity onPress={() => setInputText('')}>
-                    <Icons.MaterialCommunityIcons
-                      name="close-circle"
-                      size={32}
-                    />
-                  </TouchableOpacity>
-                </Animatable.View>
-              )}
-              {inputText.length > 5 && (
-                <Animatable.View
-                  style={{ width: '80%', alignSelf: 'center' }}
-                  animation="fadeIn"
-                  duration={500}>
-                  <CustomButton
-                    onPress={handlePublishComment}
-                    text="Опубликовать"
-                    showBorder
-                  />
-                </Animatable.View>
-              )}
-            </View>
+            <Input
+              inputRef={inputRef}
+              identify={identify}
+              inputText={inputText}
+              setInputText={setInputText}
+              handlePublishComment={handlePublishComment}
+            />
           )}
 
           {comments.length > 0 ? (
@@ -444,55 +323,27 @@ export default function CommentsScreen({ route }) {
                 showsVerticalScrollIndicator={false}
                 style={{ marginVertical: 20 }}
                 scrollEventThrottle={16}
-                bounces={false}>
+                bounces={false}
+                refreshControl={
+                  <RefreshControl
+                    colors={['white']}
+                    refreshing={isRefreshing}
+                    progressBackgroundColor={'rgb(2 132 199)'}
+                    onRefresh={onRefresh}
+                  />
+                }
+              >
                 {comments.map((item, index) => (
-                  <View key={index} style={styles.feedItem}>
-                    <Image
-                      source={item.userAvatar || userImage}
-                      style={styles.avatar}
-                    />
-                    <View style={{ flex: 1 }}>
-                      <View
-                        style={{
-                          flexDirection: 'row',
-                          justifyContent: 'space-between',
-                          alignItems: 'center',
-                        }}>
-                        <View>
-                          <Text style={styles.name}>{item.authorName}</Text>
-                          <Text style={styles.timestamp}>
-                            {formatPostTime(item.timestamp, new Date())}
-                          </Text>
-                        </View>
-                        <TouchableOpacity
-                          style={{
-                            backgroundColor: theme.bgWhite(0.3),
-                            borderRadius: 25,
-                            padding: 4,
-                          }}
-                          onPress={() => {
-                            setSelectedCommentIndex(index);
-                            setShowDeleteModal(!showDeleteModal);
-                          }}>
-                          <Icons.MaterialIcons
-                            name="more-horiz"
-                            size={28}
-                            color="rgb(96 165 250)"
-                          />
-                        </TouchableOpacity>
-                      </View>
-                      <Text style={styles.post}>
-                        {item.postText || item.commentText}
-                      </Text>
-                      {item.postImage && (
-                        <Image
-                          src={item.postImage}
-                          style={styles.postImage}
-                          resizeMode="cover"
-                        />
-                      )}
-                    </View>
-                  </View>
+                  <Comment
+                    userImage={userImage}
+                    index={index}
+                    item={item}
+                    formatPostTime={formatPostTime}
+                    onMorePress={() => {
+                      setSelectedCommentIndex(index);
+                      setShowDeleteModal(!showDeleteModal);
+                    }}
+                  />
                 ))}
               </ScrollView>
             </View>
@@ -519,18 +370,6 @@ export default function CommentsScreen({ route }) {
 }
 
 const styles = StyleSheet.create({
-  imageContainer: {
-    flex: 1,
-    width: '100%',
-    height: '100%',
-    borderRadius: 155,
-    borderWidth: 1.5,
-    borderColor: 'transparent',
-    overflow: 'hidden',
-    shadowColor: 'rgba(245, 40, 145, 1)',
-    elevation: 1,
-    marginHorizontal: '10%',
-  },
   seperator: {
     height: 1,
     width: '70%',
@@ -588,17 +427,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     marginVertical: 16,
   },
-  inputContainer: {
-    margin: 12,
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    borderRadius: 15,
-    paddingHorizontal: 32,
-    borderWidth: 0.5,
-    borderColor: theme.bgWhite(0.1),
-    backgroundColor: theme.bgWhite(0.2),
-  },
+
   inputAvatar: {
     width: 48,
     height: 48,

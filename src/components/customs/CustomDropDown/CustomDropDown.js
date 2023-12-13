@@ -67,7 +67,7 @@ export default function CustomDropDown({
       const formattedTime = `${day} ${month} в ${hours}:${minutes}`;
 
       handleUsersNewsShare({
-        author: commentToShare.identify,
+        author: commentToShare.authorName,
         newsTitle: commentToShare.postText,
         titleType: 'комментарием',
         messageType: 'Комментарий',

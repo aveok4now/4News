@@ -25,13 +25,11 @@ const CustomInput = ({
   showeye = true,
 }) => {
   const [isFocused, setIsFocused] = useState(false);
-  //const [isPasswordVisible, setIsPasswordVisible] = useState(secureTextEntry);
-  const [iseyeFocused, setIseyeFocused] = useState(false);
+  const [isEyeFocused, setIsEyeFocused] = useState(false);
 
   const handleButtonPress = () => {
     onPasswordVisibilityChange();
-    //setIsFocused(true);
-    setIseyeFocused(true);
+    setIsEyeFocused(true);
   };
 
   return (
