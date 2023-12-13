@@ -17,10 +17,11 @@ import LinearGradient from 'react-native-linear-gradient';
 
 import ModalPopup from '../../customs/CustomModal';
 import CustomButton from '../../customs/CustomButton';
-import RateUs from '../../RateUs';
 import SQLite from 'react-native-sqlite-storage';
 import { Icons } from '../../../utils/global/Icons';
 import { openLinkInBrowserHandler } from './utils/openLink';
+import RateUSModal from './components/RateUSModal/RateUSModal';
+import LogOutModal from './components/LogOutModal/LogOutModal';
 
 export default function CustomDrawer({
   children,
@@ -46,7 +47,7 @@ export default function CustomDrawer({
   const scale = useRef(new Animated.Value(1)).current;
 
   const [selectedMenuItem, setSelectedMenuItem] = useState(null);
-  const [showExitModal, setShowExitModal] = useState(false);
+  const [showLogOutModal, setShowLogOutModal] = useState(false);
 
   const [showRateUSModal, setShowRateUSModal] = useState(false);
   const [rating, setRating] = useState(1);
@@ -237,7 +238,7 @@ export default function CustomDrawer({
 
       default:
         if (title === 'Выход') {
-          setShowExitModal(!showExitModal);
+          setShowLogOutModal(!showLogOutModal);
         } else {
           navigation.navigate('Регистрация');
         }
@@ -297,7 +298,7 @@ export default function CustomDrawer({
       routes: [{ name: 'Добро пожаловать !' }],
       status: 'logout',
     });
-    setShowExitModal(false);
+    setShowLogOutModal(false);
   };
 
   return (
@@ -343,6 +344,7 @@ export default function CustomDrawer({
                 />
               </View>
             </LinearGradient>
+
             <View style={{ marginLeft: 15 }}>
               <Text style={{ fontSize: 22, fontFamily: 'Inter-Bold' }}>
                 {identify} {identify === 'Гость' ? '👾' : '💫'}
@@ -353,89 +355,28 @@ export default function CustomDrawer({
                 </Text>
               )}
             </View>
+
             {showRateUSModal && (
-              <ModalPopup
+              <RateUSModal
                 navigation={navigation}
-                visible={showRateUSModal}
-                backgroundColor="#7692FF">
-                <TouchableOpacity
-                  style={{ position: 'absolute', top: 10, right: 10 }}
-                  onPress={() => {
-                    setShowRateUSModal(!showRateUSModal);
-                  }}>
-                  <Icons.EvilIcons name="close" color="white" size={24} />
-                </TouchableOpacity>
-                <View
-                  style={[
-                    styles.container,
-                    { flexDirection: 'row', marginTop: 5 },
-                  ]}>
-                  {[1, 2, 3, 4, 5].map(index => (
-                    <Animated.View key={index}>
-                      <RateUs
-                        key={index}
-                        index={index}
-                        filled={index <= rating ? true : false}
-                        animatedValue={animatedValue}
-                        rating={rating}
-                        onPress={() => {
-                          rate(index);
-                        }}
-                      />
-                    </Animated.View>
-                  ))}
-                </View>
-              </ModalPopup>
+                showRateUSModal={showRateUSModal}
+                setShowRateUSModal={setShowRateUSModal}
+                animatedValue={animatedValue}
+                rate={rate}
+                rating={rating}
+              />
             )}
 
-            {showExitModal && (
-              <>
-                <ModalPopup
-                  navigation={navigation}
-                  visible={showExitModal}
-                  backgroundColor="#7692FF">
-                  <View>
-                    <Text
-                      style={{
-                        textAlign: 'center',
-                        fontFamily: 'Inter-ExtraBold',
-                      }}>
-                      Вы уверены, что хотите выйти из аккаунта?
-                    </Text>
-
-                    <Animatable.View
-                      animation="fadeIn"
-                      duration={1500}
-                      style={{
-                        flexDirection: 'column',
-                        justifyContent: 'center',
-                        marginTop: 15,
-                      }}>
-                      <CustomButton
-                        bgColor="#3a86ff"
-                        type="Tertiary"
-                        text="Да, выйти из аккаунта"
-                        onPress={() => {
-                          setIsOnYesPressed(true);
-                          handleOnExitYesPressed();
-                        }}
-                      />
-                    </Animatable.View>
-                  </View>
-                  <Animatable.View
-                    animation="fadeIn"
-                    style={{ justifyContent: 'center' }}>
-                    <CustomButton
-                      type="Primary"
-                      text="Отмена"
-                      bgColor="transparent"
-                      onPress={() => {
-                        setShowExitModal(!showExitModal);
-                      }}
-                    />
-                  </Animatable.View>
-                </ModalPopup>
-              </>
+            {showLogOutModal && (
+              <LogOutModal
+                navigation={navigation}
+                showLogOutModal={showLogOutModal}
+                setShowLogOutModal={setShowLogOutModal}
+                onYesPress={() => {
+                  setIsOnYesPressed(true);
+                  handleOnExitYesPressed();
+                }}
+              />
             )}
           </View>
           <View style={{ flexDirection: 'column', marginTop: 30 }}>
