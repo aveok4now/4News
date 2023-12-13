@@ -32,6 +32,9 @@ import { getUserImage } from '../../utils/global/getUserImage';
 import Toast from 'react-native-toast-message';
 import NewsFooterContainer from '../../components/UsersNewsComponents/NewsFooter/NewsFooter';
 import newsOverViewImage from '../../../assets/images/newsoverview.jpg';
+import UnregisteredModal from './components/UnregisteredModal/UnregisteredModal';
+import SendButton from './components/SendButton/SendButton';
+import PostInput from './components/PostInput/PostInput';
 
 SQLite.enablePromise(true);
 
@@ -434,44 +437,12 @@ export default function UsersNewsScreen({ navigation }) {
             fontFamily="Inter-ExtraBold"
             letterSpacing={1}>
             {showGuestModal && (
-              <ModalPopup visible={showGuestModal}>
-                <View style={{ alignItems: 'center' }}>
-                  <TypeWriter
-                    style={{ fontFamily: 'Inter-ExtraBold', fontSize: 20 }}
-                    minDelay={2}
-                    typing={1}>
-                    Упс...
-                  </TypeWriter>
-                  <Text
-                    style={{
-                      fontFamily: 'Inter-SemiBold',
-                      marginTop: 5,
-                      color: 'white',
-                      opacity: 0.85,
-                    }}>
-                    Чтобы делиться своими новостями, зарегестрируйтесь или
-                    войдите в аккаунт!
-                  </Text>
-                </View>
-                <View
-                  style={{
-                    flexDirection: 'row',
-                    width: '50%',
-                    padding: 5,
-                    justifyContent: 'space-between',
-                    gap: 10,
-                  }}>
-                  <CustomButton
-                    text="Назад"
-                    type="Tertiary"
-                    onPress={() => setShowGuestModal(!showGuestModal)}
-                  />
-                  <CustomButton
-                    text="Войти"
-                    onPress={() => navigation.navigate('Регистрация')}
-                  />
-                </View>
-              </ModalPopup>
+              <UnregisteredModal
+                navigation={navigation}
+                showGuestModal={showGuestModal}
+                onBackPress={() => setShowGuestModal(!showGuestModal)}
+                onSignInPress={() => navigation.navigate('Регистрация')}
+              />
             )}
 
             <Animated.View
@@ -496,43 +467,15 @@ export default function UsersNewsScreen({ navigation }) {
                     transform: [{ translateY }],
                   },
                 ]}>
-                <Image source={condition} style={styles.avatar} />
-                <TextInput
-                  ref={inputRef}
-                  autoFocus={false}
-                  selectionColor="white"
-                  multiline={true}
-                  numberOfLines={3}
-                  maxLength={500}
-                  style={{
-                    flex: 1,
-                    fontFamily: 'Inter-Light',
-                    maxHeight: height * 0.4,
-                    borderLeftWidth: 1,
-                    borderLeftColor: theme.bgWhite(0.2),
-                    paddingLeft: 10,
-                  }}
-                  placeholder="Что у Вас нового?"
-                  placeholderStyle={{ textAlign: 'center' }}
-                  value={postText}
-                  onFocus={checkPerson}
-                  onChangeText={text => {
-                    handleTextChange(text);
-                  }}
+                <PostInput
+                  condition={condition}
+                  inputRef={inputRef}
+                  postText={postText}
+                  checkPerson={checkPerson}
+                  handleTextChange={handleTextChange}
                 />
 
-                {isTextValid && (
-                  <Animatable.View animation="flipInY" duration={1000}>
-                    <TouchableOpacity onPress={handleSendPost}>
-                      <Icons.Ionicons
-                        name="send"
-                        size={32}
-                        //opacity={isTextValid ? 1 : 0}
-                        color={'rgb(125 211 252)'}
-                      />
-                    </TouchableOpacity>
-                  </Animatable.View>
-                )}
+                {isTextValid && <SendButton onPress={handleSendPost} />}
               </Animated.View>
             </Animated.View>
 
@@ -620,11 +563,5 @@ const styles = StyleSheet.create({
     top: 0,
     left: 0,
     right: 0,
-  },
-  avatar: {
-    width: 48,
-    height: 48,
-    borderRadius: 24,
-    marginRight: 16,
   },
 });
