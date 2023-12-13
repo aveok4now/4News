@@ -5,23 +5,21 @@ import {
   Animated,
   StyleSheet,
   Text,
-  Image,
-  FlatList,
   PanResponder,
 } from 'react-native';
 import * as Animatable from 'react-native-animatable';
 import useUserCredentials from '../../../utils/hooks/useUserCredentials';
 import useUserEmail from '../../../utils/hooks/useUserEmail';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import LinearGradient from 'react-native-linear-gradient';
-
-import ModalPopup from '../../customs/CustomModal';
-import CustomButton from '../../customs/CustomButton';
 import SQLite from 'react-native-sqlite-storage';
 import { Icons } from '../../../utils/global/Icons';
 import { openLinkInBrowserHandler } from './utils/openLink';
 import RateUSModal from './components/RateUSModal/RateUSModal';
 import LogOutModal from './components/LogOutModal/LogOutModal';
+import UserAvatar from './components/userAvatar/userAvatar';
+import UserCredentials from './components/UserCredentials/UserCredentials';
+import DrawerMenu from './components/Menu/DrawerMenu';
+import { styles } from './styles/drawerStyles'
 
 export default function CustomDrawer({
   children,
@@ -37,8 +35,8 @@ export default function CustomDrawer({
   destination = 'Search',
   titleColor = 'white',
 }) {
+
   let identify = useUserCredentials();
-  let userEmail = useUserEmail();
   const isGuest = identify === 'Гость';
   const isAdmin = identify.includes('admin');
 
@@ -312,49 +310,8 @@ export default function CustomDrawer({
               alignItems: 'center',
               marginTop: 40,
             }}>
-            <LinearGradient
-              colors={['#dd2dcf', '#f356b0']}
-              style={{
-                width: 80,
-                height: 80,
-                borderRadius: 45,
-                marginLeft: 20,
-              }}>
-              <View
-                style={{
-                  width: '100%',
-                  height: '100%',
-                  borderRadius: 45,
-                  borderWidth: 1.5,
-                  borderColor: 'transparent',
-                  alignSelf: 'center',
-                  overflow: 'hidden',
-                  shadowColor: 'rgba(245, 40, 145, 1)',
-                  elevation: 1,
-                }}>
-                <Image
-                  source={
-                    identify === 'Гость'
-                      ? require('../../../../assets/images/guest.jpg')
-                      : identify.includes('admin')
-                        ? require('../../../../assets/images/admin.jpg')
-                        : require('../../../../assets/images/user.jpg')
-                  }
-                  style={{ width: '100%', height: '100%', resizeMode: 'cover' }}
-                />
-              </View>
-            </LinearGradient>
-
-            <View style={{ marginLeft: 15 }}>
-              <Text style={{ fontSize: 22, fontFamily: 'Inter-Bold' }}>
-                {identify} {identify === 'Гость' ? '👾' : '💫'}
-              </Text>
-              {userEmail && (
-                <Text style={{ fontSize: 14, fontFamily: 'Inter-Light' }}>
-                  {userEmail}
-                </Text>
-              )}
-            </View>
+            <UserAvatar />
+            <UserCredentials />
 
             {showRateUSModal && (
               <RateUSModal
@@ -379,57 +336,15 @@ export default function CustomDrawer({
               />
             )}
           </View>
-          <View style={{ flexDirection: 'column', marginTop: 30 }}>
-            <FlatList
-              data={menu}
-              renderItem={({ item, index }) => {
-                const { icon, color } = getIconInfo(item.title, item);
-                const isSelected = selectedMenuItem === index;
-                return (
-                  <TouchableOpacity
-                    style={{
-                      width: 200,
-                      height: 50,
-                      marginLeft: 20,
-                      marginTop: 20,
-                      flexDirection: 'row',
-                      backgroundColor:
-                        index === selectedMenuItem ? '#9fb4f0' : 'transparent',
-                      borderRadius: 10,
-                      alignItems: 'center',
-                      elevation: isSelected ? 5 : 0,
-                      justifyContent: 'flex-start',
-                    }}
-                    onPress={() => {
-                      setSelectedMenuItem(index);
-                      handleMenuItemPress(index, item.title);
-                    }}>
-                    {icon && (
-                      <Animatable.View
-                        style={{ marginLeft: 10 }}
-                        animation="fadeIn">
-                        {React.cloneElement(icon, {
-                          color: isSelected ? 'black' : color,
-                          width: 24,
-                          height: 24,
-                        })}
-                      </Animatable.View>
-                    )}
 
-                    <Text
-                      style={{
-                        marginLeft: 20,
-                        fontFamily: 'Inter-Light',
-                        color: isSelected ? 'black' : 'white',
-                        fontSize: 18,
-                      }}>
-                      {item.title}
-                    </Text>
-                  </TouchableOpacity>
-                );
-              }}
-            />
-          </View>
+          <DrawerMenu
+            menu={menu}
+            getIconInfo={getIconInfo}
+            selectedMenuItem={selectedMenuItem}
+            setSelectedMenuItem={setSelectedMenuItem}
+            handleMenuItemPress={handleMenuItemPress}
+          />
+
         </Animatable.View>
       )}
       <Animated.View
@@ -500,28 +415,3 @@ export default function CustomDrawer({
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  header: {
-    paddingHorizontal: 10,
-    paddingVertical: 15,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  headerTextContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    alignSelf: 'center',
-  },
-  text: {
-    fontSize: 20,
-    color: 'white',
-    textAlign: 'center',
-    alignSelf: 'center',
-  },
-});
