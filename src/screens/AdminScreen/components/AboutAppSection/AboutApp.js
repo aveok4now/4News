@@ -1,34 +1,34 @@
-import { View, Text, StyleSheet } from 'react-native';
+import {View, Text, StyleSheet} from 'react-native';
 import React from 'react';
 import LottieView from 'lottie-react-native';
-import { width } from '../../../../utils/global/getDimensions';
+import {width} from '../../../../utils/global/getDimensions';
 import meditatingAnimation from '../../../../../assets/animations/meditating.json';
-import { Icons } from '../../../../constants/Icons';
-import { openLinkInBrowserHandler } from '../../../../components/customs/CustomDrawer/utils/openLink';
+import {Icons} from '../../../../constants/Icons';
+import {openLinkInBrowserHandler} from '../../../../components/customs/CustomDrawer/utils/openLink';
 import Button from '../Button';
 
 export default function AboutApp() {
   return (
-    <View style={{ marginVertical: 16 }}>
+    <View style={{marginVertical: 16}}>
       <LottieView
         style={styles.lottie}
         source={meditatingAnimation}
         autoPlay={true}
         loop={true}
       />
-      <View style={{ padding: 8 }}>
-        <Text style={{ fontFamily: 'Inter-Light', fontSize: 18 }}>
+      <View style={{padding: 8}}>
+        <Text style={{fontFamily: 'Inter-Light', fontSize: 18}}>
           Программное решение новостного приложения было разработано с
           использованием JavaScript-библиотеки{' '}
-          <Text style={{ fontFamily: 'Inter-ExtraBold' }}>React Native</Text>,
+          <Text style={{fontFamily: 'Inter-ExtraBold'}}>React Native</Text>,
           база данных была разработана в СУБД{' '}
-          <Text style={{ fontFamily: 'Inter-ExtraBold' }}>SQLite</Text>. Является
+          <Text style={{fontFamily: 'Inter-ExtraBold'}}>SQLite</Text>. Является
           нормализанованной и находится в третьей нормальной форме. Исходный код
           приложения:
         </Text>
         <Button onPress={() => openLinkInBrowserHandler(3)}>
           <Icons.AntDesign name="github" size={50} />
-          <Text style={{ fontFamily: 'Inter-ExtraBold', fontSize: 24 }}>
+          <Text style={{fontFamily: 'Inter-ExtraBold', fontSize: 24}}>
             Github
           </Text>
         </Button>

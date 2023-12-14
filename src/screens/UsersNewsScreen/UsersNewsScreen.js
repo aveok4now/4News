@@ -4,31 +4,22 @@ import {
   StyleSheet,
   View,
   Image,
-  TextInput,
-  TouchableOpacity,
-  Text,
   Animated,
   RefreshControl,
 } from 'react-native';
-import React, { useCallback, useState, useEffect, useRef } from 'react';
+import React, {useCallback, useState, useEffect, useRef} from 'react';
 import userImage from '../../../assets/images/user.jpg';
 import guestImage from '../../../assets/images/guest.jpg';
 import adminImage from '../../../assets/images/admin.jpg';
 import useUserCredentials from '../../utils/hooks/useUserCredentials';
 import CustomPostCard from '../../components/customs/CustomPostCard';
 import CustomDrawer from '../../components/customs/CustomDrawer';
-import { theme } from '../WeatherScreen/theme';
-import { Icons } from '../../constants/Icons';
-import ModalPopup from '../../components/customs/CustomModal/CustomModal';
-import TypeWriter from 'react-native-typewriter';
-import CustomButton from '../../components/customs/CustomButton';
-import { formatPostTime } from '../../utils/global/formatPostTime';
+import {theme} from '../WeatherScreen/theme';
+import {formatPostTime} from '../../utils/global/formatPostTime';
 import NoNewsInfo from '../../components/NoNewsInfo';
 import SQLite from 'react-native-sqlite-storage';
-import { height } from '../../utils/global/getDimensions';
-import * as Animatable from 'react-native-animatable';
 import * as Progress from 'react-native-progress';
-import { getUserImage } from '../../utils/global/getUserImage';
+import {getUserImage} from '../../utils/global/getUserImage';
 import Toast from 'react-native-toast-message';
 import NewsFooterContainer from '../../components/UsersNewsComponents/NewsFooter/NewsFooter';
 import newsOverViewImage from '../../../assets/images/newsoverview.jpg';
@@ -38,7 +29,7 @@ import PostInput from './components/PostInput/PostInput';
 
 SQLite.enablePromise(true);
 
-export default function UsersNewsScreen({ navigation }) {
+export default function UsersNewsScreen({navigation}) {
   useEffect(() => {
     getPosts();
   }, []);
@@ -50,8 +41,8 @@ export default function UsersNewsScreen({ navigation }) {
     identify === 'Гость'
       ? guestImage
       : identify.includes('admin')
-        ? adminImage
-        : userImage;
+      ? adminImage
+      : userImage;
 
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [postText, setPostText] = useState(null);
@@ -81,7 +72,7 @@ export default function UsersNewsScreen({ navigation }) {
 
   const getPosts = async () => {
     try {
-      const db = await SQLite.openDatabase({ name: 'news.db', location: 1 });
+      const db = await SQLite.openDatabase({name: 'news.db', location: 1});
 
       // let inQuery = `ALTER TABLE Likes ADD COLUMN isLiked INTEGER DEFAULT 0`;
       // await db.executeSql(inQuery)
@@ -197,7 +188,7 @@ export default function UsersNewsScreen({ navigation }) {
   const getCommentsCount = async postId => {
     try {
       console.log('post.id', postId);
-      const db = await SQLite.openDatabase({ name: 'news.db', location: 1 });
+      const db = await SQLite.openDatabase({name: 'news.db', location: 1});
 
       let query =
         'SELECT COUNT(*) as commentsCount FROM Comments WHERE postId = ?';
@@ -219,7 +210,7 @@ export default function UsersNewsScreen({ navigation }) {
   const insertPost = async data => {
     try {
       console.log(data);
-      const db = await SQLite.openDatabase({ name: 'news.db', location: 1 });
+      const db = await SQLite.openDatabase({name: 'news.db', location: 1});
 
       let query = `INSERT INTO News (newsId, AuthorName, newsTitle, publishDate, AuthorAdminId, AuthorUserId, categoryType)
                         VALUES (?, ?, ?, ?, COALESCE(?, 0), COALESCE(?, 0), ?)`;
@@ -282,7 +273,7 @@ export default function UsersNewsScreen({ navigation }) {
 
   const deletePost = async postId => {
     try {
-      const db = await SQLite.openDatabase({ name: 'news.db', location: 1 });
+      const db = await SQLite.openDatabase({name: 'news.db', location: 1});
 
       let query = 'DELETE FROM News WHERE newsId = ?';
       let queryArgs = [postId];
@@ -303,7 +294,7 @@ export default function UsersNewsScreen({ navigation }) {
 
   const toggleLike = async (postId, liked) => {
     try {
-      const db = await SQLite.openDatabase({ name: 'news.db', location: 1 });
+      const db = await SQLite.openDatabase({name: 'news.db', location: 1});
 
       if (liked) {
         let incrementLikesQuery = `
@@ -355,7 +346,7 @@ export default function UsersNewsScreen({ navigation }) {
 
       setUsersPosts(prevPosts =>
         prevPosts.map(post =>
-          post.id === postId ? { ...post, deleted: true } : post,
+          post.id === postId ? {...post, deleted: true} : post,
         ),
       );
     } catch (err) {
@@ -413,18 +404,18 @@ export default function UsersNewsScreen({ navigation }) {
   return (
     <>
       <StatusBar backgroundColor="#092439" />
-      <View style={{ flex: 1 }}>
+      <View style={{flex: 1}}>
         <Image
           blurRadius={150}
-          style={{ position: 'absolute', width: '100%', height: '100%' }}
+          style={{position: 'absolute', width: '100%', height: '100%'}}
           source={newsOverViewImage}
         />
         {isLoading ? (
           <View
-            style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+            style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
             <Image
               blurRadius={100}
-              style={{ position: 'absolute', width: '100%', height: '100%' }}
+              style={{position: 'absolute', width: '100%', height: '100%'}}
               source={newsOverViewImage}
             />
             <Progress.CircleSnail thickness={10} size={140} color="white" />
@@ -447,7 +438,7 @@ export default function UsersNewsScreen({ navigation }) {
 
             <Animated.View
               style={{
-                transform: [{ translateY: translateY }],
+                transform: [{translateY: translateY}],
                 //zIndex: 2,
                 elevation: 4,
                 zIndex: 100,
@@ -464,7 +455,7 @@ export default function UsersNewsScreen({ navigation }) {
                       ? 'rgb(186 230 253)'
                       : 'rgb(94 234 212)',
                     opacity: inputContainerOpacity,
-                    transform: [{ translateY }],
+                    transform: [{translateY}],
                   },
                 ]}>
                 <PostInput
@@ -505,7 +496,7 @@ export default function UsersNewsScreen({ navigation }) {
                     });
                   }}
                   data={UsersPosts.filter(post => !post.deleted)}
-                  renderItem={({ item }) => (
+                  renderItem={({item}) => (
                     <CustomPostCard
                       navigation={navigation}
                       key={item.id}

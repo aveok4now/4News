@@ -1,13 +1,10 @@
-import {
-  View,
-  StatusBar,
-} from 'react-native';
-import React, { useState, useEffect, useCallback } from 'react';
-import { Image } from 'react-native-animatable';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { debounce } from 'lodash';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import { fetchLocations, fetchWeatherForecast } from '../../api/weather';
+import {View, StatusBar} from 'react-native';
+import React, {useState, useEffect, useCallback} from 'react';
+import {Image} from 'react-native-animatable';
+import {SafeAreaView} from 'react-native-safe-area-context';
+import {debounce} from 'lodash';
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
+import {fetchLocations, fetchWeatherForecast} from '../../api/weather';
 import * as Progress from 'react-native-progress';
 import useUserCredentials from '../../utils/hooks/useUserCredentials';
 import SQLite from 'react-native-sqlite-storage';
@@ -17,7 +14,7 @@ import WeatherInfo from './components/WeatherInfo/WeatherInfo';
 import WeaklyForeCast from './components/WeaklyForeCast/WeaklyForeCast';
 import AdditionalInfo from './components/AdditionalInfo/AdditionalInfo';
 
-export default function WeatherScreen({ navigation }) {
+export default function WeatherScreen({navigation}) {
   let identify = useUserCredentials();
 
   const [showSearch, setShowSearch] = useState(false);
@@ -27,7 +24,7 @@ export default function WeatherScreen({ navigation }) {
 
   const handleSearch = value => {
     if (value.length > 2) {
-      fetchLocations({ cityName: value }).then(data => {
+      fetchLocations({cityName: value}).then(data => {
         //console.log("Результат " + JSON.stringify(data))
         setLocations(data);
       });
@@ -53,7 +50,7 @@ export default function WeatherScreen({ navigation }) {
   }, [identify]);
 
   const fetchMyWeatherData = async () => {
-    const db = await SQLite.openDatabase({ name: 'news.db', location: 1 });
+    const db = await SQLite.openDatabase({name: 'news.db', location: 1});
     let myCity = null;
 
     console.log('IDENTIFY' + identify);
@@ -95,7 +92,7 @@ export default function WeatherScreen({ navigation }) {
 
   const setUserCityToDB = async name => {
     try {
-      const db = await SQLite.openDatabase({ name: 'news.db', location: 1 });
+      const db = await SQLite.openDatabase({name: 'news.db', location: 1});
       let userId = null;
 
       if (identify !== 'Гость') {
@@ -135,7 +132,7 @@ export default function WeatherScreen({ navigation }) {
 
   const handleTextDebounce = useCallback(debounce(handleSearch, 1200), []);
 
-  const { current, location } = weather || {};
+  const {current, location} = weather || {};
 
   const moreInfo = {
     'Минимальная температура': `${query?.mintemp_c}°`,
@@ -160,10 +157,10 @@ export default function WeatherScreen({ navigation }) {
     city === 'Sevastopol' && country === 'Ukraine' ? 'Россия' : country;
 
   return loading ? (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+    <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
       <Image
         blurRadius={300}
-        style={{ position: 'absolute', width: '100%', height: '100%' }}
+        style={{position: 'absolute', width: '100%', height: '100%'}}
         source={searchBg}
       />
       <Progress.CircleSnail thickness={10} size={140} color="white" />
@@ -172,14 +169,14 @@ export default function WeatherScreen({ navigation }) {
     <>
       <StatusBar backgroundColor="#092439" />
       <KeyboardAwareScrollView
-        style={{ flex: 1, position: 'relative' }}
+        style={{flex: 1, position: 'relative'}}
         showsVerticalScrollIndicator={false}>
         <Image
           blurRadius={100}
-          style={{ position: 'absolute', width: '100%', height: '100%' }}
+          style={{position: 'absolute', width: '100%', height: '100%'}}
           source={searchBg}
         />
-        <SafeAreaView style={{ display: 'flex', flex: 1 }}>
+        <SafeAreaView style={{display: 'flex', flex: 1}}>
           <SearchView
             showSearch={showSearch}
             handleTextDebounce={handleTextDebounce}

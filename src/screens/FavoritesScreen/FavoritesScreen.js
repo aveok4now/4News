@@ -1,28 +1,16 @@
-import React, { useState, useEffect } from 'react';
-import {
-  View,
-  Text,
-  FlatList,
-  StyleSheet,
-  Image,
-  StatusBar,
-  RefreshControl,
-} from 'react-native';
+import React, {useState, useEffect} from 'react';
+import {View, FlatList, Image, StatusBar, RefreshControl} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Card from '../../components/Card';
 import * as Animatable from 'react-native-animatable';
-import CustomButton from '../../components/customs/CustomButton';
-import Icon from 'react-native-vector-icons/FontAwesome';
-import LottieView from 'lottie-react-native';
 import useUserCredentials from '../../utils/hooks/useUserCredentials';
 import CustomDrawer from '../../components/customs/CustomDrawer';
-import { width } from '../../utils/global/getDimensions';
 import newsOverViewImage from '../../../assets/images/newsoverview.jpg';
 import interestsAnimation from '../../../assets/animations/interests.json';
 import FavoritesInfo from './components/FavoritesInfo/FavoritesInfo';
 import GuestInfo from './components/FavoritesGuestInfo/GuestInfo';
 
-export default function FavoritesScreen({ navigation }) {
+export default function FavoritesScreen({navigation}) {
   const [favorites, setFavorites] = useState([]);
   const [isRefreshing, setIsRefreshing] = useState(false);
 
@@ -67,10 +55,10 @@ export default function FavoritesScreen({ navigation }) {
   return identify !== 'Гость' ? (
     <>
       <StatusBar backgroundColor="#092439" />
-      <View style={{ flex: 1 }}>
+      <View style={{flex: 1}}>
         <Image
           blurRadius={150}
-          style={{ position: 'absolute', width: '100%', height: '100%' }}
+          style={{position: 'absolute', width: '100%', height: '100%'}}
           source={newsOverViewImage}
         />
 
@@ -93,7 +81,7 @@ export default function FavoritesScreen({ navigation }) {
               }
               data={favorites}
               keyExtractor={item => item.url}
-              renderItem={({ item }) => {
+              renderItem={({item}) => {
                 return (
                   <Card item={item} navigation={navigation} data={favorites} />
                 );

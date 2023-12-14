@@ -1,14 +1,14 @@
-import { StyleSheet, Text, View, Image } from 'react-native';
-import React, { useState } from 'react';
+import {StyleSheet, Text, View, Image} from 'react-native';
+import React, {useState} from 'react';
 import * as Animatable from 'react-native-animatable';
 import Logo from '../../../assets/images/seved.png';
 import RadialGradient from 'react-native-radial-gradient';
 import TypeWriter from 'react-native-typewriter';
 import useUserCredentials from '../../utils/hooks/useUserCredentials';
-import { setStatusBarColor } from '../../utils/global/StatusBarManager';
-import { width, height } from '../../utils/global/getDimensions';
+import {setStatusBarColor} from '../../utils/global/StatusBarManager';
+import {width, height} from '../../utils/global/getDimensions';
 
-const Splash = ({ navigation }) => {
+const Splash = ({navigation}) => {
   setStatusBarColor('#5b86e5');
   const [isTyped, setIsTyped] = useState(false);
   let identify = useUserCredentials();
@@ -19,7 +19,7 @@ const Splash = ({ navigation }) => {
 
     navigation.reset({
       index: 0,
-      routes: [{ name: 'Домашняя страница' }],
+      routes: [{name: 'Домашняя страница'}],
     });
   };
 
@@ -40,7 +40,7 @@ const Splash = ({ navigation }) => {
 
   return (
     <RadialGradient
-      style={{ flex: 1 }}
+      style={{flex: 1}}
       colors={['#36d1dc', '#5b86e5']}
       stops={[0.1, 0.9]}
       center={[200, 360]}
@@ -67,11 +67,11 @@ const Splash = ({ navigation }) => {
         <View
           style={[
             styles.logo,
-            { flex: 1, alignItems: 'center', justifyContent: 'center' },
+            {flex: 1, alignItems: 'center', justifyContent: 'center'},
           ]}>
           <Image
             source={Logo}
-            style={[styles.logo, { height: height * 0.18 }]}
+            style={[styles.logo, {height: height * 0.18}]}
             resizeMode="contain"
           />
         </View>
@@ -90,7 +90,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     letterSpacing: 1,
     textShadowColor: 'rgba(226, 232, 240, 0.25)',
-    textShadowOffset: { width: 0, height: 2 },
+    textShadowOffset: {width: 0, height: 2},
     textShadowRadius: 2,
   },
   splash: {

@@ -1,10 +1,14 @@
-import { View, Text } from 'react-native'
-import React from 'react'
-import CustomInput from '../../../../components/customs/CustomInput'
-import CustomButton from '../../../../components/customs/CustomButton'
+import {View, Text} from 'react-native';
+import React from 'react';
+import CustomInput from '../../../../components/customs/CustomInput';
+import CustomButton from '../../../../components/customs/CustomButton';
 
-
-export default function FeedbackForm({ control, title, handleSubmit, sendMessage }) {
+export default function FeedbackForm({
+  control,
+  title,
+  handleSubmit,
+  sendMessage,
+}) {
   return (
     <View>
       <Text
@@ -40,5 +44,5 @@ export default function FeedbackForm({ control, title, handleSubmit, sendMessage
         />
       </View>
     </View>
-  )
+  );
 }

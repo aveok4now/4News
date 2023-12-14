@@ -1,34 +1,30 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useNavigation } from '@react-navigation/native';
-import React, { useEffect, useState } from 'react';
-import { useForm } from 'react-hook-form';
+import {useNavigation} from '@react-navigation/native';
+import React, {useEffect, useState} from 'react';
+import {useForm} from 'react-hook-form';
 import {
   BackHandler,
   ScrollView,
   StatusBar,
   StyleSheet,
-  TouchableOpacity,
-  TouchableWithoutFeedback,
   Vibration,
   View,
 } from 'react-native';
-import * as Animatable from 'react-native-animatable';
 import SQLite from 'react-native-sqlite-storage';
 import Toast from 'react-native-toast-message';
-import Icon from 'react-native-vector-icons/FontAwesome';
 import LogoImage from '../../../assets/images/seved.png';
 import GradientBackground from '../../components/GradientBackground';
 import CustomButton from '../../components/customs/CustomButton/CustomButton';
 import CustomInput from '../../components/customs/CustomInput/CustomInput';
 import ExitModal from '../../components/customs/CustomModal/ExitModal';
-import { removeItem } from '../../utils/global/asyncStorage';
-import { height, width } from '../../utils/global/getDimensions';
+import {removeItem} from '../../utils/global/asyncStorage';
+import {height, width} from '../../utils/global/getDimensions';
 import Logo from './components/Logo/Logo';
 import HeaderButton from './components/HeaderButton/HeaderButton/HeaderButton';
 
 SQLite.enablePromise(true);
 
-const SignInScreen = ({ route }) => {
+const SignInScreen = ({route}) => {
   const navigation = useNavigation();
   const invalidCredentialsText = '❌ Неверный логин или пароль';
 
@@ -69,12 +65,12 @@ const SignInScreen = ({ route }) => {
       } else {
         if (savedUsername && savedPassword) {
           if (isLoggedOut === 'false') {
-            onSignInPressed({ username: savedUsername, password: savedPassword });
+            onSignInPressed({username: savedUsername, password: savedPassword});
             // AsyncStorage.setItem('loggedOut', '');
           }
         } else if (savedUsername === 'guest') {
           if (guestID) {
-            onSignInAsGuestPressed({ guestID: guestID });
+            onSignInAsGuestPressed({guestID: guestID});
           } else {
             onSignInAsGuestPressed();
           }
@@ -88,13 +84,13 @@ const SignInScreen = ({ route }) => {
   const {
     control,
     handleSubmit,
-    formState: { errors },
+    formState: {errors},
   } = useForm();
 
   const onSignInPressed = async data => {
     try {
       console.log(data);
-      const db = await SQLite.openDatabase({ name: 'news.db', location: 1 });
+      const db = await SQLite.openDatabase({name: 'news.db', location: 1});
 
       let query;
       let queryArgs;
@@ -139,15 +135,15 @@ const SignInScreen = ({ route }) => {
 
   const onSignInAsGuestPressed = async data => {
     try {
-      const db = await SQLite.openDatabase({ name: 'news.db', location: 1 });
+      const db = await SQLite.openDatabase({name: 'news.db', location: 1});
       const getLastGuestID = async () => {
         return new Promise((resolve, reject) => {
           db.transaction(tx => {
             tx.executeSql(
               'SELECT MAX(guestId) AS maxID FROM Guests',
               [],
-              (_, { rows }) => {
-                const { maxID } = rows.item(0);
+              (_, {rows}) => {
+                const {maxID} = rows.item(0);
                 resolve(maxID || 0);
               },
               error => {
@@ -215,7 +211,6 @@ const SignInScreen = ({ route }) => {
       <GradientBackground>
         <ScrollView showsVerticalScrollIndicator={false}>
           <View style={styles.root}>
-
             <HeaderButton
               onPress={handleReset}
               style={styles.questionIcon}
@@ -351,7 +346,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
     marginBottom: 10,
     textShadowColor: 'rgba(226, 232, 240, 0.15)',
-    textShadowOffset: { width: -2, height: 1 },
+    textShadowOffset: {width: -2, height: 1},
     textShadowRadius: 4,
     fontFamily: 'Inter-Bold',
   },

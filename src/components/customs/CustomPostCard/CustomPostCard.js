@@ -1,14 +1,14 @@
-import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
-import React, { useState, useEffect } from 'react';
-import { Icons } from '../../../constants/Icons';
+import {View, Text, Image, TouchableOpacity, StyleSheet} from 'react-native';
+import React, {useState, useEffect} from 'react';
+import {Icons} from '../../../constants/Icons';
 import * as Animatable from 'react-native-animatable';
 import CustomDropDown from '../CustomDropDown';
 import useUserCredentials from '../../../utils/hooks/useUserCredentials';
-import { handleUsersNewsShare } from '../../../utils/newsUtils/Share';
+import {handleUsersNewsShare} from '../../../utils/newsUtils/Share';
 import ModalPopup from '../CustomModal/CustomModal';
 import CustomButton from '../CustomButton';
-import { formatPostTime } from '../../../utils/global/formatPostTime';
-import { width } from '../../../utils/global/getDimensions';
+import {formatPostTime} from '../../../utils/global/formatPostTime';
+import {width} from '../../../utils/global/getDimensions';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import GuestModal from '../CustomModal/GuestModal';
 
@@ -159,7 +159,7 @@ export default function CustomPostCard({
 
   const onOk = () => {
     setShowGuestModal(false);
-    navigation.navigate('Добро пожаловать !', { status: 'logout' });
+    navigation.navigate('Добро пожаловать !', {status: 'logout'});
   };
 
   // const getCommentsCount = async (postId) => {
@@ -188,13 +188,13 @@ export default function CustomPostCard({
         <Animatable.View animation="fadeIn" duration={1000} style={styles.card}>
           {showDeleteModal && (
             <ModalPopup visible={showDeleteModal}>
-              <View style={{ padding: 5 }}>
-                <Text style={{ fontFamily: 'Inter-ExtraBold', fontSize: 18 }}>
+              <View style={{padding: 5}}>
+                <Text style={{fontFamily: 'Inter-ExtraBold', fontSize: 18}}>
                   Подтверждение
                 </Text>
               </View>
-              <View style={{ width: '100%', padding: 5 }}>
-                <Text style={{ fontFamily: 'Inter-Light', fontSize: 18 }}>
+              <View style={{width: '100%', padding: 5}}>
+                <Text style={{fontFamily: 'Inter-Light', fontSize: 18}}>
                   Вы действительно хотите удалить этот пост?
                 </Text>
               </View>
@@ -222,7 +222,7 @@ export default function CustomPostCard({
           )}
           <View style={styles.userInfo}>
             <Image style={styles.userImage} source={item.userImage} />
-            <View style={{ position: 'absolute', top: 15, right: 15 }}>
+            <View style={{position: 'absolute', top: 15, right: 15}}>
               <TouchableOpacity
                 onPress={() => setIsDropdownVisible(!isDropdownVisible)}>
                 <Icons.MaterialIcons
@@ -259,17 +259,17 @@ export default function CustomPostCard({
                 onPress={handleLikePress}
                 style={[
                   styles.interaction,
-                  { backgroundColor: isLiked ? '#2e64e515' : 'transparent' },
+                  {backgroundColor: isLiked ? '#2e64e515' : 'transparent'},
                 ]}>
                 <Icons.Ionicons
                   name={isLiked ? 'heart' : 'heart-outline'}
                   size={25}
-                  style={{ color: likeIconColor }}
+                  style={{color: likeIconColor}}
                 />
                 <Text
                   style={[
                     styles.interactionText,
-                    { color: isLiked ? '#2e64e5' : '#333' },
+                    {color: isLiked ? '#2e64e5' : '#333'},
                   ]}>
                   {likesCount !== 0 && likesCount}
                 </Text>
@@ -287,7 +287,7 @@ export default function CustomPostCard({
               <Icons.FontAwesome
                 name="comments-o"
                 size={25}
-                style={{ color: 'blue' }}
+                style={{color: 'blue'}}
               />
               <Text style={styles.interactionText}>
                 {item.comments !== 0 && item.comments}

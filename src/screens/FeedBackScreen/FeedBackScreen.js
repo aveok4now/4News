@@ -1,19 +1,17 @@
-import { View, Text, StyleSheet, Linking, StatusBar } from 'react-native';
-import React, { useState, useEffect } from 'react';
+import {View, Linking, StatusBar} from 'react-native';
+import React, {useState, useEffect} from 'react';
 import LinearGradient from 'react-native-linear-gradient';
 import ModalPopup from '../../components/customs/CustomModal';
 import CustomButton from '../../components/customs/CustomButton';
-import CustomInput from '../../components/customs/CustomInput';
-import { useForm } from 'react-hook-form';
+import {useForm} from 'react-hook-form';
 import * as Animatable from 'react-native-animatable';
-import TypeWriter from 'react-native-typewriter';
-import { setStatusBarColor } from '../../utils/global/StatusBarManager';
+import {setStatusBarColor} from '../../utils/global/StatusBarManager';
 import SQLite from 'react-native-sqlite-storage';
 import useUserCredentials from '../../utils/hooks/useUserCredentials';
 import FeedbackForm from './components/FeedbackForm/FeedbackForm';
 import GratitudeCountDown from './components/GratitudeCountDown/GratitudeCountDown';
 
-export default function FeedBackScreen({ navigation }) {
+export default function FeedBackScreen({navigation}) {
   let identify = useUserCredentials();
 
   const [showModal, setShowModal] = useState(true);
@@ -21,7 +19,7 @@ export default function FeedBackScreen({ navigation }) {
   const [isTyped, setIsTyped] = useState(false);
   const [countdown, setCountdown] = useState(4);
 
-  const { control, handleSubmit, watch } = useForm();
+  const {control, handleSubmit, watch} = useForm();
   let message = watch('feedback');
 
   const sendMessage = async () => {
@@ -36,7 +34,7 @@ export default function FeedBackScreen({ navigation }) {
   const saveFeedbackIntoDB = async (identify, message) => {
     try {
       console.log(message);
-      const db = await SQLite.openDatabase({ name: 'news.db', location: 1 });
+      const db = await SQLite.openDatabase({name: 'news.db', location: 1});
 
       let createTableQuery = `
                 CREATE TABLE IF NOT EXISTS UsersFeedbacks (
@@ -89,7 +87,7 @@ export default function FeedBackScreen({ navigation }) {
       <StatusBar backgroundColor={'rgba(54, 209, 220, 0.5)'} />
       <LinearGradient
         colors={['rgba(58, 131, 244, 0.4)', 'rgba(9, 181, 211, 0.4)']}
-        style={{ width: '100%', flex: 1 }}>
+        style={{width: '100%', flex: 1}}>
         <View
           style={{
             flex: 1,
@@ -111,12 +109,16 @@ export default function FeedBackScreen({ navigation }) {
                   />
                 ) : (
                   isMessageSend && (
-                    <GratitudeCountDown countdown={countdown} isTyped={isTyped} handleTypeComplete={handleTypeComplete} />
+                    <GratitudeCountDown
+                      countdown={countdown}
+                      isTyped={isTyped}
+                      handleTypeComplete={handleTypeComplete}
+                    />
                   )
                 )}
                 <Animatable.View
                   animation="fadeIn"
-                  style={{ justifyContent: 'center' }}>
+                  style={{justifyContent: 'center'}}>
                   <CustomButton
                     type="Tertiary"
                     text="Назад"
@@ -135,4 +137,3 @@ export default function FeedBackScreen({ navigation }) {
     </>
   );
 }
-
