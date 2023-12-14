@@ -26,6 +26,7 @@ import newsOverViewImage from '../../../assets/images/newsoverview.jpg';
 import UnregisteredModal from './components/UnregisteredModal/UnregisteredModal';
 import SendButton from './components/SendButton/SendButton';
 import PostInput from './components/PostInput/PostInput';
+import { updatePostTitles, insertLikesCount, insertPost, deletePost, toggleLike, getCommentsCount } from './db/usersNewsDBFunctions';
 
 SQLite.enablePromise(true);
 
@@ -111,7 +112,7 @@ export default function UsersNewsScreen({ navigation }) {
           );
           const isLiked = isLikedResult.rows.item(0)?.isLiked || false;
 
-          const commentsCount = await getCommentsCount(post.newsId);
+          const commentsCount = await getCommentsCount(post.newsId, setCommentsCount);
 
           fetchedPosts.push({
             id: post.newsId.toString(),
@@ -128,7 +129,6 @@ export default function UsersNewsScreen({ navigation }) {
         }
 
         setUsersPosts(fetchedPosts);
-
       }
       SetIsLoading(false);
     } catch (err) {
@@ -167,7 +167,7 @@ export default function UsersNewsScreen({ navigation }) {
       inputRef.current.blur();
 
       try {
-        await insertPost(newPost);
+        await insertPost(newPost, identify);
 
         if (
           !(
@@ -187,148 +187,7 @@ export default function UsersNewsScreen({ navigation }) {
     }
   }, [UsersPosts, postText, identify, userImage]);
 
-  const getCommentsCount = async postId => {
-    try {
-      console.log('post.id', postId);
-      const db = await SQLite.openDatabase({ name: 'news.db', location: 1 });
 
-      let query =
-        'SELECT COUNT(*) as commentsCount FROM Comments WHERE postId = ?';
-      let queryArgs = [postId];
-
-      const [result] = await db.executeSql(query, queryArgs);
-      const commentsCount = result.rows.item(0).commentsCount;
-      console.log('Number of comments:', commentsCount);
-
-      setCommentsCount(commentsCount);
-      return commentsCount;
-    } catch (err) {
-      console.log(err);
-      setCommentsCount(0);
-      return 0;
-    }
-  };
-
-  const insertPost = async (data) => {
-    try {
-      console.log(data);
-      const db = await SQLite.openDatabase({ name: 'news.db', location: 1 });
-
-      let query = `INSERT INTO News (newsId, AuthorName, newsTitle, publishDate, AuthorAdminId, AuthorUserId, categoryType)
-                          VALUES (?, ?, ?, ?, COALESCE(?, 0), COALESCE(?, 0), ?)`;
-
-      let queryArgs = [
-        data.newsId,
-        data.userName,
-        data.post,
-        data.postTime.toISOString(),
-        !identify.includes('admin') ? null : data.id,
-        !identify.includes('admin') ? data.id : null,
-        'UsersNews',
-      ];
-
-      const [result] = await db.executeSql(query, queryArgs);
-
-      if (result.rowsAffected > 0) {
-        console.log('Post has been inserted into the database');
-        if (identify.includes('admin')) {
-          let updateQuery = `UPDATE Administrators SET adminPosts = adminPosts + 1 WHERE adminLogin = ?`;
-          let updateQueryArgs = [data.userName];
-          await db.executeSql(updateQuery, updateQueryArgs);
-          console.log('adminPosts has been updated');
-        }
-      } else {
-        console.log('Post has not been inserted into the database');
-      }
-
-      await insertLikesCount(data, db);
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
-  const insertLikesCount = async (data, db) => {
-    try {
-      // let createLikesTableQuery = `
-      // ALTER TABLE Likes (
-      //     id INTEGER PRIMARY KEY AUTOINCREMENT,
-      //     postId INTEGER,
-      //     userId INTEGER,
-      //     FOREIGN KEY (postId) REFERENCES News (newsId) ON DELETE CASCADE,
-      //     FOREIGN KEY (userId) REFERENCES Users (userId) ON DELETE CASCADE
-      //   ) `;
-
-      // await db.executeSql(createLikesTableQuery);
-
-      let insertLikesCountQuery =
-        'INSERT INTO Likes (postId, likesCount) VALUES (?, ?)';
-      let insertLikesCountQueryArgs = [data.newsId, 0];
-
-      const [result] = await db.executeSql(
-        insertLikesCountQuery,
-        insertLikesCountQueryArgs,
-      );
-
-      if (result.rowsAffected > 0) {
-        console.log('Post likes has been inserted into the database');
-      } else {
-        console.log('Post like has not been inserted into the database');
-      }
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
-  const deletePost = async postId => {
-    try {
-      const db = await SQLite.openDatabase({ name: 'news.db', location: 1 });
-
-      let query = 'DELETE FROM News WHERE newsId = ?';
-      let queryArgs = [postId];
-
-      const [result] = await db.executeSql(query, queryArgs);
-
-      if (result.rowsAffected > 0) {
-        console.log(
-          `Post with ID ${postId} has been deleted from the database`,
-        );
-      } else {
-        console.log(`Post with ID ${postId} not found in the database`);
-      }
-    } catch (err) {
-      console.log('Error deleting post:', err);
-    }
-  };
-
-  const toggleLike = async (postId, liked) => {
-    try {
-      const db = await SQLite.openDatabase({ name: 'news.db', location: 1 });
-
-      if (liked) {
-        let incrementLikesQuery = `
-                UPDATE Likes SET likesCount = likesCount + 1 WHERE postId = ?
-            `;
-        let incrementLikesQueryArgs = [postId];
-        console.log('updated');
-        await db.executeSql(incrementLikesQuery, incrementLikesQueryArgs);
-      } else {
-        let decrementLikesQuery = `
-                UPDATE Likes SET likesCount = likesCount - 1 WHERE postId = ?
-            `;
-        let decrementLikesQueryArgs = [postId];
-        console.log('deupdated');
-        await db.executeSql(decrementLikesQuery, decrementLikesQueryArgs);
-      }
-
-      let updateIsLikedQuery = `
-            UPDATE Likes SET isLiked = ? WHERE postId = ?
-        `;
-      let updateIsLikedQueryArgs = [liked ? 1 : 0, postId];
-      await db.executeSql(updateIsLikedQuery, updateIsLikedQueryArgs);
-    } catch (err) {
-      console.log(err);
-    }
-  };
 
   const handleTextChange = useCallback(text => {
     setPostText(text);

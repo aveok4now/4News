@@ -222,26 +222,13 @@ export default function AdminScreen({ navigation }) {
 
     try {
       const ratesQuery = 'SELECT AVG(rating) as averageRating FROM Rates';
-      const mostPopularCityQuery = `SELECT userCity, COUNT(userCity) as cityCount
-            FROM Users
-            GROUP BY userCity
-            ORDER BY cityCount DESC, userCity DESC;
-            `;
-      const feedBacksQuery =
-        'SELECT COUNT(*) as feedBacksCount FROM UsersFeedbacks';
-      const likedMoviesQuery =
-        'SELECT COUNT(*) as likedMoviesCount FROM likedMovies';
-      const lastRegisteredUserQuery =
-        'SELECT userLogin FROM Users ORDER BY userId DESC LIMIT 1';
-      const lastSavedMovieQuery =
-        'SELECT title FROM likedMovies WHERE rowid = last_insert_rowid()';
 
       const ratesResult = await fetchData(ratesQuery);
-      const cityResult = await fetchData(mostPopularCityQuery);
-      const feedBacksResult = await fetchData(feedBacksQuery);
-      const likedMoviesResult = await fetchData(likedMoviesQuery);
-      const lastRegisteredUserResult = await fetchData(lastRegisteredUserQuery);
-      const lastSavedMovieResult = await fetchData(lastSavedMovieQuery);
+      const cityResult = await fetchData(queries.mostPopularCityQuery);
+      const feedBacksResult = await fetchData(queries.feedBacksQuery);
+      const likedMoviesResult = await fetchData(queries.likedMoviesQuery);
+      const lastRegisteredUserResult = await fetchData(queries.lastRegisteredUserQuery);
+      const lastSavedMovieResult = await fetchData(queries.lastSavedMovieQuery);
 
       const averageRating =
         ratesResult && ratesResult.averageRating
