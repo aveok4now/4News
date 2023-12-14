@@ -112,7 +112,6 @@ export default function AdminScreen({ navigation }) {
 
   const [currentTime, setCurrentTime] = useState(new Date());
 
-  const handleCardPress = () => { };
 
   const getData = async () => {
 
@@ -123,6 +122,11 @@ export default function AdminScreen({ navigation }) {
       await addIsLikedColumnIfNeeded();
       await createTableUsersFeedbacks();
       await insertCategories();
+
+      console.log('Executing favorites query...');
+      const favoritesCountResult = await db.executeSql(queries.favoritesQuery);
+      const favoritesCount = favoritesCountResult[0].rows.raw()[0].favoritesCount;
+      console.log('Favorites Count:', favoritesCount);
 
       const [
         usersResult,

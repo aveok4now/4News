@@ -6,6 +6,7 @@ export const postsQuery = 'SELECT COUNT(*) as postsCount from News';
 export const likesQuery = 'SELECT postId, SUM(isLiked) as likesCount FROM Likes';
 export const favoritesQuery =
     'SELECT COUNT(*) as favoritesCount from UserFavorites';
+
 export const guestsQuery = 'SELECT COUNT(*) as guestsCount from Guests';
 export const ratesQuery = 'SELECT id, AVG(rating) as ratesCount from Rates';
 export const commentsQuery = 'SELECT COUNT(*) as commentsCount from Comments';

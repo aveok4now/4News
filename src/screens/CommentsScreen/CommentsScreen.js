@@ -6,28 +6,28 @@ import {
   ScrollView,
   RefreshControl,
 } from 'react-native';
-import React, {useRef, useState, useEffect} from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import * as Animatable from 'react-native-animatable';
-import {theme} from '../WeatherScreen/theme';
-import {SafeAreaView} from 'react-native-safe-area-context';
+import { theme } from '../WeatherScreen/theme';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import useUserCredentials from '../../utils/hooks/useUserCredentials';
-import {useNavigation} from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import NoNewsInfo from '../../components/NoNewsInfo';
-import {formatPostTime} from '../../utils/global/formatPostTime';
+import { formatPostTime } from '../../utils/global/formatPostTime';
 import CustomDropDown from '../../components/customs/CustomDropDown';
 import Toast from 'react-native-toast-message';
 import useUserImage from '../../utils/hooks/useUserImage';
 import SQLite from 'react-native-sqlite-storage';
 import newsBackgroundImage from '../../../assets/images/newsoverview.jpg';
-
-import {condition, getUserImage} from '../../utils/global/getUserImage';
+import { condition, getUserImage } from '../../utils/global/getUserImage';
 import ConfirmDeleteModal from './components/ConfirmDeleteModal/ConfirmDeleteModal';
 import NewsImage from './components/NewsImage/NewsImage';
 import NewsTitle from './components/NewsTitle/NewsTitle';
 import Input from './components/Input/Input';
 import Comment from './components/Comment/Comment';
+import { createCommentsTable } from './db/commentFunctions';
 
-export default function CommentsScreen({route}) {
+export default function CommentsScreen({ route }) {
   const {
     item,
     defaultImage,
@@ -66,7 +66,8 @@ export default function CommentsScreen({route}) {
   const fetchComments = async () => {
     try {
       setIsRefreshing(true);
-      const db = await SQLite.openDatabase({name: 'news.db', location: 1});
+      await createCommentsTable();
+      const db = await SQLite.openDatabase({ name: 'news.db', location: 1 });
 
       const postId = item.id || new Date(item.publishedAt).toString();
 
@@ -111,7 +112,7 @@ export default function CommentsScreen({route}) {
       if (includesG) {
         return;
       }
-      navigation.navigate('NewsViewer', {url: item.url});
+      navigation.navigate('NewsViewer', { url: item.url });
     } catch (err) {
       console.log(err);
       return;
@@ -146,7 +147,7 @@ export default function CommentsScreen({route}) {
     };
 
     try {
-      const db = await SQLite.openDatabase({name: 'news.db', location: 1});
+      const db = await SQLite.openDatabase({ name: 'news.db', location: 1 });
 
       let query = `
               INSERT INTO Comments (postId, authorName, commentText, timestamp)
@@ -180,7 +181,7 @@ export default function CommentsScreen({route}) {
       const comment = comments[selectedCommentIndex];
 
       try {
-        const db = await SQLite.openDatabase({name: 'news.db', location: 1});
+        const db = await SQLite.openDatabase({ name: 'news.db', location: 1 });
 
         let query = 'DELETE FROM Comments WHERE id = ?';
         let queryArgs = [comment.id];
@@ -205,20 +206,7 @@ export default function CommentsScreen({route}) {
     }
   };
 
-  // const createCommentsTable = async () => {
-  //     const db = await SQLite.openDatabase({ name: 'news.db', location: 1 });
-  //     let query = `
-  //       CREATE TABLE IF NOT EXISTS Comments (
-  //         id INTEGER PRIMARY KEY AUTOINCREMENT,
-  //         postId INTEGER,
-  //         authorName TEXT,
-  //         commentText TEXT,
-  //         timestamp TEXT,
-  //         FOREIGN KEY (postId) REFERENCES News (newsId) ON DELETE CASCADE
-  //       )
-  //     `;
-  //     await db.executeSql(query);
-  // };
+
 
   const onRefresh = async () => {
     await fetchComments();
@@ -228,7 +216,7 @@ export default function CommentsScreen({route}) {
     <>
       <StatusBar backgroundColor="#5fa3c5" />
 
-      <SafeAreaView style={{height: '100%'}}>
+      <SafeAreaView style={{ height: '100%' }}>
         <Animatable.View
           animation="fadeIn"
           duration={1500}
@@ -237,7 +225,7 @@ export default function CommentsScreen({route}) {
           }}>
           <Image
             blurRadius={100}
-            style={{position: 'absolute', width: '100%', height: '100%'}}
+            style={{ position: 'absolute', width: '100%', height: '100%' }}
             source={newsBackgroundImage}
           />
 
@@ -313,7 +301,7 @@ export default function CommentsScreen({route}) {
               }}>
               <ScrollView
                 showsVerticalScrollIndicator={false}
-                style={{marginVertical: 20}}
+                style={{ marginVertical: 20 }}
                 scrollEventThrottle={16}
                 bounces={false}
                 refreshControl={
@@ -326,6 +314,7 @@ export default function CommentsScreen({route}) {
                 }>
                 {comments.map((item, index) => (
                   <Comment
+                    key={index}
                     userImage={userImage}
                     index={index}
                     item={item}
@@ -339,7 +328,7 @@ export default function CommentsScreen({route}) {
               </ScrollView>
             </View>
           ) : (
-            <View style={{flex: 1}}>
+            <View style={{ flex: 1 }}>
               {inputText.length <= 40 && (
                 <NoNewsInfo
                   primaryText="Комментариев пока нет"
@@ -394,7 +383,7 @@ const styles = StyleSheet.create({
     fontFamily: 'Inter-Bold',
     color: 'rgb(96 165 250)',
     textShadowColor: 'rgba(8, 51, 68, 0.1)',
-    textShadowOffset: {width: 0, height: 2},
+    textShadowOffset: { width: 0, height: 2 },
     textShadowRadius: 4,
   },
   timestamp: {
@@ -403,7 +392,7 @@ const styles = StyleSheet.create({
     color: 'rgb(163 163 163)',
     marginTop: 2,
     textShadowColor: 'rgba(226, 232, 240, 0.25)',
-    textShadowOffset: {width: 0, height: 2},
+    textShadowOffset: { width: 0, height: 2 },
     textShadowRadius: 4,
   },
   post: {
