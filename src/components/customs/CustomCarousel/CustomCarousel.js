@@ -6,16 +6,16 @@ import {
   Animated,
   TouchableOpacity,
 } from 'react-native';
-import React, { useRef } from 'react';
-import { Images, Captions, ruCaptions } from '../../../constants/NewsImages';
-import { width } from '../../../utils/global/getDimensions';
+import React, {useRef} from 'react';
+import {Images, Captions, ruCaptions} from '../../../constants/NewsImages';
+import {width} from '../../../utils/global/getDimensions';
 
 const ITEM_SIZE = width * 0.5;
 const SPACING = 5;
 
-export default function CustomCarousel({ navigation, apiKeyList, apiKeyIndex }) {
+export default function CustomCarousel({navigation, apiKeyList, apiKeyIndex}) {
   const scrollX = useRef(new Animated.Value(0)).current;
-  const NewsImages = [{ key: 'left-spacer' }, ...Images, { key: 'right-spacer' }];
+  const NewsImages = [{key: 'left-spacer'}, ...Images, {key: 'right-spacer'}];
 
   const handleCategoryPressed = (ruCaption, curCaption) => {
     switch ((ruCaption, curCaption)) {
@@ -50,15 +50,15 @@ export default function CustomCarousel({ navigation, apiKeyList, apiKeyIndex }) 
         snapToInterval={ITEM_SIZE}
         bounces={false}
         scrollEventThrottle={16}
-        contentContainerStyle={{ alignItems: 'center' }}
+        contentContainerStyle={{alignItems: 'center'}}
         keyExtractor={(item, index) => `${index}`}
         onScroll={Animated.event(
-          [{ nativeEvent: { contentOffset: { x: scrollX } } }],
-          { useNativeDriver: true },
+          [{nativeEvent: {contentOffset: {x: scrollX}}}],
+          {useNativeDriver: true},
         )}
-        renderItem={({ item, index }) => {
+        renderItem={({item, index}) => {
           if (item.key === 'left-spacer' || item.key === 'right-spacer') {
-            return <View style={{ width: (width - ITEM_SIZE) / 2 }} />;
+            return <View style={{width: (width - ITEM_SIZE) / 2}} />;
           }
 
           const inputRange = [
@@ -83,7 +83,7 @@ export default function CustomCarousel({ navigation, apiKeyList, apiKeyIndex }) 
               style={[
                 styles.newsContainer,
                 {
-                  transform: [{ translateY }],
+                  transform: [{translateY}],
                   opacity,
                 },
               ]}>
@@ -96,7 +96,7 @@ export default function CustomCarousel({ navigation, apiKeyList, apiKeyIndex }) 
                   )
                 }>
                 <View style={styles.newsInner}>
-                  <Image source={{ uri: item }} style={styles.newsImage} />
+                  <Image source={{uri: item}} style={styles.newsImage} />
 
                   <Text style={styles.caption}>{ruCaptions[index - 1]}</Text>
                 </View>
@@ -140,7 +140,7 @@ const styles = StyleSheet.create({
     fontFamily: 'Inter-Light',
     fontSize: 20,
     textShadowColor: 'rgba(226, 232, 240, 0.25)',
-    textShadowOffset: { width: 0, height: 5 },
+    textShadowOffset: {width: 0, height: 5},
     textShadowRadius: 4,
   },
 });

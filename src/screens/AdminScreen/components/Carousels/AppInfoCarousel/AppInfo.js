@@ -1,16 +1,16 @@
-import { View, Text } from 'react-native';
+import {View, Text} from 'react-native';
 import React from 'react';
 import GradientBackground from '../../../../../components/GradientBackground';
 import AnimatedText from '../../../../../components/UsersNewsComponents/AnimatedText';
-import { theme } from '../../../../MovieNewsScreen/theme';
-import { width, height } from '../../../../../utils/global/getDimensions';
+import {theme} from '../../../../MovieNewsScreen/theme';
+import {width, height} from '../../../../../utils/global/getDimensions';
 
-export default function AppInfo({ item, activeSlide }) {
+export default function AppInfo({item, activeSlide}) {
   return (
     <>
       <GradientBackground
-        start={{ x: 0, y: 0 }}
-        end={{ x: 1, y: 0 }}
+        start={{x: 0, y: 0}}
+        end={{x: 1, y: 0}}
         colors={[item.color1, item.color2]}
         style={{
           borderWidth: 1,
@@ -37,7 +37,7 @@ export default function AppInfo({ item, activeSlide }) {
             bottom: 0,
             left: 0,
           }}>
-          <Text style={{ fontFamily: 'Inter-Bold', fontSize: 60, left: 5 }}>
+          <Text style={{fontFamily: 'Inter-Bold', fontSize: 60, left: 5}}>
             {item.count}
           </Text>
         </View>
@@ -54,7 +54,7 @@ export default function AppInfo({ item, activeSlide }) {
         <AnimatedText
           activeSlide={activeSlide}
           title={
-            <Text style={{ fontFamily: 'Inter-Light' }}>{item.description}</Text>
+            <Text style={{fontFamily: 'Inter-Light'}}>{item.description}</Text>
           }
         />
       )}

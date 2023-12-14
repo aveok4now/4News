@@ -1,23 +1,23 @@
-import { View, Text, Image, StatusBar } from 'react-native';
-import React, { useState, useEffect } from 'react';
+import {View, Text, Image, StatusBar} from 'react-native';
+import React, {useState, useEffect} from 'react';
 import * as Animatable from 'react-native-animatable';
 import CustomDrawer from '../../components/customs/CustomDrawer';
-import { Icons } from '../../utils/global/Icons';
+import {Icons} from '../../constants/Icons';
 import CustomButton from '../../components/customs/CustomButton';
 import InfoCarousel from './components/Carousels/InfoCarousel/InfoCarousel';
 import SQLite from 'react-native-sqlite-storage';
-import { fetchData, downloadFile } from './db/databaseUtils';
+import {fetchData, downloadFile} from './db/databaseUtils';
 import AppInfoCarousel from './components/Carousels/AppInfoCarousel/appInfoCarousel';
 import Loader from '../../components/MovieNewsComponents/Loader';
 import AboutApp from './components/AboutAppSection/AboutApp';
 import TablesCarousel from './components/Carousels/TablesCarousel/TablesCarousel';
 import Title from './components/Title';
-import { MemoizedTypeWriter } from './components/MemoizedComponents/MemoizedTypeWriter';
-import { MemoizedScrollView } from './components/MemoizedComponents/MemoizedScrollView';
-import { MemoizedClocks } from './components/MemoizedComponents/MemoizedClocks';
-import searchBg from '../../../assets/images/search-bg.jpg'
+import {MemoizedTypeWriter} from './components/MemoizedComponents/MemoizedTypeWriter';
+import {MemoizedScrollView} from './components/MemoizedComponents/MemoizedScrollView';
+import {MemoizedClocks} from './components/MemoizedComponents/MemoizedClocks';
+import searchBg from '../../../assets/images/search-bg.jpg';
 
-export default function AdminScreen({ navigation }) {
+export default function AdminScreen({navigation}) {
   useEffect(() => {
     getData();
   }, []);
@@ -103,11 +103,11 @@ export default function AdminScreen({ navigation }) {
 
   const [currentTime, setCurrentTime] = useState(new Date());
 
-  const handleCardPress = () => { };
+  const handleCardPress = () => {};
 
   const getData = async () => {
     try {
-      const db = await SQLite.openDatabase({ name: 'news.db', location: 1 });
+      const db = await SQLite.openDatabase({name: 'news.db', location: 1});
 
       // let query = 'UPDATE Administrators SET adminPosts = ? WHERE adminId = ?';
       // let queryArgs = [1, 46];
@@ -296,8 +296,8 @@ export default function AdminScreen({ navigation }) {
         },
         {
           id: 2,
-          title: <Text style={{ fontSize: 24 }}>Популярный{'\n'}город</Text>,
-          count: <Text style={{ fontSize: 35 }}>{mostPopularCity}</Text>,
+          title: <Text style={{fontSize: 24}}>Популярный{'\n'}город</Text>,
+          count: <Text style={{fontSize: 35}}>{mostPopularCity}</Text>,
           icon: <Icons.FontAwesome name="building" color="white" size={75} />,
           color1: '#ff1b6b',
           color2: '#45caff',
@@ -322,7 +322,7 @@ export default function AdminScreen({ navigation }) {
         },
         {
           id: 4,
-          title: <Text style={{ fontSize: 22 }}>Избранных фильмов</Text>,
+          title: <Text style={{fontSize: 22}}>Избранных фильмов</Text>,
           count: likedMoviesCount,
           icon: (
             <Icons.MaterialCommunityIcons
@@ -338,12 +338,12 @@ export default function AdminScreen({ navigation }) {
         {
           id: 5,
           title: (
-            <Text style={{ fontSize: 18 }}>
+            <Text style={{fontSize: 18}}>
               Последний{'\n'}зарегестрировавшийся{'\n'}пользователь
             </Text>
           ),
           count: (
-            <Text style={{ fontSize: 32, fontFamily: 'Inter-ExtraBold' }}>
+            <Text style={{fontSize: 32, fontFamily: 'Inter-ExtraBold'}}>
               {lastRegisteredUser}
             </Text>
           ),
@@ -356,10 +356,10 @@ export default function AdminScreen({ navigation }) {
         {
           id: 6,
           title: (
-            <Text style={{ fontSize: 22 }}>Последний{'\n'}лайкнутый фильм</Text>
+            <Text style={{fontSize: 22}}>Последний{'\n'}лайкнутый фильм</Text>
           ),
           count: (
-            <Text style={{ fontSize: 24, fontFamily: 'Inter-ExtraBold' }}>
+            <Text style={{fontSize: 24, fontFamily: 'Inter-ExtraBold'}}>
               {lastSavedMovie}
             </Text>
           ),
@@ -399,16 +399,16 @@ export default function AdminScreen({ navigation }) {
         <>
           <Image
             blurRadius={30}
-            style={{ position: 'absolute', width: '100%', height: '100%' }}
+            style={{position: 'absolute', width: '100%', height: '100%'}}
             source={searchBg}
           />
           <Loader />
         </>
       ) : (
-        <Animatable.View animation="fadeIn" style={{ flex: 1 }}>
+        <Animatable.View animation="fadeIn" style={{flex: 1}}>
           <Image
             blurRadius={50}
-            style={{ position: 'absolute', width: '100%', height: '100%' }}
+            style={{position: 'absolute', width: '100%', height: '100%'}}
             source={searchBg}
           />
           <CustomDrawer
@@ -420,7 +420,7 @@ export default function AdminScreen({ navigation }) {
             <MemoizedScrollView
               onRefresh={onRefresh}
               isRefreshing={isRefreshing}
-              style={{ paddingVertical: 8 }}
+              style={{paddingVertical: 8}}
               showsVerticalScrollIndicator={false}>
               {/* Title */}
               <MemoizedTypeWriter setCanBeShowed={setCanBeShowed} />

@@ -1,26 +1,23 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, {useState, useRef, useEffect} from 'react';
 import {
   View,
   TouchableOpacity,
   Animated,
-  StyleSheet,
   Text,
-  Image,
-  FlatList,
   PanResponder,
 } from 'react-native';
 import * as Animatable from 'react-native-animatable';
 import useUserCredentials from '../../../utils/hooks/useUserCredentials';
-import useUserEmail from '../../../utils/hooks/useUserEmail';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import LinearGradient from 'react-native-linear-gradient';
-
-import ModalPopup from '../../customs/CustomModal';
-import CustomButton from '../../customs/CustomButton';
-import RateUs from '../../RateUs';
 import SQLite from 'react-native-sqlite-storage';
-import { Icons } from '../../../utils/global/Icons';
-import { openLinkInBrowserHandler } from './utils/openLink';
+import {Icons} from '../../../constants/Icons';
+import {openLinkInBrowserHandler} from './utils/openLink';
+import RateUSModal from './components/RateUSModal/RateUSModal';
+import LogOutModal from './components/LogOutModal/LogOutModal';
+import UserAvatar from './components/UserAvatar/UserAvatar';
+import UserCredentials from './components/UserCredentials/UserCredentials';
+import DrawerMenu from './components/Menu/DrawerMenu';
+import {styles} from './styles/drawerStyles';
 
 export default function CustomDrawer({
   children,
@@ -37,7 +34,6 @@ export default function CustomDrawer({
   titleColor = 'white',
 }) {
   let identify = useUserCredentials();
-  let userEmail = useUserEmail();
   const isGuest = identify === 'Гость';
   const isAdmin = identify.includes('admin');
 
@@ -46,7 +42,7 @@ export default function CustomDrawer({
   const scale = useRef(new Animated.Value(1)).current;
 
   const [selectedMenuItem, setSelectedMenuItem] = useState(null);
-  const [showExitModal, setShowExitModal] = useState(false);
+  const [showLogOutModal, setShowLogOutModal] = useState(false);
 
   const [showRateUSModal, setShowRateUSModal] = useState(false);
   const [rating, setRating] = useState(1);
@@ -57,7 +53,7 @@ export default function CustomDrawer({
 
   const rate = async star => {
     try {
-      const db = await SQLite.openDatabase({ name: 'news.db', location: 1 });
+      const db = await SQLite.openDatabase({name: 'news.db', location: 1});
       let userId = null;
 
       if (identify !== 'Гость') {
@@ -132,7 +128,7 @@ export default function CustomDrawer({
     try {
       let userRating = null;
       let userId = null;
-      const db = await SQLite.openDatabase({ name: 'news.db', location: 1 });
+      const db = await SQLite.openDatabase({name: 'news.db', location: 1});
 
       if (identify !== 'Гость') {
         const query = 'SELECT userID FROM users WHERE userLogin = ?';
@@ -181,37 +177,37 @@ export default function CustomDrawer({
   };
 
   const menu = [
-    { icon: 'university', title: 'Университет' },
-    { icon: 'github', title: 'Коммит' },
-    { icon: 'email', title: 'Оставить отзыв' },
-    { icon: 'star-half-o', title: 'Оценить нас' },
+    {icon: 'university', title: 'Университет'},
+    {icon: 'github', title: 'Коммит'},
+    {icon: 'email', title: 'Оставить отзыв'},
+    {icon: 'star-half-o', title: 'Оценить нас'},
 
-    ...(isAdmin ? [{ icon: 'admin-panel-settings', title: 'Подсистема' }] : []),
+    ...(isAdmin ? [{icon: 'admin-panel-settings', title: 'Подсистема'}] : []),
     ...(isGuest
       ? [
-        { icon: 'user-circle', title: 'Регистрация' },
-        { icon: 'home', title: 'Домой' },
-      ]
-      : [{ icon: 'logout', title: 'Выход' }]),
+          {icon: 'user-circle', title: 'Регистрация'},
+          {icon: 'home', title: 'Домой'},
+        ]
+      : [{icon: 'logout', title: 'Выход'}]),
   ];
 
   const iconMap = {
-    Университет: { icon: <Icons.FontAwesome5 size={24} />, color: 'white' },
-    Выход: { icon: <Icons.MaterialIcons size={24} />, color: 'white' },
+    Университет: {icon: <Icons.FontAwesome5 size={24} />, color: 'white'},
+    Выход: {icon: <Icons.MaterialIcons size={24} />, color: 'white'},
     'Оставить отзыв': {
       icon: <Icons.MaterialCommunityIcons size={24} />,
       color: 'white',
     },
-    Коммит: { icon: <Icons.FontAwesome5 size={24} />, color: 'white' },
-    'Оценить нас': { icon: <Icons.FontAwesome size={24} />, color: 'white' },
-    Подсистема: { icon: <Icons.MaterialIcons size={24} />, color: 'white' },
-    default: { icon: <Icons.FontAwesome5 size={24} />, color: 'white' },
+    Коммит: {icon: <Icons.FontAwesome5 size={24} />, color: 'white'},
+    'Оценить нас': {icon: <Icons.FontAwesome size={24} />, color: 'white'},
+    Подсистема: {icon: <Icons.MaterialIcons size={24} />, color: 'white'},
+    default: {icon: <Icons.FontAwesome5 size={24} />, color: 'white'},
   };
 
   const getIconInfo = (title, item) => {
     const iconInfo = iconMap[title] || iconMap.default;
     return {
-      icon: React.cloneElement(iconInfo.icon, { name: item.icon }),
+      icon: React.cloneElement(iconInfo.icon, {name: item.icon}),
       color: iconInfo.color,
     };
   };
@@ -219,7 +215,7 @@ export default function CustomDrawer({
   const handleMenuItemPress = async (index, title) => {
     switch (title) {
       case 'Домой':
-        navigation.navigate('Добро пожаловать !', { status: 'logout' });
+        navigation.navigate('Добро пожаловать !', {status: 'logout'});
         break;
       case 'Коммит':
       case 'Университет':
@@ -237,7 +233,7 @@ export default function CustomDrawer({
 
       default:
         if (title === 'Выход') {
-          setShowExitModal(!showExitModal);
+          setShowLogOutModal(!showLogOutModal);
         } else {
           navigation.navigate('Регистрация');
         }
@@ -291,19 +287,19 @@ export default function CustomDrawer({
 
     await AsyncStorage.setItem('loggedOut', 'true');
 
-    navigation.navigate('Добро пожаловать !', { status: 'logout' });
+    navigation.navigate('Добро пожаловать !', {status: 'logout'});
     navigation.reset({
       index: 0,
-      routes: [{ name: 'Добро пожаловать !' }],
+      routes: [{name: 'Добро пожаловать !'}],
       status: 'logout',
     });
-    setShowExitModal(false);
+    setShowLogOutModal(false);
   };
 
   return (
-    <View style={{ flex: 1, borderRadius: showMenu ? 15 : 0 }}>
+    <View style={{flex: 1, borderRadius: showMenu ? 15 : 0}}>
       {showMenu && (
-        <Animatable.View animation="fadeIn" style={{ flex: 1 }}>
+        <Animatable.View animation="fadeIn" style={{flex: 1}}>
           <View
             style={{
               width: '100%',
@@ -311,184 +307,40 @@ export default function CustomDrawer({
               alignItems: 'center',
               marginTop: 40,
             }}>
-            <LinearGradient
-              colors={['#dd2dcf', '#f356b0']}
-              style={{
-                width: 80,
-                height: 80,
-                borderRadius: 45,
-                marginLeft: 20,
-              }}>
-              <View
-                style={{
-                  width: '100%',
-                  height: '100%',
-                  borderRadius: 45,
-                  borderWidth: 1.5,
-                  borderColor: 'transparent',
-                  alignSelf: 'center',
-                  overflow: 'hidden',
-                  shadowColor: 'rgba(245, 40, 145, 1)',
-                  elevation: 1,
-                }}>
-                <Image
-                  source={
-                    identify === 'Гость'
-                      ? require('../../../../assets/images/guest.jpg')
-                      : identify.includes('admin')
-                        ? require('../../../../assets/images/admin.jpg')
-                        : require('../../../../assets/images/user.jpg')
-                  }
-                  style={{ width: '100%', height: '100%', resizeMode: 'cover' }}
-                />
-              </View>
-            </LinearGradient>
-            <View style={{ marginLeft: 15 }}>
-              <Text style={{ fontSize: 22, fontFamily: 'Inter-Bold' }}>
-                {identify} {identify === 'Гость' ? '👾' : '💫'}
-              </Text>
-              {userEmail && (
-                <Text style={{ fontSize: 14, fontFamily: 'Inter-Light' }}>
-                  {userEmail}
-                </Text>
-              )}
-            </View>
+            <UserAvatar />
+            <UserCredentials />
+
             {showRateUSModal && (
-              <ModalPopup
+              <RateUSModal
                 navigation={navigation}
-                visible={showRateUSModal}
-                backgroundColor="#7692FF">
-                <TouchableOpacity
-                  style={{ position: 'absolute', top: 10, right: 10 }}
-                  onPress={() => {
-                    setShowRateUSModal(!showRateUSModal);
-                  }}>
-                  <Icons.EvilIcons name="close" color="white" size={24} />
-                </TouchableOpacity>
-                <View
-                  style={[
-                    styles.container,
-                    { flexDirection: 'row', marginTop: 5 },
-                  ]}>
-                  {[1, 2, 3, 4, 5].map(index => (
-                    <Animated.View key={index}>
-                      <RateUs
-                        key={index}
-                        index={index}
-                        filled={index <= rating ? true : false}
-                        animatedValue={animatedValue}
-                        rating={rating}
-                        onPress={() => {
-                          rate(index);
-                        }}
-                      />
-                    </Animated.View>
-                  ))}
-                </View>
-              </ModalPopup>
+                showRateUSModal={showRateUSModal}
+                setShowRateUSModal={setShowRateUSModal}
+                animatedValue={animatedValue}
+                rate={rate}
+                rating={rating}
+              />
             )}
 
-            {showExitModal && (
-              <>
-                <ModalPopup
-                  navigation={navigation}
-                  visible={showExitModal}
-                  backgroundColor="#7692FF">
-                  <View>
-                    <Text
-                      style={{
-                        textAlign: 'center',
-                        fontFamily: 'Inter-ExtraBold',
-                      }}>
-                      Вы уверены, что хотите выйти из аккаунта?
-                    </Text>
-
-                    <Animatable.View
-                      animation="fadeIn"
-                      duration={1500}
-                      style={{
-                        flexDirection: 'column',
-                        justifyContent: 'center',
-                        marginTop: 15,
-                      }}>
-                      <CustomButton
-                        bgColor="#3a86ff"
-                        type="Tertiary"
-                        text="Да, выйти из аккаунта"
-                        onPress={() => {
-                          setIsOnYesPressed(true);
-                          handleOnExitYesPressed();
-                        }}
-                      />
-                    </Animatable.View>
-                  </View>
-                  <Animatable.View
-                    animation="fadeIn"
-                    style={{ justifyContent: 'center' }}>
-                    <CustomButton
-                      type="Primary"
-                      text="Отмена"
-                      bgColor="transparent"
-                      onPress={() => {
-                        setShowExitModal(!showExitModal);
-                      }}
-                    />
-                  </Animatable.View>
-                </ModalPopup>
-              </>
+            {showLogOutModal && (
+              <LogOutModal
+                navigation={navigation}
+                showLogOutModal={showLogOutModal}
+                setShowLogOutModal={setShowLogOutModal}
+                onYesPress={() => {
+                  setIsOnYesPressed(true);
+                  handleOnExitYesPressed();
+                }}
+              />
             )}
           </View>
-          <View style={{ flexDirection: 'column', marginTop: 30 }}>
-            <FlatList
-              data={menu}
-              renderItem={({ item, index }) => {
-                const { icon, color } = getIconInfo(item.title, item);
-                const isSelected = selectedMenuItem === index;
-                return (
-                  <TouchableOpacity
-                    style={{
-                      width: 200,
-                      height: 50,
-                      marginLeft: 20,
-                      marginTop: 20,
-                      flexDirection: 'row',
-                      backgroundColor:
-                        index === selectedMenuItem ? '#9fb4f0' : 'transparent',
-                      borderRadius: 10,
-                      alignItems: 'center',
-                      elevation: isSelected ? 5 : 0,
-                      justifyContent: 'flex-start',
-                    }}
-                    onPress={() => {
-                      setSelectedMenuItem(index);
-                      handleMenuItemPress(index, item.title);
-                    }}>
-                    {icon && (
-                      <Animatable.View
-                        style={{ marginLeft: 10 }}
-                        animation="fadeIn">
-                        {React.cloneElement(icon, {
-                          color: isSelected ? 'black' : color,
-                          width: 24,
-                          height: 24,
-                        })}
-                      </Animatable.View>
-                    )}
 
-                    <Text
-                      style={{
-                        marginLeft: 20,
-                        fontFamily: 'Inter-Light',
-                        color: isSelected ? 'black' : 'white',
-                        fontSize: 18,
-                      }}>
-                      {item.title}
-                    </Text>
-                  </TouchableOpacity>
-                );
-              }}
-            />
-          </View>
+          <DrawerMenu
+            menu={menu}
+            getIconInfo={getIconInfo}
+            selectedMenuItem={selectedMenuItem}
+            setSelectedMenuItem={setSelectedMenuItem}
+            handleMenuItemPress={handleMenuItemPress}
+          />
         </Animatable.View>
       )}
       <Animated.View
@@ -501,7 +353,7 @@ export default function CustomDrawer({
           right: 0,
           top: 0,
           bottom: 0,
-          transform: [{ scale: scale }, { translateX: moveToRight }],
+          transform: [{scale: scale}, {translateX: moveToRight}],
           borderRadius: showMenu ? 15 : 0,
           elevation: showMenu ? elevation : 0,
           borderWidth: showBorder && showMenu ? 0.25 : 0,
@@ -521,14 +373,14 @@ export default function CustomDrawer({
                 name={'close'}
                 size={32}
                 color="#21FA90"
-                style={{ transform: showMenu ? [{ rotate: '90deg' }] : [] }}
+                style={{transform: showMenu ? [{rotate: '90deg'}] : []}}
               />
             ) : (
               <Icons.SimpleLineIcons
                 name={'menu'}
                 size={24}
                 color="white"
-                style={{ transform: showMenu ? [{ rotate: '90deg' }] : [] }}
+                style={{transform: showMenu ? [{rotate: '90deg'}] : []}}
               />
             )}
           </TouchableOpacity>
@@ -550,7 +402,7 @@ export default function CustomDrawer({
               <Icons.FontAwesome5 name="search" size={24} color="white" />
             </TouchableOpacity>
           ) : (
-            <View style={{ width: 24, height: 24 }} />
+            <View style={{width: 24, height: 24}} />
           )}
         </View>
         {children}
@@ -558,29 +410,3 @@ export default function CustomDrawer({
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  header: {
-    paddingHorizontal: 10,
-    paddingVertical: 15,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  headerTextContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    alignSelf: 'center',
-  },
-  text: {
-    fontSize: 20,
-    color: 'white',
-    textAlign: 'center',
-    alignSelf: 'center',
-  },
-});

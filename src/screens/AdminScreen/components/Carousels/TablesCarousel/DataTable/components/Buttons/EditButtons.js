@@ -1,7 +1,7 @@
-import { View, StyleSheet, TouchableOpacity } from 'react-native';
+import {View, StyleSheet, TouchableOpacity} from 'react-native';
 import React from 'react';
-import { theme } from '../../../../../../../MovieNewsScreen/theme';
-import { Icons } from '../../../../../../../../utils/global/Icons';
+import {theme} from '../../../../../../../MovieNewsScreen/theme';
+import {Icons} from '../../../../../../../../constants/Icons';
 
 export default function EditButtons({
   handleEditCancel,
@@ -12,7 +12,7 @@ export default function EditButtons({
     <View style={styles.buttonContainer}>
       <TouchableOpacity
         onPress={handleEditCancel}
-        style={[styles.button, { backgroundColor: theme.bgWhite(0.2) }]}>
+        style={[styles.button, {backgroundColor: theme.bgWhite(0.2)}]}>
         <Icons.AntDesign name="close" size={24} />
       </TouchableOpacity>
       <TouchableOpacity

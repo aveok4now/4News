@@ -7,9 +7,9 @@ import {
   StyleSheet,
   TouchableWithoutFeedback,
 } from 'react-native';
-import React, { useEffect } from 'react';
-import { Icons } from '../../../utils/global/Icons';
-import { handleUsersNewsShare } from '../../../utils/newsUtils/Share';
+import React, {useEffect} from 'react';
+import {Icons} from '../../../constants/Icons';
+import {handleUsersNewsShare} from '../../../utils/newsUtils/Share';
 
 export default function CustomDropDown({
   visible,
@@ -31,7 +31,7 @@ export default function CustomDropDown({
       label: condition ? 'Удалить' : 'Пожаловаться',
       icon: condition ? 'delete' : 'alert-circle-outline',
     },
-    { id: 'share', label: 'Поделиться', icon: 'share' },
+    {id: 'share', label: 'Поделиться', icon: 'share'},
   ];
 
   const handleBackgroundPress = () => onClose();
@@ -59,7 +59,7 @@ export default function CustomDropDown({
 
       const day = timestamp.getDate();
       const month = timestamp
-        .toLocaleString('ru-RU', { month: 'long' })
+        .toLocaleString('ru-RU', {month: 'long'})
         .replace(/ь$/, 'я');
       const hours = timestamp.getHours();
       const minutes = timestamp.getMinutes();
@@ -67,7 +67,7 @@ export default function CustomDropDown({
       const formattedTime = `${day} ${month} в ${hours}:${minutes}`;
 
       handleUsersNewsShare({
-        author: commentToShare.identify,
+        author: commentToShare.authorName,
         newsTitle: commentToShare.postText,
         titleType: 'комментарием',
         messageType: 'Комментарий',
@@ -95,11 +95,11 @@ export default function CustomDropDown({
       <TouchableWithoutFeedback onPress={handleBackgroundPress}>
         <View style={styles.modalContainer}>
           <View
-            style={[styles.modalContent, { backgroundColor: backgroundColor }]}>
+            style={[styles.modalContent, {backgroundColor: backgroundColor}]}>
             <FlatList
               data={options}
               keyExtractor={item => item.id}
-              renderItem={({ item }) => (
+              renderItem={({item}) => (
                 <TouchableOpacity onPress={() => handleOptionSelect(item.id)}>
                   <View
                     style={{
@@ -112,7 +112,7 @@ export default function CustomDropDown({
                       name={item.icon}
                       color="rgb(186 230 253)"
                       size={28}
-                      style={{ marginLeft: 8 }}
+                      style={{marginLeft: 8}}
                     />
                   </View>
                 </TouchableOpacity>
@@ -143,7 +143,7 @@ const styles = StyleSheet.create({
     color: 'white',
     fontFamily: 'Inter-Black',
     textShadowColor: 'rgba(226, 232, 240, 0.25)',
-    textShadowOffset: { width: 0, height: 2 },
+    textShadowOffset: {width: 0, height: 2},
     textShadowRadius: 4,
   },
 });

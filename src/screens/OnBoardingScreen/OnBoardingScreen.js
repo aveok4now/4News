@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import {
   View,
   Text,
@@ -6,12 +6,12 @@ import {
   TouchableOpacity,
   StatusBar,
 } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import {useNavigation} from '@react-navigation/native';
 import Onboarding from 'react-native-onboarding-swiper';
 import LottieView from 'lottie-react-native';
 import * as Animatable from 'react-native-animatable';
-import { setItem } from '../../utils/global/asyncStorage';
-import { width } from '../../utils/global/getDimensions';
+import {setItem} from '../../utils/global/asyncStorage';
+import {width} from '../../utils/global/getDimensions';
 
 const OnBoardingScreen = () => {
   const navigation = useNavigation();
@@ -20,7 +20,7 @@ const OnBoardingScreen = () => {
     setItem('onboarded', '1');
   };
 
-  const Button = ({ text, onPress, buttonStyle, textStyle }) => {
+  const Button = ({text, onPress, buttonStyle, textStyle}) => {
     return (
       <TouchableOpacity style={buttonStyle} onPress={onPress}>
         <Animatable.Text animation="fadeIn" style={textStyle}>
@@ -30,7 +30,7 @@ const OnBoardingScreen = () => {
     );
   };
 
-  const doneButton = ({ ...props }) => {
+  const doneButton = ({...props}) => {
     return (
       <Button
         text="Начать"
@@ -41,7 +41,7 @@ const OnBoardingScreen = () => {
     );
   };
 
-  const skipButton = ({ ...props }) => {
+  const skipButton = ({...props}) => {
     return (
       <Button
         text="Пропустить"
@@ -51,7 +51,7 @@ const OnBoardingScreen = () => {
     );
   };
 
-  const nextButton = ({ ...props }) => {
+  const nextButton = ({...props}) => {
     return (
       <Button
         text="Далее"
@@ -91,7 +91,7 @@ const OnBoardingScreen = () => {
   ];
 
   return (
-    <View style={{ flex: 1 }}>
+    <View style={{flex: 1}}>
       <StatusBar backgroundColor={screens[pageIndex].statusBarColor} />
       <Onboarding
         bottomBarHighlight={false}
@@ -101,7 +101,7 @@ const OnBoardingScreen = () => {
         NextButtonComponent={nextButton}
         SkipButtonComponent={skipButton}
         pageIndexCallback={changePageHandler}
-        containerStyles={{ paddingHorizontal: 15 }}
+        containerStyles={{paddingHorizontal: 15}}
         pages={screens.map((screen, index) => ({
           backgroundColor: screen.backgroundColor,
           image: (
@@ -127,7 +127,7 @@ const styles = StyleSheet.create({
     fontFamily: 'Inter-ExtraBold',
     fontSize: 24,
     textShadowColor: 'rgba(0, 0, 0, 0.25)',
-    textShadowOffset: { width: 0, height: 2 },
+    textShadowOffset: {width: 0, height: 2},
     textShadowRadius: 4,
   },
 

@@ -1,11 +1,11 @@
-import { View, Text, ScrollView, Image } from 'react-native';
-import React, { useState, useEffect } from 'react';
-import { width, height } from '../../../utils/global/getDimensions';
-import { theme } from '../theme';
+import {View, Text, ScrollView, Image} from 'react-native';
+import React, {useState, useEffect} from 'react';
+import {width, height} from '../../../utils/global/getDimensions';
+import {theme} from '../theme';
 import HeaderButtons from '../../../components/MovieNewsComponents/HeaderButtons';
 import MovieList from '../../../components/MovieNewsComponents/MovieList';
 import Loader from '../../../components/MovieNewsComponents/Loader';
-import { useRoute } from '@react-navigation/native';
+import {useRoute} from '@react-navigation/native';
 import {
   fetchPersonDetails,
   fetchPersonMovies,
@@ -13,12 +13,12 @@ import {
 } from '../../../api/moviedb';
 import DetailsSection from '../../../components/MovieNewsComponents/DetailsSection';
 
-export default function MoviePersonScreen({ navigation }) {
+export default function MoviePersonScreen({navigation}) {
   const [personMovies, setPersonMovies] = useState([]);
   const [person, setPerson] = useState({});
 
   const [isLoading, setIsLoading] = useState(true);
-  const { params: item } = useRoute();
+  const {params: item} = useRoute();
 
   useEffect(() => {
     setIsLoading(true);
@@ -69,8 +69,8 @@ export default function MoviePersonScreen({ navigation }) {
   };
 
   const details = [
-    { label: 'Пол', value: person.gender === 1 ? 'Женский' : 'Мужской' },
-    { label: 'Дата рождения', value: formatDate(person.birthday) },
+    {label: 'Пол', value: person.gender === 1 ? 'Женский' : 'Мужской'},
+    {label: 'Дата рождения', value: formatDate(person.birthday)},
 
     {
       label: person.gender === 1 ? 'Известна как' : 'Известен как',
@@ -95,15 +95,15 @@ export default function MoviePersonScreen({ navigation }) {
   return (
     <ScrollView
       showsVerticalScrollIndicator={false}
-      contentContainerStyle={{ paddingBottom: 20 }}
-      style={{ flex: 1, backgroundColor: 'rgb(17 24 39)' }}>
+      contentContainerStyle={{paddingBottom: 20}}
+      style={{flex: 1, backgroundColor: 'rgb(17 24 39)'}}>
       <HeaderButtons navigation={navigation} movie={item} />
       {isLoading ? (
-        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
           <Loader />
         </View>
       ) : (
-        <View style={{ marginTop: 64, backgroundColor: 'transparent' }}>
+        <View style={{marginTop: 64, backgroundColor: 'transparent'}}>
           <View
             style={{
               flexDirection: 'row',
@@ -121,19 +121,19 @@ export default function MoviePersonScreen({ navigation }) {
                 elevation: 5,
                 shadowColor: 'white',
                 shadowRadius: 140,
-                shadowOffset: { width: 0, height: 5 },
+                shadowOffset: {width: 0, height: 5},
                 shadowOpacity: 1,
                 elevation: 15,
               }}>
               <Image
-                style={{ height: height * 0.43, width: width * 0.74 }}
+                style={{height: height * 0.43, width: width * 0.74}}
                 source={{
                   uri: image342(person?.profile_path),
                 }}
               />
             </View>
           </View>
-          <View style={{ marginTop: 24 }}>
+          <View style={{marginTop: 24}}>
             <Text
               style={{
                 fontSize: 24,
@@ -142,7 +142,7 @@ export default function MoviePersonScreen({ navigation }) {
                 fontFamily: 'Inter-ExtraBold',
                 color: 'white',
                 textShadowColor: 'rgba(226, 232, 240, 0.25)',
-                textShadowOffset: { width: 0, height: 3 },
+                textShadowOffset: {width: 0, height: 3},
                 textShadowRadius: 4,
               }}>
               {person?.name}
@@ -159,7 +159,7 @@ export default function MoviePersonScreen({ navigation }) {
           <DetailsSection items={details} />
           {person?.biography !== '' && (
             <View
-              style={{ marginVertical: 24, marginHorizontal: 16, marginTop: 8 }}>
+              style={{marginVertical: 24, marginHorizontal: 16, marginTop: 8}}>
               <Text
                 style={{
                   color: 'white',
@@ -167,7 +167,7 @@ export default function MoviePersonScreen({ navigation }) {
                   fontSize: 20,
                   lineHeight: 28,
                   textShadowColor: 'rgba(226, 232, 240, 0.25)',
-                  textShadowOffset: { width: 0, height: 3 },
+                  textShadowOffset: {width: 0, height: 3},
                   textShadowRadius: 4,
                 }}>
                 Биография

@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-import { apiKey } from '../constants/WeatherImages';
+import {apiKey} from '../constants/WeatherImages';
 
 const forecastEndpoint = params =>
   `https://api.weatherapi.com/v1/forecast.json?key=${apiKey}&q=${params.cityName}&days=${params.days}&lang=ru`;

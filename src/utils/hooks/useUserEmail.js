@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import {useEffect, useState} from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import SQLite from 'react-native-sqlite-storage';
 
@@ -12,15 +12,15 @@ const useUserEmail = () => {
 
       if (savedUsername) {
         try {
-          const db = await SQLite.openDatabase({ name: 'news.db', location: 1 });
+          const db = await SQLite.openDatabase({name: 'news.db', location: 1});
 
           db.transaction(tx => {
             tx.executeSql(
               'SELECT userEmail FROM Users WHERE userLogin = ?',
               [savedUsername],
-              (_, { rows }) => {
+              (_, {rows}) => {
                 if (rows.length > 0) {
-                  const { userEmail } = rows.item(0);
+                  const {userEmail} = rows.item(0);
                   setUserEmail(userEmail);
                 }
               },

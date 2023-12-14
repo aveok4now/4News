@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from 'react';
-import { Text, StyleSheet, TouchableOpacity } from 'react-native';
+import React, {useState, useEffect} from 'react';
+import {Text, StyleSheet, TouchableOpacity} from 'react-native';
 import * as Animatable from 'react-native-animatable';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import Icon2 from 'react-native-vector-icons/SimpleLineIcons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const Header = ({ navigation }) => {
+const Header = ({navigation}) => {
   const [identify, setIdenify] = useState('');
 
   useEffect(() => {
@@ -28,7 +28,7 @@ const Header = ({ navigation }) => {
 
   return (
     <Animatable.View style={styles.header} animation="fadeIn" duration={1500}>
-      <TouchableOpacity onPress={() => { }}>
+      <TouchableOpacity onPress={() => {}}>
         <Icon2 name="menu" size={24} color="white" />
       </TouchableOpacity>
 
