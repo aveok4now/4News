@@ -1,10 +1,4 @@
 import SQLite from 'react-native-sqlite-storage';
-import { openLinkInBrowserHandler } from '../../../components/customs/CustomDrawer/utils/openLink';
-
-
-
-
-
 
 export const fetchData = async (query, queryArgs) => {
   try {
@@ -38,31 +32,6 @@ export const fetchAllUsers = async () => {
   }
 };
 
-export const downloadFile = async () => {
-  // const url =
-  //     'https://drive.google.com/file/d/1BI5ZG27azsyxB6q7X3-ONQC2_tR10GKq/view?usp=sharing';
-  // const filePath = '/data/user/0/com.mynewapp/files/news.db';
-
-  // RNFS.downloadFile({
-  //     fromUrl: url,
-  //     toFile: filePath,
-  //     progress: res => {
-  //         const progress = (res.bytesWritten / res.contentLength) * 100;
-  //         console.log(`Progress: ${progress.toFixed(2)}%`);
-  //         console.log('bites written', res.bytesWritten);
-  //     },
-  // })
-  //     .promise.then(response => {
-  //         console.log('File downloaded!', response);
-  //         console.log('file saved at: ', filePath);
-  //     })
-  //     .catch(err => {
-  //         console.log('Download error:', err);
-  //     });
-  openLinkInBrowserHandler(2);
-};
-
-
 
 export const insertCategories = async () => {
   const db = await SQLite.openDatabase({ name: 'news.db', location: 1 });
@@ -80,12 +49,10 @@ export const insertCategories = async () => {
   let queryCount = 'SELECT COUNT(*) FROM Categories';
   let queryInsert = 'INSERT INTO Categories VALUES (?, ?)';
 
-  // Проверка количества записей в таблице
   db.transaction(tx => {
     tx.executeSql(queryCount, [], (_, resultSet) => {
       const rowCount = resultSet.rows.item(0)['COUNT(*)'];
       if (rowCount === 0) {
-        // Таблица категорий пуста, выполняем вставку категорий
         db.transaction(tx => {
           categories.forEach(category => {
             tx.executeSql(queryInsert, category, (_, resultSet) => {
@@ -109,12 +76,10 @@ export const createTableLikedMovies = async () => {
 
   try {
     await db.transaction(async (tx) => {
-      // Проверяем наличие таблицы likedMovies
       const checkTableQuery = "SELECT name FROM sqlite_master WHERE type='table' AND name='likedMovies'";
       const checkResult = await tx.executeSql(checkTableQuery, []);
 
       if (checkResult && checkResult.rows.length === 0) {
-        // Таблица likedMovies отсутствует, создаем её
         const createTableQuery = `
           CREATE TABLE IF NOT EXISTS likedMovies(
             id INTEGER NULL,
@@ -138,7 +103,6 @@ export const addIsLikedColumnIfNeeded = async () => {
 
   try {
     await db.transaction(async (tx) => {
-      // Проверяем наличие столбца isLiked в таблице Likes
       const checkColumnQuery = `
         SELECT name FROM sqlite_master 
         WHERE type='table' AND name='Likes' AND sql LIKE '%isLiked%';
@@ -146,7 +110,6 @@ export const addIsLikedColumnIfNeeded = async () => {
       const [result] = await tx.executeSql(checkColumnQuery, []);
 
       if (result && result.rows.length === 0) {
-        // Столбец isLiked отсутствует, добавляем его
         const addColumnQuery = 'ALTER TABLE Likes ADD COLUMN isLiked BOOLEAN;';
         await tx.executeSql(addColumnQuery, []);
         console.log('Столбец isLiked успешно добавлен в таблицу Likes.');
@@ -165,7 +128,6 @@ export const createTableUsersFeedbacks = async () => {
 
   try {
     await db.transaction(async (tx) => {
-      // Создаем таблицу UsersFeedbacks, если она не существует
       const createTableQuery = `
         CREATE TABLE IF NOT EXISTS UsersFeedbacks(
           userId INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -178,5 +140,61 @@ export const createTableUsersFeedbacks = async () => {
     });
   } catch (error) {
     console.error('Ошибка при создании таблицы UsersFeedbacks:', error);
+  }
+};
+
+export const alterTableLikes = async () => {
+  const db = await SQLite.openDatabase({ name: 'news.db', location: 1 });
+
+  try {
+    const checkColumnQuery = `
+        PRAGMA table_info(Likes);
+      `;
+    const [checkResult] = await db.executeSql(checkColumnQuery);
+
+    let hasPostTitleColumn = false;
+    for (let i = 0; i < checkResult.rows.length; i++) {
+      if (checkResult.rows.item(i).name === 'postTitle') {
+        hasPostTitleColumn = true;
+        break;
+      }
+    }
+
+    if (!hasPostTitleColumn) {
+      const addColumnQuery = 'ALTER TABLE Likes ADD COLUMN postTitle TEXT';
+      await db.executeSql(addColumnQuery);
+      console.log('Added postTitle column to Likes table');
+    }
+
+  } catch (error) {
+    console.error('Ошибка при редактировании таблицы Likes:', error);
+  }
+};
+
+export const alterTableFavorites = async () => {
+  const db = await SQLite.openDatabase({ name: 'news.db', location: 1 });
+
+  try {
+    const checkColumnQuery = `
+        PRAGMA table_info(userFavorites);
+      `;
+    const [checkResult] = await db.executeSql(checkColumnQuery);
+
+    let hasNewsTitleColumn = false;
+    for (let i = 0; i < checkResult.rows.length; i++) {
+      if (checkResult.rows.item(i).name === 'newsTitle') {
+        hasNewsTitleColumn = true;
+        break;
+      }
+    }
+
+    if (!hasNewsTitleColumn) {
+      const addColumnQuery = 'ALTER TABLE userFavorites ADD COLUMN newsTitle TEXT';
+      await db.executeSql(addColumnQuery);
+      console.log('Added newsTitle column to userFavorites table');
+    }
+
+  } catch (error) {
+    console.error('Ошибка при редактировании таблицы userFavorites:', error);
   }
 };

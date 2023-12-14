@@ -72,8 +72,8 @@ const Card = ({ item, navigation, data, needMargin = true }) => {
           JSON.stringify(parsedSavedNewsItems),
         );
         console.log('saved');
-
-        await saveNewsItem(db, userId, newsItemId, createdAt);
+        console.log('title v carde ', item.title)
+        await saveNewsItem(db, userId, createdAt, item.title);
         console.log('News item saved');
       } else {
         const updatedSavedNewsItems = parsedSavedNewsItems.filter(

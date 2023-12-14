@@ -1,4 +1,4 @@
-import { View, Text, Image, StatusBar } from 'react-native';
+import { View, Text, Image, StatusBar, LogBox } from 'react-native';
 import React, { useState, useEffect } from 'react';
 import * as Animatable from 'react-native-animatable';
 import CustomDrawer from '../../components/customs/CustomDrawer';
@@ -8,12 +8,14 @@ import InfoCarousel from './components/Carousels/InfoCarousel/InfoCarousel';
 import SQLite from 'react-native-sqlite-storage';
 import {
   fetchData,
-  downloadFile,
   insertCategories,
   createTableLikedMovies,
   addIsLikedColumnIfNeeded,
   createTableUsersFeedbacks,
+  alterTableLikes,
+  alterTableFavorites,
 } from './db/databaseUtils';
+import { downloadFile } from './utils/downloadFile';
 import AppInfoCarousel from './components/Carousels/AppInfoCarousel/appInfoCarousel';
 import Loader from '../../components/MovieNewsComponents/Loader';
 import AboutApp from './components/AboutAppSection/AboutApp';
@@ -25,6 +27,7 @@ import { MemoizedClocks } from './components/MemoizedComponents/MemoizedClocks';
 import searchBg from '../../../assets/images/search-bg.jpg';
 import * as queries from './db/queries'
 import * as fallBacks from './utils/fallBacks'
+LogBox.ignoreLogs(['Possible Unhandled Promise Rejection']);
 
 export default function AdminScreen({ navigation }) {
   useEffect(() => {
@@ -123,6 +126,8 @@ export default function AdminScreen({ navigation }) {
       await addIsLikedColumnIfNeeded();
       await createTableUsersFeedbacks();
       await insertCategories();
+      await alterTableLikes();
+      await alterTableFavorites();
 
       const [
         usersResult,

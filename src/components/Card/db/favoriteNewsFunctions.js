@@ -1,6 +1,11 @@
-export const saveNewsItem = async (db, userId, newsItemId, createdAt) => {
-    const insertNewsQuery = `INSERT INTO UserFavorites (userId, favoriteNewsId, favoriteNewsCount) VALUES (?, ?, ?)`;
-    const insertNewsQueryArgs = [userId, createdAt, 1];
+import { alterTableFavorites } from "../../../screens/AdminScreen/db/databaseUtils";
+
+
+export const saveNewsItem = async (db, userId, createdAt, title) => {
+    console.log('title', title)
+    await alterTableFavorites();
+    const insertNewsQuery = `INSERT INTO UserFavorites (userId, favoriteNewsId, favoriteNewsCount, newsTitle) VALUES (?, ?, ?, ?)`;
+    const insertNewsQueryArgs = [userId, createdAt, 1, title];
 
     await db.executeSql(insertNewsQuery, insertNewsQueryArgs);
 };
