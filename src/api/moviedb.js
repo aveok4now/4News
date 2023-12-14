@@ -1,5 +1,5 @@
 import axios from 'axios';
-import {movieApiKey} from '../utils/apiKeys/movieApiKeys';
+import { movieApiKey } from '../utils/apiKeys/movieApiKeys';
 
 // endpoints
 const apiBaseUrl = 'https://api.themoviedb.org/3';
@@ -82,4 +82,20 @@ export const fetchPersonMovies = id => {
 
 export const searchMovies = params => {
   return apiCall(searchMoviesEndpoint, params);
+};
+
+
+export const getTrendingMovies = async () => {
+  const data = await fetchTrendingMovies();
+  return data.results || [];
+};
+
+export const getUpcomingMovies = async () => {
+  const data = await fetchUpcomingMovies();
+  return data.results || [];
+};
+
+export const getTopRatedMovies = async () => {
+  const data = await fetchTopRatedMovies();
+  return data.results || [];
 };

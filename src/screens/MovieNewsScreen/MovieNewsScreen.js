@@ -1,5 +1,5 @@
-import {View, StatusBar, ScrollView, Image} from 'react-native';
-import React, {useEffect, useState} from 'react';
+import { View, StatusBar, ScrollView, Image, RefreshControl } from 'react-native';
+import React, { useEffect, useState } from 'react';
 import CustomDrawer from '../../components/customs/CustomDrawer';
 import TrendingMovies from '../../components/MovieNewsComponents/TrendingMovies';
 import MovieList from '../../components/MovieNewsComponents/MovieList';
@@ -8,60 +8,51 @@ import {
   fetchTrendingMovies,
   fetchUpcomingMovies,
   fetchTopRatedMovies,
+  getTrendingMovies,
+  getUpcomingMovies,
+  getTopRatedMovies,
 } from '../../api/moviedb';
 import searchBg from '../../../assets/images/search-bg.jpg';
 
-export default function MovieNewsScreen({navigation}) {
+export default function MovieNewsScreen({ navigation }) {
   const [trending, setTrending] = useState([]);
   const [upcoming, setUpcoming] = useState([]);
   const [topRated, setTopRated] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-
-  let mainColor = 'rgb(49 46 129)';
+  const [isRefreshing, setIsRefreshing] = useState(false);
 
   useEffect(() => {
-    getTrendingMovies();
-    getUpcomingMovies();
-    getTopRatedMovies();
+    getData();
   }, []);
 
-  const getTrendingMovies = async () => {
-    const data = await fetchTrendingMovies();
-    console.log('TrendingData: ' + data);
+  const getData = async () => {
+    setIsLoading(true);
 
-    if (data && data.results) {
-      setTrending(data.results);
+    try {
+      const [trendingData, upcomingData, topRatedData] = await Promise.all([
+        getTrendingMovies(),
+        getUpcomingMovies(),
+        getTopRatedMovies(),
+      ]);
+
+      setTrending(trendingData);
+      setUpcoming(upcomingData);
+      setTopRated(topRatedData);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    } finally {
+      setIsLoading(false);
+      setIsRefreshing(false);
     }
-    setIsLoading(false);
-  };
-
-  const getUpcomingMovies = async () => {
-    const data = await fetchUpcomingMovies();
-    console.log('UpComingData: ' + data);
-
-    if (data && data.results) {
-      setUpcoming(data.results);
-    }
-    setIsLoading(false);
-  };
-
-  const getTopRatedMovies = async () => {
-    const data = await fetchTopRatedMovies();
-    console.log('topRatedData: ' + data);
-
-    if (data && data.results) {
-      setTopRated(data.results);
-    }
-    setIsLoading(false);
   };
 
   return (
     <>
       <StatusBar backgroundColor="#092439" />
-      <View style={{flex: 1}}>
+      <View style={{ flex: 1 }}>
         <Image
           blurRadius={50}
-          style={{position: 'absolute', width: '100%', height: '100%'}}
+          style={{ position: 'absolute', width: '100%', height: '100%' }}
           source={searchBg}
         />
         <CustomDrawer
@@ -76,8 +67,16 @@ export default function MovieNewsScreen({navigation}) {
             <Loader />
           ) : (
             <ScrollView
+              refreshControl={
+                <RefreshControl
+                  colors={['white']}
+                  refreshing={isRefreshing}
+                  progressBackgroundColor={'rgb(99 102 241)'}
+                  onRefresh={() => getData()}
+                />
+              }
               showsVerticalScrollIndicator={false}
-              contentContainerStyle={{paddingBottom: 10}}>
+              contentContainerStyle={{ paddingBottom: 10 }}>
               {/* Сейчас в тренде */}
               {trending.length > 0 && (
                 <TrendingMovies data={trending} navigation={navigation} />
