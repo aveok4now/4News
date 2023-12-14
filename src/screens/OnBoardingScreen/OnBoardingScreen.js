@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Text,
@@ -6,12 +6,17 @@ import {
   TouchableOpacity,
   StatusBar,
 } from 'react-native';
-import {useNavigation} from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import Onboarding from 'react-native-onboarding-swiper';
 import LottieView from 'lottie-react-native';
 import * as Animatable from 'react-native-animatable';
-import {setItem} from '../../utils/global/asyncStorage';
-import {width} from '../../utils/global/getDimensions';
+import { setItem } from '../../utils/global/asyncStorage';
+import { width } from '../../utils/global/getDimensions';
+import newsAnimation from '../../../assets/animations/noNewsInfo.json'
+import infinityAnimation from '../../../assets/animations/infinity.json'
+import interestsAnimation from '../../../assets/animations/interests.json'
+import weatherAnimation from '../../../assets/animations/weather/rain_with_thunder.json'
+import movieAnimation from '../../../assets/animations/movie.json'
 
 const OnBoardingScreen = () => {
   const navigation = useNavigation();
@@ -20,7 +25,7 @@ const OnBoardingScreen = () => {
     setItem('onboarded', '1');
   };
 
-  const Button = ({text, onPress, buttonStyle, textStyle}) => {
+  const Button = ({ text, onPress, buttonStyle, textStyle }) => {
     return (
       <TouchableOpacity style={buttonStyle} onPress={onPress}>
         <Animatable.Text animation="fadeIn" style={textStyle}>
@@ -30,7 +35,7 @@ const OnBoardingScreen = () => {
     );
   };
 
-  const doneButton = ({...props}) => {
+  const doneButton = ({ ...props }) => {
     return (
       <Button
         text="Начать"
@@ -41,7 +46,7 @@ const OnBoardingScreen = () => {
     );
   };
 
-  const skipButton = ({...props}) => {
+  const skipButton = ({ ...props }) => {
     return (
       <Button
         text="Пропустить"
@@ -51,7 +56,7 @@ const OnBoardingScreen = () => {
     );
   };
 
-  const nextButton = ({...props}) => {
+  const nextButton = ({ ...props }) => {
     return (
       <Button
         text="Далее"
@@ -68,30 +73,45 @@ const OnBoardingScreen = () => {
 
   const screens = [
     {
-      statusBarColor: '#40BBC4',
-      backgroundColor: '#40BBC4',
-      animationSource: require('../../../assets/animations/first.json'),
-      title: 'Узнавайте всё первыми',
-      subtitle: 'Новостная лента с регулярными обновлениями',
+      statusBarColor: 'rgb(14 165 233)',
+      backgroundColor: 'rgb(14 165 233)',
+      animationSource: newsAnimation,
+      title: 'Новости на любой вкус',
+      subtitle: 'Новостная лента с безграничной информацией.',
     },
     {
-      statusBarColor: '#7da9f2',
-      backgroundColor: '#7da9f2',
-      animationSource: require('../../../assets/animations/infinity.json'),
-      title: 'Лента не имеет конца!',
-      subtitle: 'Читайте, сколько угодно',
+      statusBarColor: 'rgb(2 132 199)',
+      backgroundColor: 'rgb(2 132 199)',
+      animationSource: infinityAnimation,
+      title: 'Новости со всего мира!',
+      subtitle: 'Читайте, что угодно и сколько угодно.',
     },
     {
-      statusBarColor: '#5a88e4',
-      backgroundColor: '#5a88e4',
-      animationSource: require('../../../assets/animations/interests.json'),
+      statusBarColor: 'rgb(3 105 161)',
+      backgroundColor: 'rgb(3 105 161)',
+      animationSource: interestsAnimation,
       title: 'Находите Ваши интересы',
-      subtitle: 'И получайте новости о том, что Вам интересно',
+      subtitle: 'И получайте новости с тех источников, которые интересны Вам.',
     },
+    {
+      statusBarColor: 'rgb(37 99 235)',
+      backgroundColor: 'rgb(37 99 235)',
+      animationSource: weatherAnimation,
+      title: 'Мировой прогноз погоды',
+      subtitle: 'Смотрите информацию о погоде в любом городе!',
+    },
+    {
+      statusBarColor: 'rgb(30 64 175)',
+      backgroundColor: 'rgb(30 64 175)',
+      animationSource: movieAnimation,
+      title: 'Свежие новости мира кино',
+      subtitle: 'Узнавайте, какие фильмы в тренде прямо сейчас!',
+    },
+
   ];
 
   return (
-    <View style={{flex: 1}}>
+    <View style={{ flex: 1 }}>
       <StatusBar backgroundColor={screens[pageIndex].statusBarColor} />
       <Onboarding
         bottomBarHighlight={false}
@@ -101,7 +121,7 @@ const OnBoardingScreen = () => {
         NextButtonComponent={nextButton}
         SkipButtonComponent={skipButton}
         pageIndexCallback={changePageHandler}
-        containerStyles={{paddingHorizontal: 15}}
+        containerStyles={{ paddingHorizontal: 15 }}
         pages={screens.map((screen, index) => ({
           backgroundColor: screen.backgroundColor,
           image: (
@@ -115,7 +135,7 @@ const OnBoardingScreen = () => {
             </View>
           ),
           title: <Text style={styles.title}>{screen.title}</Text>,
-          subtitle: screen.subtitle,
+          subtitle: <Text style={styles.subtitle}>{screen.subtitle}</Text>,
         }))}
       />
     </View>
@@ -127,8 +147,13 @@ const styles = StyleSheet.create({
     fontFamily: 'Inter-ExtraBold',
     fontSize: 24,
     textShadowColor: 'rgba(0, 0, 0, 0.25)',
-    textShadowOffset: {width: 0, height: 2},
+    textShadowOffset: { width: 0, height: 2 },
     textShadowRadius: 4,
+  },
+  subtitle: {
+    fontFamily: 'Inter-Light',
+    textAlign: 'center',
+    fontSize: 20
   },
 
   lottie: {
