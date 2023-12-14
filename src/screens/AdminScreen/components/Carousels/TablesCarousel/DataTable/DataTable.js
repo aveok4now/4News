@@ -227,7 +227,7 @@ export default function DataTable({ data, tables, selectedTable }) {
 
   return (
     <View style={styles.container}>
-      {tableData.length === 0 ? (
+      {tableData && tableData.length === 0 ? (
         <Text style={{ fontFamily: 'Inter-Light' }}>Данных пока нет.</Text>
       )
         : (
@@ -342,7 +342,7 @@ export default function DataTable({ data, tables, selectedTable }) {
                 })}
               </View>
             </ScrollView>
-            {tableData.length > visibleRows && (
+            {tableData && tableData.length > visibleRows && (
               <ShowMoreButton onPress={handleShowMore} />
             )}
 

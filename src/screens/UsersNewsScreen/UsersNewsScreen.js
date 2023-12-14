@@ -35,7 +35,7 @@ export default function UsersNewsScreen({ navigation }) {
   }, []);
 
   let identify = useUserCredentials();
-  const [isLoading, SetIsLoading] = useState(true);
+  const [isLoading, SetIsLoading] = useState(false);
 
   condition =
     identify === 'Гость'
@@ -209,13 +209,13 @@ export default function UsersNewsScreen({ navigation }) {
     }
   };
 
-  const insertPost = async data => {
+  const insertPost = async (data) => {
     try {
       console.log(data);
       const db = await SQLite.openDatabase({ name: 'news.db', location: 1 });
 
       let query = `INSERT INTO News (newsId, AuthorName, newsTitle, publishDate, AuthorAdminId, AuthorUserId, categoryType)
-                        VALUES (?, ?, ?, ?, COALESCE(?, 0), COALESCE(?, 0), ?)`;
+                          VALUES (?, ?, ?, ?, COALESCE(?, 0), COALESCE(?, 0), ?)`;
 
       let queryArgs = [
         data.newsId,
@@ -231,6 +231,12 @@ export default function UsersNewsScreen({ navigation }) {
 
       if (result.rowsAffected > 0) {
         console.log('Post has been inserted into the database');
+        if (identify.includes('admin')) {
+          let updateQuery = `UPDATE Administrators SET adminPosts = adminPosts + 1 WHERE adminLogin = ?`;
+          let updateQueryArgs = [data.userName];
+          await db.executeSql(updateQuery, updateQueryArgs);
+          console.log('adminPosts has been updated');
+        }
       } else {
         console.log('Post has not been inserted into the database');
       }

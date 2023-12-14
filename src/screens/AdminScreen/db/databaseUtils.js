@@ -113,7 +113,7 @@ export const createTableLikedMovies = async () => {
       const checkTableQuery = "SELECT name FROM sqlite_master WHERE type='table' AND name='likedMovies'";
       const checkResult = await tx.executeSql(checkTableQuery, []);
 
-      if (checkResult.rows.length === 0) {
+      if (checkResult && checkResult.rows.length === 0) {
         // Таблица likedMovies отсутствует, создаем её
         const createTableQuery = `
           CREATE TABLE IF NOT EXISTS likedMovies(
@@ -145,7 +145,7 @@ export const addIsLikedColumnIfNeeded = async () => {
       `;
       const [result] = await tx.executeSql(checkColumnQuery, []);
 
-      if (result.rows.length === 0) {
+      if (result && result.rows.length === 0) {
         // Столбец isLiked отсутствует, добавляем его
         const addColumnQuery = 'ALTER TABLE Likes ADD COLUMN isLiked BOOLEAN;';
         await tx.executeSql(addColumnQuery, []);

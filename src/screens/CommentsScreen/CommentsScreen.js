@@ -150,9 +150,9 @@ export default function CommentsScreen({ route }) {
       const db = await SQLite.openDatabase({ name: 'news.db', location: 1 });
 
       let query = `
-              INSERT INTO Comments (postId, authorName, commentText, timestamp)
-              VALUES (?, ?, ?, ?)
-            `;
+          INSERT INTO Comments (postId, authorName, commentText, timestamp)
+          VALUES (?, ?, ?, ?)
+        `;
       let queryArgs = [
         newComment.postId,
         newComment.authorName,
@@ -164,9 +164,18 @@ export default function CommentsScreen({ route }) {
 
       if (result.rowsAffected > 0) {
         console.log('Comment has been inserted into the database');
+
+        if (identify.includes('admin')) {
+          let updateQuery = `UPDATE Administrators SET adminComments = adminComments + 1 WHERE adminLogin = ?`;
+          let updateQueryArgs = [newComment.authorName];
+          await db.executeSql(updateQuery, updateQueryArgs);
+          console.log('adminComments has been updated');
+        }
+
       } else {
         console.log('Comment has not been inserted into the database');
       }
+
       const updatedComments = [newComment, ...comments];
       setComments(updatedComments);
       await fetchComments();

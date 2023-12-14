@@ -52,6 +52,7 @@ export default function AdminScreen({ navigation }) {
   const [data, setData] = useState([]);
   const [appData, setAppData] = useState([]);
 
+
   const [tablesData, setTablesData] = useState([
     {
       id: 1,
@@ -123,11 +124,6 @@ export default function AdminScreen({ navigation }) {
       await createTableUsersFeedbacks();
       await insertCategories();
 
-      console.log('Executing favorites query...');
-      const favoritesCountResult = await db.executeSql(queries.favoritesQuery);
-      const favoritesCount = favoritesCountResult[0].rows.raw()[0].favoritesCount;
-      console.log('Favorites Count:', favoritesCount);
-
       const [
         usersResult,
         adminsResult,
@@ -157,6 +153,8 @@ export default function AdminScreen({ navigation }) {
       const formattedRatesCount = ratesCount
         ? parseFloat(ratesCount).toFixed(2)
         : 'N/A';
+
+
 
       const newData = [
         {
@@ -259,6 +257,7 @@ export default function AdminScreen({ navigation }) {
         lastSavedMovieResult && lastSavedMovieResult.title
           ? lastSavedMovieResult.title
           : fallBacks.fallBackMovie;
+
 
       const newAppData = [
         {
