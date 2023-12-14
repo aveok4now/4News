@@ -1,23 +1,32 @@
-import {View, Text, Image, StatusBar} from 'react-native';
-import React, {useState, useEffect} from 'react';
+import { View, Text, Image, StatusBar } from 'react-native';
+import React, { useState, useEffect } from 'react';
 import * as Animatable from 'react-native-animatable';
 import CustomDrawer from '../../components/customs/CustomDrawer';
-import {Icons} from '../../constants/Icons';
+import { Icons } from '../../constants/Icons';
 import CustomButton from '../../components/customs/CustomButton';
 import InfoCarousel from './components/Carousels/InfoCarousel/InfoCarousel';
 import SQLite from 'react-native-sqlite-storage';
-import {fetchData, downloadFile} from './db/databaseUtils';
+import {
+  fetchData,
+  downloadFile,
+  insertCategories,
+  createTableLikedMovies,
+  addIsLikedColumnIfNeeded,
+  createTableUsersFeedbacks,
+} from './db/databaseUtils';
 import AppInfoCarousel from './components/Carousels/AppInfoCarousel/appInfoCarousel';
 import Loader from '../../components/MovieNewsComponents/Loader';
 import AboutApp from './components/AboutAppSection/AboutApp';
 import TablesCarousel from './components/Carousels/TablesCarousel/TablesCarousel';
 import Title from './components/Title';
-import {MemoizedTypeWriter} from './components/MemoizedComponents/MemoizedTypeWriter';
-import {MemoizedScrollView} from './components/MemoizedComponents/MemoizedScrollView';
-import {MemoizedClocks} from './components/MemoizedComponents/MemoizedClocks';
+import { MemoizedTypeWriter } from './components/MemoizedComponents/MemoizedTypeWriter';
+import { MemoizedScrollView } from './components/MemoizedComponents/MemoizedScrollView';
+import { MemoizedClocks } from './components/MemoizedComponents/MemoizedClocks';
 import searchBg from '../../../assets/images/search-bg.jpg';
+import * as queries from './db/queries'
+import * as fallBacks from './utils/fallBacks'
 
-export default function AdminScreen({navigation}) {
+export default function AdminScreen({ navigation }) {
   useEffect(() => {
     getData();
   }, []);
@@ -103,54 +112,17 @@ export default function AdminScreen({navigation}) {
 
   const [currentTime, setCurrentTime] = useState(new Date());
 
-  const handleCardPress = () => {};
+  const handleCardPress = () => { };
 
   const getData = async () => {
+
     try {
-      const db = await SQLite.openDatabase({name: 'news.db', location: 1});
+      const db = await SQLite.openDatabase({ name: 'news.db', location: 1 });
 
-      // let query = 'UPDATE Administrators SET adminPosts = ? WHERE adminId = ?';
-      // let queryArgs = [1, 46];
-
-      // await db.executeSql(query, queryArgs);
-
-      // let query = 'ALTER TABLE News ADD COLUMN Likes'
-
-      // await db.executeSql(query);
-
-      //     let query = `CREATE TABLE News_temp
-      //     (newsId INTEGER PRIMARY KEY AUTOINCREMENT, AuthorName VARCHAR NOT NULL,
-      //          newsTitle TEXT NOT NULL, publishDate DATE NOT NULL,
-      //          AuthorAdminId INTEGER, AuthorUserId INTEGER, categoryType VARCHAR NOT NULL);
-      //  INSERT INTO News_temp(newsId, AuthorName, newsTitle, publishDate,
-      //      AuthorAdminId, AuthorUserId, categoryType) SELECT newsId,
-      //      AuthorName, newsTitle, publishDate, AuthorAdminId,
-      //      AuthorUserId, categoryType FROM News;
-      //  DROP TABLE News;
-      //  ALTER TABLE News_temp RENAME TO News; `
-
-      //     await db.executeSql(query)
-
-      // let query = `INSERT INTO Categories VALUES (?, ?)`
-      // let queryArgs = [8, 'Технологии'];
-
-      // await db.executeSql(query, queryArgs);
-
-      let query = 'DELETE FROM Comments WHERE id >= 7 AND id <= 19';
-      await db.executeSql(query);
-
-      const usersQuery =
-        'SELECT COUNT(*) as usersCount from Users where userLogin NOT LIKE "admin%"';
-      const adminsQuery = 'SELECT COUNT(*) as adminsCount from Administrators';
-      const postsQuery = 'SELECT COUNT(*) as postsCount from News';
-      const likesQuery = 'SELECT postId, SUM(isLiked) as likesCount FROM Likes';
-      const favoritesQuery =
-        'SELECT COUNT(*) as favoritesCount from UserFavorites';
-      const guestsQuery = 'SELECT COUNT(*) as guestsCount from Guests';
-      const ratesQuery = 'SELECT id, AVG(rating) as ratesCount from Rates';
-      const commentsQuery = 'SELECT COUNT(*) as commentsCount from Comments';
-      const categoriesQuery =
-        'SELECT COUNT(*) as categoriesCount from Categories';
+      await createTableLikedMovies();
+      await addIsLikedColumnIfNeeded();
+      await createTableUsersFeedbacks();
+      await insertCategories();
 
       const [
         usersResult,
@@ -163,15 +135,15 @@ export default function AdminScreen({navigation}) {
         commentsResult,
         categoriesResult,
       ] = await Promise.all([
-        fetchData(usersQuery),
-        fetchData(adminsQuery),
-        fetchData(postsQuery),
-        fetchData(likesQuery),
-        fetchData(favoritesQuery),
-        fetchData(guestsQuery),
-        fetchData(ratesQuery),
-        fetchData(commentsQuery),
-        fetchData(categoriesQuery),
+        fetchData(queries.usersQuery),
+        fetchData(queries.adminsQuery),
+        fetchData(queries.postsQuery),
+        fetchData(queries.likesQuery),
+        fetchData(queries.favoritesQuery),
+        fetchData(queries.guestsQuery),
+        fetchData(queries.ratesQuery),
+        fetchData(queries.commentsQuery),
+        fetchData(queries.categoriesQuery),
       ]);
 
       const getCount = (result, key) =>
@@ -245,6 +217,7 @@ export default function AdminScreen({navigation}) {
   };
 
   const getAppData = async () => {
+
     try {
       const ratesQuery = 'SELECT AVG(rating) as averageRating FROM Rates';
       const mostPopularCityQuery = `SELECT userCity, COUNT(userCity) as cityCount
@@ -271,9 +244,9 @@ export default function AdminScreen({navigation}) {
       const averageRating =
         ratesResult && ratesResult.averageRating
           ? parseFloat(ratesResult.averageRating).toFixed(2)
-          : 'N/A';
+          : fallBacks.fallBackRating;
 
-      const mostPopularCity = cityResult.userCity;
+      const mostPopularCity = cityResult.userCity || fallBacks.fallBackCity;
       const feedBacksCount = feedBacksResult.feedBacksCount;
       const likedMoviesCount = likedMoviesResult.likedMoviesCount;
       const lastRegisteredUser = lastRegisteredUserResult.userLogin;
@@ -281,7 +254,7 @@ export default function AdminScreen({navigation}) {
       const lastSavedMovie =
         lastSavedMovieResult && lastSavedMovieResult.title
           ? lastSavedMovieResult.title
-          : 'N/A';
+          : fallBacks.fallBackMovie;
 
       const newAppData = [
         {
@@ -296,8 +269,8 @@ export default function AdminScreen({navigation}) {
         },
         {
           id: 2,
-          title: <Text style={{fontSize: 24}}>Популярный{'\n'}город</Text>,
-          count: <Text style={{fontSize: 35}}>{mostPopularCity}</Text>,
+          title: <Text style={{ fontSize: 24 }}>Популярный{'\n'}город</Text>,
+          count: <Text style={{ fontSize: 35 }}>{mostPopularCity}</Text>,
           icon: <Icons.FontAwesome name="building" color="white" size={75} />,
           color1: '#ff1b6b',
           color2: '#45caff',
@@ -322,7 +295,7 @@ export default function AdminScreen({navigation}) {
         },
         {
           id: 4,
-          title: <Text style={{fontSize: 22}}>Избранных фильмов</Text>,
+          title: <Text style={{ fontSize: 22 }}>Избранных фильмов</Text>,
           count: likedMoviesCount,
           icon: (
             <Icons.MaterialCommunityIcons
@@ -338,12 +311,12 @@ export default function AdminScreen({navigation}) {
         {
           id: 5,
           title: (
-            <Text style={{fontSize: 18}}>
+            <Text style={{ fontSize: 18 }}>
               Последний{'\n'}зарегестрировавшийся{'\n'}пользователь
             </Text>
           ),
           count: (
-            <Text style={{fontSize: 32, fontFamily: 'Inter-ExtraBold'}}>
+            <Text style={{ fontSize: 32, fontFamily: 'Inter-ExtraBold' }}>
               {lastRegisteredUser}
             </Text>
           ),
@@ -356,10 +329,10 @@ export default function AdminScreen({navigation}) {
         {
           id: 6,
           title: (
-            <Text style={{fontSize: 22}}>Последний{'\n'}лайкнутый фильм</Text>
+            <Text style={{ fontSize: 22 }}>Последний{'\n'}лайкнутый фильм</Text>
           ),
           count: (
-            <Text style={{fontSize: 24, fontFamily: 'Inter-ExtraBold'}}>
+            <Text style={{ fontSize: 24, fontFamily: 'Inter-ExtraBold' }}>
               {lastSavedMovie}
             </Text>
           ),
@@ -399,16 +372,16 @@ export default function AdminScreen({navigation}) {
         <>
           <Image
             blurRadius={30}
-            style={{position: 'absolute', width: '100%', height: '100%'}}
+            style={{ position: 'absolute', width: '100%', height: '100%' }}
             source={searchBg}
           />
           <Loader />
         </>
       ) : (
-        <Animatable.View animation="fadeIn" style={{flex: 1}}>
+        <Animatable.View animation="fadeIn" style={{ flex: 1 }}>
           <Image
             blurRadius={50}
-            style={{position: 'absolute', width: '100%', height: '100%'}}
+            style={{ position: 'absolute', width: '100%', height: '100%' }}
             source={searchBg}
           />
           <CustomDrawer
@@ -420,7 +393,7 @@ export default function AdminScreen({navigation}) {
             <MemoizedScrollView
               onRefresh={onRefresh}
               isRefreshing={isRefreshing}
-              style={{paddingVertical: 8}}
+              style={{ paddingVertical: 8 }}
               showsVerticalScrollIndicator={false}>
               {/* Title */}
               <MemoizedTypeWriter setCanBeShowed={setCanBeShowed} />
