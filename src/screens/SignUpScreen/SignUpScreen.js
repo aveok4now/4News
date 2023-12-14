@@ -255,7 +255,7 @@ const SignUpScreen = () => {
               onPrivacyPolicyPressed={onPrivacyPolicyPressed}
             />
 
-            <SocialSignInButtons />
+            {/* <SocialSignInButtons /> */}
 
             <CustomButton
               text="Есть аккаунт? Войти."
