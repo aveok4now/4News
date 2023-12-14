@@ -110,24 +110,3 @@ export default function FavoritesScreen({ navigation }) {
     <GuestInfo navigation={navigation} />
   );
 }
-const styles = StyleSheet.create({
-  heading: {
-    fontFamily: 'Inter-Bold',
-    fontSize: 20,
-    paddingHorizontal: 20,
-  },
-  header: {
-    alignItems: 'center',
-    paddingVertical: 10,
-    paddingHorizontal: 10,
-    backgroundColor: '#8EBBF3',
-    borderTopLeftRadius: 15,
-    borderTopRightRadius: 15,
-  },
-  headerText: {
-    fontFamily: 'Inter-ExtraBold',
-    textAlign: 'center',
-    justifyContent: 'center',
-    fontSize: 20,
-  },
-});

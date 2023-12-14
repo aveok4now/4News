@@ -1,17 +1,19 @@
-import {View, Text, StyleSheet, Linking, StatusBar} from 'react-native';
-import React, {useState, useEffect} from 'react';
+import { View, Text, StyleSheet, Linking, StatusBar } from 'react-native';
+import React, { useState, useEffect } from 'react';
 import LinearGradient from 'react-native-linear-gradient';
 import ModalPopup from '../../components/customs/CustomModal';
 import CustomButton from '../../components/customs/CustomButton';
 import CustomInput from '../../components/customs/CustomInput';
-import {useForm} from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import * as Animatable from 'react-native-animatable';
 import TypeWriter from 'react-native-typewriter';
-import {setStatusBarColor} from '../../utils/global/StatusBarManager';
+import { setStatusBarColor } from '../../utils/global/StatusBarManager';
 import SQLite from 'react-native-sqlite-storage';
 import useUserCredentials from '../../utils/hooks/useUserCredentials';
+import FeedbackForm from './components/FeedbackForm/FeedbackForm';
+import GratitudeCountDown from './components/GratitudeCountDown/GratitudeCountDown';
 
-export default function FeedBackScreen({navigation}) {
+export default function FeedBackScreen({ navigation }) {
   let identify = useUserCredentials();
 
   const [showModal, setShowModal] = useState(true);
@@ -19,7 +21,7 @@ export default function FeedBackScreen({navigation}) {
   const [isTyped, setIsTyped] = useState(false);
   const [countdown, setCountdown] = useState(4);
 
-  const {control, handleSubmit, watch} = useForm();
+  const { control, handleSubmit, watch } = useForm();
   let message = watch('feedback');
 
   const sendMessage = async () => {
@@ -34,7 +36,7 @@ export default function FeedBackScreen({navigation}) {
   const saveFeedbackIntoDB = async (identify, message) => {
     try {
       console.log(message);
-      const db = await SQLite.openDatabase({name: 'news.db', location: 1});
+      const db = await SQLite.openDatabase({ name: 'news.db', location: 1 });
 
       let createTableQuery = `
                 CREATE TABLE IF NOT EXISTS UsersFeedbacks (
@@ -87,8 +89,13 @@ export default function FeedBackScreen({navigation}) {
       <StatusBar backgroundColor={'rgba(54, 209, 220, 0.5)'} />
       <LinearGradient
         colors={['rgba(58, 131, 244, 0.4)', 'rgba(9, 181, 211, 0.4)']}
-        style={{width: '100%', flex: 1}}>
-        <View style={styles.root}>
+        style={{ width: '100%', flex: 1 }}>
+        <View
+          style={{
+            flex: 1,
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}>
           {showModal && (
             <>
               <ModalPopup
@@ -96,65 +103,20 @@ export default function FeedBackScreen({navigation}) {
                 visible={showModal}
                 backgroundColor="#7692FF">
                 {!isMessageSend ? (
-                  <View>
-                    <Text
-                      style={{
-                        textAlign: 'center',
-                        fontFamily: 'Inter-ExtraBold',
-                      }}>
-                      Оставьте свой отзыв и помогите нам стать лучше!
-                    </Text>
-                    <CustomInput
-                      name="feedback"
-                      placeholder="Мне не понравилось ..."
-                      control={control}
-                      needTrim={false}
-                      rules={{
-                        required: 'Пожалуйста, напишите сообщение',
-                        minLength: {
-                          value: 3,
-                          message: 'Сообщение слишком короткое',
-                        },
-                      }}
-                    />
-                    <View
-                      style={{
-                        flexDirection: 'column',
-                        justifyContent: 'center',
-                        marginTop: 15,
-                      }}>
-                      <CustomButton
-                        text="Отправить"
-                        onPress={handleSubmit(sendMessage)}
-                        showBorder
-                      />
-                    </View>
-                  </View>
+                  <FeedbackForm
+                    control={control}
+                    title={'Оставьте свой отзыв и помогите нам стать лучше!'}
+                    handleSubmit={handleSubmit}
+                    sendMessage={sendMessage}
+                  />
                 ) : (
                   isMessageSend && (
-                    <View style={{justifyContent: 'center'}}>
-                      <Text
-                        style={{
-                          fontFamily: 'Inter-ExtraLight',
-                          opacity: isTyped ? 0.5 : 0,
-                          textAlign: 'center',
-                        }}>
-                        {countdown}
-                      </Text>
-                      <TypeWriter
-                        style={styles.text}
-                        minDelay={2}
-                        typing={1}
-                        onTypingEnd={handleTypeComplete}>
-                        Спасибо большое за Ваш отзыв!
-                      </TypeWriter>
-                    </View>
+                    <GratitudeCountDown countdown={countdown} isTyped={isTyped} handleTypeComplete={handleTypeComplete} />
                   )
                 )}
-
                 <Animatable.View
                   animation="fadeIn"
-                  style={{justifyContent: 'center'}}>
+                  style={{ justifyContent: 'center' }}>
                   <CustomButton
                     type="Tertiary"
                     text="Назад"
@@ -174,19 +136,3 @@ export default function FeedBackScreen({navigation}) {
   );
 }
 
-const styles = StyleSheet.create({
-  root: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  text: {
-    fontFamily: 'Inter-ExtraBold',
-    color: 'white',
-    textShadowColor: 'rgba(0, 0, 0, 0.25)',
-    textShadowOffset: {width: 0, height: 2},
-    textShadowRadius: 4,
-    textAlign: 'center',
-    fontSize: 16,
-  },
-});
