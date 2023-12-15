@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, KeyboardAvoidingView } from 'react-native';
+import { View, Text, StyleSheet, KeyboardAvoidingView, TouchableWithoutFeedback } from 'react-native';
 import React from 'react';
 import LottieView from 'lottie-react-native';
 import { width } from '../../utils/global/getDimensions';
@@ -10,45 +10,48 @@ export default function NoNewsInfo({
   primaryText,
   secondaryText,
   marginVertical = 100,
+  inputRef
 }) {
   return (
-    <KeyboardAvoidingView
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      style={{ flex: 1 }}>
-      <View
-        style={{
-          flex: 1,
-          marginVertical: marginVertical,
-        }}>
-        <View style={styles.textWrap}>
-          <Animatable.View animation="fadeIn" duration={1000}>
-            <Text style={styles.primaryText}>{primaryText}</Text>
-          </Animatable.View>
-          <Animatable.View animation="fadeIn" duration={1100}>
-            <Text style={styles.secondaryText}>
-              {secondaryText.split(' ').map((word, index) =>
-                word.toLowerCase() === 'ваш' ? (
-                  <Text key={index} style={styles.highlightedText}>
-                    {word}{' '}
-                  </Text>
-                ) : (
-                  <Text key={index}>{word} </Text>
-                ),
-              )}
-            </Text>
+    <TouchableWithoutFeedback onPress={() => inputRef.current.blur()}>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        style={{ flex: 1 }}>
+        <View
+          style={{
+            flex: 1,
+            marginVertical: marginVertical,
+          }}>
+          <View style={styles.textWrap}>
+            <Animatable.View animation="fadeIn" duration={1000}>
+              <Text style={styles.primaryText}>{primaryText}</Text>
+            </Animatable.View>
+            <Animatable.View animation="fadeIn" duration={1100}>
+              <Text style={styles.secondaryText}>
+                {secondaryText.split(' ').map((word, index) =>
+                  word.toLowerCase() === 'ваш' ? (
+                    <Text key={index} style={styles.highlightedText}>
+                      {word}{' '}
+                    </Text>
+                  ) : (
+                    <Text key={index}>{word} </Text>
+                  ),
+                )}
+              </Text>
+            </Animatable.View>
+          </View>
+
+          <Animatable.View animation="flipInX" duration={1000}>
+            <LottieView
+              style={styles.lottie}
+              source={noNewsInfoAnimation}
+              autoPlay
+              loop
+            />
           </Animatable.View>
         </View>
-
-        <Animatable.View animation="flipInX" duration={1000}>
-          <LottieView
-            style={styles.lottie}
-            source={noNewsInfoAnimation}
-            autoPlay
-            loop
-          />
-        </Animatable.View>
-      </View>
-    </KeyboardAvoidingView>
+      </KeyboardAvoidingView>
+    </TouchableWithoutFeedback>
   );
 }
 
@@ -68,6 +71,7 @@ const styles = StyleSheet.create({
     textShadowColor: 'rgba(226, 232, 240, 0.25)',
     textShadowOffset: { width: 0, height: 2 },
     textShadowRadius: 4,
+    textAlign: 'center'
   },
   highlightedText: {
     fontFamily: 'Inter-Bold',
@@ -81,6 +85,7 @@ const styles = StyleSheet.create({
     textShadowColor: 'rgba(226, 232, 240, 0.25)',
     textShadowOffset: { width: 0, height: 2 },
     textShadowRadius: 4,
+    textAlign: 'center'
   },
   lottie: {
     justifyContent: 'center',

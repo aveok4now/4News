@@ -104,6 +104,8 @@ export default function CommentsScreen({ route }) {
       }
     } catch (err) {
       console.log(err);
+    } finally {
+      setIsRefreshing(false);
     }
   };
 
@@ -134,8 +136,7 @@ export default function CommentsScreen({ route }) {
   };
 
   const handlePublishComment = async () => {
-    const postId = item.id || new Date(item.publishedAt).toString();
-    console.log(new Date(item.publishedAt));
+    const postId = item.newsId || item.id || new Date(item.publishedAt).toString();
 
     const newComment = {
       postId: postId,
@@ -350,13 +351,14 @@ export default function CommentsScreen({ route }) {
             <View style={{ flex: 1 }}>
               {inputText.length <= 40 && (
                 <NoNewsInfo
+                  inputRef={inputRef}
                   primaryText="Комментариев пока нет"
                   secondaryText={
                     identify !== 'Гость'
                       ? 'Пусть Ваш будет первым!'
                       : 'Войдите в аккаунт или зарегестрируйтесь, чтобы добавлять комментарии!'
                   }
-                  marginVertical={identify !== 'Гость' ? 0 : 10}
+                  marginVertical={identify !== 'Гость' ? 0 : 12}
                 />
               )}
             </View>

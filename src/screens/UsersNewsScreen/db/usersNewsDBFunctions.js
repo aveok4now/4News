@@ -141,6 +141,17 @@ export const deletePost = async (postId, authorName, isAdmin) => {
             );
         }
 
+        let deleteCommentsQuery = 'DELETE FROM Comments WHERE postId = ?';
+        let deleteCommentsArgs = [postId];
+        const [commentsResult] = await db.executeSql(deleteCommentsQuery, deleteCommentsArgs);
+
+        if (commentsResult.rowsAffected > 0) {
+            console.log(`Comments for Post with ID ${postId} have been deleted from the Comments table`);
+        } else {
+            console.log(`No comments found for Post with ID ${postId} in the Comments table`);
+        }
+
+
         if (isAdmin) {
             let updateAdminPostsQuery =
                 'UPDATE Administrators SET adminPosts = adminPosts - 1 WHERE adminLogin = ?';

@@ -8,9 +8,7 @@ import {
   fetchTrendingMovies,
   fetchUpcomingMovies,
   fetchTopRatedMovies,
-  getTrendingMovies,
-  getUpcomingMovies,
-  getTopRatedMovies,
+
 } from '../../api/moviedb';
 import searchBg from '../../../assets/images/search-bg.jpg';
 
@@ -26,24 +24,25 @@ export default function MovieNewsScreen({ navigation }) {
   }, []);
 
   const getData = async () => {
-    setIsLoading(true);
+    await getTrendingMovies();
+    await getUpcomingMovies();
+    await getTopRatedMovies();
+  }
 
-    try {
-      const [trendingData, upcomingData, topRatedData] = await Promise.all([
-        getTrendingMovies(),
-        getUpcomingMovies(),
-        getTopRatedMovies(),
-      ]);
+  const getTrendingMovies = async () => {
+    const data = await fetchTrendingMovies();
+    if (data && data.results) setTrending(data.results);
+    setIsLoading(false)
+  };
 
-      setTrending(trendingData);
-      setUpcoming(upcomingData);
-      setTopRated(topRatedData);
-    } catch (error) {
-      console.error('Error fetching data:', error);
-    } finally {
-      setIsLoading(false);
-      setIsRefreshing(false);
-    }
+  const getUpcomingMovies = async () => {
+    const data = await fetchUpcomingMovies();
+    if (data && data.results) setUpcoming(data.results);
+  };
+
+  const getTopRatedMovies = async () => {
+    const data = await fetchTopRatedMovies();
+    if (data && data.results) setTopRated(data.results);
   };
 
   return (

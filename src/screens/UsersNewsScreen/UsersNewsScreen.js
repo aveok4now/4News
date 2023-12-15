@@ -396,6 +396,7 @@ export default function UsersNewsScreen({ navigation }) {
                 />
               ) : (
                 <NoNewsInfo
+                  inputRef={inputRef}
                   primaryText="Постов пока нет 🥲"
                   secondaryText="Пускай Ваш будет первым!"
                 />
@@ -413,9 +414,10 @@ const styles = StyleSheet.create({
   cardContainer: {
     flex: 1,
     alignItems: 'center',
-    justifyContent: 'center',
-    marginTop: 20,
-    paddingHorizontal: 20
+    //justifyContent: 'center',
+    padding: 20
+    //marginTop: 20,
+    // paddingHorizontal: 20
   },
   inputContainer: {
     margin: 12,
