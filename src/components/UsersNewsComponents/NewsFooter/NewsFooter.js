@@ -1,11 +1,11 @@
-import React, {useState} from 'react';
-import {View, Text} from 'react-native';
-import {Carousel, Pagination} from 'react-native-snap-carousel';
+import React, { useState } from 'react';
+import { View, Text } from 'react-native';
+import { Carousel, Pagination } from 'react-native-snap-carousel';
 import GroupsList from '../GroupsList';
-import {groupsData} from '../../../screens/UsersNewsScreen/groupsData';
-import {width} from '../../../utils/global/getDimensions';
+import { groupsData } from '../../../screens/UsersNewsScreen/groupsData';
+import { width } from '../../../utils/global/getDimensions';
 
-export default function NewsFooterContainer({navigation}) {
+export default function NewsFooterContainer({ navigation }) {
   const [activeSlide, setActiveSlide] = useState(2);
 
   return (
@@ -17,7 +17,7 @@ export default function NewsFooterContainer({navigation}) {
   );
 }
 
-const NewsFooter = ({activeSlide, setActiveSlide, navigation}) => {
+const NewsFooter = ({ activeSlide, setActiveSlide, navigation }) => {
   const handleCardPress = link => {
     navigation.navigate('NewsViewer', {
       url: link,
@@ -38,7 +38,7 @@ const NewsFooter = ({activeSlide, setActiveSlide, navigation}) => {
           fontSize: 20,
           lineHeight: 28,
           textShadowColor: 'rgba(226, 232, 240, 0.25)',
-          textShadowOffset: {width: 0, height: 3},
+          textShadowOffset: { width: 0, height: 3 },
           textShadowRadius: 4,
           marginBottom: 8,
         }}>
@@ -49,7 +49,7 @@ const NewsFooter = ({activeSlide, setActiveSlide, navigation}) => {
         autoplayDelay={2000}
         autoplayInterval={3000}
         data={groupsData}
-        renderItem={({item, index}) => (
+        renderItem={({ item, index }) => (
           <GroupsList
             item={item}
             navigation={navigation}
@@ -63,7 +63,7 @@ const NewsFooter = ({activeSlide, setActiveSlide, navigation}) => {
         sliderWidth={width}
         sliderHeight={width}
         itemWidth={width * 0.62}
-        slideStyle={{display: 'flex', alignItems: 'center'}}
+        slideStyle={{ display: 'flex', alignItems: 'center' }}
         layout={'stack'}
         layoutCardOffset={'24'}
         onSnapToItem={index => setActiveSlide(index)}
@@ -71,7 +71,7 @@ const NewsFooter = ({activeSlide, setActiveSlide, navigation}) => {
       <Pagination
         dotsLength={groupsData.length}
         activeDotIndex={activeSlide}
-        containerStyle={{alignSelf: 'center'}}
+        containerStyle={{ alignSelf: 'center' }}
         dotStyle={{
           width: 10,
           height: 10,
@@ -94,7 +94,7 @@ const NewsFooter = ({activeSlide, setActiveSlide, navigation}) => {
           textAlign: 'center',
           alignSelf: 'center',
         }}>
-        dtb4life, 2023
+        dtb4life, 2023 - 2024
       </Text>
     </View>
   );

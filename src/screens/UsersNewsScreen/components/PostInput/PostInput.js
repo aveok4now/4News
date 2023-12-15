@@ -36,6 +36,7 @@ export default function PostInput({
           borderLeftWidth: 1,
           borderLeftColor: theme.bgWhite(0.2),
           paddingLeft: 10,
+          color: 'white'
         }}
         placeholder="Что у Вас нового?"
         placeholderStyle={{ textAlign: 'center' }}

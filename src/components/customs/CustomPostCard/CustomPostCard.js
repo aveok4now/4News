@@ -28,9 +28,7 @@ export default function CustomPostCard({
   const [isDropdownVisible, setIsDropdownVisible] = useState(false);
 
   const [likeIcon, setLikeIcon] = useState(isLiked ? 'heart' : 'heart-outline');
-  const [likeIconColor, setLikeIconColor] = useState(
-    isLiked ? 'blue' : '#2E64E5',
-  );
+  const [likeIconColor, setLikeIconColor] = useState('blue');
 
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showGuestModal, setShowGuestModal] = useState(false);

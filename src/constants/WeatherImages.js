@@ -11,7 +11,7 @@ export const weatherImages = {
   Пасмурно: require('../../assets/animations/weather/overcast.json'),
   Облачно: require('../../assets/animations/weather/cloudy.json'),
   'Небольшой дождь': require('../../assets/animations/weather/light_rain.json'),
-  'Местами дождь': require('../../assets/animations/weather/light_rain.json'),
+  'Местами дождь': require('../../assets/animations/weather/light_rain_moderate.json'),
   'Небольшой ливень': require('../../assets/animations/weather/light_rain.json'),
   'Небольшой ливневый дождь': require('../../assets/animations/weather/light_rain.json'),
   'Умеренный или сильный ливневый дождь': require('../../assets/animations/weather/light_rain_moderate.json'),

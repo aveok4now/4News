@@ -83,17 +83,24 @@ export default function MovieNewsScreen({ navigation }) {
               )}
 
               {/* Будущие новинки */}
-              <MovieList
-                title="Будущие новинки"
-                data={upcoming}
-                navigation={navigation}
-              />
+              {upcoming.length > 0 && (
+                <MovieList
+                  title="Будущие новинки"
+                  data={upcoming}
+                  navigation={navigation}
+                />
+              )}
+
               {/* Топ рейтинга */}
-              <MovieList
-                title="Топ рейтинга"
-                data={topRated}
-                navigation={navigation}
-              />
+              {trending.length > 0 && (
+                <MovieList
+                  title="Топ рейтинга"
+                  data={topRated}
+                  navigation={navigation}
+                />
+              )}
+
+
             </ScrollView>
           )}
         </CustomDrawer>

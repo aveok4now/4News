@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Text,
@@ -6,7 +6,7 @@ import {
   StyleSheet,
   TouchableOpacity,
 } from 'react-native';
-import {Controller} from 'react-hook-form';
+import { Controller } from 'react-hook-form';
 import EyeIcon from 'react-native-vector-icons/Entypo';
 
 const defaultColor1 = 'white';
@@ -18,7 +18,6 @@ const CustomInput = ({
   secureTextEntry,
   setIsTyping,
   selectionColor,
-  isUserExist,
   needTrim = true,
   isPasswordVisible,
   onPasswordVisibilityChange,
@@ -38,8 +37,8 @@ const CustomInput = ({
       name={name}
       rules={rules}
       render={({
-        field: {value, onChange, onBlur, onFocus},
-        fieldState: {error},
+        field: { value, onChange, onBlur, onFocus },
+        fieldState: { error },
       }) => (
         <>
           <View
@@ -100,10 +99,10 @@ const CustomInput = ({
           )}
           {rules.isUserExist ==
             'Пользователь с таким именем уже существует' && (
-            <Text style={styles.errorText}>
-              {'Пользователь с таким именем уже существует'}
-            </Text>
-          )}
+              <Text style={styles.errorText}>
+                {'Пользователь с таким именем уже существует'}
+              </Text>
+            )}
         </>
       )}
     />
@@ -123,6 +122,7 @@ const styles = StyleSheet.create({
   },
   input: {
     fontFamily: 'Inter-Light',
+    color: 'white'
   },
   inputFocused: {
     backgroundColor: '#73A4BD70',

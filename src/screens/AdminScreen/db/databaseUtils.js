@@ -43,7 +43,7 @@ export const insertCategories = async () => {
     [5, 'Здоровье'],
     [6, 'Наука'],
     [7, 'Технологии'],
-    [8, 'UsersNews']
+    [8, 'UsersNews'],
   ];
 
   let queryCount = 'SELECT COUNT(*) FROM Categories';
