@@ -1,4 +1,5 @@
 import SQLite from 'react-native-sqlite-storage'
+import { createCommentsTable } from '../../CommentsScreen/db/commentFunctions';
 
 export const updatePostTitles = async (db) => {
     try {
@@ -157,6 +158,7 @@ export const toggleLike = async (postId, liked) => {
 
 export const getCommentsCount = async (postId, setCommentsCount) => {
     try {
+        await createCommentsTable();
         console.log('post.id', postId);
         const db = await SQLite.openDatabase({ name: 'news.db', location: 1 });
 

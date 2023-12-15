@@ -99,24 +99,42 @@ export const createTableLikedMovies = async () => {
 
 
 export const addIsLikedColumnIfNeeded = async () => {
+  console.log('im here')
   const db = await SQLite.openDatabase({ name: 'news.db', location: 1 });
 
+  // try {
+  //   await db.transaction(async (tx) => {
+  //     const checkColumnQuery = `
+  //       SELECT name FROM sqlite_master 
+  //       WHERE type='table' AND name='Likes' AND sql LIKE '%isLiked%';
+  //     `;
+  //     const [result] = await tx.executeSql(checkColumnQuery, []);
+
+  //     if (result && result.rows.length === 0) {
+  //       const addColumnQuery = 'ALTER TABLE Likes ADD COLUMN isLiked BOOLEAN;';
+  //       await tx.executeSql(addColumnQuery, []);
+  //       console.log('Столбец isLiked успешно добавлен в таблицу Likes.');
+  //     } else {
+  //       console.log('Столбец isLiked уже существует в таблице Likes. Добавление не требуется.');
+  //     }
+  //   });
+  // } catch (error) {
+  //   console.error('Ошибка при добавлении столбца isLiked в таблицу Likes:', error);
+  // }
   try {
-    await db.transaction(async (tx) => {
-      const checkColumnQuery = `
+    const checkColumnQuery = `
         SELECT name FROM sqlite_master 
         WHERE type='table' AND name='Likes' AND sql LIKE '%isLiked%';
       `;
-      const [result] = await tx.executeSql(checkColumnQuery, []);
+    const [result] = await db.executeSql(checkColumnQuery);
 
-      if (result && result.rows.length === 0) {
-        const addColumnQuery = 'ALTER TABLE Likes ADD COLUMN isLiked BOOLEAN;';
-        await tx.executeSql(addColumnQuery, []);
-        console.log('Столбец isLiked успешно добавлен в таблицу Likes.');
-      } else {
-        console.log('Столбец isLiked уже существует в таблице Likes. Добавление не требуется.');
-      }
-    });
+    if (result.rows.length === 0) {
+      const addColumnQuery = 'ALTER TABLE Likes ADD COLUMN isLiked BOOLEAN;';
+      await db.executeSql(addColumnQuery);
+      console.log('Столбец isLiked успешно добавлен в таблицу Likes.');
+    } else {
+      console.log('Столбец isLiked уже существует в таблице Likes. Добавление не требуется.');
+    }
   } catch (error) {
     console.error('Ошибка при добавлении столбца isLiked в таблицу Likes:', error);
   }

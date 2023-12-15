@@ -27,6 +27,7 @@ import UnregisteredModal from './components/UnregisteredModal/UnregisteredModal'
 import SendButton from './components/SendButton/SendButton';
 import PostInput from './components/PostInput/PostInput';
 import { updatePostTitles, insertLikesCount, insertPost, deletePost, toggleLike, getCommentsCount } from './db/usersNewsDBFunctions';
+import { addIsLikedColumnIfNeeded, alterTableLikes } from '../AdminScreen/db/databaseUtils';
 
 SQLite.enablePromise(true);
 
@@ -101,6 +102,8 @@ export default function UsersNewsScreen({ navigation }) {
           const likesCount = likesResult.rows.item(0)?.likesCount || 0;
           console.log('likesCount ' + likesCount);
 
+          await addIsLikedColumnIfNeeded();
+
           let getIsLikedQuery = `
                         SELECT isLiked FROM Likes WHERE postId = ?
                     `;
@@ -133,14 +136,16 @@ export default function UsersNewsScreen({ navigation }) {
       SetIsLoading(false);
     } catch (err) {
       console.log(err);
+      SetIsLoading(false);
     } finally {
       setIsRefreshing(false);
+      SetIsLoading(false);
     }
   };
 
-  const onRefresh = () => {
+  const onRefresh = async () => {
     setIsRefreshing(true);
-    getPosts();
+    await getPosts();
   };
 
   const handleSendPost = useCallback(async () => {
@@ -168,6 +173,7 @@ export default function UsersNewsScreen({ navigation }) {
 
       try {
         await insertPost(newPost, identify);
+        await addIsLikedColumnIfNeeded();
 
         if (
           !(
