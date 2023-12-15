@@ -109,6 +109,7 @@ export default function UsersNewsScreen({ navigation }) {
             getIsLikedQuery,
             getIsLikedQueryArgs,
           );
+          console.log('isLiKed', Number(isLiked))
           const isLiked = isLikedResult.rows.item(0)?.isLiked || false;
 
           const commentsCount = await getCommentsCount(post.newsId, setCommentsCount);
@@ -209,9 +210,10 @@ export default function UsersNewsScreen({ navigation }) {
     }
   };
 
-  const handleDeletePost = async postId => {
+  const handleDeletePost = async (postId, authorName, isAdmin) => {
     try {
-      await deletePost(postId);
+      console.log('handledelete poost', postId, authorName, isAdmin)
+      await deletePost(postId, authorName, isAdmin);
 
       setUsersPosts(prevPosts =>
         prevPosts.map(post =>

@@ -188,6 +188,7 @@ export default function CommentsScreen({ route }) {
   const handleDeleteComment = async () => {
     if (selectedCommentIndex !== null) {
       const comment = comments[selectedCommentIndex];
+      console.log(comment)
 
       try {
         const db = await SQLite.openDatabase({ name: 'news.db', location: 1 });
@@ -199,6 +200,13 @@ export default function CommentsScreen({ route }) {
 
         if (result.rowsAffected > 0) {
           console.log('Comment has been deleted from the database');
+
+          if (comment.authorName && comment.authorName.includes('admin')) {
+            let updateQuery = 'UPDATE Administrators SET adminComments = adminComments - 1 WHERE adminLogin = ?';
+            let updateQueryArgs = [comment.authorName];
+            await db.executeSql(updateQuery, updateQueryArgs);
+            console.log('adminComments has been updated (decremented)');
+          }
         } else {
           console.log('Comment not found in the database');
         }
@@ -214,7 +222,6 @@ export default function CommentsScreen({ route }) {
       }
     }
   };
-
 
 
   const onRefresh = async () => {

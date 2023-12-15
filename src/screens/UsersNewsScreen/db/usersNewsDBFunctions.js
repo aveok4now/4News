@@ -1,9 +1,10 @@
-import SQLite from 'react-native-sqlite-storage'
+import SQLite from 'react-native-sqlite-storage';
 import { createCommentsTable } from '../../CommentsScreen/db/commentFunctions';
 
-export const updatePostTitles = async (db) => {
+export const updatePostTitles = async db => {
     try {
-        const updateQuery = 'UPDATE Likes SET postTitle = (SELECT newsTitle FROM News WHERE Likes.postId = News.newsId)';
+        const updateQuery =
+            'UPDATE Likes SET postTitle = (SELECT newsTitle FROM News WHERE Likes.postId = News.newsId)';
         await db.executeSql(updateQuery);
         console.log('Updated postTitle for existing Likes entries');
     } catch (err) {
@@ -70,7 +71,6 @@ export const insertPost = async (data, identify) => {
         console.log(data);
         const db = await SQLite.openDatabase({ name: 'news.db', location: 1 });
         //const postDate = data.postTime.toISOString().substring(0, 10);
-
         let query = `INSERT INTO News (newsId, AuthorName, newsTitle, publishDate, AuthorAdminId, AuthorUserId, categoryType)
                           VALUES (?, ?, ?, ?, COALESCE(?, 0), COALESCE(?, 0), ?)`;
 
@@ -104,27 +104,57 @@ export const insertPost = async (data, identify) => {
     }
 };
 
-export const deletePost = async postId => {
+export const deletePost = async (postId, authorName, isAdmin) => {
     try {
+        console.log('deletePost', postId, authorName, isAdmin);
+
         const db = await SQLite.openDatabase({ name: 'news.db', location: 1 });
 
-        let query = 'DELETE FROM News WHERE newsId = ?';
-        let queryArgs = [postId];
+        let deleteNewsQuery = 'DELETE FROM News WHERE newsId = ?';
+        let deleteNewsArgs = [postId];
 
-        const [result] = await db.executeSql(query, queryArgs);
+        const [newsResult] = await db.executeSql(deleteNewsQuery, deleteNewsArgs);
 
-        if (result.rowsAffected > 0) {
+        if (newsResult.rowsAffected > 0) {
             console.log(
-                `Post with ID ${postId} has been deleted from the database`,
+                `Post with ID ${postId} has been deleted from the News table`,
             );
         } else {
-            console.log(`Post with ID ${postId} not found in the database`);
+            console.log(`Post with ID ${postId} not found in the News table`);
+        }
+
+        let deleteLikesQuery = 'DELETE FROM Likes WHERE postId = ?';
+        let deleteLikesArgs = [postId];
+
+        const [likesResult] = await db.executeSql(
+            deleteLikesQuery,
+            deleteLikesArgs,
+        );
+
+        if (likesResult.rowsAffected > 0) {
+            console.log(
+                `Likes for Post with ID ${postId} have been deleted from the Likes table`,
+            );
+        } else {
+            console.log(
+                `No likes found for Post with ID ${postId} in the Likes table`,
+            );
+        }
+
+        if (isAdmin) {
+            let updateAdminPostsQuery =
+                'UPDATE Administrators SET adminPosts = adminPosts - 1 WHERE adminLogin = ?';
+            let updateAdminPostsArgs = [authorName];
+
+            await db.executeSql(updateAdminPostsQuery, updateAdminPostsArgs);
+            console.log(
+                `adminPosts for admin ${authorName} has been updated (decremented)`,
+            );
         }
     } catch (err) {
         console.log('Error deleting post:', err);
     }
 };
-
 
 export const toggleLike = async (postId, liked) => {
     try {

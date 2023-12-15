@@ -31,7 +31,7 @@ export default function DataTable({ data, tables, selectedTable }) {
   const [visibleRows, setVisibleRows] = useState(10);
 
   const [inputHasChanges, setInputHasChanges] = useState(false);
-  const blockList = ['Likes', 'liked', 'isLiked', 'isLied', 'favoriteNewsCount', 'likesCount'];
+  const blockList = ['Likes', 'liked', 'isLiked', 'isLied', 'favoriteNewsCount'];
 
   const [sortColumn, setSortColumn] = useState({
     column: null,
