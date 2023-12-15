@@ -37,7 +37,6 @@ export default function UsersNewsScreen({ navigation }) {
   }, []);
 
   let identify = useUserCredentials();
-  const [isLoading, SetIsLoading] = useState(false);
 
   condition =
     identify === 'Гость'
@@ -46,9 +45,9 @@ export default function UsersNewsScreen({ navigation }) {
         ? adminImage
         : userImage;
 
+  const [isLoading, SetIsLoading] = useState(false);
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [postText, setPostText] = useState(null);
-
   const [showGuestModal, setShowGuestModal] = useState(false);
   const [isTextValid, setIsTextValid] = useState(false);
 
@@ -56,21 +55,18 @@ export default function UsersNewsScreen({ navigation }) {
 
   const [UsersPosts, setUsersPosts] = useState(Posts);
   const [isPostSent, setIsPostSent] = useState(false);
-
   const [localTime, setLocalTime] = useState(new Date());
-
   const [isLongText, setIsLongText] = useState(false);
   const [textLength, setTextLength] = useState(0);
 
   let inputRef = useRef(null);
+
   const [isScrolling, setIsScrolling] = useState(false);
   const [isScrolledToTop, setIsScrolledToTop] = useState(true);
-
   const [toastMessage, setToastMessage] = useState('');
-
   const [isShowToast, setShowToast] = useState(false);
-
   const [commentsCount, setCommentsCount] = useState(0);
+  const [showFooter, setShowFooter] = useState(true);
 
   const getPosts = async () => {
     try {
@@ -337,6 +333,7 @@ export default function UsersNewsScreen({ navigation }) {
                   postText={postText}
                   checkPerson={checkPerson}
                   handleTextChange={handleTextChange}
+                  setShowFooter={setShowFooter}
                 />
 
                 {isTextValid && <SendButton onPress={handleSendPost} />}
@@ -391,7 +388,7 @@ export default function UsersNewsScreen({ navigation }) {
                     </>
                   )}
                   ListFooterComponent={() => (
-                    <NewsFooterContainer navigation={navigation} />
+                    showFooter && <NewsFooterContainer navigation={navigation} />
                   )}
                 />
               ) : (

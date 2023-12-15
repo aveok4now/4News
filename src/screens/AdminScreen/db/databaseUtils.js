@@ -73,25 +73,24 @@ export const insertCategories = async () => {
 
 export const createTableLikedMovies = async () => {
   const db = await SQLite.openDatabase({ name: 'news.db', location: 1 });
-
+  console.log('createtablemovies')
   try {
-    await db.transaction(async (tx) => {
-      const checkTableQuery = "SELECT name FROM sqlite_master WHERE type='table' AND name='likedMovies'";
-      const checkResult = await tx.executeSql(checkTableQuery, []);
+    const checkTableQuery = `SELECT name FROM sqlite_master WHERE type='table' AND name= 'likedMovies' `;
+    const [checkResult] = await db.executeSql(checkTableQuery);
 
-      if (checkResult && checkResult.rows.length === 0) {
-        const createTableQuery = `
+    if (checkResult && checkResult.rows.length === 0) {
+      const createTableQuery = `
           CREATE TABLE IF NOT EXISTS likedMovies(
             id INTEGER NULL,
             title TEXT NULL
           )
         `;
-        await tx.executeSql(createTableQuery, []);
-        console.log('Таблица likedMovies успешно создана.');
-      } else {
-        console.log('Таблица likedMovies уже существует. Создание не требуется.');
-      }
-    });
+      await db.executeSql(createTableQuery);
+      console.log('Таблица likedMovies успешно создана.');
+    } else {
+      console.log('Таблица likedMovies уже существует. Создание не требуется.');
+    }
+
   } catch (error) {
     console.error('Ошибка при создании таблицы likedMovies:', error);
   }
@@ -99,7 +98,6 @@ export const createTableLikedMovies = async () => {
 
 
 export const addIsLikedColumnIfNeeded = async () => {
-  console.log('im here')
   const db = await SQLite.openDatabase({ name: 'news.db', location: 1 });
 
   // try {
