@@ -330,6 +330,9 @@ export default function CommentsScreen({ route }) {
                 }>
                 {comments.map((item, index) => (
                   <Comment
+                    identify={identify}
+                    inputRef={inputRef}
+                    setInputText={setInputText}
                     key={index}
                     userImage={userImage}
                     index={index}

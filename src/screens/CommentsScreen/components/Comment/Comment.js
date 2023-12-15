@@ -4,12 +4,14 @@ import { Icons } from '../../../../constants/Icons';
 import { theme } from '../../../WeatherScreen/theme';
 
 export default function Comment({
-
   userImage,
   index,
   item,
   formatPostTime,
   onMorePress,
+  setInputText,
+  inputRef,
+  identify,
 }) {
   return (
     <View key={index} style={styles.feedItem}>
@@ -22,7 +24,18 @@ export default function Comment({
             alignItems: 'center',
           }}>
           <View>
-            <Text style={styles.name}>{item.authorName}</Text>
+            {item.authorName !== identify ? (
+              <TouchableOpacity
+                onPress={() => {
+                  setInputText(`${item.authorName}, `);
+                  inputRef.current.focus();
+                }}>
+                <Text style={styles.name}>{item.authorName}</Text>
+              </TouchableOpacity>
+            ) : (
+              <Text style={styles.name}>{item.authorName}</Text>
+            )}
+
             <Text style={styles.timestamp}>
               {formatPostTime(item.timestamp, new Date())}
             </Text>

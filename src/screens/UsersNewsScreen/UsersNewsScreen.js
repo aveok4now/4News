@@ -28,6 +28,7 @@ import SendButton from './components/SendButton/SendButton';
 import PostInput from './components/PostInput/PostInput';
 import { updatePostTitles, insertLikesCount, insertPost, deletePost, toggleLike, getCommentsCount } from './db/usersNewsDBFunctions';
 import { addIsLikedColumnIfNeeded, alterTableLikes } from '../AdminScreen/db/databaseUtils';
+import { height } from '../../utils/global/getDimensions';
 
 SQLite.enablePromise(true);
 
@@ -353,10 +354,10 @@ export default function UsersNewsScreen({ navigation }) {
                       onRefresh={onRefresh}
                     />
                   }
-                  removeClippedSubviews={true}
+                  //removeClippedSubviews={true}
                   showsVerticalScrollIndicator={false}
                   scrollEventThrottle={16}
-                  bounces={false}
+                  //bounces={false}
                   onScroll={e => {
                     scrollY.setValue(e.nativeEvent.contentOffset.y);
                     const currentScrollPosition = e.nativeEvent.contentOffset.y;
@@ -412,7 +413,9 @@ const styles = StyleSheet.create({
   cardContainer: {
     flex: 1,
     alignItems: 'center',
-    padding: 20,
+    justifyContent: 'center',
+    marginTop: 20,
+    paddingHorizontal: 20
   },
   inputContainer: {
     margin: 12,
