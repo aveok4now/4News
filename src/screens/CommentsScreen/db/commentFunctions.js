@@ -1,10 +1,9 @@
 import SQLite from 'react-native-sqlite-storage';
 
-
 export const createCommentsTable = async () => {
-    const db = await SQLite.openDatabase({ name: 'news.db', location: 1 });
+  const db = await SQLite.openDatabase({name: 'news.db', location: 1});
 
-    let query = `
+  let query = `
         CREATE TABLE IF NOT EXISTS Comments (
           id INTEGER PRIMARY KEY AUTOINCREMENT,
           postId INTEGER,
@@ -14,5 +13,5 @@ export const createCommentsTable = async () => {
           FOREIGN KEY (postId) REFERENCES News (newsId) ON DELETE CASCADE
         )
       `;
-    await db.executeSql(query);
+  await db.executeSql(query);
 };

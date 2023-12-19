@@ -1,8 +1,8 @@
-import React, { useRef } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import React, {useRef} from 'react';
+import {View, Text, StyleSheet} from 'react-native';
 import BottomSheet from 'react-native-simple-bottom-sheet';
-import { fallbackText } from './Texts';
-import { width, height } from '../../../../utils/global/getDimensions';
+import {fallbackText} from './Texts';
+import {width, height} from '../../../../utils/global/getDimensions';
 import LottieView from 'lottie-react-native';
 import meditatingAnimation from '../../../../../assets/animations/meditating.json';
 
@@ -13,9 +13,9 @@ const BottomSheetTerms = React.forwardRef((props, ref) => {
     <BottomSheet
       onClose={props.onClose}
       sliderMaxHeight={height}
-      wrapperStyle={{ backgroundColor: '#7da9f2' }}
+      wrapperStyle={{backgroundColor: '#7da9f2'}}
       ref={innerRef}>
-      <View style={{ height: 500 }}>
+      <View style={{height: 500}}>
         <Text style={styles.terms}>
           {props.title || 'Условия использования'}
         </Text>
@@ -27,7 +27,7 @@ const BottomSheetTerms = React.forwardRef((props, ref) => {
           }}>
           {props.text || fallbackText}
         </Text>
-        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
           <LottieView
             style={styles.lottie}
             source={meditatingAnimation}
@@ -56,7 +56,6 @@ export default function BottomSheetTermsComponent({
   );
 }
 
-
 const styles = StyleSheet.create({
   terms: {
     textAlign: 'center',
@@ -64,7 +63,7 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     fontFamily: 'Inter-ExtraBold',
     textShadowColor: 'rgba(0, 0, 0, 0.25)',
-    textShadowOffset: { width: 0, height: 2 },
+    textShadowOffset: {width: 0, height: 2},
     textShadowRadius: 4,
   },
   lottie: {
@@ -73,5 +72,3 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
 });
-
-

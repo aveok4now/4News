@@ -1,5 +1,5 @@
-import { View, StatusBar, ScrollView, Image, RefreshControl } from 'react-native';
-import React, { useEffect, useState } from 'react';
+import {View, StatusBar, ScrollView, Image, RefreshControl} from 'react-native';
+import React, {useEffect, useState} from 'react';
 import CustomDrawer from '../../components/customs/CustomDrawer';
 import TrendingMovies from '../../components/MovieNewsComponents/TrendingMovies';
 import MovieList from '../../components/MovieNewsComponents/MovieList';
@@ -8,11 +8,10 @@ import {
   fetchTrendingMovies,
   fetchUpcomingMovies,
   fetchTopRatedMovies,
-
 } from '../../api/moviedb';
 import searchBg from '../../../assets/images/search-bg.jpg';
 
-export default function MovieNewsScreen({ navigation }) {
+export default function MovieNewsScreen({navigation}) {
   const [trending, setTrending] = useState([]);
   const [upcoming, setUpcoming] = useState([]);
   const [topRated, setTopRated] = useState([]);
@@ -27,31 +26,37 @@ export default function MovieNewsScreen({ navigation }) {
     await getTrendingMovies();
     await getUpcomingMovies();
     await getTopRatedMovies();
-  }
+  };
 
   const getTrendingMovies = async () => {
     const data = await fetchTrendingMovies();
-    if (data && data.results) setTrending(data.results);
-    setIsLoading(false)
+    if (data && data.results) {
+      setTrending(data.results);
+    }
+    setIsLoading(false);
   };
 
   const getUpcomingMovies = async () => {
     const data = await fetchUpcomingMovies();
-    if (data && data.results) setUpcoming(data.results);
+    if (data && data.results) {
+      setUpcoming(data.results);
+    }
   };
 
   const getTopRatedMovies = async () => {
     const data = await fetchTopRatedMovies();
-    if (data && data.results) setTopRated(data.results);
+    if (data && data.results) {
+      setTopRated(data.results);
+    }
   };
 
   return (
     <>
       <StatusBar backgroundColor="#092439" />
-      <View style={{ flex: 1 }}>
+      <View style={{flex: 1}}>
         <Image
           blurRadius={50}
-          style={{ position: 'absolute', width: '100%', height: '100%' }}
+          style={{position: 'absolute', width: '100%', height: '100%'}}
           source={searchBg}
         />
         <CustomDrawer
@@ -75,7 +80,7 @@ export default function MovieNewsScreen({ navigation }) {
                 />
               }
               showsVerticalScrollIndicator={false}
-              contentContainerStyle={{ paddingBottom: 10 }}>
+              contentContainerStyle={{paddingBottom: 10}}>
               {/* Сейчас в тренде */}
               {trending.length > 0 && (
                 <TrendingMovies data={trending} navigation={navigation} />
@@ -98,8 +103,6 @@ export default function MovieNewsScreen({ navigation }) {
                   navigation={navigation}
                 />
               )}
-
-
             </ScrollView>
           )}
         </CustomDrawer>

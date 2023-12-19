@@ -1,7 +1,7 @@
-import { Image, TextInput } from 'react-native';
+import {Image, TextInput} from 'react-native';
 import React from 'react';
-import { theme } from '../../../WeatherScreen/theme';
-import { height } from '../../../../utils/global/getDimensions';
+import {theme} from '../../../WeatherScreen/theme';
+import {height} from '../../../../utils/global/getDimensions';
 
 export default function PostInput({
   condition,
@@ -9,7 +9,7 @@ export default function PostInput({
   postText,
   checkPerson,
   handleTextChange,
-  setShowFooter
+  setShowFooter,
 }) {
   return (
     <>
@@ -36,14 +36,14 @@ export default function PostInput({
           borderLeftWidth: 1,
           borderLeftColor: theme.bgWhite(0.2),
           paddingLeft: 10,
-          color: 'white'
+          color: 'white',
         }}
         placeholder="Что у Вас нового?"
-        placeholderStyle={{ textAlign: 'center' }}
+        placeholderStyle={{textAlign: 'center'}}
         value={postText}
         onFocus={() => {
-          checkPerson()
-          setShowFooter(false)
+          checkPerson();
+          setShowFooter(false);
         }}
         onBlur={() => setShowFooter(true)}
         onChangeText={text => {

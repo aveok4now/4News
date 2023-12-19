@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   View,
   Text,
@@ -7,19 +7,19 @@ import {
   TouchableOpacity,
   TextInput,
 } from 'react-native';
-import { theme } from '../../../../../MovieNewsScreen/theme';
+import {theme} from '../../../../../MovieNewsScreen/theme';
 import Modal from './components/Modals/Modal';
 import SQLite from 'react-native-sqlite-storage';
-import { tableIdMap } from '../utils/tablesMap';
-import { Icons } from '../../../../../../constants/Icons';
-import { handleExportCSV } from '../utils/tableExport';
+import {tableIdMap} from '../utils/tablesMap';
+import {Icons} from '../../../../../../constants/Icons';
+import {handleExportCSV} from '../utils/tableExport';
 import Button from '../../../Button';
 import EditButtons from './components/Buttons/EditButtons';
 import ShowMoreButton from './components/Buttons/ShowMoreButton';
 import SortIndicator from './components/SortIndicator/SortIndicator';
 import CustomButton from '../../../../../../components/customs/CustomButton';
 
-export default function DataTable({ data, tables, selectedTable }) {
+export default function DataTable({data, tables, selectedTable}) {
   const [tableData, setTableData] = useState(data);
   const [selectedRow, setSelectedRow] = useState(null);
   const [deletedRow, setDeletedRow] = useState(null);
@@ -31,7 +31,13 @@ export default function DataTable({ data, tables, selectedTable }) {
   const [visibleRows, setVisibleRows] = useState(10);
 
   const [inputHasChanges, setInputHasChanges] = useState(false);
-  const blockList = ['Likes', 'liked', 'isLiked', 'isLied', 'favoriteNewsCount'];
+  const blockList = [
+    'Likes',
+    'liked',
+    'isLiked',
+    'isLied',
+    'favoriteNewsCount',
+  ];
 
   const [sortColumn, setSortColumn] = useState({
     column: null,
@@ -43,9 +49,9 @@ export default function DataTable({ data, tables, selectedTable }) {
 
   const handleSort = column => {
     if (sortColumn.column === column) {
-      setSortColumn({ column, isAscending: !sortColumn.isAscending });
+      setSortColumn({column, isAscending: !sortColumn.isAscending});
     } else {
-      setSortColumn({ column, isAscending: true });
+      setSortColumn({column, isAscending: true});
     }
   };
 
@@ -58,8 +64,8 @@ export default function DataTable({ data, tables, selectedTable }) {
               ? 1
               : -1
             : b[sortColumn.column] > a[sortColumn.column]
-              ? 1
-              : -1,
+            ? 1
+            : -1,
         );
       });
     }
@@ -71,14 +77,14 @@ export default function DataTable({ data, tables, selectedTable }) {
     }
 
     try {
-      const db = await SQLite.openDatabase({ name: 'news.db', location: 1 });
+      const db = await SQLite.openDatabase({name: 'news.db', location: 1});
 
       const query1 = `SELECT rowid, ${tableIdMap[selectedTable]} AS id FROM ${selectedTable} LIMIT 1 OFFSET ${selectedRow}`;
       const result = await db.executeSql(query1);
       const row = result[0].rows.item(0);
 
       if (row !== undefined) {
-        const { rowid, id } = row;
+        const {rowid, id} = row;
 
         const query =
           rowid !== undefined
@@ -116,7 +122,7 @@ export default function DataTable({ data, tables, selectedTable }) {
     setEditMode(true);
     setUpdatedRows(prev => ({
       ...prev,
-      [selectedRow]: { ...tableData[selectedRow] },
+      [selectedRow]: {...tableData[selectedRow]},
     }));
   };
 
@@ -139,12 +145,12 @@ export default function DataTable({ data, tables, selectedTable }) {
 
   const handleSave = async () => {
     try {
-      const db = await SQLite.openDatabase({ name: 'news.db', location: 1 });
+      const db = await SQLite.openDatabase({name: 'news.db', location: 1});
 
       const updatedData = await Promise.all(
         tableData.map(async (row, rowIndex) => {
           if (updatedRows[rowIndex]) {
-            const updatedRow = { ...row, ...updatedRows[rowIndex] };
+            const updatedRow = {...row, ...updatedRows[rowIndex]};
 
             const modifiedFields = Object.keys(updatedRows[rowIndex]).filter(
               key => updatedRows[rowIndex][key] !== row[key],
@@ -160,16 +166,16 @@ export default function DataTable({ data, tables, selectedTable }) {
 
               const query = isNewRow
                 ? `INSERT INTO ${selectedTable} (${Object.keys(newRow).join(
-                  ', ',
-                )}) VALUES (${Object.keys(newRow).fill('?').join(', ')})`
+                    ', ',
+                  )}) VALUES (${Object.keys(newRow).fill('?').join(', ')})`
                 : `UPDATE ${selectedTable} SET ${setStatements} WHERE ${tableIdMap[selectedTable]} = ?`;
 
               const queryArgs = isNewRow
                 ? modifiedFields.map(field => updatedRow[field])
                 : [
-                  ...modifiedFields.map(field => updatedRow[field]),
-                  row[tableIdMap[selectedTable]],
-                ];
+                    ...modifiedFields.map(field => updatedRow[field]),
+                    row[tableIdMap[selectedTable]],
+                  ];
 
               await db.executeSql(query, queryArgs);
             }
@@ -205,14 +211,14 @@ export default function DataTable({ data, tables, selectedTable }) {
       newRowObject[key] = '';
     });
 
-    setNewRow(prevNewRow => ({ ...prevNewRow, ...newRowObject }));
+    setNewRow(prevNewRow => ({...prevNewRow, ...newRowObject}));
 
     setTableData([newRowObject, ...tableData]);
 
     setSelectedRow(0);
     setIsNewRow(true);
     setEditMode(true);
-    setUpdatedRows({ 0: { ...newRowObject } });
+    setUpdatedRows({0: {...newRowObject}});
   };
 
   const handleCancelAddRow = () => {
@@ -228,142 +234,140 @@ export default function DataTable({ data, tables, selectedTable }) {
   return (
     <View style={styles.container}>
       {tableData && tableData.length === 0 ? (
-        <Text style={{ fontFamily: 'Inter-Light' }}>Данных пока нет.</Text>
-      )
-        : (
-          <>
-
-            <ScrollView horizontal={true} persistentScrollbar>
-              {showModal && (
-                <Modal
-                  showModal={showModal}
-                  onPress={() => setShowModal(false)}
-                  onDelete={handleDelete}
-                  onUpdate={handleUpdate}
-                  onSave={handleSave}
-                />
-              )}
-              <View style={styles.table}>
-                <View style={styles.headerRow}>
-                  {Object.keys(tableData[0]).map(key => {
-                    if (blockList.includes(key)) {
-                      return null;
-                    }
-                    return (
-                      <TouchableOpacity key={key} onPress={() => handleSort(key)}>
-                        <Text style={styles.headerText}>
-                          {key}
-                          {sortColumn.column === key && (
-                            <SortIndicator isAscending={sortColumn.isAscending} />
-                          )}
-                        </Text>
-                      </TouchableOpacity>
-                    );
-                  })}
-                </View>
-                {tableData.map((row, rowIndex) => {
-                  if (rowIndex === deletedRow) {
-                    return null;
-                  } else if (rowIndex >= visibleRows) {
+        <Text style={{fontFamily: 'Inter-Light'}}>Данных пока нет.</Text>
+      ) : (
+        <>
+          <ScrollView horizontal={true} persistentScrollbar>
+            {showModal && (
+              <Modal
+                showModal={showModal}
+                onPress={() => setShowModal(false)}
+                onDelete={handleDelete}
+                onUpdate={handleUpdate}
+                onSave={handleSave}
+              />
+            )}
+            <View style={styles.table}>
+              <View style={styles.headerRow}>
+                {Object.keys(tableData[0]).map(key => {
+                  if (blockList.includes(key)) {
                     return null;
                   }
                   return (
-                    <TouchableOpacity
-                      key={rowIndex}
-                      onLongPress={() => handleLongPress(rowIndex)}>
-                      <View
-                        style={[
-                          styles.row,
-                          rowIndex === tableData.length - 1 && { borderBottomWidth: 0 },
-                          {
-                            backgroundColor:
-                              rowIndex % 2 === 0
-                                ? theme.bgWhite(0.05)
-                                : theme.bgWhite(0.25),
-                          },
-                        ]}>
-                        {Object.entries(row).map(([key, value], columnIndex) => {
-                          if (blockList.includes(key)) {
-                            return null;
-                          }
-                          return (
-                            <View key={columnIndex} style={{ flex: 1 }}>
-                              {editMode ? (
-                                <View>
-                                  {rowIndex === selectedRow ||
-                                    (isNewRow && rowIndex === 0) ? (
-                                    <TextInput
-                                      style={styles.cell}
-                                      value={
-                                        updatedRows[rowIndex]?.[key] !== null
-                                          ? String(updatedRows[rowIndex]?.[key])
-                                          : ''
-                                      }
-                                      onChangeText={text =>
-                                        handleInputChange(rowIndex, key, text)
-                                      }
-                                      selectionColor={'#7a8fd3'}
-                                      cursorColor={'white'}
-                                    />
-                                  ) : (
-                                    value !== null &&
-                                    value !== '' && (
-                                      <Text style={styles.cell}>
-                                        {String(value).length > 14
-                                          ? String(value).slice(0, 14) + '...'
-                                          : String(value)}
-                                      </Text>
-                                    )
-                                  )}
-                                </View>
-                              ) : (
-                                value !== null &&
-                                value !== '' && (
-                                  <Text style={styles.cell}>
-                                    {String(value).length > 14
-                                      ? String(value).slice(0, 14) + '...'
-                                      : String(value)}
-                                  </Text>
-                                )
-                              )}
-                            </View>
-                          );
-                        })}
-                        {editMode && rowIndex === selectedRow && (
-                          <EditButtons
-                            handleEditCancel={handleEditCancel}
-                            handleSave={handleSave}
-                            inputHasChanges={inputHasChanges}
-                          />
+                    <TouchableOpacity key={key} onPress={() => handleSort(key)}>
+                      <Text style={styles.headerText}>
+                        {key}
+                        {sortColumn.column === key && (
+                          <SortIndicator isAscending={sortColumn.isAscending} />
                         )}
-                      </View>
+                      </Text>
                     </TouchableOpacity>
                   );
                 })}
               </View>
-            </ScrollView>
-            {tableData && tableData.length > visibleRows && (
-              <ShowMoreButton onPress={handleShowMore} />
-            )}
+              {tableData.map((row, rowIndex) => {
+                if (rowIndex === deletedRow) {
+                  return null;
+                } else if (rowIndex >= visibleRows) {
+                  return null;
+                }
+                return (
+                  <TouchableOpacity
+                    key={rowIndex}
+                    onLongPress={() => handleLongPress(rowIndex)}>
+                    <View
+                      style={[
+                        styles.row,
+                        rowIndex === tableData.length - 1 && {
+                          borderBottomWidth: 0,
+                        },
+                        {
+                          backgroundColor:
+                            rowIndex % 2 === 0
+                              ? theme.bgWhite(0.05)
+                              : theme.bgWhite(0.25),
+                        },
+                      ]}>
+                      {Object.entries(row).map(([key, value], columnIndex) => {
+                        if (blockList.includes(key)) {
+                          return null;
+                        }
+                        return (
+                          <View key={columnIndex} style={{flex: 1}}>
+                            {editMode ? (
+                              <View>
+                                {rowIndex === selectedRow ||
+                                (isNewRow && rowIndex === 0) ? (
+                                  <TextInput
+                                    style={styles.cell}
+                                    value={
+                                      updatedRows[rowIndex]?.[key] !== null
+                                        ? String(updatedRows[rowIndex]?.[key])
+                                        : ''
+                                    }
+                                    onChangeText={text =>
+                                      handleInputChange(rowIndex, key, text)
+                                    }
+                                    selectionColor={'#7a8fd3'}
+                                    cursorColor={'white'}
+                                  />
+                                ) : (
+                                  value !== null &&
+                                  value !== '' && (
+                                    <Text style={styles.cell}>
+                                      {String(value).length > 14
+                                        ? String(value).slice(0, 14) + '...'
+                                        : String(value)}
+                                    </Text>
+                                  )
+                                )}
+                              </View>
+                            ) : (
+                              value !== null &&
+                              value !== '' && (
+                                <Text style={styles.cell}>
+                                  {String(value).length > 14
+                                    ? String(value).slice(0, 14) + '...'
+                                    : String(value)}
+                                </Text>
+                              )
+                            )}
+                          </View>
+                        );
+                      })}
+                      {editMode && rowIndex === selectedRow && (
+                        <EditButtons
+                          handleEditCancel={handleEditCancel}
+                          handleSave={handleSave}
+                          inputHasChanges={inputHasChanges}
+                        />
+                      )}
+                    </View>
+                  </TouchableOpacity>
+                );
+              })}
+            </View>
+          </ScrollView>
+          {tableData && tableData.length > visibleRows && (
+            <ShowMoreButton onPress={handleShowMore} />
+          )}
 
-            {!editMode && (
-              <CustomButton
-                type="Tertiary"
-                onPress={handleAddRow}
-                text="Добавить строку"
-              />
-            )}
+          {!editMode && (
+            <CustomButton
+              type="Tertiary"
+              onPress={handleAddRow}
+              text="Добавить строку"
+            />
+          )}
 
-            <Button onPress={() => handleExportCSV(tableData, selectedTable)}>
-              <Icons.Foundation name="page-export-csv" size={50} />
-              <Text style={{ fontFamily: 'Inter-ExtraBold', fontSize: 22 }}>
-                Экспорт
-              </Text>
-            </Button>
-          </>
-        )
-      }
-
+          <Button onPress={() => handleExportCSV(tableData, selectedTable)}>
+            <Icons.Foundation name="page-export-csv" size={50} />
+            <Text style={{fontFamily: 'Inter-ExtraBold', fontSize: 22}}>
+              Экспорт
+            </Text>
+          </Button>
+        </>
+      )}
     </View>
   );
 }

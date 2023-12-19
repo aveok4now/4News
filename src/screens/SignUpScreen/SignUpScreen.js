@@ -1,9 +1,9 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { View, StyleSheet, ScrollView, StatusBar } from 'react-native';
+import React, {useState, useRef, useEffect} from 'react';
+import {View, StyleSheet, ScrollView, StatusBar} from 'react-native';
 import CustomInput from '../../components/customs/CustomInput/CustomInput';
 import CustomButton from '../../components/customs/CustomButton/CustomButton';
-import { useNavigation } from '@react-navigation/native';
-import { useForm } from 'react-hook-form';
+import {useNavigation} from '@react-navigation/native';
+import {useForm} from 'react-hook-form';
 import SQLite from 'react-native-sqlite-storage';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Toast from 'react-native-toast-message';
@@ -14,12 +14,12 @@ import {
   privacyPolicyText,
   termsText,
 } from './components/BottomSheetTerms/Texts';
-import { email_regex, name_regex } from '../../constants/Regex';
+import {email_regex, name_regex} from '../../constants/Regex';
 
 SQLite.enablePromise(true);
 
 const SignUpScreen = () => {
-  const { control, handleSubmit, watch } = useForm();
+  const {control, handleSubmit, watch} = useForm();
   const pwd = watch('password');
   const navigation = useNavigation();
   const panelRef = useRef(null);
@@ -59,7 +59,7 @@ const SignUpScreen = () => {
     setIsButtonPressed(true);
 
     try {
-      const db = await SQLite.openDatabase({ name: 'news.db', location: 1 });
+      const db = await SQLite.openDatabase({name: 'news.db', location: 1});
 
       const [existingUserByUsername] = await db.executeSql(
         'SELECT * FROM Users WHERE userLogin = ?',
@@ -89,8 +89,8 @@ const SignUpScreen = () => {
               tx.executeSql(
                 `SELECT MAX(${id}) AS maxID FROM ${table}`,
                 [],
-                (_, { rows }) => {
-                  const { maxID } = rows.item(0);
+                (_, {rows}) => {
+                  const {maxID} = rows.item(0);
                   resolve(maxID || 0);
                 },
                 error => {
@@ -139,7 +139,7 @@ const SignUpScreen = () => {
           navigation.navigate('Домашняя страница');
           navigation.reset({
             index: 0,
-            routes: [{ name: 'Домашняя страница' }],
+            routes: [{name: 'Домашняя страница'}],
           });
         } else {
           console.warn('Ошибка при добавлении пользователя в базу данных');
@@ -151,7 +151,7 @@ const SignUpScreen = () => {
   };
 
   const onSignInPress = () => {
-    navigation.navigate('Добро пожаловать !', { status: 'logout' });
+    navigation.navigate('Добро пожаловать !', {status: 'logout'});
   };
 
   const onTermsOfUsePressed = () => {
@@ -169,8 +169,12 @@ const SignUpScreen = () => {
       <StatusBar backgroundColor="#357ae0" />
       <GradientBackground colors={['#357ae0', '#48AFBD']}>
         <ScrollView
+          onTouchStart={() => {
+            setShowTermsSheet(false);
+            setShowPrivacySheet(false);
+          }}
           showsVerticalScrollIndicator={false}
-          contentContainerStyle={{ flexGrow: 1 }}>
+          contentContainerStyle={{flexGrow: 1}}>
           <View style={styles.root}>
             <CustomInput
               name="username"
@@ -187,7 +191,7 @@ const SignUpScreen = () => {
                   message: 'Имя пользователя должно быть не более 15 символов',
                 },
                 pattern: [
-                  { value: name_regex, message: 'Некорректный ввод имени' },
+                  {value: name_regex, message: 'Некорректный ввод имени'},
                 ],
               }}
               setIsTyping={setIsTyping}
@@ -300,7 +304,7 @@ const styles = StyleSheet.create({
     color: '#F0A5A5',
     paddingVertical: 5,
     textShadowColor: 'rgba(0, 0, 0, 0.25)',
-    textShadowOffset: { width: 0, height: 2 },
+    textShadowOffset: {width: 0, height: 2},
     textShadowRadius: 4,
   },
 });

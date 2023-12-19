@@ -1,38 +1,47 @@
-import { alterTableFavorites } from "../../../screens/AdminScreen/db/databaseUtils";
-
+import {alterTableFavorites} from '../../../screens/AdminScreen/db/databaseUtils';
 
 export const saveNewsItem = async (db, userId, createdAt, title) => {
-    console.log('title', title)
-    await alterTableFavorites();
-    const insertNewsQuery = `INSERT INTO UserFavorites (userId, favoriteNewsId, favoriteNewsCount, newsTitle) VALUES (?, ?, ?, ?)`;
-    const insertNewsQueryArgs = [userId, createdAt, 1, title];
+  console.log('title', title);
+  await alterTableFavorites();
+  const insertNewsQuery =
+    'INSERT INTO UserFavorites (userId, favoriteNewsId, favoriteNewsCount, newsTitle) VALUES (?, ?, ?, ?)';
+  const insertNewsQueryArgs = [userId, createdAt, 1, title];
 
-    await db.executeSql(insertNewsQuery, insertNewsQueryArgs);
+  await db.executeSql(insertNewsQuery, insertNewsQueryArgs);
 };
 
 export const removeNewsItem = async (db, userId, newsItemId) => {
-    const removeNewsQuery = `DELETE FROM UserFavorites WHERE userId = ? AND favoriteNewsId = ?`;
-    const removeNewsQueryArgs = [userId, newsItemId];
+  const removeNewsQuery =
+    'DELETE FROM UserFavorites WHERE userId = ? AND favoriteNewsId = ?';
+  const removeNewsQueryArgs = [userId, newsItemId];
 
-    await db.executeSql(removeNewsQuery, removeNewsQueryArgs);
+  await db.executeSql(removeNewsQuery, removeNewsQueryArgs);
 };
 
 export const getSavedNewsCount = async (db, userId) => {
-    const getSavedNewsCountQuery = `SELECT COALESCE(SUM(favoriteNewsCount), 0) as savedNewsCount FROM UserFavorites WHERE userId = ?`;
-    const getSavedNewsCountQueryArgs = [userId];
+  const getSavedNewsCountQuery =
+    'SELECT COALESCE(SUM(favoriteNewsCount), 0) as savedNewsCount FROM UserFavorites WHERE userId = ?';
+  const getSavedNewsCountQueryArgs = [userId];
 
-    const savedNewsCountResult = await db.executeSql(getSavedNewsCountQuery, getSavedNewsCountQueryArgs);
-    const savedNewsCount = savedNewsCountResult[0].rows.item(0).savedNewsCount;
+  const savedNewsCountResult = await db.executeSql(
+    getSavedNewsCountQuery,
+    getSavedNewsCountQueryArgs,
+  );
+  const savedNewsCount = savedNewsCountResult[0].rows.item(0).savedNewsCount;
 
-    return savedNewsCount;
+  return savedNewsCount;
 };
 
 export const isNewsAlreadySaved = async (db, userId, newsItemId) => {
-    const checkNewsQuery = `SELECT COUNT(*) as newsCount FROM UserFavorites WHERE userId = ? AND favoriteNewsId = ?`;
-    const checkNewsQueryArgs = [userId, newsItemId];
+  const checkNewsQuery =
+    'SELECT COUNT(*) as newsCount FROM UserFavorites WHERE userId = ? AND favoriteNewsId = ?';
+  const checkNewsQueryArgs = [userId, newsItemId];
 
-    const newsCountResult = await db.executeSql(checkNewsQuery, checkNewsQueryArgs);
-    const newsCount = newsCountResult[0].rows.item(0).newsCount;
+  const newsCountResult = await db.executeSql(
+    checkNewsQuery,
+    checkNewsQueryArgs,
+  );
+  const newsCount = newsCountResult[0].rows.item(0).newsCount;
 
-    return newsCount > 0;
+  return newsCount > 0;
 };

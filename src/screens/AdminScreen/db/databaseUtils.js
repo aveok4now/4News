@@ -2,7 +2,7 @@ import SQLite from 'react-native-sqlite-storage';
 
 export const fetchData = async (query, queryArgs) => {
   try {
-    const db = await SQLite.openDatabase({ name: 'news.db', location: 1 });
+    const db = await SQLite.openDatabase({name: 'news.db', location: 1});
     const result = await db.executeSql(query, queryArgs);
     return result[0].rows.item(0);
   } catch (err) {
@@ -15,7 +15,7 @@ export const fetchAllUsers = async () => {
   const query = 'SELECT * FROM Users';
 
   try {
-    const db = await SQLite.openDatabase({ name: 'news.db', location: 1 });
+    const db = await SQLite.openDatabase({name: 'news.db', location: 1});
     const result = await db.executeSql(query);
 
     const rows = result[0].rows;
@@ -32,9 +32,8 @@ export const fetchAllUsers = async () => {
   }
 };
 
-
 export const insertCategories = async () => {
-  const db = await SQLite.openDatabase({ name: 'news.db', location: 1 });
+  const db = await SQLite.openDatabase({name: 'news.db', location: 1});
   let categories = [
     [1, 'Главное'],
     [2, 'Спорт'],
@@ -55,27 +54,33 @@ export const insertCategories = async () => {
       if (rowCount === 0) {
         db.transaction(tx => {
           categories.forEach(category => {
-            tx.executeSql(queryInsert, category, (_, resultSet) => {
-              console.log('Категория успешно вставлена:', category);
-            },
+            tx.executeSql(
+              queryInsert,
+              category,
+              (_, resultSet) => {
+                console.log('Категория успешно вставлена:', category);
+              },
               (_, error) => {
                 console.log('Ошибка при вставке категории:', error);
-              });
+              },
+            );
           });
         });
       } else {
-        console.log('Таблица категорий уже содержит записи. Вставка категорий не требуется.');
+        console.log(
+          'Таблица категорий уже содержит записи. Вставка категорий не требуется.',
+        );
       }
     });
   });
-}
-
+};
 
 export const createTableLikedMovies = async () => {
-  const db = await SQLite.openDatabase({ name: 'news.db', location: 1 });
-  console.log('createtablemovies')
+  const db = await SQLite.openDatabase({name: 'news.db', location: 1});
+  console.log('createtablemovies');
   try {
-    const checkTableQuery = `SELECT name FROM sqlite_master WHERE type='table' AND name= 'likedMovies' `;
+    const checkTableQuery =
+      "SELECT name FROM sqlite_master WHERE type='table' AND name= 'likedMovies' ";
     const [checkResult] = await db.executeSql(checkTableQuery);
 
     if (checkResult && checkResult.rows.length === 0) {
@@ -90,20 +95,18 @@ export const createTableLikedMovies = async () => {
     } else {
       console.log('Таблица likedMovies уже существует. Создание не требуется.');
     }
-
   } catch (error) {
     console.error('Ошибка при создании таблицы likedMovies:', error);
   }
 };
 
-
 export const addIsLikedColumnIfNeeded = async () => {
-  const db = await SQLite.openDatabase({ name: 'news.db', location: 1 });
+  const db = await SQLite.openDatabase({name: 'news.db', location: 1});
 
   // try {
   //   await db.transaction(async (tx) => {
   //     const checkColumnQuery = `
-  //       SELECT name FROM sqlite_master 
+  //       SELECT name FROM sqlite_master
   //       WHERE type='table' AND name='Likes' AND sql LIKE '%isLiked%';
   //     `;
   //     const [result] = await tx.executeSql(checkColumnQuery, []);
@@ -131,19 +134,23 @@ export const addIsLikedColumnIfNeeded = async () => {
       await db.executeSql(addColumnQuery);
       console.log('Столбец isLiked успешно добавлен в таблицу Likes.');
     } else {
-      console.log('Столбец isLiked уже существует в таблице Likes. Добавление не требуется.');
+      console.log(
+        'Столбец isLiked уже существует в таблице Likes. Добавление не требуется.',
+      );
     }
   } catch (error) {
-    console.error('Ошибка при добавлении столбца isLiked в таблицу Likes:', error);
+    console.error(
+      'Ошибка при добавлении столбца isLiked в таблицу Likes:',
+      error,
+    );
   }
 };
 
-
 export const createTableUsersFeedbacks = async () => {
-  const db = await SQLite.openDatabase({ name: 'news.db', location: 1 });
+  const db = await SQLite.openDatabase({name: 'news.db', location: 1});
 
   try {
-    await db.transaction(async (tx) => {
+    await db.transaction(async tx => {
       const createTableQuery = `
         CREATE TABLE IF NOT EXISTS UsersFeedbacks(
           userId INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -160,7 +167,7 @@ export const createTableUsersFeedbacks = async () => {
 };
 
 export const alterTableLikes = async () => {
-  const db = await SQLite.openDatabase({ name: 'news.db', location: 1 });
+  const db = await SQLite.openDatabase({name: 'news.db', location: 1});
 
   try {
     const checkColumnQuery = `
@@ -181,14 +188,13 @@ export const alterTableLikes = async () => {
       await db.executeSql(addColumnQuery);
       console.log('Added postTitle column to Likes table');
     }
-
   } catch (error) {
     console.error('Ошибка при редактировании таблицы Likes:', error);
   }
 };
 
 export const alterTableFavorites = async () => {
-  const db = await SQLite.openDatabase({ name: 'news.db', location: 1 });
+  const db = await SQLite.openDatabase({name: 'news.db', location: 1});
 
   try {
     const checkColumnQuery = `
@@ -205,11 +211,11 @@ export const alterTableFavorites = async () => {
     }
 
     if (!hasNewsTitleColumn) {
-      const addColumnQuery = 'ALTER TABLE userFavorites ADD COLUMN newsTitle TEXT';
+      const addColumnQuery =
+        'ALTER TABLE userFavorites ADD COLUMN newsTitle TEXT';
       await db.executeSql(addColumnQuery);
       console.log('Added newsTitle column to userFavorites table');
     }
-
   } catch (error) {
     console.error('Ошибка при редактировании таблицы userFavorites:', error);
   }

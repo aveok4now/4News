@@ -1,8 +1,8 @@
-import { View, Text, Image, StatusBar, LogBox } from 'react-native';
-import React, { useState, useEffect } from 'react';
+import {View, Text, Image, StatusBar, LogBox} from 'react-native';
+import React, {useState, useEffect} from 'react';
 import * as Animatable from 'react-native-animatable';
 import CustomDrawer from '../../components/customs/CustomDrawer';
-import { Icons } from '../../constants/Icons';
+import {Icons} from '../../constants/Icons';
 import CustomButton from '../../components/customs/CustomButton';
 import InfoCarousel from './components/Carousels/InfoCarousel/InfoCarousel';
 import SQLite from 'react-native-sqlite-storage';
@@ -15,21 +15,21 @@ import {
   alterTableLikes,
   alterTableFavorites,
 } from './db/databaseUtils';
-import { downloadFile } from './utils/downloadFile';
+import {downloadFile} from './utils/downloadFile';
 import AppInfoCarousel from './components/Carousels/AppInfoCarousel/appInfoCarousel';
 import Loader from '../../components/MovieNewsComponents/Loader';
 import AboutApp from './components/AboutAppSection/AboutApp';
 import TablesCarousel from './components/Carousels/TablesCarousel/TablesCarousel';
 import Title from './components/Title';
-import { MemoizedTypeWriter } from './components/MemoizedComponents/MemoizedTypeWriter';
-import { MemoizedScrollView } from './components/MemoizedComponents/MemoizedScrollView';
-import { MemoizedClocks } from './components/MemoizedComponents/MemoizedClocks';
+import {MemoizedTypeWriter} from './components/MemoizedComponents/MemoizedTypeWriter';
+import {MemoizedScrollView} from './components/MemoizedComponents/MemoizedScrollView';
+import {MemoizedClocks} from './components/MemoizedComponents/MemoizedClocks';
 import searchBg from '../../../assets/images/search-bg.jpg';
-import * as queries from './db/queries'
-import * as fallBacks from './utils/fallBacks'
+import * as queries from './db/queries';
+import * as fallBacks from './utils/fallBacks';
 LogBox.ignoreLogs(['Possible Unhandled Promise Rejection']);
 
-export default function AdminScreen({ navigation }) {
+export default function AdminScreen({navigation}) {
   useEffect(() => {
     getData();
   }, []);
@@ -54,7 +54,6 @@ export default function AdminScreen({ navigation }) {
 
   const [data, setData] = useState([]);
   const [appData, setAppData] = useState([]);
-
 
   const [tablesData, setTablesData] = useState([
     {
@@ -116,11 +115,9 @@ export default function AdminScreen({ navigation }) {
 
   const [currentTime, setCurrentTime] = useState(new Date());
 
-
   const getData = async () => {
-
     try {
-      const db = await SQLite.openDatabase({ name: 'news.db', location: 1 });
+      const db = await SQLite.openDatabase({name: 'news.db', location: 1});
 
       await createTableLikedMovies();
       await addIsLikedColumnIfNeeded();
@@ -158,8 +155,6 @@ export default function AdminScreen({ navigation }) {
       const formattedRatesCount = ratesCount
         ? parseFloat(ratesCount).toFixed(2)
         : 'N/A';
-
-
 
       const newData = [
         {
@@ -224,7 +219,6 @@ export default function AdminScreen({ navigation }) {
   };
 
   const getAppData = async () => {
-
     try {
       const ratesQuery = 'SELECT AVG(rating) as averageRating FROM Rates';
 
@@ -232,7 +226,9 @@ export default function AdminScreen({ navigation }) {
       const cityResult = await fetchData(queries.mostPopularCityQuery);
       const feedBacksResult = await fetchData(queries.feedBacksQuery);
       const likedMoviesResult = await fetchData(queries.likedMoviesQuery);
-      const lastRegisteredUserResult = await fetchData(queries.lastRegisteredUserQuery);
+      const lastRegisteredUserResult = await fetchData(
+        queries.lastRegisteredUserQuery,
+      );
       const lastSavedMovieResult = await fetchData(queries.lastSavedMovieQuery);
 
       const averageRating =
@@ -250,7 +246,6 @@ export default function AdminScreen({ navigation }) {
           ? lastSavedMovieResult.title
           : fallBacks.fallBackMovie;
 
-
       const newAppData = [
         {
           id: 1,
@@ -264,8 +259,8 @@ export default function AdminScreen({ navigation }) {
         },
         {
           id: 2,
-          title: <Text style={{ fontSize: 24 }}>Популярный{'\n'}город</Text>,
-          count: <Text style={{ fontSize: 35 }}>{mostPopularCity}</Text>,
+          title: <Text style={{fontSize: 24}}>Популярный{'\n'}город</Text>,
+          count: <Text style={{fontSize: 35}}>{mostPopularCity}</Text>,
           icon: <Icons.FontAwesome name="building" color="white" size={75} />,
           color1: '#ff1b6b',
           color2: '#45caff',
@@ -290,7 +285,7 @@ export default function AdminScreen({ navigation }) {
         },
         {
           id: 4,
-          title: <Text style={{ fontSize: 22 }}>Избранных фильмов</Text>,
+          title: <Text style={{fontSize: 22}}>Избранных фильмов</Text>,
           count: likedMoviesCount,
           icon: (
             <Icons.MaterialCommunityIcons
@@ -306,12 +301,12 @@ export default function AdminScreen({ navigation }) {
         {
           id: 5,
           title: (
-            <Text style={{ fontSize: 18 }}>
+            <Text style={{fontSize: 18}}>
               Последний{'\n'}зарегестрировавшийся{'\n'}пользователь
             </Text>
           ),
           count: (
-            <Text style={{ fontSize: 32, fontFamily: 'Inter-ExtraBold' }}>
+            <Text style={{fontSize: 32, fontFamily: 'Inter-ExtraBold'}}>
               {lastRegisteredUser}
             </Text>
           ),
@@ -324,10 +319,10 @@ export default function AdminScreen({ navigation }) {
         {
           id: 6,
           title: (
-            <Text style={{ fontSize: 22 }}>Последний{'\n'}лайкнутый фильм</Text>
+            <Text style={{fontSize: 22}}>Последний{'\n'}лайкнутый фильм</Text>
           ),
           count: (
-            <Text style={{ fontSize: 24, fontFamily: 'Inter-ExtraBold' }}>
+            <Text style={{fontSize: 24, fontFamily: 'Inter-ExtraBold'}}>
               {lastSavedMovie}
             </Text>
           ),
@@ -367,16 +362,16 @@ export default function AdminScreen({ navigation }) {
         <>
           <Image
             blurRadius={30}
-            style={{ position: 'absolute', width: '100%', height: '100%' }}
+            style={{position: 'absolute', width: '100%', height: '100%'}}
             source={searchBg}
           />
           <Loader />
         </>
       ) : (
-        <Animatable.View animation="fadeIn" style={{ flex: 1 }}>
+        <Animatable.View animation="fadeIn" style={{flex: 1}}>
           <Image
             blurRadius={50}
-            style={{ position: 'absolute', width: '100%', height: '100%' }}
+            style={{position: 'absolute', width: '100%', height: '100%'}}
             source={searchBg}
           />
           <CustomDrawer
@@ -388,7 +383,7 @@ export default function AdminScreen({ navigation }) {
             <MemoizedScrollView
               onRefresh={onRefresh}
               isRefreshing={isRefreshing}
-              style={{ paddingVertical: 8 }}
+              style={{paddingVertical: 8}}
               showsVerticalScrollIndicator={false}>
               {/* Title */}
               <MemoizedTypeWriter setCanBeShowed={setCanBeShowed} />
