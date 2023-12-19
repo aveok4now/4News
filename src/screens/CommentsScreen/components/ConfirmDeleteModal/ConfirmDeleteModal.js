@@ -1,4 +1,4 @@
-import {View, Text} from 'react-native';
+import { View, Text } from 'react-native';
 import React from 'react';
 import ModalPopup from '../../../../components/customs/CustomModal/CustomModal';
 import CustomButton from '../../../../components/customs/CustomButton';
@@ -7,19 +7,20 @@ export default function ConfirmDeleteModal({
   showConfirmDeleteModal,
   setShowConfirmDeleteModal,
   handleDeleteComment,
+  title = 'Вы действительно хотите удалить этот пост?'
 }) {
   return (
     <ModalPopup
       visible={showConfirmDeleteModal}
       backgroundColor="rgb(59 130 246)">
-      <View style={{padding: 5}}>
-        <Text style={{fontFamily: 'Inter-ExtraBold', fontSize: 18}}>
+      <View style={{ padding: 5 }}>
+        <Text style={{ fontFamily: 'Inter-ExtraBold', fontSize: 18 }}>
           Подтверждение
         </Text>
       </View>
-      <View style={{width: '100%', padding: 5}}>
-        <Text style={{fontFamily: 'Inter-Light', fontSize: 18}}>
-          Вы действительно хотите удалить этот пост?
+      <View style={{ width: '100%', padding: 5 }}>
+        <Text style={{ fontFamily: 'Inter-Light', fontSize: 18 }}>
+          {title}
         </Text>
       </View>
       <View

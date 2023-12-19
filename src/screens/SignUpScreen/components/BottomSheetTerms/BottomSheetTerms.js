@@ -1,19 +1,21 @@
-import React from 'react';
-import {View, Text, StyleSheet} from 'react-native';
+import React, { useRef } from 'react';
+import { View, Text, StyleSheet } from 'react-native';
 import BottomSheet from 'react-native-simple-bottom-sheet';
-import {fallbackText} from './Texts';
-import {width, height} from '../../../../utils/global/getDimensions';
+import { fallbackText } from './Texts';
+import { width, height } from '../../../../utils/global/getDimensions';
 import LottieView from 'lottie-react-native';
 import meditatingAnimation from '../../../../../assets/animations/meditating.json';
 
 const BottomSheetTerms = React.forwardRef((props, ref) => {
+  const innerRef = useRef(null);
+
   return (
     <BottomSheet
-      ref={ref}
       onClose={props.onClose}
       sliderMaxHeight={height}
-      wrapperStyle={{backgroundColor: '#7da9f2'}}>
-      <View style={{height: 500}}>
+      wrapperStyle={{ backgroundColor: '#7da9f2' }}
+      ref={innerRef}>
+      <View style={{ height: 500 }}>
         <Text style={styles.terms}>
           {props.title || 'Условия использования'}
         </Text>
@@ -25,7 +27,7 @@ const BottomSheetTerms = React.forwardRef((props, ref) => {
           }}>
           {props.text || fallbackText}
         </Text>
-        <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
           <LottieView
             style={styles.lottie}
             source={meditatingAnimation}
@@ -36,23 +38,6 @@ const BottomSheetTerms = React.forwardRef((props, ref) => {
       </View>
     </BottomSheet>
   );
-});
-
-const styles = StyleSheet.create({
-  terms: {
-    textAlign: 'center',
-    fontSize: 20,
-    fontWeight: '600',
-    fontFamily: 'Inter-ExtraBold',
-    textShadowColor: 'rgba(0, 0, 0, 0.25)',
-    textShadowOffset: {width: 0, height: 2},
-    textShadowRadius: 4,
-  },
-  lottie: {
-    width: width * 0.6,
-    height: width,
-    marginBottom: 8,
-  },
 });
 
 export default function BottomSheetTermsComponent({
@@ -70,3 +55,23 @@ export default function BottomSheetTermsComponent({
     />
   );
 }
+
+
+const styles = StyleSheet.create({
+  terms: {
+    textAlign: 'center',
+    fontSize: 20,
+    fontWeight: '600',
+    fontFamily: 'Inter-ExtraBold',
+    textShadowColor: 'rgba(0, 0, 0, 0.25)',
+    textShadowOffset: { width: 0, height: 2 },
+    textShadowRadius: 4,
+  },
+  lottie: {
+    width: width * 0.6,
+    height: width,
+    marginBottom: 8,
+  },
+});
+
+

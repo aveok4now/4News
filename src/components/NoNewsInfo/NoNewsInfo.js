@@ -13,7 +13,7 @@ export default function NoNewsInfo({
   inputRef
 }) {
   return (
-    <TouchableWithoutFeedback onPress={() => inputRef.current.blur()}>
+    <TouchableWithoutFeedback onPress={() => inputRef && inputRef.current.blur()}>
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         style={{ flex: 1 }}>

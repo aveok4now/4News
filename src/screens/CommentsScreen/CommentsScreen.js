@@ -251,6 +251,7 @@ export default function CommentsScreen({ route }) {
               showConfirmDeleteModal={showConfirmDeleteModal}
               setShowConfirmDeleteModal={setShowConfirmDeleteModal}
               handleDeleteComment={handleDeleteComment}
+              title='Вы действительно хотите удалить этот комментарий?'
             />
           )}
 
