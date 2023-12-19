@@ -18,9 +18,21 @@ ullamcorper sit amet risus nullam.
 `;
 
 export const privacyPolicyText = `
-Ullamco veniam ad enim dolore proident proident do ipsum sint incididunt amet elit. Aliquip ut elit est Lorem reprehenderit ad adipisicing sunt dolor incididunt dolore est. Et commodo aliquip est qui magna nulla officia. Consequat fugiat excepteur nulla sint. Ullamco labore voluptate officia aliquip magna laboris duis occaecat est. Reprehenderit ut est quis nostrud nulla sit. Incididunt amet reprehenderit do nostrud deserunt eu qui reprehenderit. Amet id cillum fugiat eu ipsum est ad eiusmod elit. 
+Последнее обновление: 19 декабря 2023 г.
+
+1. Собираемая информация:
+
+1.1 При регистрации и использовании нашего приложения мы можем собирать определенную личную информацию, такую как ваше имя, адрес электронной почты, и другие данные, необходимые для создания учетной записи.
+
+1.2 Мы автоматически собираем информацию о вашем взаимодействии с приложением, включая просмотры новостей, предпочтения и другие данные о действиях пользователя.
 `;
 
 export const termsText = `
-Reprehenderit exercitation occaecat eu eiusmod. Labore proident enim est anim sint cillum Lorem consequat proident aliqua mollit sit sunt. Ullamco aliquip aliquip eiusmod proident occaecat nulla labore consectetur laborum voluptate elit ipsum minim. Cillum laborum in proident nostrud consequat consequat aliqua minim mollit irure officia non. Aliqua esse aliquip esse aute sit ea ipsum occaecat. Exercitation labore cillum enim ullamco anim ipsum Lorem.
+1. Регистрация и учетная запись:
+
+1.1 Для полноценного использования нашего приложения вам может потребоваться создать учетную запись.
+
+1.2 Вы соглашаетесь предоставить точную, актуальную и полную информацию при регистрации, и обновлять эту информацию, чтобы она оставалась актуальной.
+
+1.3 Вы несете ответственность за безопасность вашей учетной записи и пароля. Не передавайте свои учетные данные третьим лицам.
 `;

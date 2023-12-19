@@ -21,7 +21,7 @@ const BottomSheetTerms = React.forwardRef((props, ref) => {
         </Text>
         <Text
           style={{
-            marginVertical: 20,
+            marginVertical: 15,
             textAlign: 'justify',
             fontFamily: 'Inter-Light',
           }}>
