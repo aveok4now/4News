@@ -1,23 +1,23 @@
-import React, {useRef} from 'react';
-import {View, Text, StyleSheet} from 'react-native';
+import React, { useRef } from 'react';
+import { View, Text, StyleSheet } from 'react-native';
 import BottomSheet from 'react-native-simple-bottom-sheet';
-import {fallbackText} from './Texts';
-import {width, height} from '../../../../utils/global/getDimensions';
+import { fallbackText } from './Texts';
+import { width, height } from '../../../../utils/global/getDimensions';
 import LottieView from 'lottie-react-native';
 import meditatingAnimation from '../../../../../assets/animations/meditating.json';
 
-const BottomSheetTerms = React.forwardRef((props, ref) => {
-  const innerRef = useRef(null);
+export default function BottomSheetTerms({ onClose, ref, title, text }) {
+  //const innerRef = useRef(ref);
 
   return (
     <BottomSheet
-      onClose={props.onClose}
+      onClose={onClose}
       sliderMaxHeight={height}
-      wrapperStyle={{backgroundColor: '#7da9f2'}}
-      ref={innerRef}>
-      <View style={{height: 500}}>
+      wrapperStyle={{ backgroundColor: '#7da9f2' }}
+    >
+      <View style={{ height: 500 }}>
         <Text style={styles.terms}>
-          {props.title || 'Условия использования'}
+          {title || 'Условия использования'}
         </Text>
         <Text
           style={{
@@ -25,9 +25,9 @@ const BottomSheetTerms = React.forwardRef((props, ref) => {
             textAlign: 'justify',
             fontFamily: 'Inter-Light',
           }}>
-          {props.text || fallbackText}
+          {text || fallbackText}
         </Text>
-        <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
           <LottieView
             style={styles.lottie}
             source={meditatingAnimation}
@@ -38,23 +38,8 @@ const BottomSheetTerms = React.forwardRef((props, ref) => {
       </View>
     </BottomSheet>
   );
-});
-
-export default function BottomSheetTermsComponent({
-  panelRef,
-  onClose,
-  title,
-  text,
-}) {
-  return (
-    <BottomSheetTerms
-      ref={panelRef}
-      onClose={onClose}
-      title={title}
-      text={text}
-    />
-  );
 }
+
 
 const styles = StyleSheet.create({
   terms: {
@@ -63,7 +48,7 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     fontFamily: 'Inter-ExtraBold',
     textShadowColor: 'rgba(0, 0, 0, 0.25)',
-    textShadowOffset: {width: 0, height: 2},
+    textShadowOffset: { width: 0, height: 2 },
     textShadowRadius: 4,
   },
   lottie: {
