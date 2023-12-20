@@ -1,4 +1,4 @@
-import React, {useEffect, useState, useRef} from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import {
   View,
   FlatList,
@@ -12,13 +12,13 @@ import NetInfo from '@react-native-community/netinfo';
 import CustomDrawer from '../../components/customs/CustomDrawer';
 import FloatingButton from '../../components/customs/FloatingButton';
 import CustomCarousel from '../../components/customs/CustomCarousel';
-import {apiKeyList} from '../../utils/apiKeys/newsApiKeys';
+import { apiKeyList } from '../../utils/apiKeys/newsApiKeys';
 import newsBackgroundImage from '../../../assets/images/newsoverview.jpg';
 import ConnectionStatus from './components/ConnectionStatus/ConnectionStatus';
 import HomeLoader from './components/HomeLoader/HomeLoader';
 import CategoryList from './components/CategoryList/CategoryList';
 
-const HomeScreen = ({navigation}) => {
+const HomeScreen = ({ navigation }) => {
   const [isFetchingError, setIsFetchingError] = useState(false);
   const [Loading, setIsLoading] = useState(false);
   const [Data, setData] = useState([]);
@@ -185,10 +185,10 @@ const HomeScreen = ({navigation}) => {
       {Loading ? (
         <HomeLoader />
       ) : (
-        <View style={{flex: 1}}>
+        <View style={{ flex: 1 }}>
           <Image
             blurRadius={200}
-            style={{position: 'absolute', width: '100%', height: '100%'}}
+            style={{ position: 'absolute', width: '100%', height: '100%' }}
             source={newsBackgroundImage}
           />
           <CustomDrawer
@@ -198,7 +198,7 @@ const HomeScreen = ({navigation}) => {
             fontFamily="Inter-ExtraBold"
             letterSpacing={1}
             navigation={navigation}>
-            <View style={{flex: 1}}>
+            <View style={{ flex: 1 }}>
               <CategoryList
                 Category={Category}
                 Select={Select}
@@ -207,11 +207,11 @@ const HomeScreen = ({navigation}) => {
                 flatListRef={flatListRef}
               />
 
-              <View style={{flex: 1}}>
-                <View style={{height: Dimensions.get('window').height * 0.78}}>
+              <View style={{ flex: 1 }}>
+                <View style={{ height: Dimensions.get('window').height * 0.78 }}>
                   <FlatList
                     ref={flatListRef}
-                    style={{flex: 1, zIndex: 100, position: 'relative'}}
+                    style={{ flex: 1, zIndex: 100, position: 'relative' }}
                     showsVerticalScrollIndicator={false}
                     scrollEventThrottle={16}
                     refreshControl={
@@ -228,8 +228,8 @@ const HomeScreen = ({navigation}) => {
                         event.nativeEvent.contentOffset.y;
                       setShowFloatingButton(
                         currentScrollPosition < prevScrollPosition ||
-                          (isScrolledToBottom &&
-                            currentScrollPosition > prevScrollPosition),
+                        (isScrolledToBottom &&
+                          currentScrollPosition > prevScrollPosition),
                       );
                       setPrevScrollPosition(currentScrollPosition);
                       setIsScrolledToTop(currentScrollPosition === 0);
@@ -261,7 +261,7 @@ const HomeScreen = ({navigation}) => {
                         />
                       </View>
                     ))}
-                    renderItem={({item, index}) => {
+                    renderItem={({ item, index }) => {
                       return (
                         <Card
                           item={item}
