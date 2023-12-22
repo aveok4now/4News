@@ -18,7 +18,7 @@ import CustomDropDown from '../../components/customs/CustomDropDown';
 import Toast from 'react-native-toast-message';
 import useUserImage from '../../utils/hooks/useUserImage';
 import SQLite from 'react-native-sqlite-storage';
-import newsBackgroundImage from '../../../assets/images/newsoverview.jpg';
+import newsBackgroundImage from '../../../assets/images/search-bg.jpg';
 import { condition, getUserImage } from '../../utils/global/getUserImage';
 import ConfirmDeleteModal from './components/ConfirmDeleteModal/ConfirmDeleteModal';
 import NewsImage from './components/NewsImage/NewsImage';
@@ -232,7 +232,7 @@ export default function CommentsScreen({ route }) {
 
   return (
     <>
-      <StatusBar backgroundColor="#5fa3c5" />
+      <StatusBar backgroundColor="#092439" />
 
       <SafeAreaView style={{ height: '100%' }}>
         <Animatable.View
@@ -334,7 +334,7 @@ export default function CommentsScreen({ route }) {
                 {comments.map((item, index) => (
                   <Comment
                     identify={identify}
-                    inputRef={inputRef}
+                    inputRef={identify !== 'Гость' && inputRef}
                     setInputText={setInputText}
                     key={index}
                     userImage={userImage}
