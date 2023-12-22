@@ -1,8 +1,8 @@
 import axios from 'axios';
-import {movieApiKey} from '../utils/apiKeys/movieApiKeys';
+import { movieApiKey } from '../utils/apiKeys/movieApiKeys';
 
 // endpoints
-const apiBaseUrl = 'https://api.themoviedb.org/3';
+const apiBaseUrl = 'http://api.themoviedb.org/3';
 const trendingMoviesEndpoint = `${apiBaseUrl}/trending/movie/day?api_key=${movieApiKey}&language=ru-RU`;
 const upComingMoviesEndpoint = `${apiBaseUrl}/movie/upcoming?api_key=${movieApiKey}&language=ru-RU`;
 const topRatedMoviesEndpoint = `${apiBaseUrl}/movie/top_rated?api_key=${movieApiKey}&language=ru-RU`;
@@ -22,15 +22,15 @@ const personMoviesEndpoint = id =>
   `${apiBaseUrl}/person/${id}/movie_credits?api_key=${movieApiKey}&language=ru-RU`;
 
 export const image500 = path =>
-  path ? `https://image.tmdb.org/t/p/w500/${path}` : fallbackMoviePoster;
+  path ? `http://image.tmdb.org/t/p/w500/${path}` : fallbackMoviePoster;
 export const image342 = path =>
-  path ? `https://image.tmdb.org/t/p/w342/${path}` : fallbackMoviePoster;
+  path ? `http://image.tmdb.org/t/p/w342/${path}` : fallbackMoviePoster;
 export const image185 = path =>
-  path ? `https://image.tmdb.org/t/p/w185/${path}` : fallbackPersonImage;
+  path ? `http://image.tmdb.org/t/p/w185/${path}` : fallbackPersonImage;
 export const fallbackMoviePoster =
-  'https://arbeitgeber.de/wp-content/uploads/2020/11/bda-news-header-1920x1280px-1536x1024.jpg';
+  'http://arbeitgeber.de/wp-content/uploads/2020/11/bda-news-header-1920x1280px-1536x1024.jpg';
 export const fallbackPersonImage =
-  'https://i.pinimg.com/564x/52/e3/b1/52e3b195a572d00afac7884a733b9bc5.jpg';
+  'http://i.pinimg.com/564x/52/e3/b1/52e3b195a572d00afac7884a733b9bc5.jpg';
 
 const apiCall = async (endpoint, params) => {
   const options = {

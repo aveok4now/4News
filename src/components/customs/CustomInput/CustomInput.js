@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Text,
@@ -6,8 +6,9 @@ import {
   StyleSheet,
   TouchableOpacity,
 } from 'react-native';
-import {Controller} from 'react-hook-form';
+import { Controller } from 'react-hook-form';
 import EyeIcon from 'react-native-vector-icons/Entypo';
+import { theme } from '../../../screens/WeatherScreen/theme';
 
 const defaultColor1 = 'white';
 const CustomInput = ({
@@ -25,6 +26,8 @@ const CustomInput = ({
 }) => {
   const [isFocused, setIsFocused] = useState(false);
   const [isEyeFocused, setIsEyeFocused] = useState(false);
+  const [placeholderTextColor, setPlaceHolderTextColor] =
+    useState('rgb(249 250 251)');
 
   const handleButtonPress = () => {
     onPasswordVisibilityChange();
@@ -37,8 +40,8 @@ const CustomInput = ({
       name={name}
       rules={rules}
       render={({
-        field: {value, onChange, onBlur, onFocus},
-        fieldState: {error},
+        field: { value, onChange, onBlur, onFocus },
+        fieldState: { error },
       }) => (
         <>
           <View
@@ -72,12 +75,17 @@ const CustomInput = ({
                   setIsTyping(false);
                 }
                 setIsFocused(false);
+                setPlaceHolderTextColor('rgb(249 250 251)');
               }}
-              onFocus={() => setIsFocused(true)}
+              onFocus={() => {
+                setIsFocused(true);
+                setPlaceHolderTextColor('rgb(229 231 235)');
+              }}
               selectionColor={
                 error ? 'rgb(239 68 68)' : selectionColor || defaultColor1
               }
               placeholder={placeholder}
+              placeholderTextColor={placeholderTextColor}
               style={styles.input}
               secureTextEntry={isPasswordVisible}
             />
@@ -99,10 +107,10 @@ const CustomInput = ({
           )}
           {rules.isUserExist ==
             'Пользователь с таким именем уже существует' && (
-            <Text style={styles.errorText}>
-              {'Пользователь с таким именем уже существует'}
-            </Text>
-          )}
+              <Text style={styles.errorText}>
+                {'Пользователь с таким именем уже существует'}
+              </Text>
+            )}
         </>
       )}
     />
@@ -111,7 +119,9 @@ const CustomInput = ({
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#CEEAF770',
+    //backgroundColor: '#CEEAF770',
+    //backgroundColor: '#73A4BD70',
+    backgroundColor: theme.bgWhite(0.1),
     width: '100%',
     borderColor: '#E8E8E8',
     borderWidth: 1,
@@ -130,7 +140,7 @@ const styles = StyleSheet.create({
 
   errorText: {
     fontFamily: 'Inter-Bold',
-    color: 'red',
+    color: 'rgb(153 27 27)',
     alignSelf: 'stretch',
   },
 
