@@ -13,7 +13,7 @@ import CustomDrawer from '../../components/customs/CustomDrawer';
 import FloatingButton from '../../components/customs/FloatingButton';
 import CustomCarousel from '../../components/customs/CustomCarousel';
 import { apiKeyList } from '../../utils/apiKeys/newsApiKeys';
-import newsBackgroundImage from '../../../assets/images/newsoverview.jpg';
+import newsBackgroundImage from '../../../assets/images/search-bg.jpg';
 import ConnectionStatus from './components/ConnectionStatus/ConnectionStatus';
 import HomeLoader from './components/HomeLoader/HomeLoader';
 import CategoryList from './components/CategoryList/CategoryList';
@@ -187,7 +187,7 @@ const HomeScreen = ({ navigation }) => {
       ) : (
         <View style={{ flex: 1 }}>
           <Image
-            blurRadius={200}
+            blurRadius={50}
             style={{ position: 'absolute', width: '100%', height: '100%' }}
             source={newsBackgroundImage}
           />
@@ -206,7 +206,6 @@ const HomeScreen = ({ navigation }) => {
                 getData2={getData2}
                 flatListRef={flatListRef}
               />
-
               <View style={{ flex: 1 }}>
                 <View style={{ height: Dimensions.get('window').height * 0.78 }}>
                   <FlatList
@@ -222,7 +221,7 @@ const HomeScreen = ({ navigation }) => {
                         onRefresh={onRefresh}
                       />
                     }
-                    data={Data}
+                    data={[{ type: 'carousel' }, ...Data]}
                     onScroll={event => {
                       const currentScrollPosition =
                         event.nativeEvent.contentOffset.y;
@@ -242,34 +241,25 @@ const HomeScreen = ({ navigation }) => {
                       setIsScrolledToBottom(isBottomReached);
                     }}
                     onEndReached={() => setIsScrolledToBottom(true)}
-                    ListHeaderComponent={React.memo(() => (
-                      <View>
-                        <Image
-                          blurRadius={70}
-                          style={{
-                            position: 'absolute',
-                            width: '100%',
-                            height: '100%',
-                          }}
-                          source={newsBackgroundImage}
-                        />
-
-                        <CustomCarousel
-                          apiKeyList={apiKeyList}
-                          apiKeyIndex={apiKeyIndex}
-                          navigation={navigation}
-                        />
-                      </View>
-                    ))}
                     renderItem={({ item, index }) => {
-                      return (
-                        <Card
-                          item={item}
-                          navigation={navigation}
-                          data={Data}
-                          needMargin={false}
-                        />
-                      );
+                      if (item.type === 'carousel') {
+                        return (
+                          <CustomCarousel
+                            apiKeyList={apiKeyList}
+                            apiKeyIndex={apiKeyIndex}
+                            navigation={navigation}
+                          />
+                        )
+                      } else {
+                        return (
+                          <Card
+                            item={item}
+                            navigation={navigation}
+                            data={Data}
+                            needMargin={false}
+                          />
+                        );
+                      }
                     }}
                   />
                 </View>
