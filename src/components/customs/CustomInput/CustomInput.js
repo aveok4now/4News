@@ -53,7 +53,7 @@ const CustomInput = ({
               isFocused && styles.inputFocused,
               {
                 borderColor:
-                  !error && isFocused ? '#7af5d1' : error ? 'red' : '#E8E8E8',
+                  !error && isFocused ? '#7af5d1' : error ? 'rgb(127 29 29)' : '#E8E8E8',
               },
             ]}>
             <TextInput
@@ -82,7 +82,7 @@ const CustomInput = ({
                 setPlaceHolderTextColor('rgb(229 231 235)');
               }}
               selectionColor={
-                error ? 'rgb(239 68 68)' : selectionColor || defaultColor1
+                error && value.length === 0 ? 'rgb(239 68 68)' : isFocused ? '#7af5d1' : selectionColor || defaultColor1
               }
               placeholder={placeholder}
               placeholderTextColor={placeholderTextColor}
@@ -140,7 +140,7 @@ const styles = StyleSheet.create({
 
   errorText: {
     fontFamily: 'Inter-Bold',
-    color: 'rgb(153 27 27)',
+    color: 'rgb(127 29 29)',
     alignSelf: 'stretch',
   },
 
