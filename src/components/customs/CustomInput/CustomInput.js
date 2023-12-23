@@ -28,10 +28,23 @@ const CustomInput = ({
   const [isEyeFocused, setIsEyeFocused] = useState(false);
   const [placeholderTextColor, setPlaceHolderTextColor] =
     useState('rgb(249 250 251)');
+  const [isFirstPress, setIsFirstPress] = useState(true);
 
   const handleButtonPress = () => {
     onPasswordVisibilityChange();
     setIsEyeFocused(true);
+  };
+
+  const getSelectionColor = (error, isFocused, isFirstPress, value) => {
+    if (error && isFocused) {
+      if (isFirstPress || value?.length === 0) {
+        return 'rgb(239 68 68)';
+      }
+      if (value?.length >= 1) {
+        return defaultColor1;
+      }
+    }
+    return '#7af5d1';
   };
 
   return (
@@ -53,7 +66,11 @@ const CustomInput = ({
               isFocused && styles.inputFocused,
               {
                 borderColor:
-                  !error && isFocused ? '#7af5d1' : error ? 'rgb(127 29 29)' : '#E8E8E8',
+                  !error && isFocused
+                    ? '#7af5d1'
+                    : error
+                      ? 'rgb(127 29 29)'
+                      : '#E8E8E8',
               },
             ]}>
             <TextInput
@@ -68,6 +85,10 @@ const CustomInput = ({
                 if (setIsTyping) {
                   setIsTyping(true);
                 }
+
+                if (isFirstPress) {
+                  setIsFirstPress(false);
+                }
               }}
               onBlur={() => {
                 onBlur();
@@ -81,13 +102,15 @@ const CustomInput = ({
                 setIsFocused(true);
                 setPlaceHolderTextColor('rgb(229 231 235)');
               }}
-              selectionColor={
-                error && value.length === 0 ? 'rgb(239 68 68)' : isFocused ? '#7af5d1' : selectionColor || defaultColor1
-              }
+              selectionColor={getSelectionColor(
+                error,
+                isFocused,
+                isFirstPress,
+                value,
+              )}
               placeholder={placeholder}
               placeholderTextColor={placeholderTextColor}
               style={styles.input}
-              secureTextEntry={isPasswordVisible}
             />
             {secureTextEntry && !isFocused && value && value.length > 0 && (
               <TouchableOpacity
