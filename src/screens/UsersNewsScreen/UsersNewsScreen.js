@@ -375,7 +375,7 @@ export default function UsersNewsScreen({ navigation }) {
                   }}
                   data={[
                     ...UsersPosts.filter(post => !post.deleted),
-                    { type: 'footer' },
+                    { type: 'footer', id: 'footer-id' },
                   ]}
                   renderItem={({ item }) => {
                     if (item.type === 'footer') {

@@ -24,6 +24,7 @@ const CustomInput = ({
   onPasswordVisibilityChange,
   showeye = true,
 }) => {
+
   const [isFocused, setIsFocused] = useState(false);
   const [isEyeFocused, setIsEyeFocused] = useState(false);
   const [placeholderTextColor, setPlaceHolderTextColor] =
@@ -111,6 +112,7 @@ const CustomInput = ({
               placeholder={placeholder}
               placeholderTextColor={placeholderTextColor}
               style={styles.input}
+              secureTextEntry={isPasswordVisible}
             />
             {secureTextEntry && !isFocused && value && value.length > 0 && (
               <TouchableOpacity

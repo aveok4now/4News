@@ -1,16 +1,16 @@
-import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import React from 'react';
 import CustomButton from '../../CustomButton';
 import LottieView from 'lottie-react-native';
-import {width} from '../../../../utils/global/getDimensions';
+import { width } from '../../../../utils/global/getDimensions';
 import ModalPopup from '../CustomModal';
 import closeButton from '../../../../../assets/animations/close.json';
 import exitAnimation from '../../../../../assets/animations/exit.json';
 
-export default function ExitModal({visible, onYes, setVisible}) {
+export default function ExitModal({ visible, onYes, setVisible }) {
   return (
-    <ModalPopup visible={visible}>
-      <View style={{alignItems: 'center'}}>
+    <ModalPopup visible={visible} >
+      <View style={{ alignItems: 'center' }}>
         <View style={styles.header}>
           <TouchableOpacity onPress={() => setVisible(false)}>
             <LottieView
@@ -36,7 +36,7 @@ export default function ExitModal({visible, onYes, setVisible}) {
           textDecorationColor: 'white',
           fontFamily: 'Inter-Black',
           textShadowColor: 'rgba(226, 232, 240, 0.25)',
-          textShadowOffset: {width: 0, height: 3},
+          textShadowOffset: { width: 0, height: 3 },
           textShadowRadius: 4,
         }}>
         Уже уходите ? 🥺
@@ -49,13 +49,13 @@ export default function ExitModal({visible, onYes, setVisible}) {
           textDecorationColor: 'white',
           fontFamily: 'Inter-Light',
           textShadowColor: 'rgba(226, 232, 240, 0.25)',
-          textShadowOffset: {width: 0, height: 3},
+          textShadowOffset: { width: 0, height: 3 },
           textShadowRadius: 4,
         }}>
         Будем рады увидеть Вас снова!
       </Text>
-      <View style={{flexDirection: 'column', justifyContent: 'center'}}>
-        <CustomButton text="Да" onPress={() => onYes()} />
+      <View style={{ flexDirection: 'column', justifyContent: 'center' }}>
+        <CustomButton text="Да" onPress={() => onYes()} bgColor="rgb(29 78 216)" />
         <CustomButton
           type="Tertiary"
           text="Отмена"

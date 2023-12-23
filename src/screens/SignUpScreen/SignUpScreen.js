@@ -246,6 +246,7 @@ const SignUpScreen = () => {
             />
 
             <CustomButton
+              bgColor="rgb(29 78 216)"
               text="Зарегестрироваться"
               onPress={handleSubmit(onRegisterPressed)}
               showBorder
