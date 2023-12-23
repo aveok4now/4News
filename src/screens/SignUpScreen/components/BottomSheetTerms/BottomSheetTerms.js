@@ -1,24 +1,21 @@
-import React, { useRef } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import React from 'react';
+import {View, Text, StyleSheet} from 'react-native';
 import BottomSheet from 'react-native-simple-bottom-sheet';
-import { fallbackText } from './Texts';
-import { width, height } from '../../../../utils/global/getDimensions';
+import {fallbackText} from './Texts';
+import {width, height} from '../../../../utils/global/getDimensions';
 import LottieView from 'lottie-react-native';
 import meditatingAnimation from '../../../../../assets/animations/meditating.json';
 
-export default function BottomSheetTerms({ onClose, ref, title, text }) {
+export default function BottomSheetTerms({onClose, ref, title, text}) {
   //const innerRef = useRef(ref);
 
   return (
     <BottomSheet
       onClose={onClose}
       sliderMaxHeight={height}
-      wrapperStyle={{ backgroundColor: '#7da9f2' }}
-    >
-      <View style={{ height: 500 }}>
-        <Text style={styles.terms}>
-          {title || 'Условия использования'}
-        </Text>
+      wrapperStyle={{backgroundColor: '#7da9f2'}}>
+      <View style={{height: 500}}>
+        <Text style={styles.terms}>{title || 'Условия использования'}</Text>
         <Text
           style={{
             marginVertical: 15,
@@ -27,7 +24,7 @@ export default function BottomSheetTerms({ onClose, ref, title, text }) {
           }}>
           {text || fallbackText}
         </Text>
-        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
           <LottieView
             style={styles.lottie}
             source={meditatingAnimation}
@@ -40,7 +37,6 @@ export default function BottomSheetTerms({ onClose, ref, title, text }) {
   );
 }
 
-
 const styles = StyleSheet.create({
   terms: {
     textAlign: 'center',
@@ -48,7 +44,7 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     fontFamily: 'Inter-ExtraBold',
     textShadowColor: 'rgba(0, 0, 0, 0.25)',
-    textShadowOffset: { width: 0, height: 2 },
+    textShadowOffset: {width: 0, height: 2},
     textShadowRadius: 4,
   },
   lottie: {

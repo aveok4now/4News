@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { movieApiKey } from '../utils/apiKeys/movieApiKeys';
+import {movieApiKey} from '../utils/apiKeys/movieApiKeys';
 
 // endpoints
 const apiBaseUrl = 'http://api.themoviedb.org/3';

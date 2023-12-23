@@ -1,4 +1,4 @@
-import { View, Image } from 'react-native';
+import {View, Image} from 'react-native';
 import React from 'react';
 import * as Progress from 'react-native-progress';
 import newsBackgroundImage from '../../../../../assets/images/search-bg.jpg';
@@ -13,7 +13,7 @@ export default function HomeLoader() {
       }}>
       <Image
         blurRadius={100}
-        style={{ position: 'absolute', width: '100%', height: '100%' }}
+        style={{position: 'absolute', width: '100%', height: '100%'}}
         source={newsBackgroundImage}
       />
       <Progress.CircleSnail thickness={10} size={140} color="white" />

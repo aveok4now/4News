@@ -1,7 +1,7 @@
-import { View, Text, TouchableOpacity, StyleSheet, Image } from 'react-native';
+import {View, Text, TouchableOpacity, StyleSheet, Image} from 'react-native';
 import React from 'react';
-import { Icons } from '../../../../constants/Icons';
-import { theme } from '../../../WeatherScreen/theme';
+import {Icons} from '../../../../constants/Icons';
+import {theme} from '../../../WeatherScreen/theme';
 
 export default function Comment({
   userImage,
@@ -16,7 +16,7 @@ export default function Comment({
   return (
     <View key={index} style={styles.feedItem}>
       <Image source={item.userAvatar || userImage} style={styles.avatar} />
-      <View style={{ flex: 1 }}>
+      <View style={{flex: 1}}>
         <View
           style={{
             flexDirection: 'row',
@@ -88,7 +88,7 @@ const styles = StyleSheet.create({
     fontFamily: 'Inter-Bold',
     color: 'rgb(96 165 250)',
     textShadowColor: 'rgba(8, 51, 68, 0.1)',
-    textShadowOffset: { width: 0, height: 2 },
+    textShadowOffset: {width: 0, height: 2},
     textShadowRadius: 4,
   },
   timestamp: {
@@ -97,7 +97,7 @@ const styles = StyleSheet.create({
     color: 'rgb(163 163 163)',
     marginTop: 2,
     textShadowColor: 'rgba(226, 232, 240, 0.25)',
-    textShadowOffset: { width: 0, height: 2 },
+    textShadowOffset: {width: 0, height: 2},
     textShadowRadius: 4,
   },
   post: {

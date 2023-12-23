@@ -7,9 +7,9 @@ import {
 } from 'react-native';
 import React from 'react';
 import LottieView from 'lottie-react-native';
-import { width } from '../../utils/global/getDimensions';
+import {width} from '../../utils/global/getDimensions';
 import noNewsInfoAnimation from '../../../assets/animations/noNewsInfo.json';
-import { theme } from '../../screens/WeatherScreen/theme';
+import {theme} from '../../screens/WeatherScreen/theme';
 import * as Animatable from 'react-native-animatable';
 
 export default function NoNewsInfo({
@@ -18,15 +18,17 @@ export default function NoNewsInfo({
   marginVertical = 100,
   inputRef,
 }) {
-  console.log(inputRef)
+  console.log(inputRef);
   return (
     <TouchableWithoutFeedback
       onPress={() => {
-        if (inputRef) inputRef.current.blur()
+        if (inputRef) {
+          inputRef.current.blur();
+        }
       }}>
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        style={{ flex: 1 }}>
+        style={{flex: 1}}>
         <View
           style={{
             flex: 1,
@@ -79,21 +81,21 @@ const styles = StyleSheet.create({
     fontFamily: 'Inter-ExtraBold',
     fontSize: 30,
     textShadowColor: 'rgba(226, 232, 240, 0.25)',
-    textShadowOffset: { width: 0, height: 2 },
+    textShadowOffset: {width: 0, height: 2},
     textShadowRadius: 4,
     textAlign: 'center',
   },
   highlightedText: {
     fontFamily: 'Inter-Bold',
     textShadowColor: 'rgba(226, 232, 240, 0.25)',
-    textShadowOffset: { width: 0, height: 5 },
+    textShadowOffset: {width: 0, height: 5},
     textShadowRadius: 4,
   },
   secondaryText: {
     fontFamily: 'Inter-Light',
     fontSize: 28,
     textShadowColor: 'rgba(226, 232, 240, 0.25)',
-    textShadowOffset: { width: 0, height: 2 },
+    textShadowOffset: {width: 0, height: 2},
     textShadowRadius: 4,
     textAlign: 'center',
   },

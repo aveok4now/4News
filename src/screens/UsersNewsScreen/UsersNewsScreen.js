@@ -7,19 +7,19 @@ import {
   Animated,
   RefreshControl,
 } from 'react-native';
-import React, { useCallback, useState, useEffect, useRef } from 'react';
+import React, {useCallback, useState, useEffect, useRef} from 'react';
 import userImage from '../../../assets/images/user.jpg';
 import guestImage from '../../../assets/images/guest.jpg';
 import adminImage from '../../../assets/images/admin.jpg';
 import useUserCredentials from '../../utils/hooks/useUserCredentials';
 import CustomPostCard from '../../components/customs/CustomPostCard';
 import CustomDrawer from '../../components/customs/CustomDrawer';
-import { theme } from '../WeatherScreen/theme';
-import { formatPostTime } from '../../utils/global/formatPostTime';
+import {theme} from '../WeatherScreen/theme';
+import {formatPostTime} from '../../utils/global/formatPostTime';
 import NoNewsInfo from '../../components/NoNewsInfo';
 import SQLite from 'react-native-sqlite-storage';
 import * as Progress from 'react-native-progress';
-import { getUserImage } from '../../utils/global/getUserImage';
+import {getUserImage} from '../../utils/global/getUserImage';
 import Toast from 'react-native-toast-message';
 import NewsFooterContainer from '../../components/UsersNewsComponents/NewsFooter/NewsFooter';
 import newsOverViewImage from '../../../assets/images/search-bg.jpg';
@@ -32,11 +32,11 @@ import {
   toggleLike,
   getCommentsCount,
 } from './db/usersNewsDBFunctions';
-import { addIsLikedColumnIfNeeded } from '../AdminScreen/db/databaseUtils';
+import {addIsLikedColumnIfNeeded} from '../AdminScreen/db/databaseUtils';
 
 SQLite.enablePromise(true);
 
-export default function UsersNewsScreen({ navigation }) {
+export default function UsersNewsScreen({navigation}) {
   useEffect(() => {
     getPosts();
   }, []);
@@ -47,8 +47,8 @@ export default function UsersNewsScreen({ navigation }) {
     identify === 'Гость'
       ? guestImage
       : identify.includes('admin')
-        ? adminImage
-        : userImage;
+      ? adminImage
+      : userImage;
 
   const [isLoading, SetIsLoading] = useState(false);
   const [isRefreshing, setIsRefreshing] = useState(false);
@@ -76,7 +76,7 @@ export default function UsersNewsScreen({ navigation }) {
   const getPosts = async () => {
     try {
       SetIsLoading(true);
-      const db = await SQLite.openDatabase({ name: 'news.db', location: 1 });
+      const db = await SQLite.openDatabase({name: 'news.db', location: 1});
 
       // let inQuery = `ALTER TABLE Likes ADD COLUMN isLiked INTEGER DEFAULT 0`;
       // await db.executeSql(inQuery)
@@ -223,7 +223,7 @@ export default function UsersNewsScreen({ navigation }) {
 
       setUsersPosts(prevPosts =>
         prevPosts.map(post =>
-          post.id === postId ? { ...post, deleted: true } : post,
+          post.id === postId ? {...post, deleted: true} : post,
         ),
       );
     } catch (err) {
@@ -281,18 +281,18 @@ export default function UsersNewsScreen({ navigation }) {
   return (
     <>
       <StatusBar backgroundColor="#092439" />
-      <View style={{ flex: 1 }}>
+      <View style={{flex: 1}}>
         <Image
           blurRadius={150}
-          style={{ position: 'absolute', width: '100%', height: '100%' }}
+          style={{position: 'absolute', width: '100%', height: '100%'}}
           source={newsOverViewImage}
         />
         {isLoading ? (
           <View
-            style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+            style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
             <Image
               blurRadius={50}
-              style={{ position: 'absolute', width: '100%', height: '100%' }}
+              style={{position: 'absolute', width: '100%', height: '100%'}}
               source={newsOverViewImage}
             />
             <Progress.CircleSnail thickness={10} size={140} color="white" />
@@ -315,7 +315,7 @@ export default function UsersNewsScreen({ navigation }) {
 
             <Animated.View
               style={{
-                transform: [{ translateY: translateY }],
+                transform: [{translateY: translateY}],
                 //zIndex: 2,
                 elevation: 4,
                 zIndex: 100,
@@ -332,7 +332,7 @@ export default function UsersNewsScreen({ navigation }) {
                       ? 'rgb(186 230 253)'
                       : '#3a86ff',
                     opacity: inputContainerOpacity,
-                    transform: [{ translateY }],
+                    transform: [{translateY}],
                   },
                 ]}>
                 <PostInput
@@ -375,9 +375,9 @@ export default function UsersNewsScreen({ navigation }) {
                   }}
                   data={[
                     ...UsersPosts.filter(post => !post.deleted),
-                    { type: 'footer', id: 'footer-id' },
+                    {type: 'footer', id: 'footer-id'},
                   ]}
-                  renderItem={({ item }) => {
+                  renderItem={({item}) => {
                     if (item.type === 'footer') {
                       return (
                         showFooter && (

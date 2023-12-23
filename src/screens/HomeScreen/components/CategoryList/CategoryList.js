@@ -1,8 +1,8 @@
-import { Text, FlatList, TouchableOpacity, StyleSheet } from 'react-native';
+import {Text, FlatList, TouchableOpacity, StyleSheet} from 'react-native';
 import React from 'react';
 import * as Animatable from 'react-native-animatable';
-import { width } from '../../../../utils/global/getDimensions';
-import { theme } from '../../../WeatherScreen/theme';
+import {width} from '../../../../utils/global/getDimensions';
+import {theme} from '../../../WeatherScreen/theme';
 
 export default function CategoryList({
   Category,
@@ -14,14 +14,14 @@ export default function CategoryList({
   return (
     <Animatable.View animation="fadeIn" duration={1500} style={styles.horList}>
       <FlatList
-        contentContainerStyle={{ paddingHorizontal: 10 }}
+        contentContainerStyle={{paddingHorizontal: 10}}
         horizontal
         showsHorizontalScrollIndicator={false}
         scrollEventThrottle={16}
         data={Category}
         bounces={false}
         initialScrollIndex={0}
-        renderItem={({ item, index }) => {
+        renderItem={({item, index}) => {
           return (
             <TouchableOpacity
               style={index == Select ? styles.selListItem : styles.horListItem}
@@ -83,14 +83,14 @@ const styles = StyleSheet.create({
     color: 'rgb(203 213 225)',
     fontFamily: 'Inter-Bold',
     textShadowColor: 'rgba(0, 0, 0, 0.25)',
-    textShadowOffset: { width: 0, height: 2 },
+    textShadowOffset: {width: 0, height: 2},
     textShadowRadius: 2,
   },
 
   selListText: {
     fontFamily: 'Inter-ExtraBold',
     textShadowColor: 'rgba(0, 0, 0, 0.45)',
-    textShadowOffset: { width: 0, height: 2 },
+    textShadowOffset: {width: 0, height: 2},
     textShadowRadius: 4,
   },
 });

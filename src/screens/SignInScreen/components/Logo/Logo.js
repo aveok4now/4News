@@ -1,8 +1,8 @@
-import { TouchableWithoutFeedback } from 'react-native';
+import {TouchableWithoutFeedback} from 'react-native';
 import React from 'react';
 import * as Animatable from 'react-native-animatable';
 
-export default function Logo({ navigation, height, source }) {
+export default function Logo({navigation, height, source}) {
   return (
     <TouchableWithoutFeedback
       onPress={() =>
@@ -22,7 +22,7 @@ export default function Logo({ navigation, height, source }) {
             width: '70%',
             maxWidth: 500,
             maxHeight: 200,
-            tintColor: 'rgb(29 78 216)'
+            tintColor: 'rgb(29 78 216)',
           },
         ]}
         resizeMode="contain"

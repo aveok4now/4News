@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import {
   View,
   Text,
@@ -6,9 +6,9 @@ import {
   StyleSheet,
   TouchableOpacity,
 } from 'react-native';
-import { Controller } from 'react-hook-form';
+import {Controller} from 'react-hook-form';
 import EyeIcon from 'react-native-vector-icons/Entypo';
-import { theme } from '../../../screens/WeatherScreen/theme';
+import {theme} from '../../../screens/WeatherScreen/theme';
 
 const defaultColor1 = 'white';
 const CustomInput = ({
@@ -24,7 +24,6 @@ const CustomInput = ({
   onPasswordVisibilityChange,
   showeye = true,
 }) => {
-
   const [isFocused, setIsFocused] = useState(false);
   const [isEyeFocused, setIsEyeFocused] = useState(false);
   const [placeholderTextColor, setPlaceHolderTextColor] =
@@ -54,8 +53,8 @@ const CustomInput = ({
       name={name}
       rules={rules}
       render={({
-        field: { value, onChange, onBlur, onFocus },
-        fieldState: { error },
+        field: {value, onChange, onBlur, onFocus},
+        fieldState: {error},
       }) => (
         <>
           <View
@@ -70,8 +69,8 @@ const CustomInput = ({
                   !error && isFocused
                     ? '#7af5d1'
                     : error
-                      ? 'rgb(127 29 29)'
-                      : '#E8E8E8',
+                    ? 'rgb(127 29 29)'
+                    : '#E8E8E8',
               },
             ]}>
             <TextInput
@@ -132,10 +131,10 @@ const CustomInput = ({
           )}
           {rules.isUserExist ==
             'Пользователь с таким именем уже существует' && (
-              <Text style={styles.errorText}>
-                {'Пользователь с таким именем уже существует'}
-              </Text>
-            )}
+            <Text style={styles.errorText}>
+              {'Пользователь с таким именем уже существует'}
+            </Text>
+          )}
         </>
       )}
     />
